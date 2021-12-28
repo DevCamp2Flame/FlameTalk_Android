@@ -3,11 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_navigation"
-    app:startDestination="@id/navigation_home">
+    app:startDestination="@id/navigation_signin">
+
+    <fragment
+        android:id="@+id/navigation_signin"
+        android:name="com.sgs.devcamp2.flametalk_android.ui.signin.SigninFragment"
+        android:label="Signin"
+        tools:layout="@layout/fragment_signin">
+        <action
+            android:id="@+id/action_signin_to_home"
+            app:destination="@id/navigation_home"
+            app:popUpTo="@id/navigation_home" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.test.mystoveblog_android.ui.home.HomeFragment"
+        android:name="com.sgs.devcamp2.flametalk_android.ui.home.HomeFragment"
         android:label="Home"
         tools:layout="@layout/fragment_home">
         <action
@@ -22,7 +33,7 @@
 
     <fragment
         android:id="@+id/navigation_post"
-        android:name="com.test.mystoveblog_android.ui.post.PostFragment"
+        android:name="com.sgs.devcamp2.flametalk_android.ui.post.PostFragment"
         android:label="Post"
         tools:layout="@layout/fragment_post">
         <action
@@ -37,7 +48,7 @@
 
     <fragment
         android:id="@+id/navigation_profile"
-        android:name="com.test.mystoveblog_android.ui.profile.ProfileFragment"
+        android:name="com.sgs.devcamp2.flametalk_android.ui.profile.ProfileFragment"
         android:label="Profile"
         tools:layout="@layout/fragment_profile">
         <action

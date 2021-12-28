@@ -2,8 +2,8 @@
     <!-- Base application theme. -->
     <style name="Theme.FlameTalk_Android" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/orange_500</item>
-        <item name="colorPrimaryVariant">@color/orange_700</item>
+        <item name="colorPrimary">@color/flame_blue</item>
+        <item name="colorPrimaryVariant">@color/flame_sky_blue</item>
         <item name="colorOnPrimary">@color/black</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
