@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -47,7 +48,7 @@ dependencies {
     // navigation
     def nav_version = "2.3.5"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
-    implementation "androidx.navigation:navigation-com.sgs.devcamp2.flametalk_android.ui.ui-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-com.sgs.devcamp2.flametalk_android.ui-ktx:$nav_version"
 
     //timber
     implementation 'com.jakewharton.timber:timber:4.7.1'
@@ -67,4 +68,16 @@ dependencies {
 
     // RecyclerView
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
+
+
+    //firebase
+    // Import the BoM for the Firebase platform
+    implementation platform('com.google.firebase:firebase-bom:29.0.2')
+
+    // Declare the dependency for the Firebase Authentication library
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation 'com.google.firebase:firebase-auth-ktx'
+
+    // Also declare the dependency for the Google Play services library and specify its version
+    implementation 'com.google.android.gms:play-services-auth:20.0.0'
 }
