@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "640753895393-4kbu2mie7eo8qnehc0qeo92412i6hqg0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sgs.devcamp2.flametalk_android",
+            "certificate_hash": "5df9d1fdd07d465047ffea2e2a6647713bd41df8"
+          }
+        },
+        {
           "client_id": "640753895393-i9i5rcmi2nf1iu687queuven5p9bf7g8.apps.googleusercontent.com",
           "client_type": 3
         }
