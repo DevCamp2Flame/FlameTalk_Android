@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentSigninBinding
 
 class SigninFragment : Fragment() {
@@ -21,6 +23,13 @@ class SigninFragment : Fragment() {
     }
 
     private fun initUI() {
+        // 로그인 > 회원가입 이동
+        binding.tvSigninToSignup.setOnClickListener {
+            findNavController().navigate(R.id.navigation_signup)
+        }
+
+
+        // 로그인 요청
         binding.btnSigninConfirm.setOnClickListener {
             submitLogin()
         }

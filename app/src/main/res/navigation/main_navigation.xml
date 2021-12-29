@@ -14,6 +14,22 @@
             android:id="@+id/action_signin_to_home"
             app:destination="@id/navigation_home"
             app:popUpTo="@id/navigation_home" />
+
+        <action
+            android:id="@+id/action_signin_to_signup"
+            app:destination="@id/navigation_signup"
+            app:popUpTo="@id/navigation_signup" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_signup"
+        android:name="com.sgs.devcamp2.flametalk_android.ui.signup.SignupFragment"
+        android:label="Signup"
+        tools:layout="@layout/fragment_signup">
+        <action
+            android:id="@+id/action_signup_to_signin"
+            app:destination="@id/navigation_signin"
+            app:popUpTo="@id/navigation_signin" />
     </fragment>
 
     <fragment

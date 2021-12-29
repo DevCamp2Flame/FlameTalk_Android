@@ -26,11 +26,10 @@
         android:layout_marginTop="80dp"
         android:outlineSpotShadowColor="@color/gray"
         android:padding="20dp"
+        android:hint="이메일"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_signin_logo"
-        tools:text="aaa@naver.com" />
-
+        app:layout_constraintTop_toBottomOf="@id/tv_signin_logo"/>
 
     <EditText
         android:id="@+id/edt_signin_pwd"
@@ -39,11 +38,11 @@
         android:layout_marginHorizontal="50dp"
         android:layout_marginTop="10dp"
         android:inputType="textPassword"
+        android:hint="비밀번호"
         android:padding="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edt_signin_email"
-        tools:text="aaa@naver.com" />
+        app:layout_constraintTop_toBottomOf="@id/edt_signin_email" />
 
     <Button
         android:id="@+id/btn_signin_confirm"
@@ -72,6 +71,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btn_signin_confirm" />
+
+    <TextView
+        android:id="@+id/tv_signin_to_signup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="30dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="@string/signin_signup"
+        android:textColor="@color/middle_gray"
+        android:textSize="17sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_signin_google" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
