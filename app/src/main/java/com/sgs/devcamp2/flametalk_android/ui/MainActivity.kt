@@ -26,13 +26,13 @@ class MainActivity : AppCompatActivity() {
         navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fcv_main) as NavHostFragment
         navController = navHostFragment.navController
-//        navController.addOnDestinationChangedListener { _, destination, _ ->
-//            if (destination.id == R.id.navigation_post) {
-//                binding.btnvView.visibility = View.GONE
-//            } else {
-//                binding.btnvView.visibility = View.VISIBLE
-//            }
-//        }
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            if (destination.id == R.id.navigation_signin || destination.id == R.id.navigation_signup) {
+                binding.btnvView.visibility = View.GONE
+            } else {
+                binding.btnvView.visibility = View.VISIBLE
+            }
+        }
 
         binding.btnvView.setupWithNavController(navController)
         binding.btnvView.itemIconTintList = null

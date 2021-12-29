@@ -1,4 +1,4 @@
-package com.test.mystoveblog_android.ui.home
+package com.sgs.devcamp2.flametalk_android.ui.home
 
 import android.os.Bundle
 import android.view.LayoutInflater

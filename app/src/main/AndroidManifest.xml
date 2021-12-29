@@ -11,8 +11,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FlameTalk_Android">
         <activity
-            android:name=".ui.oauth.OAuthActivity"
-            android:exported="true" >
+            android:name=".ui.MainActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.FlameTalk_Android.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
