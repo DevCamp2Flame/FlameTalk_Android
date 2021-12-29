@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.test.mystoveblog_android.ui.home.HomeFragment"
+        android:name="com.sgs.devcamp2.flametalk_android.ui.home.HomeFragment"
         android:label="Home"
         tools:layout="@layout/fragment_home">
         <action
@@ -22,7 +22,7 @@
 
     <fragment
         android:id="@+id/navigation_post"
-        android:name="com.test.mystoveblog_android.ui.post.PostFragment"
+        android:name="com.sgs.devcamp2.flametalk_android.ui.post.PostFragment"
         android:label="Post"
         tools:layout="@layout/fragment_post">
         <action
@@ -37,7 +37,7 @@
 
     <fragment
         android:id="@+id/navigation_profile"
-        android:name="com.test.mystoveblog_android.ui.profile.ProfileFragment"
+        android:name="com.sgs.devcamp2.flametalk_android.ui.profile.ProfileFragment"
         android:label="Profile"
         tools:layout="@layout/fragment_profile">
         <action

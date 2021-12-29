@@ -1,6 +1,9 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+    id 'kotlin-parcelize'
 }
 
 android {
@@ -52,11 +55,21 @@ dependencies {
     //timber
     implementation 'com.jakewharton.timber:timber:4.7.1'
 
-    // live data
+
+    // ktx - lifecycle
     def ver_lifecycle = "2.3.1"
+    implementation "androidx.fragment:fragment-ktx:1.4.0"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$ver_lifecycle"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$ver_lifecycle"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$ver_lifecycle"
+
+    //retrofit
+    implementation "com.squareup.retrofit2:retrofit:2.9.0"
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.google.code.gson:gson:2.8.6'
+    //Retrofit 라이브러리 응답으로 가짜 객체를 만들기 위해
+    implementation 'com.squareup.retrofit2:retrofit-mock:2.6.2'
 
     //Glide
     implementation ("com.github.bumptech.glide:glide:4.11.0") {
@@ -67,4 +80,35 @@ dependencies {
 
     // RecyclerView
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
+
+    // hilt
+    def hilt_version = "2.37"
+    def hilt_viewmodel_version = "1.0.0-alpha01"
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
+    testImplementation "com.google.dagger:hilt-android-testing:$hilt_version"
+    kaptTest "com.google.dagger:hilt-android-compiler:$hilt_version"
+
+    androidTestImplementation "com.google.dagger:hilt-android-testing:$hilt_version"
+    kaptAndroidTest "com.google.dagger:hilt-android-compiler:$hilt_version"
+
+    implementation "androidx.hilt:hilt-navigation-fragment:1.0.0"
+
+    implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hilt_viewmodel_version"
+    kapt "androidx.hilt:hilt-compiler:$hilt_viewmodel_version"
+
+    //okhttp
+    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.0'
+
+    //rxjava
+    implementation "io.reactivex.rxjava2:rxjava:2.2.13"
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation "io.reactivex.rxjava2:rxkotlin:2.4.0"
+
+    //dataStore
+    implementation "androidx.datastore:datastore-preferences:1.0.0-rc01"
+
+    // coroutine
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.1'
 }
