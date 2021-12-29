@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "640753895393",
+    "project_id": "flametalk-a2290",
+    "storage_bucket": "flametalk-a2290.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:640753895393:android:09cab6a5cf300e7a2974a0",
+        "android_client_info": {
+          "package_name": "com.sgs.devcamp2.flametalk_android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "640753895393-4kbu2mie7eo8qnehc0qeo92412i6hqg0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sgs.devcamp2.flametalk_android",
+            "certificate_hash": "5df9d1fdd07d465047ffea2e2a6647713bd41df8"
+          }
+        },
+        {
+          "client_id": "640753895393-i9i5rcmi2nf1iu687queuven5p9bf7g8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCjX7pI7WHX_qLTcGi-EMk2tzJX3YyO0mc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "640753895393-i9i5rcmi2nf1iu687queuven5p9bf7g8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
