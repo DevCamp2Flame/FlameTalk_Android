@@ -1,6 +1,7 @@
 package com.sgs.devcamp2.flametalk_android.ui
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -28,13 +29,13 @@ class MainActivity : AppCompatActivity() {
         navController = navHostFragment.navController
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (destination.id == R.id.navigation_signin || destination.id == R.id.navigation_signup) {
-                binding.btnvView.visibility = View.GONE
+                binding.btnView.visibility = View.GONE
             } else {
-                binding.btnvView.visibility = View.VISIBLE
+                binding.btnView.visibility = View.VISIBLE
             }
         }
 
-        binding.btnvView.setupWithNavController(navController)
-        binding.btnvView.itemIconTintList = null
+        binding.btnView.setupWithNavController(navController)
+        binding.btnView.itemIconTintList = null
     }
 }

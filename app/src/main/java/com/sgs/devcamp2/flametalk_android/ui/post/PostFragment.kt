@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentPostBinding
 
-
 class PostFragment : Fragment() {
     lateinit var binding: FragmentPostBinding
 
@@ -16,7 +15,7 @@ class PostFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentPostBinding.inflate(inflater, container,false)
+        binding = FragmentPostBinding.inflate(inflater, container, false)
         initUI()
         return binding.root
     }
