@@ -100,14 +100,6 @@ dependencies {
     // When using Java.
     annotationProcessor 'androidx.hilt:hilt-compiler:1.0.0-alpha03'
 
-
-    //Circle ImageView
-    implementation 'de.hdodenhof:circleimageview:3.1.0'
-    implementation 'com.makeramen:roundedimageview:2.3.0'
-
-
-
-
     //retrofit
     //okhttp3
      implementation 'com.google.code.gson:gson:2.8.5'
