@@ -16,6 +16,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentChatListBinding
 import com.sgs.devcamp2.flametalk_android.domain.model.response.chatlist.ChatList
 import dagger.hilt.android.AndroidEntryPoint
+
+
+/**
+ * 채팅방 리스트 display fragment
+ */
 @AndroidEntryPoint
 class ChatListFragment : Fragment(), ChatListAdapter.ClickCallBack {
 

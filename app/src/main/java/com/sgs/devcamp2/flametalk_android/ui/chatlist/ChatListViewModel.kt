@@ -21,6 +21,10 @@ class ChatListViewModel @Inject constructor() : ViewModel() {
     val chatList: LiveData<MutableList<ChatList>>
         get() = _chatList
 
+    /**
+     * 초기화 시 initChattingRoom 에서 emit된 chatRoom 하나씩 list 에 추가 후
+     * livedata에 초기
+     */
     init {
         viewModelScope.launch {
             initChattingRoom().collect {
@@ -30,11 +34,14 @@ class ChatListViewModel @Inject constructor() : ViewModel() {
         }
     }
 
+    /**
+     * chatList 객체 생성 100개 생성 후 1개씩 emit
+     */
     fun initChattingRoom(): Flow<ChatList> = flow {
         for (i in 0 until 100) {
             val userList = arrayListOf<String>("김현국", "김다롬", "박소연", "최수연")
-            val chattingRoom = ChatList(i, "flame$i", user_list = userList, title = "", user_id = "")
-            emit(chattingRoom)
+            val chatroom = ChatList(i, "flame$i", user_list = userList, title = "", user_id = "")
+            emit(chatroom)
         }
     }
 }

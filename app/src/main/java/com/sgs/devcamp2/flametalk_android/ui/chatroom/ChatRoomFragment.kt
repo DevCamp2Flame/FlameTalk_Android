@@ -9,6 +9,9 @@ import androidx.fragment.app.viewModels
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentChatRoomBinding
 import dagger.hilt.android.AndroidEntryPoint
 
+/**
+ * 채팅방 리스트에서 한 채팅 클릭 시 이동하게 될 채팅방 내부 fragment
+ */
 @AndroidEntryPoint
 class ChatRoomFragment : Fragment() {
     val TAG: String = "로그"
