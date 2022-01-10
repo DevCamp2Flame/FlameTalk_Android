@@ -8,7 +8,7 @@
     tools:context=".ui.chatlist.ChatListFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/menu_room"
+        android:id="@+id/layout_chat_list_top_menu"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintHeight_percent="0.07"
@@ -18,7 +18,7 @@
         app:layout_constraintBottom_toTopOf="@+id/layout_room"
         android:background="@color/white">
         <TextView
-            android:id="@+id/chat_title"
+            android:id="@+id/tv_chat_list_menu_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
@@ -30,27 +30,27 @@
             android:textStyle="bold"
             />
         <ImageView
-            android:id="@+id/btn_room_search"
+            android:id="@+id/iv_chat_list_search"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintWidth_percent="0.13"
             app:layout_constraintTop_toTopOf="parent"
-            android:src="@drawable/ic_artboard_1"
-            app:layout_constraintEnd_toStartOf="@id/btn_room_open"
+            android:src="@drawable/ic_search"
+            app:layout_constraintEnd_toStartOf="@id/iv_chat_list_chat"
             app:layout_constraintBottom_toBottomOf="parent"
             />
         <ImageView
-            android:id="@+id/btn_room_open"
+            android:id="@+id/iv_chat_list_chat"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintEnd_toStartOf="@id/btn_room_setting"
+            app:layout_constraintEnd_toStartOf="@id/iv_chat_list_setting"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintWidth_percent="0.13"
-            android:src="@drawable/ic_artboard_2"
+            android:src="@drawable/ic_chatting"
             />
         <ImageView
-            android:id="@+id/btn_room_setting"
+            android:id="@+id/iv_chat_list_setting"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -76,7 +76,7 @@
 
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_room"
+            android:id="@+id/rv_chat_list_chatting_room"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

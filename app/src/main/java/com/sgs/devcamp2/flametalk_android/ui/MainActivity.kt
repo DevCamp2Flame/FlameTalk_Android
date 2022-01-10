@@ -29,13 +29,13 @@ class MainActivity : AppCompatActivity() {
         navController = navHostFragment.navController
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (destination.id == R.id.navigation_signin || destination.id == R.id.navigation_signup) {
-                binding.btnView.visibility = View.GONE
+                binding.btnvView.visibility = View.GONE
             } else {
-                binding.btnView.visibility = View.VISIBLE
+                binding.btnvView.visibility = View.VISIBLE
             }
         }
 
-        binding.btnView.setupWithNavController(navController)
-        binding.btnView.itemIconTintList = null
+        binding.btnvView.setupWithNavController(navController)
+        binding.btnvView.itemIconTintList = null
     }
 }

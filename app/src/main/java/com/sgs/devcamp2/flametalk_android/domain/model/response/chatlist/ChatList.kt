@@ -6,9 +6,11 @@ import java.util.* // ktlint-disable no-wildcard-imports
 import kotlin.collections.ArrayList
 
 @Parcelize
-data class ChattingRoom(
-    val id: Int,
-    val title: String,
+data class ChatList(
+    val id: Int?,
+    val chatroom_id: String?,
+    val user_id: String?,
+    val title: String?,
     val user_list: ArrayList<String>,
     // val created_at: Date,
     // val updated_at: Date
