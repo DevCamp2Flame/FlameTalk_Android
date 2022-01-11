@@ -3,8 +3,12 @@ package com.sgs.devcamp2.flametalk_android.ui.oauth
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -13,14 +17,14 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.sgs.devcamp2.flametalk_android.databinding.ActivityOauthBinding
+import com.sgs.devcamp2.flametalk_android.databinding.FragmentOAuthBinding
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class OAuthActivity : AppCompatActivity() {
+class OAuthFragment : Fragment() {
     val TAG: String = "로그"
-    lateinit var binding: ActivityOauthBinding
+    lateinit var binding: FragmentOAuthBinding
 
     @Inject
     lateinit var googleSignIn: GoogleSignInOptions
@@ -30,22 +34,24 @@ class OAuthActivity : AppCompatActivity() {
 
     lateinit var googleSignInClient: GoogleSignInClient
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityOauthBinding.inflate(layoutInflater)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
-        setContentView(binding.root)
-
+        binding = FragmentOAuthBinding.inflate(layoutInflater, container, false)
         var gso = googleSignIn
-        googleSignInClient = GoogleSignIn.getClient(this, gso)
+        googleSignInClient = GoogleSignIn.getClient(this.requireContext(), gso)
         auth = Firebase.auth
         val user = Firebase.auth.currentUser
-        Log.d(TAG,"OAuthActivity - onCreate() called ${user?.providerData}")
+        Log.d(TAG, "OAuthActivity - onCreate() called ${user?.providerData}")
         binding.btnGoogle.setOnClickListener {
 
             val signInIntent = googleSignInClient.signInIntent
             startActivityForResult(signInIntent, 1)
         }
+        return binding.root
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -64,7 +70,7 @@ class OAuthActivity : AppCompatActivity() {
 
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         auth.signInWithCredential(credential)
-            .addOnCompleteListener(this) {
+            .addOnCompleteListener(this.requireActivity()) {
                 task ->
                 if (task.isSuccessful) {
                     Log.d(TAG, "OAuthActivity - firebaseAuthWithGoogle() success called :$idToken")

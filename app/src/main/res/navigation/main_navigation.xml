@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_navigation"
-    app:startDestination="@id/navigation_signin">
+    app:startDestination="@id/navigation_chat">
 
     <fragment
         android:id="@+id/navigation_signin"
@@ -72,5 +72,28 @@
             app:destination="@id/navigation_post"
             app:popUpTo="@id/navigation_post" />
     </fragment>
+
+
+    <fragment
+        android:id="@+id/navigation_chat"
+        android:name="com.sgs.devcamp2.flametalk_android.ui.chatlist.ChatListFragment"
+        android:label="Chatlist"
+        tools:layout="@layout/fragment_chat_list">
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_oauth"
+        android:name="com.sgs.devcamp2.flametalk_android.ui.oauth.OAuthFragment"
+        android:label="OAuth"
+        tools:layout="@layout/fragment_o_auth"
+        >
+        <action
+            android:id="@+id/action_chat_to_post"
+            app:destination="@id/navigation_chat"
+            app:popUpTo="@id/navigation_chat"/>
+    </fragment>
+
+
+
 
 </navigation>
