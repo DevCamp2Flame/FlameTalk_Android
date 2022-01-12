@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.sgs.devcamp2.flametalk_android.databinding.DrawerLayoutChatRoomBinding
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentChatRoomBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -20,6 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class ChatRoomFragment : Fragment(), View.OnClickListener {
     val TAG: String = "로그"
     lateinit var binding: FragmentChatRoomBinding
+    lateinit var drawer_bindng : DrawerLayoutChatRoomBinding
     lateinit var adapter: ChatRoomAdapter
     lateinit var userlistAdapter: ChatRoomDrawUserListAdapter
     private val model by viewModels<ChatRoomViewModel>()
@@ -31,6 +33,7 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
     ): View? {
 
         binding = FragmentChatRoomBinding.inflate(inflater, container, false)
+        drawer_bindng = binding.layoutDrawer
         initUI(this.requireContext())
 
         /**
@@ -61,13 +64,13 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
      */
     fun initUI(context: Context) {
         binding.rvChatRoom.layoutManager = LinearLayoutManager(context)
-        binding.rvDrawUserList.layoutManager = LinearLayoutManager(context)
+        drawer_bindng.rvDrawUserList.layoutManager = LinearLayoutManager(context)
 
         adapter = ChatRoomAdapter()
         userlistAdapter = ChatRoomDrawUserListAdapter()
 
         binding.rvChatRoom.adapter = adapter
-        binding.rvDrawUserList.adapter = userlistAdapter
+        drawer_bindng.rvDrawUserList.adapter = userlistAdapter
 
         binding.ivChatRoomDraw.setOnClickListener(this)
     }

@@ -28,7 +28,6 @@ class SigninFragment : Fragment() {
             findNavController().navigate(R.id.navigation_signup)
         }
 
-
         // 로그인 요청
         binding.btnSigninConfirm.setOnClickListener {
             submitLogin()

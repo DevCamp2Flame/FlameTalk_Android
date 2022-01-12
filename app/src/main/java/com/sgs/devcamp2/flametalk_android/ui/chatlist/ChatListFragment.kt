@@ -17,14 +17,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentChatListBinding
 import com.sgs.devcamp2.flametalk_android.domain.model.response.chatlist.ChatList
+import com.sgs.devcamp2.flametalk_android.ui.chatlist.topsheet.TopSheetFragment
 import dagger.hilt.android.AndroidEntryPoint
-
 
 /**
  * 채팅방 리스트 display fragment
  */
 @AndroidEntryPoint
-class ChatListFragment : Fragment(), ChatListAdapter.ClickCallBack {
+class ChatListFragment : Fragment(), ChatListAdapter.ClickCallBack, View.OnClickListener {
 
     val TAG: String = "로그"
 
@@ -59,6 +59,8 @@ class ChatListFragment : Fragment(), ChatListAdapter.ClickCallBack {
         binding.rvChatListChattingRoom.layoutManager = LinearLayoutManager(context)
         adapter = ChatListAdapter(callback = this)
         binding.rvChatListChattingRoom.adapter = adapter
+
+        binding.ivChatListChat.setOnClickListener(this)
     }
 
     override fun onItemLongClicked(position: Int, chatList: ChatList) {
@@ -92,5 +94,14 @@ class ChatListFragment : Fragment(), ChatListAdapter.ClickCallBack {
 
     override fun onItemShortClicked(position: Int, chatList: ChatList) {
         findNavController().navigate(R.id.navigation_chat_room)
+    }
+
+    override fun onClick(view: View?) {
+        when (view) {
+            binding.ivChatListChat ->
+                {
+                    TopSheetFragment().show(childFragmentManager, "topsheet")
+                }
+        }
     }
 }
