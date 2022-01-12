@@ -12,7 +12,9 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentChatListBinding
 import com.sgs.devcamp2.flametalk_android.domain.model.response.chatlist.ChatList
 import dagger.hilt.android.AndroidEntryPoint
@@ -59,7 +61,7 @@ class ChatListFragment : Fragment(), ChatListAdapter.ClickCallBack {
         binding.rvChatListChattingRoom.adapter = adapter
     }
 
-    override fun onItemClicked(position: Int, chatList: ChatList) {
+    override fun onItemLongClicked(position: Int, chatList: ChatList) {
 
         /**
          * itemClickCallback
@@ -86,5 +88,9 @@ class ChatListFragment : Fragment(), ChatListAdapter.ClickCallBack {
         )
         dialog.show()
         true
+    }
+
+    override fun onItemShortClicked(position: Int, chatList: ChatList) {
+        findNavController().navigate(R.id.navigation_chat_room)
     }
 }

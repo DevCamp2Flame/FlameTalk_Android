@@ -22,7 +22,8 @@ class ChatListAdapter constructor(
 // 클래스에서만 한번만 쓸려고하는 것
 
     interface ClickCallBack {
-        fun onItemClicked(position: Int, chatList: ChatList)
+        fun onItemLongClicked(position: Int, chatList: ChatList)
+        fun onItemShortClicked(position: Int, chatList: ChatList)
     }
 
     var clickCallBack: ClickCallBack? = callback
@@ -81,7 +82,8 @@ class ChatListAdapter constructor(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
-        holder.itemView.setOnLongClickListener(ItemClickListener(position, getItem(position)))
+        holder.itemView.setOnLongClickListener(ItemLongClickListener(position, getItem(position)))
+        holder.itemView.setOnClickListener(ItemShortClickListener(position, getItem(position)))
         when (getItem(position).user_list.size) {
             1 ->
                 {
@@ -141,15 +143,25 @@ class ChatListAdapter constructor(
     /**
      * 각각의 ItemView 에 대해서 LongClick Listener 를 붙여서 클릭시에 dialog callback 을 실행 할 수 있게 한다.
      */
-    inner class ItemClickListener(var position: Int, var chatList: ChatList) : View.OnLongClickListener {
+    inner class ItemLongClickListener(var position: Int, var chatList: ChatList) : View.OnLongClickListener {
 
         override fun onLongClick(view: View?): Boolean {
             when (view?.id) {
-                R.id.item_chat -> {
-                    clickCallBack?.onItemClicked(position, chatList)
+                R.id.item_chat_list -> {
+                    clickCallBack?.onItemLongClicked(position, chatList)
                 }
             }
             return false
+        }
+    }
+
+    inner class ItemShortClickListener(var position: Int, var chatList: ChatList) : View.OnClickListener {
+        override fun onClick(view: View?) {
+            when (view?.id) {
+                R.id.item_chat_list -> {
+                    clickCallBack?.onItemShortClicked(position, chatList)
+                }
+            }
         }
     }
 }

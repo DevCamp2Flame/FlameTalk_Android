@@ -1,5 +1,6 @@
 package com.sgs.devcamp2.flametalk_android.ui.chatlist
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -30,6 +31,7 @@ class ChatListViewModel @Inject constructor() : ViewModel() {
             initChattingRoom().collect {
                 list.add(it)
                 _chatList.value = list
+
             }
         }
     }

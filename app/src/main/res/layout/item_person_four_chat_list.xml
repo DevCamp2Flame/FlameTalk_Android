@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="80dp"
-    android:id="@+id/item_chat">
+    android:id="@+id/item_chat_list">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -20,7 +20,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:background="@drawable/chat_list_round_background"
+            android:background="@drawable/bg_chat_list_round"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:outlineProvider="none"
@@ -42,7 +42,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:background="@drawable/chat_list_round_background"
+            android:background="@drawable/bg_chat_list_round"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
 
@@ -64,7 +64,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:background="@drawable/chat_list_round_background"
+            android:background="@drawable/bg_chat_list_round"
 
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -87,7 +87,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:background="@drawable/chat_list_round_background"
+            android:background="@drawable/bg_chat_list_round"
 
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
