@@ -6,9 +6,16 @@
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
-    <color name="gray">#605E5D</color>
+    <color name="middle_gray">#A1A1A1</color>
+    <color name="gray">#D8d8d8</color>
     <color name="white">#FFFFFFFF</color>
 
     <color name="stove_orange">#FE4F00</color>
     <color name="stove_purple">#454F89</color>
+
+    <color name="flame_blue">#0884f6</color>
+    <color name="flame_sky_blue">#B0D9FF</color>
+
+
+
 </resources>

@@ -3,7 +3,34 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_navigation"
-    app:startDestination="@id/navigation_home">
+    app:startDestination="@id/navigation_chat_list">
+
+    <fragment
+        android:id="@+id/navigation_signin"
+        android:name="com.sgs.devcamp2.flametalk_android.ui.signin.SigninFragment"
+        android:label="Signin"
+        tools:layout="@layout/fragment_signin">
+        <action
+            android:id="@+id/action_signin_to_home"
+            app:destination="@id/navigation_home"
+            app:popUpTo="@id/navigation_home" />
+
+        <action
+            android:id="@+id/action_signin_to_signup"
+            app:destination="@id/navigation_signup"
+            app:popUpTo="@id/navigation_signup" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_signup"
+        android:name="com.sgs.devcamp2.flametalk_android.ui.signup.SignupFragment"
+        android:label="Signup"
+        tools:layout="@layout/fragment_signup">
+        <action
+            android:id="@+id/action_signup_to_signin"
+            app:destination="@id/navigation_signin"
+            app:popUpTo="@id/navigation_signin" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_home"
@@ -45,5 +72,38 @@
             app:destination="@id/navigation_post"
             app:popUpTo="@id/navigation_post" />
     </fragment>
+
+
+    <fragment
+        android:id="@+id/navigation_chat_list"
+        android:name="com.sgs.devcamp2.flametalk_android.ui.chatlist.ChatListFragment"
+        android:label="Chatlist"
+        tools:layout="@layout/fragment_chat_list">
+        <action
+            android:id="@+id/action_navigation_chat_to_chatRoomFragment"
+            app:destination="@id/navigation_chat_room" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_oauth"
+        android:name="com.sgs.devcamp2.flametalk_android.ui.oauth.OAuthFragment"
+        android:label="OAuth"
+        tools:layout="@layout/fragment_o_auth"
+        >
+        <action
+            android:id="@+id/action_chat_to_post"
+            app:destination="@id/navigation_chat_list"
+            app:popUpTo="@id/navigation_chat_list"/>
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_chat_room"
+        android:name="com.sgs.devcamp2.flametalk_android.ui.chatroom.ChatRoomFragment"
+        android:label="fragment_chat_room"
+        tools:layout="@layout/fragment_chat_room" >
+        <action
+            android:id="@+id/action_chatRoomFragment_to_navigation_oauth"
+            app:destination="@id/navigation_oauth" />
+    </fragment>
+
 
 </navigation>

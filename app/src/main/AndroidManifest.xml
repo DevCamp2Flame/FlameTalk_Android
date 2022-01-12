@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".HiltActivity"
         android:allowBackup="true"
         android:name=".di.FlameTalkApp"
         android:icon="@mipmap/ic_launcher"
@@ -14,6 +15,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FlameTalk_Android">
+
+
         <activity
             android:name=".ui.MainActivity"
             android:exported="true"

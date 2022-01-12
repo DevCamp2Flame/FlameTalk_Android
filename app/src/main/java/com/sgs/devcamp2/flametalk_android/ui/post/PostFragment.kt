@@ -11,7 +11,6 @@ import com.sgs.devcamp2.flametalk_android.ui.home.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-
 @AndroidEntryPoint
 @ExperimentalCoroutinesApi
 class PostFragment : Fragment() {
@@ -23,7 +22,7 @@ class PostFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentPostBinding.inflate(inflater, container,false)
+        binding = FragmentPostBinding.inflate(inflater, container, false)
         initUI()
         return binding.root
     }

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/item_chat_room">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_chat_room_text_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        >
+
+        <TextView
+            android:id="@+id/tv_chat_room_user_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="2"
+            android:textColor="@color/flame_blue"
+            android:textSize="7dp"
+            app:layout_constraintBottom_toTopOf="@id/tv_chat_list_date"
+            android:layout_marginBottom="2dp"
+            android:layout_marginRight="2dp"
+            app:layout_constraintEnd_toStartOf="@id/layout_chat_room_message_space"
+            />
+
+
+        <TextView
+            android:id="@+id/tv_chat_list_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            tools:text="오전 09시 30분"
+            android:textSize="10dp"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/layout_chat_room_message_space"
+            android:layout_marginEnd="2dp"
+            />
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_chat_room_message_space"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            >
+            <TextView
+                android:id="@+id/tv_chat_room_message"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/bg_chat_room_right_item"
+                android:maxWidth="200dp"
+                tools:text="가나다라마바사아가나다라마바사아가나다라마바사아가나다라마바사아가나다라마바사아"
+                android:singleLine="false"
+                android:textColor="@color/white"
+                android:textSize="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+
+                />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
