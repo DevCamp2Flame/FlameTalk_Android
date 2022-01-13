@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/navigation_home"
-        android:icon="@drawable/main_navi_home"
-        android:title="Home"/>
-    <item android:id="@+id/navigation_post"
-        android:icon="@drawable/main_navi_post"
-        android:title="Post"/>
-    <item android:id="@+id/navigation_profile"
-        android:icon="@drawable/main_navi_profile"
-        android:title="Profile"/>
+    <item android:id="@+id/navigation_friend"
+        android:icon="@drawable/main_navi_friend"
+        android:title="Friend"/>
+    <item android:id="@+id/navigation_chat_list"
+        android:icon="@drawable/main_navi_chat_room"
+        android:title="Room"/>
+    <item android:id="@+id/navigation_setting"
+        android:icon="@drawable/main_navi_set"
+        android:title="Setting"/>
 </menu>
