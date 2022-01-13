@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_navigation"
-    app:startDestination="@id/navigation_chat_list">
+    app:startDestination="@id/navigation_friend">
 
     <fragment
         android:id="@+id/navigation_signin"
@@ -11,9 +11,9 @@
         android:label="Signin"
         tools:layout="@layout/fragment_signin">
         <action
-            android:id="@+id/action_signin_to_home"
-            app:destination="@id/navigation_home"
-            app:popUpTo="@id/navigation_home" />
+            android:id="@+id/action_signin_to_friend"
+            app:destination="@id/navigation_friend"
+            app:popUpTo="@id/navigation_friend" />
 
         <action
             android:id="@+id/action_signin_to_signup"
@@ -33,56 +33,39 @@
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_home"
-        android:name="com.sgs.devcamp2.flametalk_android.ui.home.HomeFragment"
-        android:label="Home"
-        tools:layout="@layout/fragment_home">
+        android:id="@+id/navigation_friend"
+        android:name="com.sgs.devcamp2.flametalk_android.ui.friend.FriendFragment"
+        android:label="Friend"
+        tools:layout="@layout/fragment_friend">
         <action
-            android:id="@+id/action_home_to_profile"
-            app:destination="@id/navigation_profile"
-            app:popUpTo="@id/navigation_profile" />
+            android:id="@+id/action_friend_to_setting"
+            app:destination="@id/navigation_setting"
+            app:popUpTo="@id/navigation_setting" />
         <action
-            android:id="@+id/action_home_to_post"
-            app:destination="@id/navigation_post"
-            app:popUpTo="@id/navigation_post" />
+            android:id="@+id/action_friend_to_chat_list"
+            app:destination="@id/navigation_chat_list"
+            app:popUpTo="@id/navigation_chat_list" />
     </fragment>
 
-    <fragment
-        android:id="@+id/navigation_post"
-        android:name="com.sgs.devcamp2.flametalk_android.ui.post.PostFragment"
-        android:label="Post"
-        tools:layout="@layout/fragment_post">
-        <action
-            android:id="@+id/action_post_to_profile"
-            app:destination="@id/navigation_profile"
-            app:popUpTo="@id/navigation_profile" />
-        <action
-            android:id="@+id/action_post_to_home"
-            app:destination="@+id/navigation_feed"
-            app:popUpTo="@id/navigation_feed" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/navigation_profile"
-        android:name="com.sgs.devcamp2.flametalk_android.ui.profile.ProfileFragment"
-        android:label="Profile"
-        tools:layout="@layout/fragment_profile">
-        <action
-            android:id="@+id/action_profile_to_post"
-            app:destination="@id/navigation_post"
-            app:popUpTo="@id/navigation_post" />
-    </fragment>
-
-
+<!--    채팅방 리스트-->
     <fragment
         android:id="@+id/navigation_chat_list"
         android:name="com.sgs.devcamp2.flametalk_android.ui.chatlist.ChatListFragment"
-        android:label="Chatlist"
+        android:label="Chat list"
         tools:layout="@layout/fragment_chat_list">
         <action
             android:id="@+id/action_navigation_chat_to_chatRoomFragment"
             app:destination="@id/navigation_chat_room" />
     </fragment>
+
+    <fragment
+        android:id="@+id/navigation_setting"
+        android:name="com.sgs.devcamp2.flametalk_android.ui.setting.SettingFragment"
+        android:label="Setting"
+        tools:layout="@layout/fragment_setting">
+    </fragment>
+
+
 
     <fragment
         android:id="@+id/navigation_oauth"

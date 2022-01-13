@@ -26,7 +26,7 @@
         android:layout_marginEnd="0dp"
         android:background="#FFFFFF"
         app:itemTextColor="@drawable/txt_navigation"
-        app:labelVisibilityMode="labeled"
+        app:labelVisibilityMode="unlabeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

@@ -2,8 +2,8 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:state_checked="true"
-        android:drawable="@drawable/icon_navi_home_orange"/>
+        android:drawable="@drawable/ic_more_blue_24"/>
     <item
         android:state_checked="false"
-        android:drawable="@drawable/icon_navi_home_black"/>
+        android:drawable="@drawable/ic_more_black_24"/>
 </selector>

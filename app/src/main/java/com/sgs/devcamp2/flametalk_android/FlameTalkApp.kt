@@ -1,4 +1,4 @@
-package com.sgs.devcamp2.flametalk_android.di
+package com.sgs.devcamp2.flametalk_android
 
 import android.app.Application
 import android.content.Context
