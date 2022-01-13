@@ -1,16 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:text="Friend Fragment"
-        android:textSize="30sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+    <include
+        android:id="@+id/ab_friend"
+        layout="@layout/ab_main"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/ab_friend">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <!--메인 유저 프로필-->
+            <include
+                android:id="@+id/l_friend_main_user"
+                layout="@layout/item_friend_preview"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray"
+                app:layout_constraintTop_toBottomOf="@+id/l_friend_main_user" />
+
+            <!--            멀티프로필-->
+
+            <TextView
+                android:id="@+id/tv_friend_multi_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="내 멀티 프로필 "
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/l_friend_main_user" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_friend_multi_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/item_friend_add_profile"
+                tools:itemCount="3"
+                tools:listitem="@layout/item_vertical_profile" />
+
+            <include
+                android:id="@+id/item_friend_add_profile"
+                layout="@layout/item_vertical_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@+id/rv_friend_multi_profile"
+                app:layout_constraintTop_toBottomOf="@+id/tv_friend_multi_profile" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray"
+                app:layout_constraintTop_toBottomOf="@+id/item_friend_add_profile" />
+
+
+            <!--            생일인 친구-->
+
+            <TextView
+                android:id="@+id/tv_friend_birthday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="생일인 친구 "
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/item_friend_add_profile" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_friend_birthday"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintTop_toBottomOf="@+id/tv_friend_birthday"
+                tools:itemCount="3"
+                tools:listitem="@layout/item_friend_preview" />
+
+            <include
+                android:id="@+id/item_friend_more_birthday"
+                layout="@layout/item_friend_preview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/rv_friend_birthday" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray"
+                app:layout_constraintTop_toBottomOf="@+id/item_friend_more_birthday" />
+
+
+            <!--            연락처 친구 목록 -->
+
+            <TextView
+                android:id="@+id/tv_friend_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="친구 "
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/item_friend_more_birthday" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintTop_toBottomOf="@id/tv_friend_count"
+                tools:listitem="@layout/item_friend_preview" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
