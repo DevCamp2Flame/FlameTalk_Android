@@ -66,14 +66,14 @@
             android:textColor="@color/flame_blue"
             android:textSize="7dp"
             app:layout_constraintStart_toEndOf="@id/layout_chat_room_message_space"
-            app:layout_constraintBottom_toTopOf="@id/tv_chat_list_date"
+            app:layout_constraintBottom_toTopOf="@id/tv_chat_room_list_date"
             android:layout_marginBottom="2dp"
             android:layout_marginStart="2dp"
             />
 
 
         <TextView
-            android:id="@+id/tv_chat_list_date"
+            android:id="@+id/tv_chat_room_list_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"

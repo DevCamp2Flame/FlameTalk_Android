@@ -1,4 +1,4 @@
-package com.sgs.devcamp2.flametalk_android.ui.chatlist
+package com.sgs.devcamp2.flametalk_android.ui.chatroomlist
 
 import android.app.AlertDialog
 import android.content.Context
@@ -15,22 +15,23 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sgs.devcamp2.flametalk_android.R
-import com.sgs.devcamp2.flametalk_android.databinding.FragmentChatListBinding
+import com.sgs.devcamp2.flametalk_android.databinding.FragmentChatRoomListBinding
 import com.sgs.devcamp2.flametalk_android.domain.model.response.chatlist.ChatList
-import com.sgs.devcamp2.flametalk_android.ui.chatlist.topsheet.TopSheetFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * 채팅방 리스트 display fragment
+ *
  */
+
 @AndroidEntryPoint
-class ChatListFragment : Fragment(), ChatListAdapter.ClickCallBack, View.OnClickListener {
+class ChatRoomListFragment : Fragment(), ChatRoomListAdapter.ClickCallBack, View.OnClickListener {
 
     val TAG: String = "로그"
 
-    lateinit var binding: FragmentChatListBinding
-    private val model by viewModels<ChatListViewModel>()
-    lateinit var adapter: ChatListAdapter
+    lateinit var binding: FragmentChatRoomListBinding
+    private val model by viewModels<ChatRoomListViewModel>()
+    lateinit var adapterRoom: ChatRoomListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,7 +39,7 @@ class ChatListFragment : Fragment(), ChatListAdapter.ClickCallBack, View.OnClick
         savedInstanceState: Bundle?
     ): View? {
 
-        binding = FragmentChatListBinding.inflate(inflater, container, false)
+        binding = FragmentChatRoomListBinding.inflate(inflater, container, false)
         initUI(this.requireContext())
 
         /**
@@ -49,7 +50,7 @@ class ChatListFragment : Fragment(), ChatListAdapter.ClickCallBack, View.OnClick
             this.requireActivity(),
             Observer {
 
-                adapter.submitList(it)
+                adapterRoom.submitList(it)
             }
         )
         return binding.root
@@ -57,10 +58,10 @@ class ChatListFragment : Fragment(), ChatListAdapter.ClickCallBack, View.OnClick
 
     private fun initUI(context: Context) {
         binding.rvChatListChattingRoom.layoutManager = LinearLayoutManager(context)
-        adapter = ChatListAdapter(callback = this)
-        binding.rvChatListChattingRoom.adapter = adapter
+        adapterRoom = ChatRoomListAdapter(callback = this)
+        binding.rvChatListChattingRoom.adapter = adapterRoom
 
-        binding.ivChatListChat.setOnClickListener(this)
+        binding.ivChatRoomListChat.setOnClickListener(this)
     }
 
     override fun onItemLongClicked(position: Int, chatList: ChatList) {
@@ -98,9 +99,9 @@ class ChatListFragment : Fragment(), ChatListAdapter.ClickCallBack, View.OnClick
 
     override fun onClick(view: View?) {
         when (view) {
-            binding.ivChatListChat ->
+            binding.ivChatRoomListChat ->
                 {
-                    TopSheetFragment().show(childFragmentManager, "topsheet")
+                    ChatRoomTopSheetFragment().show(childFragmentManager, "topsheet")
                 }
         }
     }

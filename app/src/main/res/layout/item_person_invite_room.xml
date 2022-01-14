@@ -1,26 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="80dp"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/item_chat_room_list">
+    android:id="@+id/layout_invite_room_item"
+    android:layout_width="match_parent"
+    android:layout_height="80dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layout_chat_room_list_image_container"
+        android:id="@+id/layout_invite_room_image_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
+        android:background="@drawable/bg_chat_list_round"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:cardElevation="0dp"
-        app:cardCornerRadius="20dp"
-        android:background="@drawable/bg_chat_list_round"
-        >
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/iv_chat_room_list_user_img"
+            android:id="@+id/iv_invite_room_image"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:padding="4dp"
@@ -31,65 +30,43 @@
             app:layout_constraintTop_toTopOf="parent"
 
 
-
             />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layout_chat_room_list_data_container"
+        android:id="@+id/layout_invite_room_data_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/layout_chat_room_list_image_container"
+        app:layout_constraintStart_toEndOf="@id/layout_invite_room_image_container"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/tv_chat_room_list_user_name"
+            android:id="@+id/tv_invite_room_user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="김현국"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="김현국" />
 
-        <TextView
-            android:id="@+id/tv_chat_room_list_user_count"
+        <ImageView
+            android:id="@+id/iv_invite_room_radio_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            tools:text="2"
-            app:layout_constraintStart_toEndOf="@id/tv_chat_room_list_user_name"
-
+            android:src="@drawable/ic_radio_button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/iv_chat_room_list_alarm"
-            android:layout_width="15dp"
-            android:layout_height="20dp"
-            android:layout_marginStart="10dp"
-            android:src="@drawable/ic_alarm"
-            app:layout_constraintStart_toEndOf="@id/tv_chat_room_list_user_count"
-            app:layout_constraintTop_toTopOf="parent"/>
-
-        <TextView
-            android:id="@+id/tv_chat_room_list_message"
+            android:id="@+id/iv_invite_room_radio_button_fill"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            tools:text="ㅁㄴㅇㄹㅁㄴㅇㄹㅁㄴㅇ"
-            android:textSize="10dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_chat_room_list_user_name" />
-
-
-        <TextView
-            android:id="@+id/tv_chat_room_list_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            tools:text="오전 09시 30분"
+            android:src="@drawable/ic_radio_button_fill"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

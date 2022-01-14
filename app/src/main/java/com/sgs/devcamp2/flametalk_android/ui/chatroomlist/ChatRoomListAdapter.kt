@@ -1,4 +1,4 @@
-package com.sgs.devcamp2.flametalk_android.ui.chatlist
+package com.sgs.devcamp2.flametalk_android.ui.chatroomlist
 
 import android.view.LayoutInflater
 import android.view.View
@@ -16,7 +16,7 @@ import com.sgs.devcamp2.flametalk_android.domain.model.response.chatlist.ChatLis
  *
  *
  */
-class ChatListAdapter constructor(
+class ChatRoomListAdapter constructor(
     callback: ClickCallBack
 ) : ListAdapter<ChatList, RecyclerView.ViewHolder>(diffUtil) {
 // 클래스에서만 한번만 쓸려고하는 것
@@ -119,24 +119,24 @@ class ChatListAdapter constructor(
     inner class OneViewHolder(val binding: ItemPersonOneChatListBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(chatList: ChatList) {
-            binding.tvChatListUserName.text = chatList.title
+            binding.tvChatRoomListUserName.text = chatList.title
         }
     }
 
     inner class TwoViewHolder(val binding: ItemPersonTwoChatListBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(chatList: ChatList) {
-            binding.tvChatListUserName.text = chatList.title
+            binding.tvChatRoomListUserName.text = chatList.title
         }
     }
     inner class ThreeViewHolder(val binding: ItemPersonThreeChatListBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(chatList: ChatList) {
-            binding.tvChatListUserName.text = chatList.title
+            binding.tvChatRoomListUserName.text = chatList.title
         }
     }
     inner class FourViewHolder(val binding: ItemPersonFourChatListBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(chatList: ChatList) {
-            binding.tvChatListUserName.text = chatList.title
+            binding.tvChatRoomListUserName.text = chatList.title
         }
     }
 
@@ -147,7 +147,7 @@ class ChatListAdapter constructor(
 
         override fun onLongClick(view: View?): Boolean {
             when (view?.id) {
-                R.id.item_chat_list -> {
+                R.id.item_chat_room_list -> {
                     clickCallBack?.onItemLongClicked(position, chatList)
                 }
             }
@@ -158,7 +158,7 @@ class ChatListAdapter constructor(
     inner class ItemShortClickListener(var position: Int, var chatList: ChatList) : View.OnClickListener {
         override fun onClick(view: View?) {
             when (view?.id) {
-                R.id.item_chat_list -> {
+                R.id.item_chat_room_list -> {
                     clickCallBack?.onItemShortClicked(position, chatList)
                 }
             }
