@@ -1,4 +1,4 @@
-package com.sgs.devcamp2.flametalk_android.data.user
+package com.sgs.devcamp2.flametalk_android.domain.model
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
