@@ -1,6 +1,5 @@
 package com.sgs.devcamp2.flametalk_android.ui.inviteroom
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -25,7 +24,8 @@ class InviteRoomViewModel @Inject constructor() : ViewModel() {
     private val markList = mutableListOf<Friend>()
     private var _friendList = MutableLiveData<MutableList<Friend>>()
     private val list = mutableListOf<Friend>()
-    private var inviteFriendMap: HashMap<Int, String>? = HashMap()
+    private var inviteFriendMap: HashMap<Int, Int>? = HashMap()
+
     private var _inviteFriendList = MutableLiveData<MutableList<Friend>>()
     private val inviteList = mutableListOf<Friend>()
     val friendMarkList: LiveData<MutableList<Friend>>
@@ -37,14 +37,6 @@ class InviteRoomViewModel @Inject constructor() : ViewModel() {
 
     init {
         viewModelScope.launch {
-            /*initFriendList().collect {
-                list.add(it)
-                _friendList.value = list
-            }
-            initMarkFriendList().collect {
-                markList.add(it)
-                _friendMarkList.value = markList
-            }*/
 
             initFriendList().collect {
                 if (it.mark == 1) {
@@ -58,22 +50,6 @@ class InviteRoomViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-/*
-
-    fun initFriendList(): Flow<Friend> = flow {
-        for (i in 5 until 20) {
-            val friend = Friend(i, "$i", "더미$i", false)
-            emit(friend)
-        }
-    }
-
-    fun initMarkFriendList(): Flow<Friend> = flow {
-        for (i in 0 until 4) {
-            val friend = Friend(i, "$i", "더미$i", false)
-            emit(friend)
-        }
-    }*/
-
     fun initFriendList(): Flow<Friend> = flow {
         for (i in 0 until 20) {
             if (i < 2) {
@@ -85,21 +61,57 @@ class InviteRoomViewModel @Inject constructor() : ViewModel() {
             }
         }
     }
+    /**
+     * [position]  inviteRoomAdapter와 inviteRoomMarkAdatper에서의 item position
+     */
+    fun addMarkFriendToMap(friend: Friend, position: Int) {
 
-    fun addMarkFriendToMap(friend: Friend) {
-        // map에 선택한 인원들을 넣는다.
         if (inviteFriendMap?.containsKey(friend.id) == true) {
+
             inviteFriendMap?.remove(friend.id)
             inviteList.remove(friend)
-            Log.d(TAG, "InviteRoomViewModel - addMarkFriendToMap() inviteList : $inviteList")
+            _inviteFriendList.value = inviteList
+            if (friend.mark == 1) {
+                markList[position].selected = 0
+                _friendMarkList.value = markList
+            } else {
+
+                list[position].selected = 0
+                _friendList.value = list
+            }
         } else {
 
-            inviteFriendMap?.put(friend.id, friend.nickname)
-            inviteList.add(friend)
-            Log.d(TAG, "InviteRoomViewModel - addMarkFriendToMap() inviteList : $inviteList")
+            inviteFriendMap?.put(friend.id, position)
+            if (friend.mark == 1) {
+                markList[position].selected = 1
+                _friendMarkList.value = markList
+                inviteList.add(friend)
+
+                _inviteFriendList.value = inviteList
+            } else {
+                list[position].selected = 1
+                _friendList.value = list
+                inviteList.add(friend)
+                _inviteFriendList.value = inviteList
+            }
         }
+    }
+    /**
+     * [position] inviteFriendList에서의 position
+     */
+
+    fun removeSelectedItem(friend: Friend, position: Int) {
+        var removePosition = inviteFriendMap?.get(friend.id)
+        inviteFriendMap?.remove(friend.id)
+        inviteList.removeAt(position)
+
         _inviteFriendList.value = inviteList
-        Log.d(TAG, "InviteRoomViewModel - addMarkFriendToMap() inviteList : $inviteList")
+        if (friend.mark == 1) {
+            markList[removePosition!!].selected = 0
+            _friendMarkList.value = markList
+        } else {
+            list[removePosition!!].selected = 0
+            _friendList.value = list
+        }
     }
 }
-// 라이브 데이터 객체.

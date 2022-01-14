@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout.HORIZONTAL
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -18,17 +17,16 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class InviteRoomFragment :
     Fragment(),
-    InviteRoomMarkAdapter.ItemClickCallBack,
     InviteRoomAdapter.ItemClickCallBack,
-    InviteRoomSelectedAdapter.ItemClickCallBack,
-    Adapter.ClickCallBack,
+    InviteRoomMarkAdapter.ItemClickCallBack,
+    InviteRoomSelectedAdapter.ItemSelectedClickCallBack,
+
     View.OnClickListener {
     lateinit var binding: FragmentInviteRoomBinding
-//    lateinit var roomMarkAdapter: InviteRoomMarkAdapter
-//    lateinit var roomAdapter: InviteRoomAdapter
-//    lateinit var inviteRoomSelectedAdapter: InviteRoomSelectedAdapter
+    lateinit var roomAdapter: InviteRoomAdapter
+    lateinit var roomMarkAdapter: InviteRoomMarkAdapter
+    lateinit var inviteRoomSelectedAdapter: InviteRoomSelectedAdapter
 
-    lateinit var adapter: Adapter
     private val model by viewModels<InviteRoomViewModel>()
 
     val TAG: String = "로그"
@@ -42,63 +40,62 @@ class InviteRoomFragment :
 
         initUI(this.requireContext())
 
-//        model.friendMarkList.observe(
-//            this.requireActivity(),
-//            Observer {
-//                roomMarkAdapter.submitList(it)
-//            }
-//        )
-//
         model.friendList.observe(
             this.requireActivity(),
             Observer {
-                adapter.submitList(it)
-                Log.d(TAG,"InviteRoomFragment - submit() called")
+                Log.d(TAG, "InviteRoomFragment - friendList :${model.friendList.value}")
+                roomAdapter.submitList(it.toMutableList())
+                binding.rvInviteRoom.adapter = roomAdapter
             }
         )
-//
-//        model.inviteFriendList.observe(
-//            this.requireActivity(),
-//            Observer {
-//                if (it.size != 0) {
-//                    binding.rvInviteRoomSelected.visibility = View.VISIBLE
-//                    Log.d(TAG, "InviteRoomFragment - MutableList<Friend> $it")
-//                    inviteRoomSelectedAdapter.submitList(it?.toMutableList())
-//                } else {
-//                    binding.rvInviteRoomSelected.visibility = View.GONE
-//                }
-//            }
-//        )
+
+        model.friendMarkList.observe(
+            this.requireActivity(),
+            {
+                Log.d(TAG, "InviteRoomFragment - friendMarkList :${model.friendMarkList.value}")
+                roomMarkAdapter.submitList(it.toMutableList())
+                binding.rvInviteRoomMark.adapter = roomMarkAdapter
+            }
+        )
+
+        model.inviteFriendList.observe(
+            this.requireActivity(),
+            {
+                if (it.size != 0) {
+                    binding.rvInviteRoomSelected.visibility = View.VISIBLE
+                    inviteRoomSelectedAdapter.submitList(it)
+                    binding.rvInviteRoomSelected.adapter = inviteRoomSelectedAdapter
+                } else {
+                    binding.rvInviteRoomSelected.visibility = View.GONE
+                }
+            }
+        )
 
         return binding.root
     }
 
     fun initUI(context: Context) {
-        binding.rvInviteRoomMark.layoutManager = LinearLayoutManager(context)
         binding.rvInviteRoom.layoutManager = LinearLayoutManager(context)
+        binding.rvInviteRoomMark.layoutManager = LinearLayoutManager(context)
+
         binding.rvInviteRoomSelected.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
-//        roomMarkAdapter = InviteRoomMarkAdapter(markCallback = this)
-//        roomAdapter = InviteRoomAdapter(callback = this)
-//        inviteRoomSelectedAdapter = InviteRoomSelectedAdapter(selectedCallBack = this)
+        roomAdapter = InviteRoomAdapter(this)
+        roomMarkAdapter = InviteRoomMarkAdapter(this)
+        inviteRoomSelectedAdapter = InviteRoomSelectedAdapter(this)
 
-        adapter = Adapter(callback = this)
-
-//        binding.rvInviteRoomMark.adapter = roomMarkAdapter
-//        binding.rvInviteRoom.adapter = roomAdapter
-//        binding.rvInviteRoomSelected.adapter = inviteRoomSelectedAdapter
-
-        binding.rvInviteRoom.adapter = adapter
-
-        binding.rvInviteRoomMark.adapter = adapter
-
-        binding.rvInviteRoomSelected.adapter = adapter
+        binding.rvInviteRoom.adapter = roomAdapter
+        binding.rvInviteRoomMark.adapter = roomMarkAdapter
+        binding.rvInviteRoomSelected.adapter = inviteRoomSelectedAdapter
     }
 
-    override fun onItemClicked(friend: Friend) {
-        model.addMarkFriendToMap(friend)
+    override fun onItemClicked(friend: Friend, position: Int) {
+        model.addMarkFriendToMap(friend, position)
     }
 
+    override fun onItemSelectedClick(friend: Friend, position: Int) {
+        model.removeSelectedItem(friend, position)
+    }
     override fun onClick(view: View?) {
         when (view) {
             binding.tvInviteRoomSubmit -> {

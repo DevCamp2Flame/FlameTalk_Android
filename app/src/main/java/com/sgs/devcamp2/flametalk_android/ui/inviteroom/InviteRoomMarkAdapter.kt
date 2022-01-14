@@ -1,5 +1,6 @@
 package com.sgs.devcamp2.flametalk_android.ui.inviteroom
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +19,7 @@ class InviteRoomMarkAdapter constructor(
     markCallback: ItemClickCallBack
 ) : ListAdapter<Friend, RecyclerView.ViewHolder>(diffUtil) {
     interface ItemClickCallBack {
-        fun onItemClicked(friend: Friend)
+        fun onItemClicked(friend: Friend, position: Int)
     }
 
     var itemClickCallBack: ItemClickCallBack? = markCallback
@@ -27,11 +28,22 @@ class InviteRoomMarkAdapter constructor(
         val TAG: String = "로그"
         val diffUtil = object : DiffUtil.ItemCallback<Friend>() {
             override fun areItemsTheSame(oldItem: Friend, newItem: Friend): Boolean {
+
                 return oldItem.id == newItem.id
             }
 
             override fun areContentsTheSame(oldItem: Friend, newItem: Friend): Boolean {
-                return oldItem == newItem
+
+                if (oldItem == newItem) {
+                    Log.d(TAG, "oldItem - $oldItem ")
+                    Log.d(TAG, "newItem - $newItem ")
+                    Log.d(TAG, " areContentsTheSame true")
+                } else {
+                    Log.d(TAG, "oldItem - $oldItem ")
+                    Log.d(TAG, "newItem - $newItem ")
+                    Log.d(TAG, " areContentsTheSame false")
+                }
+                return oldItem.selected == newItem.selected
             }
         }
     }
@@ -43,48 +55,39 @@ class InviteRoomMarkAdapter constructor(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as PersonViewHolder).bind(getItem(position))
+        (holder as PersonViewHolder).bind(getItem(position), position)
     }
 
     inner class PersonViewHolder(val binding: ItemPersonInviteRoomBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(friend: Friend) {
+        fun bind(friend: Friend, position: Int) {
             binding.tvInviteRoomUserName.text = friend.nickname
+
+            if (friend.selected == 0) {
+                binding.ivInviteRoomRadioButtonFill.visibility = View.GONE
+                binding.ivInviteRoomRadioButton.visibility = View.VISIBLE
+            } else {
+                binding.ivInviteRoomRadioButtonFill.visibility = View.VISIBLE
+                binding.ivInviteRoomRadioButton.visibility = View.GONE
+            }
+
             binding.layoutInviteRoomItem.setOnClickListener(
                 ItemClickListener(
-                    friend, binding
+                    friend, binding, position
                 )
             )
         }
     }
-    /**
-     * change visiblity from radioButton
-     * if item touched filledRadiobutton set visible and radiobutton set visible gone
-     * else radiobutton set visible and filledRadiobutton set visible gone
-     *
-     */
+
     inner class ItemClickListener(
         var friend: Friend,
-        var binding: ItemPersonInviteRoomBinding
+        var binding: ItemPersonInviteRoomBinding,
+        var position: Int
     ) : View.OnClickListener {
         override fun onClick(view: View?) {
             when (view?.id) {
                 R.id.layout_invite_room_item -> {
-//                    if (friend.selected) {
-//                        this.binding.ivInviteRoomRadioButtonFill.visibility = View.GONE
-//                        this.binding.ivInviteRoomRadioButton.visibility = View.VISIBLE
-//                    } else {
-//                        this.binding.ivInviteRoomRadioButton.visibility = View.GONE
-//                        this.binding.ivInviteRoomRadioButtonFill.visibility = View.VISIBLE
-//                    }
-//                    if (this.binding.ivInviteRoomRadioButton.visibility == View.VISIBLE) {
-//                        this.binding.ivInviteRoomRadioButton.visibility = View.GONE
-//                        this.binding.ivInviteRoomRadioButtonFill.visibility = View.VISIBLE
-//                    } else {
-//                        this.binding.ivInviteRoomRadioButtonFill.visibility = View.GONE
-//                        this.binding.ivInviteRoomRadioButton.visibility = View.VISIBLE
-//                    }
-                    itemClickCallBack?.onItemClicked(friend)
+                    itemClickCallBack?.onItemClicked(friend, position)
                 }
             }
         }

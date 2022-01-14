@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.sgs.devcamp2.flametalk_android.R
-import com.sgs.devcamp2.flametalk_android.databinding.ItemPersonInviteRoomBinding
 import com.sgs.devcamp2.flametalk_android.databinding.ItemPersonInviteRoomSelectedBinding
 import com.sgs.devcamp2.flametalk_android.domain.model.response.friend.Friend
 
@@ -16,13 +15,13 @@ import com.sgs.devcamp2.flametalk_android.domain.model.response.friend.Friend
  * @created 2022/01/13
  */
 class InviteRoomSelectedAdapter constructor(
-    selectedCallBack: ItemClickCallBack
+    selectedCallBack: ItemSelectedClickCallBack
 ) : ListAdapter<Friend, RecyclerView.ViewHolder>(diffUtil) {
-    interface ItemClickCallBack {
-        fun onItemClicked(friend: Friend)
+    interface ItemSelectedClickCallBack {
+        fun onItemSelectedClick(friend: Friend, position: Int)
     }
 
-    var itemClickCallBack: ItemClickCallBack? = selectedCallBack
+    var itemClickCallBack: ItemSelectedClickCallBack? = selectedCallBack
 
     companion object {
         val TAG: String = "로그"
@@ -40,34 +39,30 @@ class InviteRoomSelectedAdapter constructor(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_person_invite_room_selected, parent, false)
-
-        val view2 = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_person_invite_room, parent, false)
-
         return SelectedPersonViewHolder(ItemPersonInviteRoomSelectedBinding.bind(view))
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as SelectedPersonViewHolder).bind(getItem(position))
+        (holder as SelectedPersonViewHolder).bind(getItem(position), position)
     }
 
     inner class SelectedPersonViewHolder(val binding: ItemPersonInviteRoomSelectedBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(friend: Friend) {
+        fun bind(friend: Friend, position: Int) {
             binding.tvInviteRoomSelectedUserName.text = friend.nickname
-            binding.layoutInviteRoomSelected.setOnClickListener(ItemClickListener(friend, binding))
+            binding.layoutInviteRoomSelected.setOnClickListener(ItemClickListener(friend, binding, position))
         }
     }
 
     inner class ItemClickListener(
         var friend: Friend,
-        var binding: ItemPersonInviteRoomSelectedBinding
+        var binding: ItemPersonInviteRoomSelectedBinding,
+        var position: Int,
     ) : View.OnClickListener {
         override fun onClick(view: View?) {
             when (view?.id) {
                 R.id.layout_invite_room_selected -> {
-
-                    itemClickCallBack?.onItemClicked(friend)
+                    itemClickCallBack?.onItemSelectedClick(friend, position)
                 }
             }
         }
