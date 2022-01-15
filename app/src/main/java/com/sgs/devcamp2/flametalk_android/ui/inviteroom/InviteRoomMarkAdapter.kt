@@ -1,6 +1,5 @@
 package com.sgs.devcamp2.flametalk_android.ui.inviteroom
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,15 +33,6 @@ class InviteRoomMarkAdapter constructor(
 
             override fun areContentsTheSame(oldItem: Friend, newItem: Friend): Boolean {
 
-                if (oldItem == newItem) {
-                    Log.d(TAG, "oldItem - $oldItem ")
-                    Log.d(TAG, "newItem - $newItem ")
-                    Log.d(TAG, " areContentsTheSame true")
-                } else {
-                    Log.d(TAG, "oldItem - $oldItem ")
-                    Log.d(TAG, "newItem - $newItem ")
-                    Log.d(TAG, " areContentsTheSame false")
-                }
                 return oldItem.selected == newItem.selected
             }
         }
@@ -92,4 +82,5 @@ class InviteRoomMarkAdapter constructor(
             }
         }
     }
+
 }

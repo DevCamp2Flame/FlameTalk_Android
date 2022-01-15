@@ -1,6 +1,5 @@
 package com.sgs.devcamp2.flametalk_android.ui.inviteroom
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,21 +24,18 @@ class InviteRoomAdapter(callback: InviteRoomFragment) :
 
     companion object {
         val TAG: String = "로그"
-
         val diffUtil = object : DiffUtil.ItemCallback<Friend>() {
             override fun areItemsTheSame(oldItem: Friend, newItem: Friend): Boolean {
                 return oldItem.id == newItem.id
             }
 
             override fun areContentsTheSame(oldItem: Friend, newItem: Friend): Boolean {
-                Log.d(TAG, "oldItem : $oldItem - newItem : $newItem  called")
-                return oldItem == newItem
+                return oldItem.selected == newItem.selected
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_person_invite_room, parent, false)
         return PersonViewHolder(ItemPersonInviteRoomBinding.bind(view))
@@ -55,7 +51,6 @@ class InviteRoomAdapter(callback: InviteRoomFragment) :
             binding.tvInviteRoomUserName.text = friend.nickname
 
             if (friend.selected == 0) {
-
                 binding.ivInviteRoomRadioButtonFill.visibility = View.GONE
                 binding.ivInviteRoomRadioButton.visibility = View.VISIBLE
             } else {

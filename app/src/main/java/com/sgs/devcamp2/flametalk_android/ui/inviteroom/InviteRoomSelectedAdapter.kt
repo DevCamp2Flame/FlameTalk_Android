@@ -1,5 +1,6 @@
 package com.sgs.devcamp2.flametalk_android.ui.inviteroom
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +19,7 @@ class InviteRoomSelectedAdapter constructor(
     selectedCallBack: ItemSelectedClickCallBack
 ) : ListAdapter<Friend, RecyclerView.ViewHolder>(diffUtil) {
     interface ItemSelectedClickCallBack {
-        fun onItemSelectedClick(friend: Friend, position: Int)
+        fun onItemSelectedClick(friend: Friend)
     }
 
     var itemClickCallBack: ItemSelectedClickCallBack? = selectedCallBack
@@ -31,7 +32,7 @@ class InviteRoomSelectedAdapter constructor(
             }
 
             override fun areContentsTheSame(oldItem: Friend, newItem: Friend): Boolean {
-                return oldItem == newItem
+                return oldItem.selected == newItem.selected
             }
         }
     }
@@ -43,26 +44,25 @@ class InviteRoomSelectedAdapter constructor(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as SelectedPersonViewHolder).bind(getItem(position), position)
+        (holder as SelectedPersonViewHolder).bind(getItem(position))
     }
 
     inner class SelectedPersonViewHolder(val binding: ItemPersonInviteRoomSelectedBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(friend: Friend, position: Int) {
+        fun bind(friend: Friend) {
             binding.tvInviteRoomSelectedUserName.text = friend.nickname
-            binding.layoutInviteRoomSelected.setOnClickListener(ItemClickListener(friend, binding, position))
+            binding.layoutInviteRoomSelected.setOnClickListener(ItemClickListener(friend, binding))
         }
     }
 
     inner class ItemClickListener(
         var friend: Friend,
         var binding: ItemPersonInviteRoomSelectedBinding,
-        var position: Int,
     ) : View.OnClickListener {
         override fun onClick(view: View?) {
             when (view?.id) {
                 R.id.layout_invite_room_selected -> {
-                    itemClickCallBack?.onItemSelectedClick(friend, position)
+                    itemClickCallBack?.onItemSelectedClick(friend)
                 }
             }
         }

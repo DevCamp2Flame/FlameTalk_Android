@@ -2,7 +2,6 @@ package com.sgs.devcamp2.flametalk_android.ui.inviteroom
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -43,18 +42,14 @@ class InviteRoomFragment :
         model.friendList.observe(
             this.requireActivity(),
             Observer {
-                Log.d(TAG, "InviteRoomFragment - friendList :${model.friendList.value}")
-                roomAdapter.submitList(it.toMutableList())
-                binding.rvInviteRoom.adapter = roomAdapter
+                roomAdapter.submitList(it)
             }
         )
 
         model.friendMarkList.observe(
             this.requireActivity(),
             {
-                Log.d(TAG, "InviteRoomFragment - friendMarkList :${model.friendMarkList.value}")
-                roomMarkAdapter.submitList(it.toMutableList())
-                binding.rvInviteRoomMark.adapter = roomMarkAdapter
+                roomMarkAdapter.submitList(it)
             }
         )
 
@@ -64,7 +59,6 @@ class InviteRoomFragment :
                 if (it.size != 0) {
                     binding.rvInviteRoomSelected.visibility = View.VISIBLE
                     inviteRoomSelectedAdapter.submitList(it)
-                    binding.rvInviteRoomSelected.adapter = inviteRoomSelectedAdapter
                 } else {
                     binding.rvInviteRoomSelected.visibility = View.GONE
                 }
@@ -90,11 +84,12 @@ class InviteRoomFragment :
     }
 
     override fun onItemClicked(friend: Friend, position: Int) {
+
         model.addMarkFriendToMap(friend, position)
     }
 
-    override fun onItemSelectedClick(friend: Friend, position: Int) {
-        model.removeSelectedItem(friend, position)
+    override fun onItemSelectedClick(friend: Friend) {
+        model.removeSelectedItem(friend)
     }
     override fun onClick(view: View?) {
         when (view) {
