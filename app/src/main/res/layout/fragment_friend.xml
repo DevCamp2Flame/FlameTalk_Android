@@ -15,6 +15,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:overScrollMode="never"
         app:layout_constraintTop_toBottomOf="@+id/ab_friend">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -36,7 +37,6 @@
                 app:layout_constraintTop_toBottomOf="@+id/l_friend_main_user" />
 
             <!--            멀티프로필-->
-
             <TextView
                 android:id="@+id/tv_friend_multi_profile"
                 android:layout_width="wrap_content"
@@ -46,30 +46,46 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/l_friend_main_user" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_friend_multi_profile"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            <HorizontalScrollView
+                android:id="@+id/nsv_friend_multi_profile"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/item_friend_add_profile"
-                tools:itemCount="3"
-                tools:listitem="@layout/item_vertical_profile" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_friend_multi_profile">
 
-            <include
-                android:id="@+id/item_friend_add_profile"
-                layout="@layout/item_vertical_profile"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toEndOf="@+id/rv_friend_multi_profile"
-                app:layout_constraintTop_toBottomOf="@+id/tv_friend_multi_profile" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_friend_multi_profile"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:overScrollMode="never"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:itemCount="7"
+                        tools:listitem="@layout/item_vertical_profile" />
+
+                    <include
+                        android:id="@+id/item_friend_add_profile"
+                        layout="@layout/item_vertical_profile"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toEndOf="@id/rv_friend_multi_profile" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </HorizontalScrollView>
+
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/gray"
-                app:layout_constraintTop_toBottomOf="@+id/item_friend_add_profile" />
+                app:layout_constraintTop_toBottomOf="@+id/nsv_friend_multi_profile" />
 
 
             <!--            생일인 친구-->
@@ -81,13 +97,14 @@
                 android:layout_margin="10dp"
                 android:text="생일인 친구 "
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/item_friend_add_profile" />
+                app:layout_constraintTop_toBottomOf="@+id/nsv_friend_multi_profile" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_friend_birthday"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:overScrollMode="never"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintTop_toBottomOf="@+id/tv_friend_birthday"
                 tools:itemCount="3"
@@ -119,8 +136,10 @@
                 app:layout_constraintTop_toBottomOf="@+id/item_friend_more_birthday" />
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_friend"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:overScrollMode="never"
                 app:layout_constraintTop_toBottomOf="@id/tv_friend_count"
                 tools:listitem="@layout/item_friend_preview" />
         </androidx.constraintlayout.widget.ConstraintLayout>
