@@ -49,10 +49,10 @@
 
 <!--    채팅방 리스트-->
     <fragment
-        android:id="@+id/navigation_chat_list"
-        android:name="com.sgs.devcamp2.flametalk_android.ui.chatlist.ChatListFragment"
-        android:label="Chat list"
-        tools:layout="@layout/fragment_chat_list">
+        android:id="@+id/navigation_chat_room_list"
+        android:name="com.sgs.devcamp2.flametalk_android.ui.chatroomlist.ChatRoomListFragment"
+        android:label="ChatRoomlist"
+        tools:layout="@layout/fragment_chat_room_list">
         <action
             android:id="@+id/action_navigation_chat_to_chatRoomFragment"
             app:destination="@id/navigation_chat_room" />
@@ -75,8 +75,8 @@
         >
         <action
             android:id="@+id/action_chat_to_post"
-            app:destination="@id/navigation_chat_list"
-            app:popUpTo="@id/navigation_chat_list"/>
+            app:destination="@id/navigation_chat_room_list"
+            app:popUpTo="@id/navigation_chat_room_list"/>
     </fragment>
     <fragment
         android:id="@+id/navigation_chat_room"
@@ -86,6 +86,23 @@
         <action
             android:id="@+id/action_chatRoomFragment_to_navigation_oauth"
             app:destination="@id/navigation_oauth" />
+    </fragment>
+    <fragment
+        android:id="@+id/inviteRoomFragment"
+        android:name="com.sgs.devcamp2.flametalk_android.ui.inviteroom.InviteRoomFragment"
+        android:label="fragment_invite_room"
+        tools:layout="@layout/fragment_invite_room" >
+        <action
+            android:id="@+id/action_inviteRoomFragment_to_navigation_chat_room_list2"
+            app:destination="@id/navigation_chat_room_list" />
+    </fragment>
+    <fragment
+        android:id="@+id/chatRoomTopSheetFragment"
+        android:name="com.sgs.devcamp2.flametalk_android.ui.chatroomlist.ChatRoomTopSheetFragment"
+        android:label="ChatRoomTopSheetFragment" >
+        <action
+            android:id="@+id/action_chatRoomTopSheetFragment_to_inviteRoomFragment"
+            app:destination="@id/inviteRoomFragment" />
     </fragment>
 
 

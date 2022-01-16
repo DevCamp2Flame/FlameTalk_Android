@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="80dp"
-    android:id="@+id/item_chat_list">
+    android:id="@+id/item_chat_room_list">
 
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layout_chat_list_image_container"
+        android:id="@+id/layout_chat_room_list_image_container"
         android:layout_width="50dp"
         android:layout_height="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -28,7 +28,7 @@
             android:outlineProvider="none"
             >
             <ImageView
-                android:id="@+id/iv_chat_list_user_img"
+                android:id="@+id/iv_chat_room_list_user_img"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:scaleType="centerInside"
@@ -51,7 +51,7 @@
             android:outlineProvider="none"
             >
             <ImageView
-                android:id="@+id/iv_chat_list_user_img2"
+                android:id="@+id/iv_chat_room_list_user_img2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:scaleType="centerInside"
@@ -71,17 +71,17 @@
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layout_chat_list_data_container"
+        android:id="@+id/layout_chat_room_list_data_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/layout_chat_list_image_container"
+        app:layout_constraintStart_toEndOf="@id/layout_chat_room_list_image_container"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/tv_chat_list_user_name"
+            android:id="@+id/tv_chat_room_list_user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="김현국"
@@ -90,25 +90,25 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tv_chat_list_user_count"
+            android:id="@+id/tv_chat_room_list_user_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             tools:text="3"
-            app:layout_constraintStart_toEndOf="@id/tv_chat_list_user_name"
+            app:layout_constraintStart_toEndOf="@id/tv_chat_room_list_user_name"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/iv_chat_list_alarm"
+            android:id="@+id/iv_chat_room_list_alarm"
             android:layout_width="15dp"
             android:layout_height="20dp"
             android:layout_marginStart="10dp"
             android:src="@drawable/ic_alarm"
-            app:layout_constraintStart_toEndOf="@id/tv_chat_list_user_count"
+            app:layout_constraintStart_toEndOf="@id/tv_chat_room_list_user_count"
             app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
-            android:id="@+id/tv_chat_list_message"
+            android:id="@+id/tv_chat_room_list_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -116,11 +116,11 @@
 
             android:textSize="10dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_chat_list_user_name" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_chat_room_list_user_name" />
 
 
         <TextView
-            android:id="@+id/tv_chat_list_date"
+            android:id="@+id/tv_chat_room_list_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"

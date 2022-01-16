@@ -1,6 +1,5 @@
-package com.sgs.devcamp2.flametalk_android.ui.chatlist
+package com.sgs.devcamp2.flametalk_android.ui.chatroomlist
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,7 +11,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ChatListViewModel @Inject constructor() : ViewModel() {
+class ChatRoomListViewModel @Inject constructor() : ViewModel() {
 
     val TAG: String = "로그"
 
@@ -31,7 +30,6 @@ class ChatListViewModel @Inject constructor() : ViewModel() {
             initChattingRoom().collect {
                 list.add(it)
                 _chatList.value = list
-
             }
         }
     }
