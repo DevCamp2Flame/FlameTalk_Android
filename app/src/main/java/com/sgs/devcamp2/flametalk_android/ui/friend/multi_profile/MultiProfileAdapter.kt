@@ -7,7 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.sgs.devcamp2.flametalk_android.databinding.ItemFriendPreviewBinding
+import com.bumptech.glide.request.RequestOptions
+import com.sgs.devcamp2.flametalk_android.databinding.ItemVerticalProfileBinding
 import com.sgs.devcamp2.flametalk_android.domain.model.response.friend.ProfilePreview
 
 /**
@@ -18,13 +19,13 @@ import com.sgs.devcamp2.flametalk_android.domain.model.response.friend.ProfilePr
  */
 
 class MultiProfileAdapter(
-    private val context: Context,
-    private var data: ArrayList<ProfilePreview>
+    private val context: Context
 ) : RecyclerView.Adapter<MultiProfileAdapter.MultiProfileViewHolder>() {
+    var data = arrayListOf<ProfilePreview>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MultiProfileViewHolder {
         return MultiProfileViewHolder(
-            ItemFriendPreviewBinding.inflate(
+            ItemVerticalProfileBinding.inflate(
                 LayoutInflater.from(context),
                 parent,
                 false
@@ -41,9 +42,9 @@ class MultiProfileAdapter(
     }
 
     inner class MultiProfileViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        lateinit var binding: ItemFriendPreviewBinding
+        lateinit var binding: ItemVerticalProfileBinding
 
-        constructor(binding: ItemFriendPreviewBinding) : this(binding.root) {
+        constructor(binding: ItemVerticalProfileBinding) : this(binding.root) {
             Log.d("ViewHolder", " create")
             this.binding = binding
 
@@ -53,8 +54,9 @@ class MultiProfileAdapter(
         }
 
         fun bind(data: ProfilePreview) {
-            Glide.with(itemView).load(data.image).into(binding.imgFriendPreview)
-            binding.tvFriendPreviewNickname.text = data.nickname
+            Glide.with(itemView).load(data.image).apply(RequestOptions.circleCropTransform())
+                .into(binding.imgVerticalProfile)
+            binding.tvVerticalProfileNickname.text = data.nickname
         }
     }
 }

@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.ItemFriendPreviewBinding
 import com.sgs.devcamp2.flametalk_android.domain.model.response.friend.ProfilePreview
 
@@ -18,9 +20,9 @@ import com.sgs.devcamp2.flametalk_android.domain.model.response.friend.ProfilePr
  */
 
 class BirthdayAdapter(
-    private val context: Context,
-    private var data: ArrayList<ProfilePreview>
+    private val context: Context
 ) : RecyclerView.Adapter<BirthdayAdapter.BirthdayViewHolder>() {
+    var data = arrayListOf<ProfilePreview>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BirthdayViewHolder {
         return BirthdayViewHolder(
@@ -53,7 +55,9 @@ class BirthdayAdapter(
         }
 
         fun bind(data: ProfilePreview) {
-            Glide.with(itemView).load(data.image).into(binding.imgFriendPreview)
+            Glide.with(itemView).load(data.image).apply(RequestOptions.circleCropTransform())
+                .apply(RequestOptions.placeholderOf(R.drawable.ic_person_white_24))
+                .into(binding.imgFriendPreview)
             binding.tvFriendPreviewNickname.text = data.nickname
             if (data.description != null) {
                 binding.tvFriendPreviewDesc.visibility = View.VISIBLE
