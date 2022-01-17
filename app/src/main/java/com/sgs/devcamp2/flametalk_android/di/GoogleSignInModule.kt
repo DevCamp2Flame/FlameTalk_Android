@@ -15,7 +15,6 @@ import javax.inject.Singleton
 object GoogleSignInModule {
     @Provides
     @Singleton
-
     fun provideGoogleSignIn(@ApplicationContext context : Context): GoogleSignInOptions {
         return GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(context.resources.getString(R.string.default_web_client_id))

@@ -16,7 +16,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentChatRoomListBinding
-import com.sgs.devcamp2.flametalk_android.domain.model.response.chatlist.ChatList
+import com.sgs.devcamp2.flametalk_android.network.response.chatlist.ChatList
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
