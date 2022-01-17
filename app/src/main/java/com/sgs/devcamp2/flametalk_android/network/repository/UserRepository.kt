@@ -6,7 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import com.sgs.devcamp2.flametalk_android.data.user.User
+import com.sgs.devcamp2.flametalk_android.domain.model.User
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -29,10 +29,11 @@ class UserRepository @Inject constructor(
     private val token: Flow<String?> = dataStore.data.map { it[TOKEN_KEY] }
     private val nickname: Flow<String?> = dataStore.data.map { it[NICKNAME_KEY] }
 
-    val user = combine(token, nickname) { token, nickname->
+    val user = combine(token, nickname) { token, nickname ->
         when {
             token == null -> null
             nickname == null -> null
+
             else -> User(
                 token = token,
                 nickname = nickname
