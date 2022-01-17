@@ -1,6 +1,5 @@
 package com.sgs.devcamp2.flametalk_android.network.auth
 
-import com.sgs.devcamp2.flametalk_android.data.repository.UserRepository
 import com.sgs.devcamp2.flametalk_android.network.request.SignUpRequest
 import com.sgs.devcamp2.flametalk_android.network.service.UserService
 import dagger.Lazy
@@ -12,7 +11,6 @@ import javax.inject.Singleton
 @Singleton
 class LoginApi @Inject constructor(
     private val userService: Lazy<UserService>,
-    private val userRepository: Lazy<UserRepository>,
     private val ioDispatcher: CoroutineDispatcher,
 ) {
     suspend fun signUp(request: SignUpRequest) = withContext(ioDispatcher) {

@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.sgs.devcamp2.flametalk_android.databinding.ItemVerticalProfileBinding
-import com.sgs.devcamp2.flametalk_android.domain.model.response.friend.ProfilePreview
+import com.sgs.devcamp2.flametalk_android.network.response.friend.ProfilePreview
 
 /**
  * @author 박소연

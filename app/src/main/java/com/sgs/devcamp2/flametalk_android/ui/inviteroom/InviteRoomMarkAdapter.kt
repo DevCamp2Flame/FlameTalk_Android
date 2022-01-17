@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.ItemPersonInviteRoomBinding
-import com.sgs.devcamp2.flametalk_android.domain.model.response.friend.Friend
+import com.sgs.devcamp2.flametalk_android.network.response.friend.Friend
 
 /**
  * @author boris
@@ -82,5 +82,4 @@ class InviteRoomMarkAdapter constructor(
             }
         }
     }
-
 }

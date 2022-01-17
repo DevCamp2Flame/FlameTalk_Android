@@ -11,7 +11,7 @@ import com.sgs.devcamp2.flametalk_android.databinding.ItemLeftStartTextChatRoomB
 import com.sgs.devcamp2.flametalk_android.databinding.ItemLeftTextChatRoomBinding
 import com.sgs.devcamp2.flametalk_android.databinding.ItemRightStartTextChatRoomBinding
 import com.sgs.devcamp2.flametalk_android.databinding.ItemRightTextChatRoomBinding
-import com.sgs.devcamp2.flametalk_android.domain.model.response.chat.Chat
+import com.sgs.devcamp2.flametalk_android.network.response.chat.Chat
 
 class ChatRoomAdapter constructor() : ListAdapter<Chat, RecyclerView.ViewHolder>(diffUtil) {
 
