@@ -2,7 +2,7 @@ package com.sgs.devcamp2.flametalk_android.network.auth
 
 import com.sgs.devcamp2.flametalk_android.data.repository.UserRepository
 import com.sgs.devcamp2.flametalk_android.network.request.SignUpRequest
-import com.sgs.devcamp2.flametalk_android.service.UserService
+import com.sgs.devcamp2.flametalk_android.network.service.UserService
 import dagger.Lazy
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
