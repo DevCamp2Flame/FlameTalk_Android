@@ -1,4 +1,4 @@
-package com.sgs.devcamp2.flametalk_android.data.repository
+package com.sgs.devcamp2.flametalk_android.network.repository.user
 
 import android.content.Context
 import androidx.datastore.core.DataStore
@@ -6,7 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import com.sgs.devcamp2.flametalk_android.domain.model.User
+import com.sgs.devcamp2.flametalk_android.data.model.User
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow

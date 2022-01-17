@@ -1,8 +1,7 @@
-package com.sgs.devcamp2.flametalk_android.domain.model.response.chatlist
+package com.sgs.devcamp2.flametalk_android.network.response.chatlist
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
-import java.util.* // ktlint-disable no-wildcard-imports
 import kotlin.collections.ArrayList
 
 @Parcelize
