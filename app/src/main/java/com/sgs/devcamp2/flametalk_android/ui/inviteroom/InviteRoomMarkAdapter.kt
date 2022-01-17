@@ -15,32 +15,29 @@ import com.sgs.devcamp2.flametalk_android.network.response.friend.Friend
  * @created 2022/01/12
  */
 class InviteRoomMarkAdapter constructor(
-    markCallback: ItemClickCallBack
+    markCallback: ItemMarkClickCallBack
 ) : ListAdapter<Friend, RecyclerView.ViewHolder>(diffUtil) {
-    interface ItemClickCallBack {
-        fun onItemClicked(friend: Friend, position: Int)
+    interface ItemMarkClickCallBack {
+        fun onItemMarkClicked(friend: Friend, position: Int, adapter: InviteRoomMarkAdapter)
     }
 
-    var itemClickCallBack: ItemClickCallBack? = markCallback
+    var itemClickCallBack: ItemMarkClickCallBack? = markCallback
 
     companion object {
         val TAG: String = "로그"
         val diffUtil = object : DiffUtil.ItemCallback<Friend>() {
             override fun areItemsTheSame(oldItem: Friend, newItem: Friend): Boolean {
-
                 return oldItem.id == newItem.id
             }
 
             override fun areContentsTheSame(oldItem: Friend, newItem: Friend): Boolean {
-
                 return oldItem.selected == newItem.selected
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_person_invite_room, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_person_invite_room, parent, false)
         return PersonViewHolder(ItemPersonInviteRoomBinding.bind(view))
     }
 
@@ -51,36 +48,38 @@ class InviteRoomMarkAdapter constructor(
     inner class PersonViewHolder(val binding: ItemPersonInviteRoomBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(friend: Friend, position: Int) {
-            binding.tvInviteRoomUserName.text = friend.nickname
-
-            if (friend.selected == 0) {
-                binding.ivInviteRoomRadioButtonFill.visibility = View.GONE
-                binding.ivInviteRoomRadioButton.visibility = View.VISIBLE
-            } else {
-                binding.ivInviteRoomRadioButtonFill.visibility = View.VISIBLE
-                binding.ivInviteRoomRadioButton.visibility = View.GONE
-            }
-
+            binding.ivInviteRoomRadioButton.isActivated = friend.selected != "0"
             binding.layoutInviteRoomItem.setOnClickListener(
-                ItemClickListener(
-                    friend, binding, position
-                )
+                ItemClickListener(friend, position)
             )
+            binding.tvInviteRoomUserName.text = friend.nickname
         }
     }
 
     inner class ItemClickListener(
         var friend: Friend,
-        var binding: ItemPersonInviteRoomBinding,
         var position: Int
     ) : View.OnClickListener {
         override fun onClick(view: View?) {
             when (view?.id) {
                 R.id.layout_invite_room_item -> {
-                    itemClickCallBack?.onItemClicked(friend, position)
+                    itemClickCallBack?.onItemMarkClicked(friend, position, this@InviteRoomMarkAdapter)
                 }
             }
         }
     }
-
+    fun putActivate(position: Int) {
+        var list: MutableList<Friend> = currentList.toMutableList()
+        var friend: Friend = currentList[position].copy()
+        friend.selected = "1"
+        list[position] = friend
+        submitList(list)
+    }
+    fun removeActivate(position: Int) {
+        var list: MutableList<Friend> = currentList.toMutableList()
+        var friend: Friend = currentList[position].copy()
+        friend.selected = "0"
+        list[position] = friend
+        submitList(list)
+    }
 }

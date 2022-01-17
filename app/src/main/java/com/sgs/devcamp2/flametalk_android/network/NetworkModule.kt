@@ -1,6 +1,5 @@
 package com.sgs.devcamp2.flametalk_android.network
 
-
 import com.sgs.devcamp2.flametalk_android.network.repository.user.UserRepository
 import com.sgs.devcamp2.flametalk_android.network.service.UserService
 import dagger.Module
