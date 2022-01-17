@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.*
-import com.sgs.devcamp2.flametalk_android.domain.model.response.chatlist.ChatList
+import com.sgs.devcamp2.flametalk_android.network.response.chatlist.ChatList
 
 /**
  * 채팅방 리스트 recyclerview Adapter

@@ -10,7 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentInviteRoomBinding
-import com.sgs.devcamp2.flametalk_android.domain.model.response.friend.Friend
+import com.sgs.devcamp2.flametalk_android.network.response.friend.Friend
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

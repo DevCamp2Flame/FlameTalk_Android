@@ -3,7 +3,7 @@
     <item android:id="@+id/navigation_friend"
         android:icon="@drawable/main_navi_friend"
         android:title="Friend"/>
-    <item android:id="@+id/navigation_chat_list"
+    <item android:id="@+id/navigation_chat_room_list"
         android:icon="@drawable/main_navi_chat_room"
         android:title="Room"/>
     <item android:id="@+id/navigation_setting"
