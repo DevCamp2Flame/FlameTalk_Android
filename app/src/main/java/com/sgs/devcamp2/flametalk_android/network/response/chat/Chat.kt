@@ -1,4 +1,4 @@
-package com.sgs.devcamp2.flametalk_android.domain.model.response.chat
+package com.sgs.devcamp2.flametalk_android.network.response.chat
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

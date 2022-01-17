@@ -1,4 +1,4 @@
-package com.sgs.devcamp2.flametalk_android.service
+package com.sgs.devcamp2.flametalk_android.network.service
 
 import com.sgs.devcamp2.flametalk_android.network.request.SignUpRequest
 import retrofit2.http.Body

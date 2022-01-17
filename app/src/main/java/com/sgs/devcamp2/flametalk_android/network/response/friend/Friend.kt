@@ -1,4 +1,4 @@
-package com.sgs.devcamp2.flametalk_android.domain.model.response.friend
+package com.sgs.devcamp2.flametalk_android.network.response.friend
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
