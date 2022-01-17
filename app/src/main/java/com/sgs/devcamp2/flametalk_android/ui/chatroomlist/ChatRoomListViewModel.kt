@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sgs.devcamp2.flametalk_android.domain.model.response.chatlist.ChatList
+import com.sgs.devcamp2.flametalk_android.network.response.chatlist.ChatList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
