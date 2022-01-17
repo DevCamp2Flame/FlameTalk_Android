@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavDirections
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -21,8 +23,8 @@ import kotlinx.coroutines.flow.collectLatest
 
 /**
  * @author 박소연
- * @created 2022/01/14
- * @desc 앱 실행 시 기본 화면. 1번째 탭의 친구 목록 페이지
+ * @created 2022/01/17
+ * @desc 프로필 상세 보기 (유저, 친)
  */
 
 @AndroidEntryPoint
@@ -30,6 +32,7 @@ import kotlinx.coroutines.flow.collectLatest
 class FriendFragment : Fragment() {
     private val binding by lazy { FragmentFriendBinding.inflate(layoutInflater) }
     private val viewModel: FriendViewModel by viewModels()
+
     // 뷰 생성 시점에 adapter 초기화
     private val multiProfileAdapter: MultiProfileAdapter by lazy {
         MultiProfileAdapter(requireContext())
@@ -71,6 +74,16 @@ class FriendFragment : Fragment() {
                     binding.lFriendMainUser.tvFriendPreviewDesc.text = it.description
                 }
             }
+        }
+
+        // 친구 목록 > 프로필 상세 보기 이동
+        binding.lFriendMainUser.root.setOnClickListener {
+            val friendToProfileDirections: NavDirections =
+                FriendFragmentDirections.actionFriendToProfile(
+                    viewModel.userProfile.value.userId,
+                    2
+                )
+            findNavController().navigate(friendToProfileDirections)
         }
     }
 

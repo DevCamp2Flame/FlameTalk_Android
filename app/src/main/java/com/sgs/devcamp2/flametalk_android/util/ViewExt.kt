@@ -14,3 +14,8 @@ fun View.toInvisible() {
 fun View.toVisibleGone() {
     this.visibility = View.GONE
 }
+
+fun swapViewVisibility(view1: View, view2: View) {
+    view1.visibility = View.INVISIBLE
+    view2.visibility = View.VISIBLE
+}
