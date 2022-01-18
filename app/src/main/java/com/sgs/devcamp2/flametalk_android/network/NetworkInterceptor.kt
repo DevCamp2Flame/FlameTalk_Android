@@ -9,14 +9,14 @@ import org.json.JSONObject
 import timber.log.Timber
 import java.io.IOException
 
-class NetworkInterceptor (
+class NetworkInterceptor(
     val tokenSupplier: () -> String?
-    ): Interceptor {
+) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
             .addHeader("x-access-token", tokenSupplier().also { Timber.d("token: $it") }.toString())
-         .addHeader("accept", "application/json")
-         .addHeader("Content-Type", "application/json")
+            .addHeader("accept", "application/json")
+            .addHeader("Content-Type", "application/json")
 
         Timber.d("url -> ${request.url}")
         Timber.d("headers -> ${request.headers}")
@@ -27,13 +27,13 @@ class NetworkInterceptor (
         Timber.d(response.toString())
         Timber.d(JSONObject(response.peekBody(Long.MAX_VALUE).string()).toString(4))
 
-         response.peekBody(Long.MAX_VALUE).string().let { JSONObject(it) }.let {
-             val isSuccess = it["isSuccess"] as Boolean
-             val code = it["code"] as Int
-             val message = it["message"] as String
+        response.peekBody(Long.MAX_VALUE).string().let { JSONObject(it) }.let {
+            val isSuccess = it["isSuccess"] as Boolean
+            val code = it["code"] as Int
+            val message = it["message"] as String
 
-             if (!isSuccess) throw NetworkError(message, code)
-         }
+            if (!isSuccess) throw NetworkError(message, code)
+        }
         Timber.d("response -> $response")
 
         return response
