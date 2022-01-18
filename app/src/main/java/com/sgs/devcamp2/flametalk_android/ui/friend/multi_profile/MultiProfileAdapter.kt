@@ -5,11 +5,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.NavDirections
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.sgs.devcamp2.flametalk_android.databinding.ItemVerticalProfileBinding
 import com.sgs.devcamp2.flametalk_android.network.response.friend.ProfilePreview
+import com.sgs.devcamp2.flametalk_android.ui.friend.FriendFragmentDirections
 
 /**
  * @author 박소연
@@ -47,13 +50,20 @@ class MultiProfileAdapter(
         constructor(binding: ItemVerticalProfileBinding) : this(binding.root) {
             Log.d("ViewHolder", " create")
             this.binding = binding
-
-            binding.root.setOnClickListener {
-                // TODO: userID 넘겨서 프로필 상세 화면으로 이동 (id)
-            }
         }
 
         fun bind(data: ProfilePreview) {
+            initMultiProfileList(data)
+
+            // 멀티 프로필 상세보기로 이동
+            itemView.setOnClickListener {
+                val friendToFriendProfileDirections: NavDirections =
+                    FriendFragmentDirections.actionFriendToProfile(3, data)
+                it.findNavController().navigate(friendToFriendProfileDirections)
+            }
+        }
+
+        private fun initMultiProfileList(data: ProfilePreview) {
             Glide.with(itemView).load(data.image).apply(RequestOptions.circleCropTransform())
                 .into(binding.imgVerticalProfile)
             binding.tvVerticalProfileNickname.text = data.nickname

@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
@@ -16,6 +15,7 @@ import com.sgs.devcamp2.flametalk_android.databinding.FragmentProfileBinding
 import com.sgs.devcamp2.flametalk_android.util.swapViewVisibility
 import com.sgs.devcamp2.flametalk_android.util.toInvisible
 import com.sgs.devcamp2.flametalk_android.util.toVisible
+import com.sgs.devcamp2.flametalk_android.util.toVisibleGone
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import timber.log.Timber
@@ -60,11 +60,18 @@ class ProfileFragment : Fragment() {
         when (args.viewType) {
             1 -> { // 내 프로필
                 binding.imgProfileBookmark.toInvisible()
+                binding.imgProfileFriend.toVisibleGone()
+                binding.tvProfileFriend.toVisibleGone()
                 swapViewVisibility(binding.cstProfileChat, binding.cstProfileEdit)
             }
             2 -> { // 친구 프로필
                 binding.imgProfileBookmark.toVisible()
                 swapViewVisibility(binding.cstProfileEdit, binding.cstProfileChat)
+            }
+            3 -> { // 내 멀티 프로필
+                binding.imgProfileBookmark.toInvisible()
+                binding.imgProfileFriend.toVisible()
+                binding.tvProfileFriend.toVisible()
             }
         }
         initUserProfile()
