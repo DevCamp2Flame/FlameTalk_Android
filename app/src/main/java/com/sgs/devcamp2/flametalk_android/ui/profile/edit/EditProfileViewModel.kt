@@ -33,9 +33,17 @@ class EditProfileViewModel @Inject constructor(
     private val _profileImage = MutableStateFlow("")
     val profileImage = _profileImage.asStateFlow()
 
+    // 프로필 이미지 url
+    private val _profileImageUrl = MutableStateFlow("")
+    val profileImageUrl = _profileImageUrl.asStateFlow()
+
     // 배경 이미지
     private val _backgroundImage = MutableStateFlow("")
     val backgroundImage = _backgroundImage.asStateFlow()
+
+    // 배경 이미지
+    private val _backgroundImageUrl = MutableStateFlow("")
+    val backgroundImageUrl = _backgroundImageUrl.asStateFlow()
 
     fun getProfileDesc(desc: String) {
         _description.value = desc

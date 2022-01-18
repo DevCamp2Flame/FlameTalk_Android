@@ -49,6 +49,7 @@ class EditProfileFragment : Fragment() {
         }
     }
 
+    // ViewModel StateFlow 변수가 갱신되면 UI에 자동 바인딩한다
     private fun updateUI() {
         lifecycleScope.launchWhenResumed {
             // 닉네임
@@ -73,8 +74,8 @@ class EditProfileFragment : Fragment() {
                     .into(binding.imgEditProfile)
             }
         }
+
         lifecycleScope.launchWhenResumed {
-            // 배경 사진
             viewModel.backgroundImage.collectLatest {
                 Glide.with(binding.imgEditProfileBg)
                     .load(it)
@@ -88,18 +89,34 @@ class EditProfileFragment : Fragment() {
             findNavController().navigateUp()
         }
 
-        binding.tvEditProfileConfirm.setOnClickListener {
-            // TODO: 프로필 편집 통신
+        // 프로필 이미지 변경
+        binding.imgEditProfileGallery.setOnClickListener {
+            // TODO: 프로필 이미지 가져오기경
+            // getProfileImage(PROFILE_IMAGE)
         }
 
-        binding.imgEditProfile.setOnClickListener {
-            // TODO: 이미지 가져오기
+        // 배경 이미지 변경
+        binding.imgEditProfileGalleryBg.setOnClickListener {
+            // TODO: 배경 이미지 가져오기
+            // getProfileImage(BACKGROUND_IMAGE)
         }
 
+        // 상태 메세지 변경
         binding.tvEditProfileDesc.setOnClickListener {
             val editProfileToDescDirections: NavDirections =
                 EditProfileFragmentDirections.actionProfileToEditDesc(viewModel.description.value)
             findNavController().navigate(editProfileToDescDirections)
         }
+
+        // 프로필 수정 완료
+        binding.tvEditProfileConfirm.setOnClickListener {
+            // TODO: 프로필 편집 통신
+        }
+    }
+
+    companion object {
+        private const val PROFILE_IMAGE = 1
+        private const val BACKGROUND_IMAGE = 2
+        private const val PERMISSION_CALLBACK_CONSTANT = 100
     }
 }

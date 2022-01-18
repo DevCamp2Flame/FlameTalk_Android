@@ -104,5 +104,15 @@
         app:layout_constraintStart_toStartOf="@id/tv_edit_profile_desc"
         app:layout_constraintTop_toBottomOf="@id/tv_edit_profile_desc" />
 
+    <ImageView
+        android:id="@+id/img_edit_profile_gallery_bg"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_margin="20dp"
+        android:background="@drawable/bg_white_15"
+        android:foreground="@drawable/ic_camera_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

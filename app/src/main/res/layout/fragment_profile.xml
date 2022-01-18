@@ -31,17 +31,7 @@
         android:src="@drawable/selector_bookmark"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/img_profile_feed"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_margin="20dp"
-        android:src="@drawable/ic_photo_feed_24"
-        app:tint="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+    
     <ImageView
         android:id="@+id/img_profile"
         android:layout_width="100dp"
