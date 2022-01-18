@@ -1,6 +1,5 @@
 package com.sgs.devcamp2.flametalk_android.ui.inviteroom
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -51,13 +50,12 @@ class InviteRoomSelectedAdapter constructor(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(friend: Friend) {
             binding.tvInviteRoomSelectedUserName.text = friend.nickname
-            binding.layoutInviteRoomSelected.setOnClickListener(ItemClickListener(friend, binding))
+            binding.layoutInviteRoomSelected.setOnClickListener(ItemClickListener(friend))
         }
     }
 
     inner class ItemClickListener(
-        var friend: Friend,
-        var binding: ItemPersonInviteRoomSelectedBinding,
+        var friend: Friend
     ) : View.OnClickListener {
         override fun onClick(view: View?) {
             when (view?.id) {

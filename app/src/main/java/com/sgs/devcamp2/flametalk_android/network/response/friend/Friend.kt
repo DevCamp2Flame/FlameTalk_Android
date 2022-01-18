@@ -13,10 +13,10 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class Friend(
-    val id: Int,
-    val friend_id: String,
-    val nickname: String,
-    val mark: Int,
-    var selected: Int,
+    var id: String,
+    var friend_id: String,
+    var nickname: String,
+    var mark: Int,
+    var selected: String = "0",
 
 ) : Parcelable

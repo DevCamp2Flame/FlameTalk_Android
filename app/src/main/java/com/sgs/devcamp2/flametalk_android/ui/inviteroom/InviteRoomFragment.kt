@@ -7,17 +7,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentInviteRoomBinding
 import com.sgs.devcamp2.flametalk_android.network.response.friend.Friend
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class InviteRoomFragment :
     Fragment(),
     InviteRoomAdapter.ItemClickCallBack,
-    InviteRoomMarkAdapter.ItemClickCallBack,
+    InviteRoomMarkAdapter.ItemMarkClickCallBack,
     InviteRoomSelectedAdapter.ItemSelectedClickCallBack,
 
     View.OnClickListener {
@@ -38,32 +40,27 @@ class InviteRoomFragment :
         binding = FragmentInviteRoomBinding.inflate(inflater, container, false)
 
         initUI(this.requireContext())
-
-        model.friendList.observe(
-            this.requireActivity(),
-            Observer {
+        viewLifecycleOwner.lifecycleScope.launch {
+            model.friendList.collect {
                 roomAdapter.submitList(it)
             }
-        )
-
-        model.friendMarkList.observe(
-            this.requireActivity(),
-            {
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            model.markFriendList.collect {
                 roomMarkAdapter.submitList(it)
             }
-        )
+        }
 
-        model.inviteFriendList.observe(
-            this.requireActivity(),
-            {
-                if (it.size != 0) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            model.selectedFriendList.collect {
+                if (it.isNotEmpty()) {
                     binding.rvInviteRoomSelected.visibility = View.VISIBLE
-                    inviteRoomSelectedAdapter.submitList(it)
                 } else {
                     binding.rvInviteRoomSelected.visibility = View.GONE
                 }
+                inviteRoomSelectedAdapter.submitList(it)
             }
-        )
+        }
 
         return binding.root
     }
@@ -71,7 +68,6 @@ class InviteRoomFragment :
     fun initUI(context: Context) {
         binding.rvInviteRoom.layoutManager = LinearLayoutManager(context)
         binding.rvInviteRoomMark.layoutManager = LinearLayoutManager(context)
-
         binding.rvInviteRoomSelected.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
         roomAdapter = InviteRoomAdapter(this)
@@ -83,11 +79,12 @@ class InviteRoomFragment :
         binding.rvInviteRoomSelected.adapter = inviteRoomSelectedAdapter
     }
 
-    override fun onItemClicked(friend: Friend, position: Int) {
-
-        model.addMarkFriendToMap(friend, position)
+    override fun onItemClicked(friend: Friend, position: Int, adapter: InviteRoomAdapter) {
+        model.addFriendList(friend, position, adapter)
     }
-
+    override fun onItemMarkClicked(friend: Friend, position: Int, adapter: InviteRoomMarkAdapter) {
+        model.addMarkList(friend, position, adapter)
+    }
     override fun onItemSelectedClick(friend: Friend) {
         model.removeSelectedItem(friend)
     }

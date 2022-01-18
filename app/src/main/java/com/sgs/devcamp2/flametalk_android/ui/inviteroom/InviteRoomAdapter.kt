@@ -1,5 +1,6 @@
 package com.sgs.devcamp2.flametalk_android.ui.inviteroom
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +18,7 @@ import com.sgs.devcamp2.flametalk_android.network.response.friend.Friend
 class InviteRoomAdapter(callback: InviteRoomFragment) :
     ListAdapter<Friend, RecyclerView.ViewHolder>(diffUtil) {
     interface ItemClickCallBack {
-        fun onItemClicked(friend: Friend, position: Int)
+        fun onItemClicked(friend: Friend, position: Int, adapter: InviteRoomAdapter)
     }
 
     val itemClickCallBack = callback
@@ -48,35 +49,47 @@ class InviteRoomAdapter(callback: InviteRoomFragment) :
     inner class PersonViewHolder(val binding: ItemPersonInviteRoomBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(friend: Friend, position: Int) {
-            binding.tvInviteRoomUserName.text = friend.nickname
 
-            if (friend.selected == 0) {
-                binding.ivInviteRoomRadioButtonFill.visibility = View.GONE
-                binding.ivInviteRoomRadioButton.visibility = View.VISIBLE
-            } else {
-                binding.ivInviteRoomRadioButtonFill.visibility = View.VISIBLE
-                binding.ivInviteRoomRadioButton.visibility = View.GONE
-            }
-
+            binding.ivInviteRoomRadioButton.isActivated = friend.selected != "0"
             binding.layoutInviteRoomItem.setOnClickListener(
-                ItemClickListener(
-                    friend, binding, position
-                )
+                ItemClickListener(friend, position, binding)
             )
+            binding.tvInviteRoomUserName.text = friend.nickname
         }
     }
 
     inner class ItemClickListener(
         var friend: Friend,
-        var binding: ItemPersonInviteRoomBinding,
-        var position: Int
+        var position: Int,
+        var binding: ItemPersonInviteRoomBinding
+
     ) : View.OnClickListener {
         override fun onClick(view: View?) {
             when (view?.id) {
                 R.id.layout_invite_room_item -> {
-                    itemClickCallBack?.onItemClicked(friend, position)
+                    if (binding.ivInviteRoomRadioButton.isActivated) {
+                        Log.d(TAG, "binding.ivInviteRoomRadioButton.isSelected - ${binding.ivInviteRoomRadioButton.isSelected} called")
+                        binding.ivInviteRoomRadioButton.isActivated = false
+                    } else {
+                        binding.ivInviteRoomRadioButton.isActivated = true
+                    }
+                    itemClickCallBack?.onItemClicked(friend, position, this@InviteRoomAdapter)
                 }
             }
         }
+    }
+    fun putActivate(position: Int) {
+        var list: MutableList<Friend> = currentList.toMutableList()
+        var friend: Friend = currentList[position].copy()
+        friend.selected = "1"
+        list[position] = friend
+        submitList(list)
+    }
+    fun removeActivate(position: Int) {
+        var list: MutableList<Friend> = currentList.toMutableList()
+        var friend: Friend = currentList[position].copy()
+        friend.selected = "0"
+        list[position] = friend
+        submitList(list)
     }
 }
