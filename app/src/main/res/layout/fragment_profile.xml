@@ -23,13 +23,12 @@
         app:layout_constraintTop_toTopOf="parent"
         app:tint="@color/white" />
 
-    <androidx.appcompat.widget.AppCompatCheckBox
-        android:id="@+id/ckb_profile_bookmark"
+    <ImageView
+        android:id="@+id/img_profile_bookmark"
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_margin="10dp"
-        android:button="@drawable/selector_bookmark"
-        android:clickable="true"
+        android:src="@drawable/selector_bookmark"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -38,6 +37,7 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginBottom="70dp"
+        android:background="@drawable/bg_skyblue2_50"
         app:layout_constraintBottom_toTopOf="@id/cst_profile_edit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
