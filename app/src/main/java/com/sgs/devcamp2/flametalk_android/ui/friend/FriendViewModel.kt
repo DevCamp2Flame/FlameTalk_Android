@@ -16,8 +16,7 @@ import kotlinx.coroutines.flow.*
 
 @HiltViewModel
 class FriendViewModel @Inject constructor(
-    @ApplicationContext private val context: Context,
-    userRepository: UserRepository
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
     // 네트워크 통신 데이터 전 더미데이터
     private var dummyUserData: ProfilePreview = getDummyUser()
