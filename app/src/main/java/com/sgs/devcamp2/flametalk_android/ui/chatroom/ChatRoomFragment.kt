@@ -8,7 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,6 +16,7 @@ import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.DrawerLayoutChatRoomBinding
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentChatRoomBinding
 import com.sgs.devcamp2.flametalk_android.network.response.chat.Chat
+import com.sgs.devcamp2.flametalk_android.util.onTextChanged
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -29,7 +30,7 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
     lateinit var drawer_bindng: DrawerLayoutChatRoomBinding
     lateinit var adapter: ChatRoomAdapter
     lateinit var userlistAdapter: ChatRoomDrawUserListAdapter
-    private val model by viewModels<ChatRoomViewModel>()
+    private val model by activityViewModels<ChatRoomViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,28 +38,33 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
         savedInstanceState: Bundle?
     ): View? {
 
-        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Chat>("chat")?.observe(
-            viewLifecycleOwner
-        ) {
-            result ->
-            run {
-                Log.d(TAG, "result - $result")
-                lifecycleScope.launch {
-                    model.addChatting(result)
-                }
-            }
-        }
+//        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Chat>("chat")?.observe(
+//            viewLifecycleOwner
+//        ) {
+//            result ->
+//            run {
+//                Log.d(TAG, "result - $result")
+//                lifecycleScope.launch {
+//                    model.addChatting(result)
+//                }
+//            }
+//        }
 
         binding = FragmentChatRoomBinding.inflate(inflater, container, false)
         drawer_bindng = binding.layoutDrawer
         initUI(this.requireContext())
+
 
         lifecycleScope.launch {
             model.chatRoom.observe(
                 viewLifecycleOwner,
                 {
                     Log.d(TAG, "it - $it() called")
-                    adapter.submitList(it)
+                    adapter.submitList(it){
+                        binding.rvChatRoom.scrollToPosition(it.size-1)
+                    }
+
+
                 }
             )
         }
@@ -69,6 +75,10 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
                 userlistAdapter.submitList(it)
             }
         )
+
+        binding.etChatRoomInputText.onTextChanged {
+            model.updateTextValue(it.toString())
+        }
 
         return binding.root
     }
@@ -85,6 +95,7 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
 
         binding.ivChatRoomDraw.setOnClickListener(this)
         binding.ivChatRoomFile.setOnClickListener(this)
+        binding.ivChatSend.setOnClickListener(this)
     }
 
     override fun onClick(view: View?) {
@@ -103,8 +114,10 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
 
             binding.ivChatSend ->
                 {
-                    var chat = Chat(0, "1", "1",)
-                    // model.addChatting()
+                    Log.d(TAG,"ChatRoomFragment - onClick() called")
+                    model.sendMessage()
+                    binding.etChatRoomInputText.setText("")
+
                 }
         }
     }

@@ -9,7 +9,6 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -19,10 +18,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.navGraphViewModels
-import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentChatRoomBottomSheetBinding
 import com.sgs.devcamp2.flametalk_android.network.response.chat.Chat
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,12 +30,8 @@ class ChatRoomBottomSheetFragment : DialogFragment(), View.OnClickListener {
     val TAG: String = "로그"
     lateinit var binding: FragmentChatRoomBottomSheetBinding
     lateinit var resultLauncher: ActivityResultLauncher<Intent>
-    private val model: ChatRoomViewModel by navGraphViewModels(R.id.navigation_chat_room) {
-        defaultViewModelProviderFactory
-    }
-//    private lateinit var model: ChatRoomViewModel
+    private val model by activityViewModels<ChatRoomViewModel>()
 
-    val REQUEST_IMAGE_CAPTURE = 1
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -50,11 +43,11 @@ class ChatRoomBottomSheetFragment : DialogFragment(), View.OnClickListener {
             if (result.resultCode == RESULT_OK) {
                 val imageBitMap = result.data!!.extras!!.get("data") as Bitmap
                 val bundle = bundleOf("image" to imageBitMap)
-                Log.d(TAG, "model bottom sheet hashcode : ${model.hashCode()}")
+
                 lifecycleScope.launch {
 
-                    findNavController().previousBackStackEntry?.savedStateHandle?.set("chat", Chat(4, "4", "4", "$imageBitMap"))
-                    // model.addChatting()
+                    // findNavController().previousBackStackEntry?.savedStateHandle?.set("chat", Chat(4, "4", "4", "$imageBitMap"))
+                    model.addChatting(Chat(4, "4", "0", "그라하하하하하하하하"))
                 }
             }
         }

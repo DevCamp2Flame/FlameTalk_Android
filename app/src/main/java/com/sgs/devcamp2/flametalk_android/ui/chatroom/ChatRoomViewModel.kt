@@ -9,9 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.sgs.devcamp2.flametalk_android.network.response.chat.Chat
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
@@ -24,6 +22,8 @@ class ChatRoomViewModel @Inject constructor(
 
     private var _chatRoom = MutableLiveData<MutableList<Chat>>()
     private var list = mutableListOf<Chat>()
+
+    private var _chat = MutableStateFlow<String>("")
 
     /**
      * _chatUserList는 채팅방에 속해 있는 user의 정보를 의미한다. image url, 이름 등이 포함 될 수 있다.
@@ -38,12 +38,14 @@ class ChatRoomViewModel @Inject constructor(
     val userRoom: LiveData<MutableList<String>>
         get() = _chatUserList
 
+    val chat: StateFlow<String>
+        get() = _chat
+
     init {
         viewModelScope.launch {
             initChattingText().collect {
                 list.add(it)
                 _chatRoom.value = list
-                Log.d(TAG, "_chatRoom - ${_chatRoom.value}() called")
             }
             initChattingUser().collect {
                 userlist.add(it)
@@ -93,9 +95,12 @@ class ChatRoomViewModel @Inject constructor(
         Log.d(TAG, "list - $list")
         _chatRoom.value = list!!
     }
+    fun updateTextValue(text: String) {
+        _chat.value = text
+    }
 
-    override fun onCleared() {
-        super.onCleared()
-        Log.d(TAG, "ChatRoomViewModel - onCleared() called")
+    fun sendMessage() {
+        var chat = Chat(1, "1", "0", _chat.value)
+        addChatting(chat)
     }
 }
