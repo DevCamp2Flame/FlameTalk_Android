@@ -43,8 +43,8 @@
             app:popUpTo="@id/navigation_setting" />
         <action
             android:id="@+id/action_friend_to_chat_list"
-            app:destination="@id/navigation_chat_list"
-            app:popUpTo="@id/navigation_chat_list" />
+            app:destination="@id/navigation_chat_room_list"
+            app:popUpTo="@id/navigation_chat_room_list" />
         <action
             android:id="@+id/action_friend_to_profile"
             app:destination="@id/navigation_profile" />
