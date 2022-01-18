@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    style="@style/Theme.Transparent.Gray">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/gray_transparent"/>
+
+    <TextView
+        android:id="@+id/tv_edit_profile_desc_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:drawableStart="@drawable/ic_back_arrow_white_34"
+        android:gravity="center"
+        android:text="프로필 편집"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/white" />
+
+    <TextView
+        android:id="@+id/tv_edit_profile_desc_confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:text="완료"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <EditText
+        android:id="@+id/edt_edit_profile_desc"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="50dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:hint="상태메세지를 입력해 주세요."
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:textSize="18sp"
+        android:maxLength="60"
+        android:backgroundTint="@color/white"
+        android:paddingVertical="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/img_edit_profile_desc_delete"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:background="@drawable/bg_button_gray_10"
+        android:src="@drawable/ic_close_24"
+        app:layout_constraintBottom_toBottomOf="@id/edt_edit_profile_desc"
+        app:layout_constraintEnd_toEndOf="@id/edt_edit_profile_desc"
+        app:layout_constraintTop_toTopOf="@id/edt_edit_profile_desc" />
+
+    <TextView
+        android:id="@+id/tv_edit_profile_desc_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/ic_close_24"
+        android:text="n/60"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="@id/edt_edit_profile_desc"
+        app:layout_constraintStart_toStartOf="@id/edt_edit_profile_desc"
+        app:layout_constraintTop_toBottomOf="@id/edt_edit_profile_desc" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

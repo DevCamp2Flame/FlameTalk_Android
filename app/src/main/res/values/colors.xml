@@ -18,6 +18,5 @@
     <color name="flame_sky_blue2">#A3D3FF</color>
     <color name="flame_pink">#FF82AD</color>
 
-
-
+    <color name="gray_transparent">#6F000000</color>
 </resources>

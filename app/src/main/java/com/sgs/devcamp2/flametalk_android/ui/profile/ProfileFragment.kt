@@ -23,7 +23,7 @@ import timber.log.Timber
 /**
  * @author 박소연
  * @created 2022/01/17
- * @desc 앱 실행 시 기본 화면. 1번째 탭의 친구 목록 페이지
+ * @desc 프로필 상세 보기 페이지
  */
 
 @AndroidEntryPoint
@@ -51,6 +51,9 @@ class ProfileFragment : Fragment() {
             it.isActivated = !it.isActivated
             Snackbar.make(requireContext(), it, it.isActivated.toString(), Snackbar.LENGTH_SHORT)
                 .show()
+        }
+        binding.cstProfileEdit.setOnClickListener {
+            findNavController().navigate(ProfileFragmentDirections.actionProfileToEdit(args.userInfo))
         }
     }
 
@@ -84,6 +87,7 @@ class ProfileFragment : Fragment() {
             .apply(RequestOptions.placeholderOf(R.drawable.ic_person_white_24))
             .into(binding.imgProfile)
         binding.tvProfileNickname.text = args.userInfo.nickname
+        binding.tvProfileDesc.text = args.userInfo.description
         Glide.with(binding.imgProfileBg).load(args.userInfo.backgroundImage)
             .into(binding.imgProfileBg)
     }
