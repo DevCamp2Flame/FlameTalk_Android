@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentFriendBinding
 import com.sgs.devcamp2.flametalk_android.ui.friend.birthday.BirthdayAdapter
 import com.sgs.devcamp2.flametalk_android.ui.friend.friends.FriendAdapter
@@ -82,6 +83,7 @@ class FriendFragment : Fragment() {
             viewModel.userProfile.collectLatest {
                 Glide.with(binding.lFriendMainUser.imgFriendPreview)
                     .load(it.image).apply(RequestOptions.circleCropTransform())
+                    .apply(RequestOptions.placeholderOf(R.drawable.ic_person_white_24))
                     .into(binding.lFriendMainUser.imgFriendPreview)
                 binding.lFriendMainUser.tvFriendPreviewNickname.text = it.nickname
                 if (it.description.isNullOrBlank()) {

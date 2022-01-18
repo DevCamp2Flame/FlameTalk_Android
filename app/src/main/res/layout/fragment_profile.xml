@@ -31,12 +31,12 @@
         android:src="@drawable/selector_bookmark"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
+    
     <ImageView
         android:id="@+id/img_profile"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginBottom="70dp"
+        android:layout_marginBottom="95dp"
         android:background="@drawable/bg_skyblue2_50"
         app:layout_constraintBottom_toTopOf="@id/cst_profile_edit"
         app:layout_constraintEnd_toEndOf="parent"
@@ -54,6 +54,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/img_profile"
         tools:text="홍길동" />
+
+    <TextView
+        android:id="@+id/tv_profile_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:maxWidth="300dp"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_profile_nickname"
+        tools:text="zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz" />
 
     <View
         android:layout_width="match_parent"
