@@ -6,13 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentInviteRoomBinding
 import com.sgs.devcamp2.flametalk_android.network.response.friend.Friend
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -28,7 +29,7 @@ class InviteRoomFragment :
     lateinit var roomMarkAdapter: InviteRoomMarkAdapter
     lateinit var inviteRoomSelectedAdapter: InviteRoomSelectedAdapter
 
-    private val model by viewModels<InviteRoomViewModel>()
+    private val model by activityViewModels<InviteRoomViewModel>()
 
     val TAG: String = "로그"
 
