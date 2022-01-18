@@ -6,19 +6,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.snackbar.Snackbar
+import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentProfileBinding
 import com.sgs.devcamp2.flametalk_android.util.swapViewVisibility
 import com.sgs.devcamp2.flametalk_android.util.toInvisible
 import com.sgs.devcamp2.flametalk_android.util.toVisible
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.collectLatest
+import timber.log.Timber
 
 /**
  * @author 박소연
@@ -30,7 +30,6 @@ import kotlinx.coroutines.flow.collectLatest
 @ExperimentalCoroutinesApi
 class ProfileFragment : Fragment() {
     private val binding by lazy { FragmentProfileBinding.inflate(layoutInflater) }
-    private val viewModel: ProfileViewModel by viewModels()
     private val args: ProfileFragmentArgs by navArgs()
 
     override fun onCreateView(
@@ -44,40 +43,41 @@ class ProfileFragment : Fragment() {
 
     private fun initUI() {
         initViewType()
-        initUserProfile()
 
         binding.imgProfileClose.setOnClickListener {
             findNavController().navigateUp()
         }
-       /* binding.ckbProfileBookmark.isSelected = false
-        binding.ckbProfileBookmark.setOnClickListener {
-            it.
-        }*/
+        binding.imgProfileBookmark.setOnClickListener {
+            it.isActivated = !it.isActivated
+            Snackbar.make(requireContext(), it, it.isActivated.toString(), Snackbar.LENGTH_SHORT)
+                .show()
+        }
     }
 
     // 메인 유저, 친구 여부에 따라 UI가 다름
-   private fun initViewType() {
+    private fun initViewType() {
+        Timber.d("UserInfo" + args.userInfo)
         when (args.viewType) {
             1 -> { // 내 프로필
-                binding.ckbProfileBookmark.toInvisible()
+                binding.imgProfileBookmark.toInvisible()
                 swapViewVisibility(binding.cstProfileChat, binding.cstProfileEdit)
             }
             2 -> { // 친구 프로필
-                binding.ckbProfileBookmark.toVisible()
+                binding.imgProfileBookmark.toVisible()
                 swapViewVisibility(binding.cstProfileEdit, binding.cstProfileChat)
             }
         }
+        initUserProfile()
     }
 
     // 유저프로필 초기화
     private fun initUserProfile() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.userProfile.collectLatest {
-                Glide.with(binding.imgProfile)
-                    .load(it.image).apply(RequestOptions.circleCropTransform())
-                    .into(binding.imgProfile)
-                binding.tvProfileNickname.text = it.nickname
-            }
-        }
+        Glide.with(binding.imgProfile)
+            .load(args.userInfo.image).apply(RequestOptions.circleCropTransform())
+            .apply(RequestOptions.placeholderOf(R.drawable.ic_person_white_24))
+            .into(binding.imgProfile)
+        binding.tvProfileNickname.text = args.userInfo.nickname
+        Glide.with(binding.imgProfileBg).load(args.userInfo.backgroundImage)
+            .into(binding.imgProfileBg)
     }
 }

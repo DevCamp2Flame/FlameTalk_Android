@@ -78,11 +78,7 @@ class FriendFragment : Fragment() {
 
         // 친구 목록 > 프로필 상세 보기 이동
         binding.lFriendMainUser.root.setOnClickListener {
-            val friendToProfileDirections: NavDirections =
-                FriendFragmentDirections.actionFriendToProfile(
-                    viewModel.userProfile.value.userId,
-                    2
-                )
+            val friendToProfileDirections: NavDirections = FriendFragmentDirections.actionFriendToProfile(1, viewModel.userProfile.value)
             findNavController().navigate(friendToProfileDirections)
         }
     }
@@ -112,9 +108,7 @@ class FriendFragment : Fragment() {
 
     // 생일인 친구 리스트 초기화
     private fun initBirthdayProfile() {
-        binding.rvFriendBirthday.layoutManager = LinearLayoutManager(
-            requireContext(), RecyclerView.HORIZONTAL, false
-        )
+        binding.rvFriendBirthday.layoutManager = LinearLayoutManager(requireContext())
         binding.rvFriendBirthday.adapter = birthdayAdapter
 
         viewModel.birthProfile.observe(

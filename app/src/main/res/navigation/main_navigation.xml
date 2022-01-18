@@ -56,13 +56,12 @@
         android:label="Profile"
         tools:layout="@layout/fragment_profile">
         <argument
-            android:name="userId"
-            android:defaultValue="-1"
-            app:argType="integer" />
-        <argument
             android:name="viewType"
             android:defaultValue="1"
             app:argType="integer" />
+        <argument
+            android:name="userInfo"
+            app:argType="com.sgs.devcamp2.flametalk_android.network.response.friend.ProfilePreview" />
     </fragment>
 
     <!--    채팅방 리스트-->

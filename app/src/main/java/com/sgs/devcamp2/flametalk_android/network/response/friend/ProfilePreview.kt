@@ -1,5 +1,8 @@
 package com.sgs.devcamp2.flametalk_android.network.response.friend
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
 /**
  *  ProfilePreview
  *
@@ -9,10 +12,11 @@ package com.sgs.devcamp2.flametalk_android.network.response.friend
  *   backgroundImage 배경 이미지
  */
 
+@Parcelize
 data class ProfilePreview(
     val userId: Int,
     val nickname: String,
     val image: String?,
     val description: String?,
     val backgroundImage: String?
-)
+) : Parcelable

@@ -2,8 +2,8 @@ package com.sgs.devcamp2.flametalk_android.ui.profile
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
-import com.sgs.devcamp2.flametalk_android.domain.dummy.getDummyUser
-import com.sgs.devcamp2.flametalk_android.domain.model.response.friend.ProfilePreview
+import com.sgs.devcamp2.flametalk_android.data.dummy.getDummyUser
+import com.sgs.devcamp2.flametalk_android.network.response.friend.ProfilePreview
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
