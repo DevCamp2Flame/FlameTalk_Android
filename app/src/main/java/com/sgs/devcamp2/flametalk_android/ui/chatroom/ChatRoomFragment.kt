@@ -15,10 +15,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.DrawerLayoutChatRoomBinding
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentChatRoomBinding
+import com.sgs.devcamp2.flametalk_android.di.WebSocketListener
 import com.sgs.devcamp2.flametalk_android.util.onTextChanged
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.WebSocket
+import javax.inject.Inject
 
 /**
  * 채팅방 리스트에서 한 채팅 클릭 시 이동하게 될 채팅방 내부 fragment
@@ -30,6 +35,17 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
     lateinit var drawer_bindng: DrawerLayoutChatRoomBinding
     lateinit var adapter: ChatRoomAdapter
     lateinit var userlistAdapter: ChatRoomDrawUserListAdapter
+
+    @Inject
+    lateinit var webSocketListener: WebSocketListener
+
+    @Inject
+    lateinit var request: Request
+
+    lateinit var webSocket: WebSocket
+
+    var client = OkHttpClient()
+
     private val model by activityViewModels<ChatRoomViewModel>()
 
     override fun onCreateView(
@@ -80,6 +96,8 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
         binding.ivChatRoomDraw.setOnClickListener(this)
         binding.ivChatRoomFile.setOnClickListener(this)
         binding.ivChatSend.setOnClickListener(this)
+
+        webSocket = client.newWebSocket(request, webSocketListener)
     }
 
     override fun onClick(view: View?) {
@@ -99,7 +117,8 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
             binding.ivChatSend ->
                 {
                     Log.d(TAG, "ChatRoomFragment - onClick() called")
-                    model.sendMessage()
+                    model.sendMessage(webSocket)
+
                     binding.etChatRoomInputText.setText("")
                 }
         }

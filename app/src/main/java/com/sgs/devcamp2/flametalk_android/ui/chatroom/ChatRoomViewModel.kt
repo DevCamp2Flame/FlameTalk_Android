@@ -1,7 +1,6 @@
 package com.sgs.devcamp2.flametalk_android.ui.chatroom
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,6 +10,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import okhttp3.WebSocket
 import java.util.*
 import javax.inject.Inject
 
@@ -88,8 +88,9 @@ class ChatRoomViewModel @Inject constructor(
         _chat.value = text
     }
 
-    fun sendMessage() {
+    fun sendMessage(webSocket: WebSocket) {
         var chat = Chat(1, "1", "0", _chat.value)
         addChatting(chat)
+        webSocket.send(_chat.value)
     }
 }
