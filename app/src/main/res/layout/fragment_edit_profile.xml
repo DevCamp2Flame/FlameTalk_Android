@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/img_edit_profile_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/flame_sky_blue"
+        android:scaleType="centerCrop"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/tv_edit_profile_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:drawableStart="@drawable/ic_back_arrow_white_34"
+        android:gravity="center"
+        android:text="프로필 편집"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/white" />
+
+    <TextView
+        android:id="@+id/tv_edit_profile_confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:text="완료"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/img_edit_profile"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="200dp"
+        android:background="@drawable/bg_skyblue2_50"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/img_edit_profile_gallery"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/bg_white_15"
+        android:foreground="@drawable/ic_camera_24"
+        android:padding="15dp"
+        app:layout_constraintBottom_toBottomOf="@+id/img_edit_profile"
+        app:layout_constraintEnd_toEndOf="@+id/img_edit_profile" />
+
+    <TextView
+        android:id="@+id/tv_edit_profile_nickname"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="50dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/img_edit_profile"
+        tools:text="홍길동" />
+
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/ic_edit_24"
+        app:layout_constraintEnd_toEndOf="@id/tv_edit_profile_desc"
+        app:layout_constraintTop_toTopOf="@+id/tv_edit_profile_desc"
+        app:tint="@color/white" />
+
+    <TextView
+        android:id="@+id/tv_edit_profile_desc"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="50dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_edit_profile_nickname"
+        tools:text="상태메세지" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="200dp"
+        android:background="@color/white"
+        app:layout_constraintEnd_toEndOf="@id/tv_edit_profile_desc"
+        app:layout_constraintStart_toStartOf="@id/tv_edit_profile_desc"
+        app:layout_constraintTop_toBottomOf="@id/tv_edit_profile_desc" />
+
+    <ImageView
+        android:id="@+id/img_edit_profile_gallery_bg"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_margin="20dp"
+        android:background="@drawable/bg_white_15"
+        android:foreground="@drawable/ic_camera_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
