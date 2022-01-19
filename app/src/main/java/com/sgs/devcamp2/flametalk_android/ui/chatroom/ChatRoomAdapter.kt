@@ -1,5 +1,6 @@
 package com.sgs.devcamp2.flametalk_android.ui.chatroom
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,11 +17,11 @@ import com.sgs.devcamp2.flametalk_android.network.response.chat.Chat
 class ChatRoomAdapter constructor() : ListAdapter<Chat, RecyclerView.ViewHolder>(diffUtil) {
 
     companion object {
+        val TAG: String = "로그"
         val diffUtil = object : DiffUtil.ItemCallback<Chat>() {
             override fun areItemsTheSame(oldItem: Chat, newItem: Chat): Boolean {
                 return oldItem.id == newItem.id
             }
-
             override fun areContentsTheSame(oldItem: Chat, newItem: Chat): Boolean {
                 return oldItem == newItem
             }
@@ -55,6 +56,7 @@ class ChatRoomAdapter constructor() : ListAdapter<Chat, RecyclerView.ViewHolder>
         when (getItem(position).user_id) {
             "0" ->
                 {
+
                     (holder as RightStartViewHolder).bind(getItem(position))
                 }
             "1" ->

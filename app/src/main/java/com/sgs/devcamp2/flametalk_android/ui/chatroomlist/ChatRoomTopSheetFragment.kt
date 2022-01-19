@@ -5,14 +5,15 @@ import android.graphics.Point
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
-import android.view.*
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentChatRoomListTopSheetBinding
-import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
 class ChatRoomTopSheetFragment : DialogFragment(), View.OnClickListener {
 
     lateinit var binding: FragmentChatRoomListTopSheetBinding
@@ -55,7 +56,7 @@ class ChatRoomTopSheetFragment : DialogFragment(), View.OnClickListener {
         when (view) {
             binding.ivDialogTopSheetNormalChat ->
                 {
-                    findNavController().navigate(R.id.inviteRoomFragment)
+                    findNavController().navigate(R.id.navigation_invite_room)
                     this.dismiss()
                 }
         }

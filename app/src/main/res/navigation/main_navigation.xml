@@ -136,9 +136,12 @@
         <action
             android:id="@+id/action_chatRoomFragment_to_navigation_oauth"
             app:destination="@id/navigation_oauth" />
+        <action
+            android:id="@+id/action_navigation_chat_room_to_navigation_chat_Room_Bottom_Sheet"
+            app:destination="@id/navigation_chat_Room_Bottom_Sheet" />
     </fragment>
     <fragment
-        android:id="@+id/inviteRoomFragment"
+        android:id="@+id/navigation_invite_room"
         android:name="com.sgs.devcamp2.flametalk_android.ui.inviteroom.InviteRoomFragment"
         android:label="fragment_invite_room"
         tools:layout="@layout/fragment_invite_room">
@@ -146,14 +149,32 @@
             android:id="@+id/action_inviteRoomFragment_to_navigation_chat_room_list2"
             app:destination="@id/navigation_chat_room_list" />
     </fragment>
-    <fragment
-        android:id="@+id/chatRoomTopSheetFragment"
+    <dialog
+        android:id="@+id/navigation_chat_Room_Top_Sheet"
         android:name="com.sgs.devcamp2.flametalk_android.ui.chatroomlist.ChatRoomTopSheetFragment"
-        android:label="ChatRoomTopSheetFragment">
+        android:label="fragment_chat_room_top_sheet" >
         <action
             android:id="@+id/action_chatRoomTopSheetFragment_to_inviteRoomFragment"
-            app:destination="@id/inviteRoomFragment" />
+            app:destination="@id/navigation_invite_room" />
+    </dialog>
+    <fragment
+        android:id="@+id/navigation_chat_Room_Camera"
+        android:name="com.sgs.devcamp2.flametalk_android.ui.chatroom.ChatRoomCameraFragment"
+        android:label="fragment_chat_room_camera"
+        tools:layout="@layout/fragment_chat_room_camera" >
+        <action
+            android:id="@+id/action_chatRoomCameraFragment_to_navigation_chat_room"
+            app:destination="@id/navigation_chat_room" />
     </fragment>
+    <dialog
+        android:id="@+id/navigation_chat_Room_Bottom_Sheet"
+        android:name="com.sgs.devcamp2.flametalk_android.ui.chatroom.ChatRoomBottomSheetFragment"
+        android:label="fragment_chat_room_bottom_sheet"
+        tools:layout="@layout/fragment_chat_room_bottom_sheet" >
+        <action
+            android:id="@+id/action_chatRoomBottomSheetFragment_to_chatRoomCameraFragment"
+            app:destination="@id/navigation_chat_Room_Camera" />
+    </dialog>
 
 
 </navigation>

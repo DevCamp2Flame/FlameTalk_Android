@@ -8,11 +8,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.DrawerLayoutChatRoomBinding
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentChatRoomBinding
+import com.sgs.devcamp2.flametalk_android.util.onTextChanged
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 /**
  * 채팅방 리스트에서 한 채팅 클릭 시 이동하게 될 채팅방 내부 fragment
@@ -21,10 +27,10 @@ import dagger.hilt.android.AndroidEntryPoint
 class ChatRoomFragment : Fragment(), View.OnClickListener {
     val TAG: String = "로그"
     lateinit var binding: FragmentChatRoomBinding
-    lateinit var drawer_bindng : DrawerLayoutChatRoomBinding
+    lateinit var drawer_bindng: DrawerLayoutChatRoomBinding
     lateinit var adapter: ChatRoomAdapter
     lateinit var userlistAdapter: ChatRoomDrawUserListAdapter
-    private val model by viewModels<ChatRoomViewModel>()
+    private val model by activityViewModels<ChatRoomViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,19 +42,17 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
         drawer_bindng = binding.layoutDrawer
         initUI(this.requireContext())
 
-        /**
-         * viewModel에서 생성한 chat content를 chatRoomAdapter에 전달한다.
-         */
-        model.chatRoom.observe(
-            this.requireActivity(),
-            {
-                adapter.submitList(it)
-            }
-        )
+        lifecycleScope.launch {
+            model.chatRoom.collect {
 
-        /**
-         * viewModel에서 생성한 유저를 user_adpater에 전달한다.
-         */
+                Log.d(TAG, "adapter currentList hashcode - ${adapter.currentList.hashCode()}")
+                Log.d(TAG, "newList hashcode - ${it.hashCode()}")
+                adapter.submitList(it) {
+                    binding.rvChatRoom.smoothScrollToPosition(it.size)
+                }
+            }
+        }
+
         model.userRoom.observe(
             this.requireActivity(),
             {
@@ -56,12 +60,13 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
             }
         )
 
+        binding.etChatRoomInputText.onTextChanged {
+            model.updateTextValue(it.toString())
+        }
+
         return binding.root
     }
 
-    /**
-     * adapter 두개를 사용하기 위하여 초기화
-     */
     fun initUI(context: Context) {
         binding.rvChatRoom.layoutManager = LinearLayoutManager(context)
         drawer_bindng.rvDrawUserList.layoutManager = LinearLayoutManager(context)
@@ -73,18 +78,29 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
         drawer_bindng.rvDrawUserList.adapter = userlistAdapter
 
         binding.ivChatRoomDraw.setOnClickListener(this)
+        binding.ivChatRoomFile.setOnClickListener(this)
+        binding.ivChatSend.setOnClickListener(this)
     }
 
-    /**
-     * 서랍 아이콘 클릭시 drawlayout 을 연다.
-     */
     override fun onClick(view: View?) {
-        Log.d(TAG, "ChatRoomFragment - view : $view called")
         when (view) {
             binding.ivChatRoomDraw ->
                 {
                     Log.d(TAG, "ChatRoomFragment - onClick() called")
                     binding.layoutChatRoomDraw.openDrawer(Gravity.RIGHT)
+                }
+            binding.ivChatRoomFile ->
+                {
+                    Log.d(TAG, "ChatRoomFragment - onClick() called")
+                    // ChatRoomBottomSheetFragment().show(childFragmentManager, "bottomSheet")
+                    findNavController().navigate(R.id.action_navigation_chat_room_to_navigation_chat_Room_Bottom_Sheet)
+                }
+
+            binding.ivChatSend ->
+                {
+                    Log.d(TAG, "ChatRoomFragment - onClick() called")
+                    model.sendMessage()
+                    binding.etChatRoomInputText.setText("")
                 }
         }
     }
