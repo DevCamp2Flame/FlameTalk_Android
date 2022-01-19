@@ -22,11 +22,7 @@ class ChatRoomAdapter constructor() : ListAdapter<Chat, RecyclerView.ViewHolder>
             override fun areItemsTheSame(oldItem: Chat, newItem: Chat): Boolean {
                 return oldItem.id == newItem.id
             }
-
             override fun areContentsTheSame(oldItem: Chat, newItem: Chat): Boolean {
-                Log.d(TAG, "oldItem - ${oldItem.hashCode()}")
-                Log.d(TAG, "newItem - ${newItem.hashCode()}")
-
                 return oldItem == newItem
             }
         }

@@ -20,7 +20,8 @@ class ChatRoomViewModel @Inject constructor(
 ) : ViewModel() {
     val TAG: String = "로그"
 
-    private var _chatRoom = MutableLiveData<MutableList<Chat>>()
+    private var _chatRoom = MutableStateFlow<List<Chat>>(emptyList())
+
     private var list = mutableListOf<Chat>()
 
     private var _chat = MutableStateFlow<String>("")
@@ -32,8 +33,7 @@ class ChatRoomViewModel @Inject constructor(
     private var _chatUserList = MutableLiveData<MutableList<String>>()
     private var userlist = mutableListOf<String>()
 
-    val chatRoom: LiveData<MutableList<Chat>>
-        get() = _chatRoom
+    val chatRoom = _chatRoom.asStateFlow()
 
     val userRoom: LiveData<MutableList<String>>
         get() = _chatUserList
@@ -53,16 +53,6 @@ class ChatRoomViewModel @Inject constructor(
             }
         }
     }
-
-    /**
-     * itemView를 나누기 위해서 총 4가지의 변수를 두어야한다.
-     * leftstart , left, rightstart, right
-     *
-     * 사용자의 userid를 받아서 비교해서 같으면 오른쪽, 아니라면 왼쪽
-     * 내가 아닌 다른 사용자가 첫번째로 보낸 메세지면 leftStart ViewHolder에 전달
-     * 위의 메세지 이후에 오는 메시지는 leftViewHolder에 전달
-     * >> 첫번째 보넀을 때는 이름과 사진이 보여야하지만 연달아서 오는 메시지는 텍스트만 보여주고 , 날짜가 옮겨간다.
-     */
 
     fun initChattingText(): Flow<Chat> = flow {
 
@@ -90,10 +80,9 @@ class ChatRoomViewModel @Inject constructor(
     }
 
     fun addChatting(chat: Chat) {
-        var list = _chatRoom.value?.map { it.copy() }?.toMutableList()
-        list?.add(chat)
-        Log.d(TAG, "list - $list")
-        _chatRoom.value = list!!
+        var newList = _chatRoom.value.toMutableList()
+        newList.add(chat)
+        _chatRoom.value = newList
     }
     fun updateTextValue(text: String) {
         _chat.value = text

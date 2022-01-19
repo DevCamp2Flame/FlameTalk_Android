@@ -15,9 +15,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.DrawerLayoutChatRoomBinding
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentChatRoomBinding
-import com.sgs.devcamp2.flametalk_android.network.response.chat.Chat
 import com.sgs.devcamp2.flametalk_android.util.onTextChanged
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 /**
@@ -38,35 +38,19 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
         savedInstanceState: Bundle?
     ): View? {
 
-//        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Chat>("chat")?.observe(
-//            viewLifecycleOwner
-//        ) {
-//            result ->
-//            run {
-//                Log.d(TAG, "result - $result")
-//                lifecycleScope.launch {
-//                    model.addChatting(result)
-//                }
-//            }
-//        }
-
         binding = FragmentChatRoomBinding.inflate(inflater, container, false)
         drawer_bindng = binding.layoutDrawer
         initUI(this.requireContext())
 
-
         lifecycleScope.launch {
-            model.chatRoom.observe(
-                viewLifecycleOwner,
-                {
-                    Log.d(TAG, "it - $it() called")
-                    adapter.submitList(it){
-                        binding.rvChatRoom.scrollToPosition(it.size-1)
-                    }
+            model.chatRoom.collect {
 
-
+                Log.d(TAG, "adapter currentList hashcode - ${adapter.currentList.hashCode()}")
+                Log.d(TAG, "newList hashcode - ${it.hashCode()}")
+                adapter.submitList(it) {
+                    binding.rvChatRoom.smoothScrollToPosition(it.size)
                 }
-            )
+            }
         }
 
         model.userRoom.observe(
@@ -114,10 +98,9 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
 
             binding.ivChatSend ->
                 {
-                    Log.d(TAG,"ChatRoomFragment - onClick() called")
+                    Log.d(TAG, "ChatRoomFragment - onClick() called")
                     model.sendMessage()
                     binding.etChatRoomInputText.setText("")
-
                 }
         }
     }
