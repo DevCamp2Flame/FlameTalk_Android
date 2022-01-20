@@ -1,6 +1,7 @@
 package com.sgs.devcamp2.flametalk_android.ui.chatroom
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,7 +11,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import okhttp3.WebSocket
+import org.json.JSONObject
+import ua.naiksoftware.stomp.Stomp
+import ua.naiksoftware.stomp.dto.LifecycleEvent
+import ua.naiksoftware.stomp.dto.StompHeader
 import java.util.*
 import javax.inject.Inject
 
@@ -25,6 +29,21 @@ class ChatRoomViewModel @Inject constructor(
     private var list = mutableListOf<Chat>()
 
     private var _chat = MutableStateFlow<String>("")
+
+//    @Inject
+//    lateinit var webSocketListener: WebSocketListener
+//
+//    @Inject
+//    lateinit var request: Request
+//
+//    lateinit var webSocket: WebSocket
+
+    // var url = "ws://127.0.0.1:8080/app/chat/rooms"
+    val intervalMillis = 1000L
+    var url = "ws://10.0.2.2:8080/pub/chat/enter"
+
+
+    val stompClient = Stomp.over(Stomp.ConnectionProvider.OKHTTP, url)
 
     /**
      * _chatUserList는 채팅방에 속해 있는 user의 정보를 의미한다. image url, 이름 등이 포함 될 수 있다.
@@ -52,6 +71,7 @@ class ChatRoomViewModel @Inject constructor(
                 _chatUserList.value = userlist
             }
         }
+
     }
 
     fun initChattingText(): Flow<Chat> = flow {
@@ -88,9 +108,48 @@ class ChatRoomViewModel @Inject constructor(
         _chat.value = text
     }
 
-    fun sendMessage(webSocket: WebSocket) {
+    fun sendMessage() {
         var chat = Chat(1, "1", "0", _chat.value)
         addChatting(chat)
-        webSocket.send(_chat.value)
+        runStomp()
+    }
+
+    fun runStomp() {
+        stompClient.topic("/topic/message/test0912").subscribe { topicMessage ->
+            Log.i("message Recieve", topicMessage.payload)
+        }
+
+        val headerList = arrayListOf<StompHeader>()
+        headerList.add(StompHeader("inviteCode", "test0912"))
+        headerList.add(StompHeader("username", "test1"))
+        headerList.add(StompHeader("positionType", "1"))
+        stompClient.connect(headerList)
+
+        stompClient.lifecycle().subscribe { lifecycleEvent ->
+            when (lifecycleEvent.type) {
+                LifecycleEvent.Type.OPENED -> {
+                    Log.i("OPEND", "!!")
+                }
+                LifecycleEvent.Type.CLOSED -> {
+                    Log.i("CLOSED", "!!")
+                }
+                LifecycleEvent.Type.ERROR -> {
+                    Log.i("ERROR", "!!")
+                    Log.e("CONNECT ERROR", lifecycleEvent.exception.toString())
+                }
+                else -> {
+                    Log.i("ELSE", lifecycleEvent.message)
+                }
+            }
+        }
+
+        val data = JSONObject()
+        data.put("userKey", "test1")
+        data.put("positionType", "1")
+        data.put("content", "test")
+        data.put("messageType", "CHAT")
+        data.put("destRoomCode", "test0912")
+
+        stompClient.send("/sub/chat/room"  , data.toString()).subscribe()
     }
 }

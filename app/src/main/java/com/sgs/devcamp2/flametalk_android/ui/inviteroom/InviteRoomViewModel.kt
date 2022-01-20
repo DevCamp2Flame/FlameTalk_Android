@@ -142,4 +142,8 @@ class InviteRoomViewModel @Inject constructor() : ViewModel() {
             this.markAdapter?.removeActivate(newPosition)
         }
     }
+
+    fun createChatRoom(){
+
+    }
 }

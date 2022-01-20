@@ -17,7 +17,7 @@ object Request {
     @Provides
     @Singleton
     fun requestBuild(): Request {
-        return Request.Builder().url("ws://10.0.2.2:8082/app/pub/rooms")
+        return Request.Builder().url("ws://127.0.0.1:8080/app/pub/chat/room/")
             .build()
     }
 }
