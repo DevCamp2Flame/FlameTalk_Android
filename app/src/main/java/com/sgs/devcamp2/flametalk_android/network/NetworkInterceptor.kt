@@ -1,13 +1,20 @@
 package com.sgs.devcamp2.flametalk_android.network
 
 import com.sgs.devcamp2.flametalk_android.util.addHeader
+import java.io.IOException
 import okhttp3.Interceptor
 import okhttp3.RequestBody
 import okhttp3.Response
 import okio.Buffer
 import org.json.JSONObject
 import timber.log.Timber
-import java.io.IOException
+
+/**
+ * @author 박소연
+ * @created 2022/01/13
+ * @updated 2022/01/20
+ * @desc Header에 access token을 자동 주입
+ */
 
 class NetworkInterceptor(
     val tokenSupplier: () -> String?
