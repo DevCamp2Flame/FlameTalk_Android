@@ -57,7 +57,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/edt_signin_pwd" />
 
-    <TextView
+    <com.google.android.gms.common.SignInButton
         android:id="@+id/btn_signin_google"
         android:layout_width="0dp"
         android:layout_height="50dp"
