@@ -8,7 +8,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import kotlinx.coroutines.flow.*
-import timber.log.Timber
 
 @HiltViewModel
 class EditProfileViewModel @Inject constructor(
@@ -41,7 +40,7 @@ class EditProfileViewModel @Inject constructor(
     private val _backgroundImage = MutableStateFlow("")
     val backgroundImage = _backgroundImage.asStateFlow()
 
-    // 배경 이미지
+    // 배경 이미지 url
     private val _backgroundImageUrl = MutableStateFlow("")
     val backgroundImageUrl = _backgroundImageUrl.asStateFlow()
 
@@ -68,5 +67,17 @@ class EditProfileViewModel @Inject constructor(
 
         )
         // TODO: 통신 준비
+    }
+
+    fun setProfileImage(path: String?) {
+        if (path != null) {
+            _profileImage.value = path
+        }
+    }
+
+    fun setBackgroundImage(path: String) {
+        if (path != null) {
+            _backgroundImage.value = path
+        }
     }
 }
