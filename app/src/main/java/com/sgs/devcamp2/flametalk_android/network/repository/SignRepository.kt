@@ -1,10 +1,14 @@
 package com.sgs.devcamp2.flametalk_android.network.repository
 
-import com.sgs.devcamp2.flametalk_android.network.repository.user.UserRepository
+import com.sgs.devcamp2.flametalk_android.network.dao.UserDAO
+import com.sgs.devcamp2.flametalk_android.network.request.sign.SigninRequest
+import com.sgs.devcamp2.flametalk_android.network.request.sign.SignupRequest
 import com.sgs.devcamp2.flametalk_android.network.service.UserService
+import dagger.Lazy
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 
 /**
  * @author 박소연
@@ -15,12 +19,16 @@ import kotlinx.coroutines.CoroutineDispatcher
 @Singleton
 class SignRepository @Inject constructor(
     private val userService: Lazy<UserService>,
-    private val userRepository: Lazy<UserRepository>,
-    private val ioDispatcher: CoroutineDispatcher,
+    private val userDAO: Lazy<UserDAO>,
+    private val ioDispatcher: CoroutineDispatcher
 ) {
+    // 회원가입
+    suspend fun signup(request: SignupRequest) = withContext(ioDispatcher) {
+        userService.get().postSignup(request)
+    }
 
-//     네트워크 모듈 예시
-//    suspend fun signUp(request: SignUpRequest) = withContext(ioDispatcher) {
-//        userService.get().postSignUp(request)
-//    }
+    // 로그인
+    suspend fun signin(request: SigninRequest) = withContext(ioDispatcher) {
+        userService.get().postSignin(request)
+    }
 }
