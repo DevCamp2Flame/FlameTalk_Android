@@ -1,8 +1,8 @@
-package com.sgs.devcamp2.flametalk_android.network
+package com.sgs.devcamp2.flametalk_android.di.module
 
-import com.sgs.devcamp2.flametalk_android.network.repository.user.UserRepository
+import com.sgs.devcamp2.flametalk_android.network.NetworkInterceptor
+import com.sgs.devcamp2.flametalk_android.network.dao.UserDAO
 import com.sgs.devcamp2.flametalk_android.network.service.UserService
-import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,7 +15,6 @@ import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 /**
@@ -29,10 +28,10 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 class NetworkModule {
     @Provides
     @Singleton
-    fun provideNetworkInterceptor(userRepository: UserRepository): NetworkInterceptor {
+    fun provideNetworkInterceptor(userDAO: UserDAO): NetworkInterceptor {
         return NetworkInterceptor {
             runBlocking(Dispatchers.IO) {
-                userRepository.user.first()?.token
+                userDAO.user.first()?.accessToken
             }
         }
     }
@@ -41,10 +40,16 @@ class NetworkModule {
     @Singleton
     fun provideOkHttp3Client(networkInterceptor: NetworkInterceptor): OkHttpClient {
         return OkHttpClient.Builder()
-            .addInterceptor(networkInterceptor)
             .callTimeout(10, TimeUnit.SECONDS)
             .connectTimeout(10, TimeUnit.SECONDS)
             .build()
+
+        // TODO: response가 통일되면 interceptor를 추가해야한다.
+        /* return OkHttpClient.Builder()
+            .addInterceptor(networkInterceptor)
+            .callTimeout(10, TimeUnit.SECONDS)
+            .connectTimeout(10, TimeUnit.SECONDS)
+            .build()*/
     }
 
     @Provides

@@ -5,6 +5,7 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class User(
-    val token: String,
-    val nickname: String
+    val nickname: String,
+    val accessToken: String,
+    val refreshToken: String
 ) : Parcelable
