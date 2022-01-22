@@ -109,16 +109,17 @@ class SigninFragment : Fragment() {
         )
 
         // 로그인된 유저의 닉네임 띄움
-        lifecycleScope.launchWhenResumed {
-            viewModel.nickname.collectLatest {
-                if (it != "") {
-                    Snackbar.make(requireView(), "${it}님 로그인 되었습니다.", Snackbar.LENGTH_SHORT).show()
-                } else {
-                    Snackbar.make(requireView(), "로그인에 실패했습니다.", Snackbar.LENGTH_SHORT).show()
-                    findNavController().navigateUp()
-                }
-            }
-        }
+//        lifecycleScope.launchWhenResumed {
+//            viewModel.nickname.collectLatest {
+//                if (it != "") {
+//                    Snackbar.make(requireView(), "${it}님 로그인 되었습니다.", Snackbar.LENGTH_SHORT).show()
+//                } else {
+//                    Snackbar.make(requireView(), "로그인에 실패했습니다.", Snackbar.LENGTH_SHORT).show()
+//                    findNavController().navigateUp()
+//                }
+//            }
+//        }
+
     }
 
     private fun googleLogin() {

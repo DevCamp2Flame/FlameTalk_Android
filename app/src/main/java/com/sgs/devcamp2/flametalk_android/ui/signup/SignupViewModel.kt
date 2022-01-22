@@ -50,12 +50,14 @@ class SignupViewModel @Inject constructor(
         val request = SignupRequest(
             email, password, nickname, phoneNumber, birthday, social, region, language, deviceId
         )
+
         viewModelScope.launch {
             try {
                 val response = signRepository.get().signup(request)
                 _nickname.value = response.nickname
 
-                Timber.d("Signup Response: $response")
+                Timber.d("Signup Response: ${response.nickname}")
+                Timber.d("Signup Response _nickname: ${_nickname.value}")
             } catch (ignored: Throwable) {
                 _error.value = "알 수 없는 에러 발생"
                 Timber.d("Signup Response: $_error")

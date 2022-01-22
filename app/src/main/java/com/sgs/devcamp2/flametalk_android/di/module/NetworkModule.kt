@@ -15,7 +15,7 @@ import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.converter.gson.GsonConverterFactory
 
 /**
  * @author 박소연
@@ -32,6 +32,7 @@ class NetworkModule {
         return NetworkInterceptor {
             runBlocking(Dispatchers.IO) {
                 userDAO.user.first()?.accessToken
+                userDAO.user.first()?.refreshToken
             }
         }
     }
@@ -40,16 +41,10 @@ class NetworkModule {
     @Singleton
     fun provideOkHttp3Client(networkInterceptor: NetworkInterceptor): OkHttpClient {
         return OkHttpClient.Builder()
-            .callTimeout(10, TimeUnit.SECONDS)
-            .connectTimeout(10, TimeUnit.SECONDS)
-            .build()
-
-        // TODO: response가 통일되면 interceptor를 추가해야한다.
-        /* return OkHttpClient.Builder()
             .addInterceptor(networkInterceptor)
             .callTimeout(10, TimeUnit.SECONDS)
             .connectTimeout(10, TimeUnit.SECONDS)
-            .build()*/
+            .build()
     }
 
     @Provides
@@ -59,7 +54,7 @@ class NetworkModule {
             .baseUrl(BASE_URL)
             .client(client)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .addConverterFactory(MoshiConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
 
@@ -70,6 +65,6 @@ class NetworkModule {
     }
 
     companion object {
-        const val BASE_URL = "~~"
+        const val BASE_URL = "http://10.0.2.2:8080"
     }
 }

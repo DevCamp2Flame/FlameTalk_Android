@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.collectLatest
 @ExperimentalCoroutinesApi
 class SignupFragment : Fragment() {
     private val binding by lazy { FragmentSignupBinding.inflate(layoutInflater) }
+
     // lateinit var binding: FragmentSignupBinding
     private val viewModel by viewModels<SignupViewModel>() //  by viewModels()
 

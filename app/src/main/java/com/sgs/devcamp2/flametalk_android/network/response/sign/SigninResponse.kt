@@ -1,8 +1,7 @@
 package com.sgs.devcamp2.flametalk_android.network.response.sign
 
 import androidx.annotation.Keep
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import com.google.gson.annotations.SerializedName
 
 /**
  * @author 박소연
@@ -23,16 +22,29 @@ import com.squareup.moshi.JsonClass
  */
 
 @Keep
-@JsonClass(generateAdapter = true)
 data class SigninResponse(
-    @Json(name = "userId")
+    @SerializedName("userId")
     val userId: String,
-    @Json(name = "nickname")
+    @SerializedName("nickname")
     val nickname: String,
-    @Json(name = "status")
+    @SerializedName("status")
     val status: String,
-    @Json(name = "accessToken")
+    @SerializedName("accessToken")
     val accessToken: String,
-    @Json(name = "refreshToken")
+    @SerializedName("refreshToken")
     val refreshToken: String
 )
+
+// @JsonClass(generateAdapter = true)
+// data class SigninResponse(
+//    @Json(name = "userId")
+//    val userId: String,
+//    @Json(name = "nickname")
+//    val nickname: String,
+//    @Json(name = "status")
+//    val status: String,
+//    @Json(name = "accessToken")
+//    val accessToken: String,
+//    @Json(name = "refreshToken")
+//    val refreshToken: String
+// )
