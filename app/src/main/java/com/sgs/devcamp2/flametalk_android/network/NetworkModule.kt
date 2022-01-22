@@ -2,7 +2,6 @@ package com.sgs.devcamp2.flametalk_android.network
 
 import com.sgs.devcamp2.flametalk_android.network.repository.user.UserRepository
 import com.sgs.devcamp2.flametalk_android.network.service.UserService
-import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,7 +14,6 @@ import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 /**
