@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/item_chat_room_list"
+    android:layout_width="match_parent"
+    android:layout_height="120dp">
+
+    <TextView
+        android:id="@+id/tv_open_chat_room_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:textSize="17sp"
+        app:layout_constraintEnd_toStartOf="@+id/img_open_chat_room"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="오픈채팅방 이름" />
+
+    <TextView
+        android:id="@+id/tv_open_chat_room_desc"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        app:layout_constraintEnd_toEndOf="@id/tv_open_chat_room_title"
+        app:layout_constraintStart_toStartOf="@id/tv_open_chat_room_title"
+        app:layout_constraintTop_toBottomOf="@id/tv_open_chat_room_title"
+        tools:text="#오픈채팅 #오픈채팅 #오픈채팅 #오픈채팅 #오픈채팅 #오픈채팅 #오픈채팅 #오픈채팅" />
+
+    <ImageView
+        android:id="@+id/img_open_chat_room_owner"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintStart_toStartOf="@id/tv_open_chat_room_title"
+        app:layout_constraintTop_toBottomOf="@id/tv_open_chat_room_desc"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/tv_open_chat_room_personnel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        app:layout_constraintBottom_toBottomOf="@id/img_open_chat_room_owner"
+        app:layout_constraintStart_toEndOf="@id/img_open_chat_room_owner"
+        app:layout_constraintTop_toTopOf="@id/img_open_chat_room_owner"
+        tools:text="222명" />
+
+    <ImageView
+        android:id="@+id/img_open_chat_room"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
