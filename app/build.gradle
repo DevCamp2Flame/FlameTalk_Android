@@ -76,12 +76,17 @@ dependencies {
 
     //retrofit
     implementation "com.squareup.retrofit2:retrofit:2.9.0"
-    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.9.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-    implementation 'com.google.code.gson:gson:2.8.6'
-    implementation 'com.squareup.moshi:moshi:1.13.0'
+    implementation "com.squareup.retrofit2:adapter-rxjava2:2.9.0"
+    implementation "com.squareup.retrofit2:converter-gson:2.9.0"
+    implementation "com.squareup.retrofit2:converter-moshi:2.9.0"
+    implementation "com.google.code.gson:gson:2.8.6"
+
+    // Moshi - json converter
+    implementation "com.squareup.moshi:moshi:1.12.0"
+    implementation "com.squareup.moshi:moshi-kotlin:1.12.0"
+
     //Retrofit 라이브러리 응답으로 가짜 객체를 만들기 위해
-    implementation 'com.squareup.retrofit2:retrofit-mock:2.6.2'
+    implementation "com.squareup.retrofit2:retrofit-mock:2.9.0"
 
     //Glide
     implementation ("com.github.bumptech.glide:glide:4.11.0") {
@@ -131,5 +136,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth-ktx:21.0.1'
     implementation 'com.google.android.gms:play-services-auth:20.0.0'
 
+    //stomp
+    implementation 'com.github.NaikSoftware:StompProtocolAndroid:1.6.6'
 }
 
