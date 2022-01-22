@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.DrawerLayoutChatRoomBinding
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentChatRoomBinding
+
 import com.sgs.devcamp2.flametalk_android.util.onTextChanged
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -30,6 +31,8 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
     lateinit var drawer_bindng: DrawerLayoutChatRoomBinding
     lateinit var adapter: ChatRoomAdapter
     lateinit var userlistAdapter: ChatRoomDrawUserListAdapter
+
+
     private val model by activityViewModels<ChatRoomViewModel>()
 
     override fun onCreateView(
@@ -80,6 +83,8 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
         binding.ivChatRoomDraw.setOnClickListener(this)
         binding.ivChatRoomFile.setOnClickListener(this)
         binding.ivChatSend.setOnClickListener(this)
+
+       // webSocket = client.newWebSocket(request, webSocketListener)
     }
 
     override fun onClick(view: View?) {
@@ -99,8 +104,11 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
             binding.ivChatSend ->
                 {
                     Log.d(TAG, "ChatRoomFragment - onClick() called")
+                        //model.sendMessage(webSocket)
+
                     model.sendMessage()
                     binding.etChatRoomInputText.setText("")
+
                 }
         }
     }
