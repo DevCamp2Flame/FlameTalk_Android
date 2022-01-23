@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_navigation"
-    app:startDestination="@id/navigation_additional_user_info">
+    app:startDestination="@id/navigation_friend">
 
     <fragment
         android:id="@+id/navigation_signin"

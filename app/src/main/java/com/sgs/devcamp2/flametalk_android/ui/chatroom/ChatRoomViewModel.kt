@@ -5,18 +5,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sgs.devcamp2.flametalk_android.network.request.ChatMessageDto
 import com.sgs.devcamp2.flametalk_android.network.response.chat.Chat
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import org.hildan.krossbow.stomp.StompClient
 import org.hildan.krossbow.stomp.StompSession
-import org.hildan.krossbow.stomp.conversions.kxserialization.convertAndSend
 import org.hildan.krossbow.stomp.conversions.kxserialization.withJsonConversions
 import org.hildan.krossbow.websocket.okhttp.OkHttpWebSocketClient
 import java.time.Duration
@@ -73,9 +69,9 @@ class ChatRoomViewModel @Inject constructor(
         viewModelScope.launch {
             connection().collect {
 
-                var Req: ChatMessageDto = ChatMessageDto("a9024424-e88f-4e6b-b5d6-bd3db709ba87", "김현국", "안녕하세요 ")
-                val jsonStompSession = it.withJsonConversions()
-                jsonStompSession.convertAndSend("/pub/chat/enter", Json.encodeToString(Req))
+                // var Req: ChatMessageDto = ChatMessageDto("a9024424-e88f-4e6b-b5d6-bd3db709ba87", "김현국", "안녕하세요 ")
+                //val jsonStompSession = it.withJsonConversions()
+                // jsonStompSession.convertAndSend("/pub/chat/enter", Json.encodeToString(Req))
             }
         }
     }
@@ -119,8 +115,5 @@ class ChatRoomViewModel @Inject constructor(
     }
 
     fun sendMessage() {
-        // var chat = Chat(1, "1", "0", _chat.value)
-        // addChatting(chat)
     }
-
 }
