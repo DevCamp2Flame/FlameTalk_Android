@@ -3,6 +3,7 @@ package com.sgs.devcamp2.flametalk_android.util
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
+import java.util.*
 
 /**
  * @author boris
@@ -21,3 +22,4 @@ fun EditText.onTextChanged(completion: (Editable?) -> Unit) {
         }
     })
 }
+
