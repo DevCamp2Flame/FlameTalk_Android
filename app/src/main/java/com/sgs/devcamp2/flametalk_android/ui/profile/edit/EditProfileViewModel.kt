@@ -4,7 +4,9 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sgs.devcamp2.flametalk_android.data.dummy.getDummyUser
+import com.sgs.devcamp2.flametalk_android.network.repository.FileRepository
 import com.sgs.devcamp2.flametalk_android.network.response.friend.ProfilePreview
+import dagger.Lazy
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
@@ -14,10 +16,12 @@ import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
+import timber.log.Timber
 
 @HiltViewModel
 class EditProfileViewModel @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    private val fileRepository: Lazy<FileRepository>
 ) : ViewModel() {
     // 네트워크 통신 데이터 전 더미데이터
     private var dummyUserData: ProfilePreview = getDummyUser()
@@ -98,7 +102,17 @@ class EditProfileViewModel @Inject constructor(
         )
     }
 
-    fun postCreateImage(url: String) {
-        val multipartFile = pathToMultipartFile(url)
+    // File Create 통신
+    fun postCreateImage() {
+        val multipartFile = pathToMultipartFile(_profileImage.value)
+
+        // 테스트용 더미 api
+        viewModelScope.launch {
+            try {
+                fileRepository.get().postFileCreate(multipartFile, "22")
+            } catch (ignore: Throwable) {
+                Timber.d("EditProfileViewModel: 알 수 없는 에러 발생")
+            }
+        }
     }
 }

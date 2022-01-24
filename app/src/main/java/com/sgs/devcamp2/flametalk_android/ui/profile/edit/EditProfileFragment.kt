@@ -114,7 +114,7 @@ class EditProfileFragment : Fragment() {
 
         // 프로필 이미지 변경
         binding.imgEditProfileGallery.setOnClickListener {
-            // TODO: 프로필 이미지 가져오기경
+            // TODO: 프로필 이미지 가져오기
             getProfileImage(PROFILE_IMAGE)
         }
 
@@ -133,8 +133,12 @@ class EditProfileFragment : Fragment() {
 
         // 프로필 수정 완료
         binding.tvEditProfileConfirm.setOnClickListener {
-
             // TODO: 프로필 편집 통신
+            // 파일 통신을 위한 임시 요청
+            // File Create 통신
+            if (viewModel.profileImage.value != ""){
+                viewModel.postCreateImage()
+            }
         }
     }
 
