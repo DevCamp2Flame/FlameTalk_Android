@@ -1,8 +1,7 @@
 package com.sgs.devcamp2.flametalk_android.ui.chatroomlist
 
 import android.app.AlertDialog
-import android.content.Context
-import android.content.DialogInterface
+import android.content.*
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,7 +15,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentChatRoomListBinding
-import com.sgs.devcamp2.flametalk_android.network.response.chatlist.ChatList
+import com.sgs.devcamp2.flametalk_android.data.model.ChatList
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -41,7 +40,6 @@ class ChatRoomListFragment : Fragment(), ChatRoomListAdapter.ClickCallBack, View
 
         binding = FragmentChatRoomListBinding.inflate(inflater, container, false)
         initUI(this.requireContext())
-
         /**
          * listAdapter 사용 시 adapter 에서 list type 의 변수를 생성하지 않음
          * submitList 를 통해서 추가해준다.
@@ -49,10 +47,12 @@ class ChatRoomListFragment : Fragment(), ChatRoomListAdapter.ClickCallBack, View
         model.chatList.observe(
             this.requireActivity(),
             Observer {
-
+                Log.d(TAG, "ChatRoomListFragment - onCreateView() called")
+                Log.d(TAG, "ChatRoomListFragment - $it() called")
                 adapterRoom.submitList(it)
             }
         )
+
         return binding.root
     }
 
@@ -60,7 +60,6 @@ class ChatRoomListFragment : Fragment(), ChatRoomListAdapter.ClickCallBack, View
         binding.rvChatListChattingRoom.layoutManager = LinearLayoutManager(context)
         adapterRoom = ChatRoomListAdapter(callback = this)
         binding.rvChatListChattingRoom.adapter = adapterRoom
-
         binding.ivChatRoomListChat.setOnClickListener(this)
     }
 
