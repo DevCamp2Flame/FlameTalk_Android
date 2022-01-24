@@ -133,6 +133,7 @@ class EditProfileFragment : Fragment() {
 
         // 프로필 수정 완료
         binding.tvEditProfileConfirm.setOnClickListener {
+
             // TODO: 프로필 편집 통신
         }
     }

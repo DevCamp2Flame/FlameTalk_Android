@@ -2,12 +2,18 @@ package com.sgs.devcamp2.flametalk_android.ui.profile.edit
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.sgs.devcamp2.flametalk_android.data.dummy.getDummyUser
 import com.sgs.devcamp2.flametalk_android.network.response.friend.ProfilePreview
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import java.io.File
 import javax.inject.Inject
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
 
 @HiltViewModel
 class EditProfileViewModel @Inject constructor(
@@ -79,5 +85,20 @@ class EditProfileViewModel @Inject constructor(
         if (path != null) {
             _backgroundImage.value = path
         }
+    }
+
+    private fun pathToMultipartFile(url: String): MultipartBody.Part {
+        val file = File(url)
+        val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
+
+        return MultipartBody.Part.createFormData(
+            "multipartFile",
+            file.name,
+            requestFile
+        )
+    }
+
+    fun postCreateImage(url: String) {
+        val multipartFile = pathToMultipartFile(url)
     }
 }
