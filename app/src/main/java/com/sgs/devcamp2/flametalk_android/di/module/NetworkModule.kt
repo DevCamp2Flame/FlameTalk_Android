@@ -1,8 +1,8 @@
-package com.sgs.devcamp2.flametalk_android.network
+package com.sgs.devcamp2.flametalk_android.di.module
 
-import com.sgs.devcamp2.flametalk_android.network.repository.user.UserRepository
+import com.sgs.devcamp2.flametalk_android.network.NetworkInterceptor
+import com.sgs.devcamp2.flametalk_android.network.dao.UserDAO
 import com.sgs.devcamp2.flametalk_android.network.service.UserService
-import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,7 +16,6 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.converter.moshi.MoshiConverterFactory
 
 /**
  * @author 박소연
@@ -29,10 +28,11 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 class NetworkModule {
     @Provides
     @Singleton
-    fun provideNetworkInterceptor(userRepository: UserRepository): NetworkInterceptor {
+    fun provideNetworkInterceptor(userDAO: UserDAO): NetworkInterceptor {
         return NetworkInterceptor {
             runBlocking(Dispatchers.IO) {
-                userRepository.user.first()?.token
+                userDAO.user.first()?.accessToken
+                userDAO.user.first()?.refreshToken
             }
         }
     }
@@ -54,7 +54,7 @@ class NetworkModule {
             .baseUrl(BASE_URL)
             .client(client)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .addConverterFactory(MoshiConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
 
@@ -65,6 +65,6 @@ class NetworkModule {
     }
 
     companion object {
-        const val BASE_URL = "~~"
+        const val BASE_URL = "http://10.0.2.2:8080"
     }
 }
