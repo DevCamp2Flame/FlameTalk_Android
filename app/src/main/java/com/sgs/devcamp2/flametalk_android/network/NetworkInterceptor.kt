@@ -20,8 +20,10 @@ class NetworkInterceptor(
     val tokenSupplier: () -> String?
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
-        val request = chain.request().addHeader("Content-Type", "application/json")
+        val request = chain.request().addHeader("Content-Type", "multipart/form-data")
+            .addHeader("token", "dummy token")
 
+//          val request = chain.request().addHeader("Content-Type", "application/json")
 //        val request = chain.request()
 //            .addHeader("x-access-token", tokenSupplier().also { Timber.d("token: $it") }.toString())
 //            .addHeader("accept", "application/json")
