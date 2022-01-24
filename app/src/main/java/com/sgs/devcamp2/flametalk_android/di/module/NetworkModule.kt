@@ -2,6 +2,7 @@ package com.sgs.devcamp2.flametalk_android.di.module
 
 import com.sgs.devcamp2.flametalk_android.network.NetworkInterceptor
 import com.sgs.devcamp2.flametalk_android.network.dao.UserDAO
+import com.sgs.devcamp2.flametalk_android.network.service.FileService
 import com.sgs.devcamp2.flametalk_android.network.service.UserService
 import dagger.Module
 import dagger.Provides
@@ -62,6 +63,12 @@ class NetworkModule {
     @Singleton
     fun provideUserService(retrofit: Retrofit): UserService {
         return retrofit.create(UserService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFileService(retrofit: Retrofit): FileService {
+        return retrofit.create(FileService::class.java)
     }
 
     companion object {
