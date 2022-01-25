@@ -17,12 +17,19 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+/**
+ * @author 박소연
+ * @created 2022/01/20
+ * @updated 2022/01/25
+ * @desc 회원가입 화면
+ */
+
 @AndroidEntryPoint
 @ExperimentalCoroutinesApi
 class SignupFragment : Fragment() {
     private val binding by lazy { FragmentSignupBinding.inflate(layoutInflater) }
 
-    private val viewModel by viewModels<SignupViewModel>() //  by viewModels()
+    private val viewModel by viewModels<SignupViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,7 +54,7 @@ class SignupFragment : Fragment() {
 
     private fun submitSignup() {
         // 이벤트가 발생하면 회원가입 요청을 보냄
-        viewModel.signUp( // 이메일, 비번, 닉네임, 폰번, 생일, 소셜, 리전, 디바이스ID
+        viewModel.signUp( // 이메일, 비번, 닉네임, 폰번, 생일, 소셜로그인 여부, 지역코드, 디바이스ID
             binding.edtSignupEmail.text.toString(),
             binding.edtSignupPwd.text.toString(),
             binding.edtSignupName.text.toString(),

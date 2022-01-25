@@ -18,6 +18,7 @@ import javax.inject.Inject
 /**
  * @author 박소연
  * @created 2022/01/20
+ * @updated 2022/01/25
  * @desc 회원가입과 관련 비즈니스 로직을 담당하는 ViewModel
  */
 

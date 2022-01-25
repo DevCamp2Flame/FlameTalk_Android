@@ -10,6 +10,7 @@ import com.google.gson.annotations.SerializedName
  * @desc 회원가입 Response Body
  *
  * [User Create API]
+ * userId	String	아이디
  * email	String	이메일
  * nickname	String	별명
  * phoneNumber	String	휴대폰 번호
