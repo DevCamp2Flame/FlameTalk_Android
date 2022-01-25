@@ -1,6 +1,7 @@
 package com.sgs.devcamp2.flametalk_android.ui.signup
 
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,16 +13,15 @@ import com.google.android.material.snackbar.Snackbar
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentSignupBinding
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 @ExperimentalCoroutinesApi
 class SignupFragment : Fragment() {
     private val binding by lazy { FragmentSignupBinding.inflate(layoutInflater) }
 
-    // lateinit var binding: FragmentSignupBinding
     private val viewModel by viewModels<SignupViewModel>() //  by viewModels()
 
     override fun onCreateView(
@@ -29,7 +29,6 @@ class SignupFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // binding = FragmentSignupBinding.inflate(inflater, container, false)
         initUI()
         return binding.root
     }
@@ -57,11 +56,11 @@ class SignupFragment : Fragment() {
             "LOGIN",
             "82",
             "KR",
-            UUID.randomUUID().toString()
+            Settings.Secure.getString(context!!.contentResolver, Settings.Secure.ANDROID_ID)
         )
 
         // 회원가입 된 유저의 닉네임 띄움
-        lifecycleScope.launchWhenResumed {
+        lifecycleScope.launch {
             viewModel.nickname.collectLatest {
                 if (it != "") {
                     Snackbar.make(requireView(), "${it}님 회원가입 되었습니다.", Snackbar.LENGTH_SHORT).show()

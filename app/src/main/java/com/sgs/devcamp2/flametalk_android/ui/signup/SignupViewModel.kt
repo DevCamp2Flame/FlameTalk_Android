@@ -8,11 +8,12 @@ import com.sgs.devcamp2.flametalk_android.network.request.sign.SignupRequest
 import dagger.Lazy
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import javax.inject.Inject
 
 /**
  * @author 박소연
@@ -29,8 +30,8 @@ class SignupViewModel @Inject constructor(
     val isSuccess = _isSuccess.asStateFlow()
 
     // 유저 닉네임
-    private val _nickname = MutableStateFlow("")
-    val nickname = _nickname.asStateFlow()
+    private val _nickname: MutableStateFlow<String> = MutableStateFlow("")
+    val nickname: StateFlow<String> = _nickname
 
     private val _error = MutableStateFlow("")
     val error = _error.asStateFlow()
@@ -50,14 +51,14 @@ class SignupViewModel @Inject constructor(
         val request = SignupRequest(
             email, password, nickname, phoneNumber, birthday, social, region, language, deviceId
         )
+        Timber.d("Signup Request: $request")
 
         viewModelScope.launch {
             try {
                 val response = signRepository.get().signup(request)
                 _nickname.value = response.nickname
 
-                Timber.d("Signup Response: ${response.nickname}")
-                Timber.d("Signup Response _nickname: ${_nickname.value}")
+                Timber.d("Signup Response: $response")
             } catch (ignored: Throwable) {
                 _error.value = "알 수 없는 에러 발생"
                 Timber.d("Signup Response: $_error")
