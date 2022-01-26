@@ -15,13 +15,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentChatRoomBottomSheetBinding
-import com.sgs.devcamp2.flametalk_android.network.response.chat.Chat
+import com.sgs.devcamp2.flametalk_android.data.model.Chat
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 

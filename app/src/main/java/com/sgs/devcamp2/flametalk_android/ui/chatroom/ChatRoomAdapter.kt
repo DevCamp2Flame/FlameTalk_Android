@@ -1,6 +1,5 @@
 package com.sgs.devcamp2.flametalk_android.ui.chatroom
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +11,7 @@ import com.sgs.devcamp2.flametalk_android.databinding.ItemLeftStartTextChatRoomB
 import com.sgs.devcamp2.flametalk_android.databinding.ItemLeftTextChatRoomBinding
 import com.sgs.devcamp2.flametalk_android.databinding.ItemRightStartTextChatRoomBinding
 import com.sgs.devcamp2.flametalk_android.databinding.ItemRightTextChatRoomBinding
-import com.sgs.devcamp2.flametalk_android.network.response.chat.Chat
+import com.sgs.devcamp2.flametalk_android.data.model.Chat
 
 class ChatRoomAdapter constructor() : ListAdapter<Chat, RecyclerView.ViewHolder>(diffUtil) {
 

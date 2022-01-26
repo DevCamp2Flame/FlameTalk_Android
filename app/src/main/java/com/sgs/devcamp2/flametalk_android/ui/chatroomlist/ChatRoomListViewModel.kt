@@ -1,14 +1,11 @@
 package com.sgs.devcamp2.flametalk_android.ui.chatroomlist
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.sgs.devcamp2.flametalk_android.network.response.chatlist.ChatList
+import androidx.lifecycle.*
+import com.sgs.devcamp2.flametalk_android.data.model.ChatList
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class ChatRoomListViewModel @Inject constructor() : ViewModel() {
@@ -38,7 +35,7 @@ class ChatRoomListViewModel @Inject constructor() : ViewModel() {
      * chatList 객체 생성 100개 생성 후 1개씩 emit
      */
     fun initChattingRoom(): Flow<ChatList> = flow {
-        for (i in 0 until 100) {
+        for (i in 0 until 20) {
             val userList = arrayListOf<String>("김현국", "김다롬", "박소연", "최수연")
             val chatroom = ChatList(i, "flame$i", user_list = userList, title = "", user_id = "")
             emit(chatroom)
