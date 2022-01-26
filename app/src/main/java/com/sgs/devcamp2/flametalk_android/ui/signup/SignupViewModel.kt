@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sgs.devcamp2.flametalk_android.network.repository.SignRepository
+import com.sgs.devcamp2.flametalk_android.network.request.sign.SigninRequest
 import com.sgs.devcamp2.flametalk_android.network.request.sign.SignupRequest
 import dagger.Lazy
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,6 +34,10 @@ class SignupViewModel @Inject constructor(
     // 유저 닉네임
     private val _nickname: MutableStateFlow<String> = MutableStateFlow("")
     val nickname: StateFlow<String> = _nickname
+
+    // 이메일 체크 성공여부
+    private val _emailCheck = MutableStateFlow(false)
+    val emailCheck = _emailCheck.asStateFlow()
 
     private val _error = MutableStateFlow("")
     val error = _error.asStateFlow()
@@ -65,5 +70,24 @@ class SignupViewModel @Inject constructor(
                 Timber.d("Signup Response: $_error")
             }
         }
+    }
+
+    // 이메일 체크 통신
+    fun emailCheck(email: String) {
+        viewModelScope.launch {
+            try {
+                val response = signRepository.get().emailCheck(email)
+                _emailCheck.value = response.data
+
+                Timber.d("$TAG Success Response: $response")
+            } catch (ignored: Throwable) {
+                _error.value = "알 수 없는 에러 발생"
+                Timber.d("$TAG Success Response: $_error")
+            }
+        }
+    }
+
+    companion object {
+        final const val TAG = "SignupViewModel"
     }
 }

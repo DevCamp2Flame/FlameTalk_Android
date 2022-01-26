@@ -46,6 +46,10 @@ class SignupFragment : Fragment() {
             findNavController().navigateUp()
         }
 
+        binding.btnSignupEmailCheck.setOnClickListener {
+
+        }
+
         // 회원가입 요청
         binding.btnSignupConfirm.setOnClickListener {
             submitSignup()
@@ -75,6 +79,22 @@ class SignupFragment : Fragment() {
                 } else {
                     Snackbar.make(requireView(), "회원가입에 실패했습니다.", Snackbar.LENGTH_SHORT).show()
                     findNavController().navigateUp()
+                }
+            }
+        }
+    }
+
+    private fun emailDoubleCheck() {
+        // 이벤트가 발생하면 회원가입 요청을 보냄
+        viewModel.emailCheck(binding.edtSignupEmail.toString())
+
+        // 회원가입 된 유저의 닉네임 띄움
+        lifecycleScope.launch {
+            viewModel.emailCheck.collectLatest {
+                if (it) {
+                    Snackbar.make(requireView(), "사용 가능한 이메일입니다.", Snackbar.LENGTH_SHORT).show()
+                } else {
+                    Snackbar.make(requireView(), "이미 가입된 이메일입니다.", Snackbar.LENGTH_SHORT).show()
                 }
             }
         }

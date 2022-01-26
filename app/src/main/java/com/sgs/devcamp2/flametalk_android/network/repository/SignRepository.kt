@@ -31,4 +31,9 @@ class SignRepository @Inject constructor(
     suspend fun signin(request: SigninRequest) = withContext(ioDispatcher) {
         userService.get().postSignin(request)
     }
+
+    // 이메일 중복체크
+    suspend fun emailCheck(email: String) = withContext(ioDispatcher) {
+        userService.get().getEmailCheck(email)
+    }
 }
