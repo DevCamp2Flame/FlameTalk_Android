@@ -183,6 +183,15 @@
             android:id="@+id/action_chatRoomBottomSheetFragment_to_chatRoomCameraFragment"
             app:destination="@id/navigation_chat_Room_Camera" />
     </dialog>
+    <fragment
+        android:id="@+id/navigation_additional_user_info"
+        android:name="com.sgs.devcamp2.flametalk_android.ui.signup.AdditionalUserInfoFragment"
+        android:label="fragment_additional_user_info"
+        tools:layout="@layout/fragment_additional_user_info" >
+        <action
+            android:id="@+id/action_additionalUserInfoFragment_to_navigation_chat_room_list"
+            app:destination="@id/navigation_chat_room_list" />
+    </fragment>
 
 
 </navigation>
