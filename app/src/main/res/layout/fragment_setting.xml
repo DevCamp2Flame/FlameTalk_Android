@@ -11,8 +11,15 @@
         android:layout_height="70dp"
         app:layout_constraintTop_toTopOf="parent" />
 
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/light_gray"
+        app:layout_constraintTop_toBottomOf="@+id/ab_setting"/>
+
     <include
-        android:id="@+id/item_leave"
+        android:id="@+id/item_setting_leave"
         layout="@layout/item_setting"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

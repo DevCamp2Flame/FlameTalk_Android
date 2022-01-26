@@ -1,6 +1,5 @@
 package com.sgs.devcamp2.flametalk_android.ui.setting
 
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -46,7 +45,8 @@ class SettingFragment : Fragment() {
         // 메세지 알림
         lifecycleScope.launch {
             viewModel.message.collectLatest {
-                Snackbar.make(requireView(), it, Snackbar.LENGTH_SHORT).show()
+                if (it != "")
+                    Snackbar.make(requireView(), it, Snackbar.LENGTH_SHORT).show()
             }
         }
     }
@@ -59,13 +59,13 @@ class SettingFragment : Fragment() {
     }
 
     private fun initLeave() {
-        binding.itemLeave.root.setOnClickListener {
+        binding.itemSettingLeave.root.setOnClickListener {
             initLeaveDialog()
         }
-        binding.itemLeave.tvSettingTitle.text = "탈퇴하기"
-        binding.itemLeave.tvSettingDesc.toVisibleGone()
-        binding.itemLeave.swSettingTitle.toVisibleGone()
-        binding.itemLeave.imgSettingRefresh.toVisibleGone()
+        binding.itemSettingLeave.tvSettingTitle.text = "탈퇴하기"
+        binding.itemSettingLeave.tvSettingDesc.toVisibleGone()
+        binding.itemSettingLeave.swSettingTitle.toVisibleGone()
+        binding.itemSettingLeave.imgSettingRefresh.toVisibleGone()
     }
 
     private fun initLeaveDialog() {
@@ -73,21 +73,13 @@ class SettingFragment : Fragment() {
             .setTitle("탈퇴 하시겠습니까?")
             .setMessage("탈퇴하면 일정 기간 동안 재가입이 불가능합니다.")
             .setPositiveButton(
-                "탈퇴",
-                object : DialogInterface.OnClickListener {
-                    override fun onClick(dialog: DialogInterface, which: Int) {
-                        viewModel.leaveUser()
-                        dialog.cancel()
-                    }
-                }
-            ).setNegativeButton(
-                "취소",
-                object : DialogInterface.OnClickListener {
-                    override fun onClick(dialog: DialogInterface, which: Int) {
-                        dialog.dismiss()
-                    }
-                }
-            )
+                "탈퇴"
+            ) { dialog, _ ->
+                viewModel.leaveUser()
+                dialog.cancel()
+            }.setNegativeButton(
+                "취소"
+            ) { dialog, _ -> dialog.dismiss() }
             .create()
             .show()
     }
