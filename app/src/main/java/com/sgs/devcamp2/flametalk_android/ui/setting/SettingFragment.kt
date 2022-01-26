@@ -20,15 +20,16 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 @AndroidEntryPoint
 @ExperimentalCoroutinesApi
 class SettingFragment : Fragment() {
-    lateinit var binding: FragmentSettingBinding
-    private val viewModel: FriendViewModel by viewModels()
+    private val binding by lazy { FragmentSettingBinding.inflate(layoutInflater) }
+    // lateinit var binding: FragmentSettingBinding
+    private val viewModel: SettingViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentSettingBinding.inflate(inflater, container,false)
+        // binding = FragmentSettingBinding.inflate(inflater, container,false)
         initUI()
         return binding.root
     }
