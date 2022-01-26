@@ -36,4 +36,13 @@ class SignRepository @Inject constructor(
     suspend fun emailCheck(email: String) = withContext(ioDispatcher) {
         userService.get().getEmailCheck(email)
     }
+
+    // 탈퇴
+    suspend fun leaveUser() = withContext(ioDispatcher) {
+        userService.get().deleteLeaveUser()
+            .also {
+                if (it.status == 200)
+                    userDAO.get().setUser(null)
+            }
+    }
 }

@@ -2,10 +2,7 @@ package com.sgs.devcamp2.flametalk_android.network.service
 
 import com.sgs.devcamp2.flametalk_android.network.request.sign.SigninRequest
 import com.sgs.devcamp2.flametalk_android.network.request.sign.SignupRequest
-import com.sgs.devcamp2.flametalk_android.network.response.sign.EmailCheckResponse
-import com.sgs.devcamp2.flametalk_android.network.response.sign.RenewTokenResponse
-import com.sgs.devcamp2.flametalk_android.network.response.sign.SigninResponse
-import com.sgs.devcamp2.flametalk_android.network.response.sign.SignupResponse
+import com.sgs.devcamp2.flametalk_android.network.response.sign.*
 import retrofit2.http.*
 
 interface UserService {
@@ -30,4 +27,8 @@ interface UserService {
     // 토큰 재발급
     @GET("/api/auth/token")
     suspend fun getRenewToken(): RenewTokenResponse
+
+    // 탈퇴
+    @DELETE("/api/auth/leave")
+    suspend fun deleteLeaveUser(): UserLeaveResponse
 }
