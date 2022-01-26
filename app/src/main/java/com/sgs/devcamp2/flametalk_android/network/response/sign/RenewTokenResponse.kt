@@ -26,7 +26,7 @@ data class RenewTokenResponse(
     val status: Int,
     @SerializedName("message")
     val message: String,
-    @SerializedName("status")
+    @SerializedName("data")
     val data: Result
 ) {
     @Keep
