@@ -4,13 +4,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:text="Setting Fragment"
-        android:textSize="30sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+    <include
+        android:id="@+id/ab_setting"
+        layout="@layout/ab_main"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <include
+        android:id="@+id/item_leave"
+        layout="@layout/item_setting"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/ab_setting" />
 </androidx.constraintlayout.widget.ConstraintLayout>
