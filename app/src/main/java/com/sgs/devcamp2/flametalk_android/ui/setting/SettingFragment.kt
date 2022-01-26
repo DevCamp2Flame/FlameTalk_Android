@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
  * @author 박소연
  * @created 2022/01/26
  * @updated
- * @desc 기타 설정 화면
+ * @desc 기타 설정 화면 (탈퇴하기)
  */
 
 @AndroidEntryPoint
@@ -42,6 +42,13 @@ class SettingFragment : Fragment() {
     private fun initUI() {
         initAppbar()
         initLeave()
+
+        // 메세지 알림
+        lifecycleScope.launch {
+            viewModel.message.collectLatest {
+                Snackbar.make(requireView(), it, Snackbar.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun initAppbar() {
@@ -59,13 +66,6 @@ class SettingFragment : Fragment() {
         binding.itemLeave.tvSettingDesc.toVisibleGone()
         binding.itemLeave.swSettingTitle.toVisibleGone()
         binding.itemLeave.imgSettingRefresh.toVisibleGone()
-
-        // 메세지 알림
-        lifecycleScope.launch {
-            viewModel.message.collectLatest {
-                Snackbar.make(requireView(), it, Snackbar.LENGTH_SHORT).show()
-            }
-        }
     }
 
     private fun initLeaveDialog() {
