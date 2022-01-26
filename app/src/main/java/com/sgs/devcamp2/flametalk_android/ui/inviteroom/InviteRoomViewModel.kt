@@ -143,7 +143,4 @@ class InviteRoomViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun createChatRoom(){
-
-    }
 }

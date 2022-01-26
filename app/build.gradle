@@ -74,6 +74,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$ver_lifecycle"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$ver_lifecycle"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$ver_lifecycle"
+    implementation "androidx.lifecycle:lifecycle-service:$ver_lifecycle"
 
     //retrofit
     implementation "com.squareup.retrofit2:retrofit:2.9.0"
@@ -139,12 +140,16 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:29.0.2')
     implementation 'com.google.firebase:firebase-auth-ktx:21.0.1'
     implementation 'com.google.android.gms:play-services-auth:20.0.0'
-
+    implementation 'com.google.firebase:firebase-messaging-ktx'
+    implementation 'com.google.firebase:firebase-analytics-ktx'
 
     //stomp krossbow
     implementation("org.hildan.krossbow:krossbow-websocket-okhttp:3.1.1")
     implementation("org.hildan.krossbow:krossbow-stomp-core:3.1.1")
     implementation("org.hildan.krossbow:krossbow-stomp-kxserialization:3.1.1")
+
+
+
 
 
 

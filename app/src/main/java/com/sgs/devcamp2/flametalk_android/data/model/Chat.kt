@@ -1,16 +1,14 @@
-package com.sgs.devcamp2.flametalk_android.network.response.chatlist
+package com.sgs.devcamp2.flametalk_android.data.model
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
-import kotlin.collections.ArrayList
 
 @Parcelize
-data class ChatList(
+data class Chat(
     val id: Int?,
     val chatroom_id: String?,
     val user_id: String?,
-    val title: String?,
-    val user_list: ArrayList<String>,
+    val content: String?,
     // val created_at: Date,
     // val updated_at: Date
 ) : Parcelable
