@@ -6,45 +6,39 @@ import com.google.gson.annotations.SerializedName
 /**
  * @author 박소연
  * @created 2022/01/20
- * @updated 2022/01/20
+ * @updated 2022/01/26
  * @desc 로그인 Response Body
  *
  * [User Login API]
- * email	    String	이메일	                Y
- * password 	String	비밀번호                	N
- * nickname    	String	별명	                    Y
- * phoneNumber	String	휴대폰 번호	            Y
- * birthday	    String	생년월일 'YYYY-MM-DD'	    Y
- * social	    String	로그인 타입(LOGIN, GOOGLE)	Y
- * region	    String	국가	                    Y
- * language 	String	언어	                    Y
- * deviceId	    String	기기 uuid	            Y
+ * status	    int 	상태 코드
+ * message	    String	status 메시지
+ * userId	    String	이메일
+ * nickname	    String	별명
+ * status	    String	권한 & 상태
+ * accessToken	String	resource server 통신에 활용
+ * refreshToken	String	토큰 재발급에 이용됨
  */
 
 @Keep
 data class SigninResponse(
-    @SerializedName("userId")
-    val userId: String,
-    @SerializedName("nickname")
-    val nickname: String,
     @SerializedName("status")
-    val status: String,
-    @SerializedName("accessToken")
-    val accessToken: String,
-    @SerializedName("refreshToken")
-    val refreshToken: String
-)
-
-// @JsonClass(generateAdapter = true)
-// data class SigninResponse(
-//    @Json(name = "userId")
-//    val userId: String,
-//    @Json(name = "nickname")
-//    val nickname: String,
-//    @Json(name = "status")
-//    val status: String,
-//    @Json(name = "accessToken")
-//    val accessToken: String,
-//    @Json(name = "refreshToken")
-//    val refreshToken: String
-// )
+    val status: Int,
+    @SerializedName("message")
+    val message: String,
+    @SerializedName("status")
+    val data: Result
+) {
+    @Keep
+    data class Result(
+        @SerializedName("userId")
+        val userId: String,
+        @SerializedName("nickname")
+        val nickname: String,
+        @SerializedName("status")
+        val status: String,
+        @SerializedName("accessToken")
+        val accessToken: String,
+        @SerializedName("refreshToken")
+        val refreshToken: String
+    )
+}

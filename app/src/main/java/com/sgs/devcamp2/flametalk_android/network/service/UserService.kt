@@ -8,13 +8,15 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface UserService {
-    @POST("/api/auth/signin")
-    suspend fun postSignin(
-        @Body request: SigninRequest
-    ): SigninResponse
-
+    // 회원가입
     @POST("/api/auth/signup")
     suspend fun postSignup(
         @Body request: SignupRequest
     ): SignupResponse
+
+    // 로그인
+    @POST("/api/auth/signin")
+    suspend fun postSignin(
+        @Body request: SigninRequest
+    ): SigninResponse
 }

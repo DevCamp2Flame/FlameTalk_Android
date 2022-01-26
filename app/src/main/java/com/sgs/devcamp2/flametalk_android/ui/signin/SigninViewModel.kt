@@ -33,23 +33,22 @@ class SigninViewModel @Inject constructor(
 
     fun signIn(email: String, password: String, social: String, deviceId: String) {
         viewModelScope.launch {
-            val request = SigninRequest(
-                email, password, social, deviceId
-            )
-            val response = signRepository.get().signin(request)
-            // _nickname.value = response.nickname
-            Timber.d("Signin Response: $response")
-//            try {
-//                val request = SigninRequest(
-//                    email, password, social, deviceId
-//                )
-//                val response = signRepository.get().signin(request)
-//                // _nickname.value = response.nickname
-//                Timber.d("Signin Response: $response")
-//            } catch (ignored: Throwable) {
-//                // _error.value = "알 수 없는 에러 발생"
-//                Timber.d("Signin Response error: $_error")
-//            }
+            try {
+                val request = SigninRequest(
+                    email, password, social, deviceId
+                )
+                val response = signRepository.get().signin(request)
+                _nickname.value = response.data.nickname
+
+                Timber.d("$TAG Success Response: $response")
+            } catch (ignored: Throwable) {
+                _error.value = "알 수 없는 에러 발생"
+                Timber.d("$TAG Success Response: $_error")
+            }
         }
+    }
+
+    companion object {
+        final const val TAG = "SigninViewModel"
     }
 }

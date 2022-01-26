@@ -3,6 +3,7 @@ package com.sgs.devcamp2.flametalk_android.ui.signin
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,14 +29,20 @@ import java.util.*
 import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+
+/**
+ * @author 박소연
+ * @created 2022/01/19
+ * @updated 2022/01/26
+ * @desc 로그인 화면
+ */
 
 @AndroidEntryPoint
 @ExperimentalCoroutinesApi
 class SigninFragment : Fragment() {
     private val binding by lazy { FragmentSigninBinding.inflate(layoutInflater) }
-
-    // lateinit var binding: FragmentSigninBinding
-    private val viewModel by viewModels<SigninViewModel>() // by viewModels()
+    private val viewModel by viewModels<SigninViewModel>()
 
     // firebase google auth
     @Inject
@@ -50,7 +57,6 @@ class SigninFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // binding = FragmentSigninBinding.inflate(inflater, container, false)
         initUI()
 
         return binding.root
@@ -105,21 +111,20 @@ class SigninFragment : Fragment() {
             binding.edtSigninEmail.text.toString(),
             binding.edtSigninPwd.text.toString(),
             "LOGIN",
-            UUID.randomUUID().toString()
+            Settings.Secure.getString(context!!.contentResolver, Settings.Secure.ANDROID_ID)
         )
 
         // 로그인된 유저의 닉네임 띄움
-//        lifecycleScope.launchWhenResumed {
-//            viewModel.nickname.collectLatest {
-//                if (it != "") {
-//                    Snackbar.make(requireView(), "${it}님 로그인 되었습니다.", Snackbar.LENGTH_SHORT).show()
-//                } else {
-//                    Snackbar.make(requireView(), "로그인에 실패했습니다.", Snackbar.LENGTH_SHORT).show()
-//                    findNavController().navigateUp()
-//                }
-//            }
-//        }
-
+        lifecycleScope.launch {
+            viewModel.nickname.collectLatest {
+                if (it != "") {
+                    Snackbar.make(requireView(), "${it}님 로그인 되었습니다.", Snackbar.LENGTH_SHORT).show()
+                } else {
+                    Snackbar.make(requireView(), "로그인에 실패했습니다.", Snackbar.LENGTH_SHORT).show()
+                    findNavController().navigateUp()
+                }
+            }
+        }
     }
 
     private fun googleLogin() {
