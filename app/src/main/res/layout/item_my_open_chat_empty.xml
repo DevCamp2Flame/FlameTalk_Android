@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/item_chat_room_list"
+    android:layout_width="match_parent"
+    android:layout_height="220dp"
+    android:padding="10dp">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_open_room_gray_border_3"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!--오픈채팅 empty view-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cst_open_empty_room"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tv_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:text="오픈채팅을 만들어 보세요!"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="친구 추가 없이 채팅 참여가 가능해요."
+            android:textColor="@color/middle_gray"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_1" />
+
+        <TextView
+            android:id="@+id/tv_open_empty_room_create"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/bg_open_room_gray_border_3"
+            android:drawableStart="@drawable/ic_plus"
+            android:drawableTint="@color/middle_gray"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="오픈채팅 만들기"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_2" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!--오픈프로필 empty view-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cst_open_empty_profile"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tv_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:text="오픈프로필을 만들어 보세요!"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="채팅방 프로필로 사용할 수 있고\n친구 추가 없이 1:1 대화가 가능해요."
+            android:textColor="@color/middle_gray"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_3" />
+
+        <TextView
+            android:id="@+id/tv_open_empty_profile_create"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/bg_open_room_gray_border_3"
+            android:drawableStart="@drawable/ic_plus"
+            android:drawableTint="@color/middle_gray"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="오픈프로필 만들기"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_4" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
