@@ -111,6 +111,14 @@
             app:destination="@id/navigation_chat_room" />
     </fragment>
 
+    <!--   오픈 채팅방 리스트-->
+    <fragment
+        android:id="@+id/navigation_open_chat_room"
+        android:name="com.sgs.devcamp2.flametalk_android.ui.openchatroom.OpenChaRoomFragment"
+        android:label="OpenChatRoom"
+        tools:layout="@layout/fragment_open_chat_room">
+    </fragment>
+
     <fragment
         android:id="@+id/navigation_setting"
         android:name="com.sgs.devcamp2.flametalk_android.ui.setting.SettingFragment"
