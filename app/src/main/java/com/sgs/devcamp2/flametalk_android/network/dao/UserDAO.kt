@@ -72,14 +72,23 @@ class UserDAO @Inject constructor(
         }
     }
 
+    // 유저 생성
     suspend fun setUser(user: User?) = withContext(ioDispatcher) {
         setNickname(user?.nickname)
         setAccessToken(user?.accessToken)
-        setAccessToken(user?.refreshToken)
+        setRefreshToken(user?.refreshToken)
     }
 
-    suspend fun updateUserNickname(item: String?) = withContext(ioDispatcher) {
-        setNickname(item)
+    // 토큰 갱신
+    suspend fun renewUserToken(accessToken: String, refreshToken: String) = withContext(ioDispatcher) {
+        setAccessToken(accessToken)
+        setRefreshToken(refreshToken)
+    }
+
+    suspend fun logoutUser() = withContext(ioDispatcher) {
+        setNickname(null)
+        setAccessToken(null)
+        setRefreshToken(null)
     }
 
     // TODO: 시리얼라이저 구현해야함.

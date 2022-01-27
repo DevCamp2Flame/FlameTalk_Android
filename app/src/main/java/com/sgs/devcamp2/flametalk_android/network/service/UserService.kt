@@ -25,8 +25,8 @@ interface UserService {
     ): EmailCheckResponse
 
     // 토큰 재발급
-    @GET("/api/auth/token")
-    suspend fun getRenewToken(): RenewTokenResponse
+//    @GET("/api/auth/token")
+//    suspend fun getRenewToken(): RenewTokenResponse
 
     // 탈퇴
     @DELETE("/api/auth/leave")

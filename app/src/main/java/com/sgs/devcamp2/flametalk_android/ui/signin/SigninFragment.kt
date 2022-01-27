@@ -35,7 +35,7 @@ import kotlinx.coroutines.launch
  * @author 박소연
  * @created 2022/01/19
  * @updated 2022/01/26
- * @desc 로그인 화면
+ * @desc 로그인 화면. (이메일을 이용한 자체 로그인, Google 로그인)
  */
 
 @AndroidEntryPoint
@@ -105,8 +105,8 @@ class SigninFragment : Fragment() {
             }
     }
 
+    // [소연] 로그인
     private fun submitLogin() {
-        // 이벤트가 발생하면 로그 요청을 보냄
         viewModel.signIn( // 이메일, 비번, 소셜, 디바이스ID
             binding.edtSigninEmail.text.toString(),
             binding.edtSigninPwd.text.toString(),
