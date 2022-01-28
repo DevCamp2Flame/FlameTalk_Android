@@ -16,7 +16,8 @@ interface FileService {
     @Multipart
     @POST("/api/file")
     suspend fun postCreateFile(
-        @Part file: MultipartBody.Part
+        @Part file: MultipartBody.Part,
+        @Part chatRoomId: MultipartBody.Part
     )
 
     @GET("/api/file/{fileId}")

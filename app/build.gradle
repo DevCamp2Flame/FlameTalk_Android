@@ -134,6 +134,7 @@ dependencies {
     // coroutine
     testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.1'
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.5.1")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.4.0-alpha01")
 
 
     //firebase
@@ -148,7 +149,15 @@ dependencies {
     implementation("org.hildan.krossbow:krossbow-stomp-core:3.1.1")
     implementation("org.hildan.krossbow:krossbow-stomp-kxserialization:3.1.1")
 
+    //viewPager2
+    implementation "androidx.viewpager2:viewpager2:1.0.0"
 
+    //room
+    def room_version = '2.3.0'
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    // optional - Kotlin Extensions and Coroutines support for Room
+    implementation "androidx.room:room-ktx:$room_version"
 
 
 

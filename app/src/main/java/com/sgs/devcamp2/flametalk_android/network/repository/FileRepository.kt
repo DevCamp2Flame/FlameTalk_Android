@@ -20,10 +20,10 @@ class FileRepository @Inject constructor(
     private val ioDispatcher: CoroutineDispatcher,
 ) {
     //  파일 생성
-    suspend fun postFileCreate(file: MultipartBody.Part) = withContext(ioDispatcher) {
+    suspend fun postFileCreate(file: MultipartBody.Part, chatRoomId: MultipartBody.Part) = withContext(ioDispatcher) {
         try {
             // fileService.get().postCreateFile(file, chatroomId)
-            fileService.get().postCreateFile(file)
+            fileService.get().postCreateFile(file, chatRoomId)
         } catch (e: Exception) {
             e.stackTraceToString()
         }

@@ -1,4 +1,4 @@
-package com.sgs.devcamp2.flametalk_android.ui.openchatroom
+package com.sgs.devcamp2.flametalk_android.ui.openchatroom.myopenchatroom
 
 import android.content.Context
 import android.util.Log

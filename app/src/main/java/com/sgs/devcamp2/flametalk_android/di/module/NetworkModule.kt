@@ -1,5 +1,6 @@
 package com.sgs.devcamp2.flametalk_android.di.module
 
+import com.sgs.devcamp2.flametalk_android.data.source.remote.service.ChatRoomsService
 import com.sgs.devcamp2.flametalk_android.network.NetworkInterceptor
 import com.sgs.devcamp2.flametalk_android.network.dao.UserDAO
 import com.sgs.devcamp2.flametalk_android.network.service.FileService
@@ -70,6 +71,12 @@ class NetworkModule {
     @Singleton
     fun provideFileService(retrofit: Retrofit): FileService {
         return retrofit.create(FileService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideChatRoomsService(retrofit: Retrofit): ChatRoomsService {
+        return retrofit.create(ChatRoomsService::class.java)
     }
 
     companion object {

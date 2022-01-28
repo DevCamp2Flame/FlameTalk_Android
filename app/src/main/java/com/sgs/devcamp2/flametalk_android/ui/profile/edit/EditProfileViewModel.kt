@@ -111,7 +111,7 @@ class EditProfileViewModel @Inject constructor(
     // File Create 통신
     fun postCreateImage() {
         val multipartFile = pathToMultipartFile(_profileImage.value)
-        // val chatRoomId = roomIdToMultipart("22")
+        //val chatRoomId = roomIdToMultipart("room1")
 
         // 테스트용 더미 api
         viewModelScope.launch {
@@ -120,8 +120,8 @@ class EditProfileViewModel @Inject constructor(
                 // fileRepository.get().postFileCreate(multipartFile) -> create
                 // fileRepository.get().getCreatedFile(7) -> get
                 // fileRepository.get().deleteCreatedFile(7) -> delete
-                var response = fileRepository.get().postFileCreate(multipartFile)
-                Log.d(TAG, "EditProfileViewModel - $response")
+        //        var response = fileRepository.get().postFileCreate(multipartFile, chatRoomId) 채팅방에서 파일을 날렸을 떄
+         //       Log.d(TAG, "EditProfileViewModel - $response")
                 Log.d(TAG, "EditProfileViewModel - postCreateImage() called")
             } catch (ignore: Throwable) {
                 Log.d(TAG, "ignore - $ignore() called")

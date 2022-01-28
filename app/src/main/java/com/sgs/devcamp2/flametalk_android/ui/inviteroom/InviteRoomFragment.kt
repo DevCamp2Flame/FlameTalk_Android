@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentInviteRoomBinding
@@ -92,8 +91,6 @@ class InviteRoomFragment :
     override fun onClick(view: View?) {
         when (view) {
             binding.tvInviteRoomSubmit -> {
-
-
             }
         }
     }
