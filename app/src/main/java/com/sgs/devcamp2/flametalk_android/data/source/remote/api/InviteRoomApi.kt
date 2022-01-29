@@ -10,6 +10,7 @@ import retrofit2.http.POST
 /**
  * @author boris
  * @created 2022/01/28
+ * 채팅방 생성시 post api
  */
 interface InviteRoomApi {
 

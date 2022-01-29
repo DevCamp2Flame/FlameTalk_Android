@@ -12,7 +12,7 @@ import dagger.hilt.components.SingletonComponent
 /**
  * @author boris
  * @created 2022/01/27
- * usecase에 repository 주입
+ * domain layer usecase에 domain layer repository 주입
  */
 @Module
 @InstallIn(SingletonComponent::class)

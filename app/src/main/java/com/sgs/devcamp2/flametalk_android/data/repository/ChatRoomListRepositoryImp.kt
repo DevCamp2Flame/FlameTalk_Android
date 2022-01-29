@@ -15,7 +15,8 @@ import javax.inject.Inject
 /**
  * @author boris
  * @created 2022/01/27
- * domain layer의 repository의 실제 구현체
+ * domain layer의 ChatRoomsRepository 실제 구현체
+ *
  */
 
 class ChatRoomListRepositoryImp @Inject constructor(

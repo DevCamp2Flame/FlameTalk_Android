@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName
 /**
  * @author boris
  * @created 2022/01/28
+ * 서버 response를 파싱할 때 사용하는 wrapper
  */
 data class WrappedListResponse<T> (
     var code: Int,

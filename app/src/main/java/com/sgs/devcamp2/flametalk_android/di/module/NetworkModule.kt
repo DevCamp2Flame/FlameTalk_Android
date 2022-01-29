@@ -24,6 +24,7 @@ import javax.inject.Singleton
  * @author 박소연
  * @created 2022/01/17
  * @desc Dagger+Hilt를 이용한 Network Module
+ * data -> source -> remote api들의 의존성 주입
  */
 
 @Module

@@ -7,6 +7,7 @@ import kotlinx.parcelize.Parcelize
 /**
  * @author boris
  * @created 2022/01/29
+ * inviteRoom ui에서 api  request 객체
  */
 @Parcelize
 data class InviteRoomReq(

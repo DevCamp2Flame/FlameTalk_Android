@@ -19,6 +19,7 @@ import javax.inject.Inject
 /**
  * @author boris
  * @created 2022/01/28
+ * domain layer의 InviteRoomRepository 실제 구현체
  */
 class InviteRoomRepositoryImp @Inject constructor(
     private val ioDispatcher: CoroutineDispatcher,

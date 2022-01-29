@@ -8,6 +8,8 @@ import retrofit2.http.Path
 /**
  * @author boris
  * @created 2022/01/27
+ * retrofit에서 사용될 api interface
+ * local에서 chatroomList를 가져올 예정이라 현재 미사용
  */
 interface ChatRoomsApi {
 

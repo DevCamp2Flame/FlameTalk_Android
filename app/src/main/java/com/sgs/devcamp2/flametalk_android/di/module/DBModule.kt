@@ -14,6 +14,7 @@ import javax.inject.Singleton
 /**
  * @author boris
  * @created 2022/01/27
+ * AppDatabaseImpl에 AppDatabase 의존성 주입
  */
 @Module
 @InstallIn(SingletonComponent::class)

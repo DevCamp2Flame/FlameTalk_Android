@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.Flow
 /**
  * @author boris
  * @created 2022/01/27
+ * Room database crud 관련
  */
 @Dao
 interface ChatRoomDao {

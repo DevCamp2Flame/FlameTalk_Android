@@ -12,6 +12,7 @@ import dagger.hilt.components.SingletonComponent
 /**
  * @author boris
  * @created 2022/01/28
+ * repository의 실제 구현체 ( impl class )를 domain layer의 repository에 bind
  */
 @Module
 @InstallIn(SingletonComponent::class)
