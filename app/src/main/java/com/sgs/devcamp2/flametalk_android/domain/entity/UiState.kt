@@ -1,4 +1,4 @@
-package com.sgs.devcamp2.flametalk_android.domain.model
+package com.sgs.devcamp2.flametalk_android.domain.entity
 
 /**
  * @author boris

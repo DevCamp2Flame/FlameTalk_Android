@@ -1,20 +1,11 @@
 package com.sgs.devcamp2.flametalk_android.data.source.local.database
 
-import androidx.room.Database
-import androidx.room.RoomDatabase
-import com.sgs.devcamp2.flametalk_android.data.source.local.dao.ChatRoomListDao
-import com.sgs.devcamp2.flametalk_android.domain.model.ChatRoomList
+import com.sgs.devcamp2.flametalk_android.data.source.local.dao.ChatRoomDao
 
 /**
  * @author boris
- * @created 2022/01/27
+ * @created 2022/01/29
  */
-@Database(entities = [ChatRoomList::class], version = 1, exportSchema = false)
-abstract class AppDatabase : RoomDatabase() {
-
-    abstract fun chatRoomListDao(): ChatRoomListDao
-
-    companion object {
-        const val CHAT_ROOM_LIST_DB_NAME = "AppDatabase.db"
-    }
+interface AppDatabase {
+    fun chatRoomDao(): ChatRoomDao
 }

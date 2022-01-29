@@ -10,15 +10,16 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentChatRoomListBinding
-import com.sgs.devcamp2.flametalk_android.domain.model.ChatRoomList
-import com.sgs.devcamp2.flametalk_android.domain.model.UiState
+import com.sgs.devcamp2.flametalk_android.domain.entity.ChatRoomsEntity
+import com.sgs.devcamp2.flametalk_android.domain.entity.UiState
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 /**
@@ -44,17 +45,18 @@ class ChatRoomListFragment : Fragment(), ChatRoomListAdapter.ClickCallBack {
         binding = FragmentChatRoomListBinding.inflate(inflater, container, false)
         initUI(this.requireContext())
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            model.uiState.collectLatest {
-                state ->
-                when (state) {
-                    is UiState.Success ->
-                        {
-                            adapterRoom.submitList(state.data)
-                        }
-                }
-            }
-        }
+//        viewLifecycleOwner.lifecycleScope.launch {
+//            model.uiState.collectLatest {
+//                state ->
+//                when (state) {
+//                    is UiState.Success ->
+//                        {
+//                            adapterRoom.submitList(state.data)
+//                        }
+//                }
+//            }
+//        }
+        initObserve()
 
         return binding.root
     }
@@ -65,7 +67,25 @@ class ChatRoomListFragment : Fragment(), ChatRoomListAdapter.ClickCallBack {
         binding.rvChatListChattingRoom.adapter = adapterRoom
     }
 
-    override fun onItemLongClicked(position: Int, chatRoomList: ChatRoomList) {
+    fun initObserve() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    model.uiState.collect {
+                        state ->
+                        when (state) {
+                            is UiState.Success ->
+                                {
+                                    adapterRoom.submitList(state.data)
+                                }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    override fun onItemLongClicked(position: Int, chatRoomList: ChatRoomsEntity) {
 
         /**
          * itemClickCallback
@@ -94,7 +114,7 @@ class ChatRoomListFragment : Fragment(), ChatRoomListAdapter.ClickCallBack {
         true
     }
 
-    override fun onItemShortClicked(position: Int, chatRoomList: ChatRoomList) {
+    override fun onItemShortClicked(position: Int, chatRoomList: ChatRoomsEntity) {
         findNavController().navigate(R.id.navigation_chat_room)
     }
 }

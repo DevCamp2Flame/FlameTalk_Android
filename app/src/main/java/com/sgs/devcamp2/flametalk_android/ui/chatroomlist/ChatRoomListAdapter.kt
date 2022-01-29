@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.*
-import com.sgs.devcamp2.flametalk_android.domain.model.ChatRoomList
+import com.sgs.devcamp2.flametalk_android.domain.entity.ChatRoomsEntity
 
 /**
  * 채팅방 리스트 recyclerview Adapter
@@ -18,12 +18,12 @@ import com.sgs.devcamp2.flametalk_android.domain.model.ChatRoomList
  */
 class ChatRoomListAdapter constructor(
     callback: ClickCallBack
-) : ListAdapter<ChatRoomList, RecyclerView.ViewHolder>(diffUtil) {
+) : ListAdapter<ChatRoomsEntity, RecyclerView.ViewHolder>(diffUtil) {
 // 클래스에서만 한번만 쓸려고하는 것
 
     interface ClickCallBack {
-        fun onItemLongClicked(position: Int, chatRoomList: ChatRoomList)
-        fun onItemShortClicked(position: Int, chatRoomList: ChatRoomList)
+        fun onItemLongClicked(position: Int, chatRoomList: ChatRoomsEntity)
+        fun onItemShortClicked(position: Int, chatRoomList: ChatRoomsEntity)
     }
 
     var clickCallBack: ClickCallBack? = callback
@@ -38,12 +38,12 @@ class ChatRoomListAdapter constructor(
          * notifyDataSetChanged 를 사용하지 않기 위한 방법
          * DiffUtil 를 사용하여 다른 부분만 갱신을 해준다.
          */
-        val diffUtil = object : DiffUtil.ItemCallback<ChatRoomList>() {
-            override fun areItemsTheSame(oldItem: ChatRoomList, newItem: ChatRoomList): Boolean {
+        val diffUtil = object : DiffUtil.ItemCallback<ChatRoomsEntity>() {
+            override fun areItemsTheSame(oldItem: ChatRoomsEntity, newItem: ChatRoomsEntity): Boolean {
                 return oldItem.room_id == newItem.room_id
             }
 
-            override fun areContentsTheSame(oldItem: ChatRoomList, newItem: ChatRoomList): Boolean {
+            override fun areContentsTheSame(oldItem: ChatRoomsEntity, newItem: ChatRoomsEntity): Boolean {
                 return oldItem == newItem
             }
         }
@@ -118,24 +118,24 @@ class ChatRoomListAdapter constructor(
      */
     inner class OneViewHolder(val binding: ItemPersonOneChatListBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(chatRoomList: ChatRoomList) {
+        fun bind(chatRoomList: ChatRoomsEntity) {
             binding.tvChatRoomListUserName.text = chatRoomList.title
         }
     }
 
     inner class TwoViewHolder(val binding: ItemPersonTwoChatListBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(chatRoomList: ChatRoomList) {
+        fun bind(chatRoomList: ChatRoomsEntity) {
             binding.tvChatRoomListUserName.text = chatRoomList.title
         }
     }
     inner class ThreeViewHolder(val binding: ItemPersonThreeChatListBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(chatRoomList: ChatRoomList) {
+        fun bind(chatRoomList: ChatRoomsEntity) {
             binding.tvChatRoomListUserName.text = chatRoomList.title
         }
     }
     inner class FourViewHolder(val binding: ItemPersonFourChatListBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(chatRoomList: ChatRoomList) {
+        fun bind(chatRoomList: ChatRoomsEntity) {
             binding.tvChatRoomListUserName.text = chatRoomList.title
         }
     }
@@ -143,7 +143,7 @@ class ChatRoomListAdapter constructor(
     /**
      * 각각의 ItemView 에 대해서 LongClick Listener 를 붙여서 클릭시에 dialog callback 을 실행 할 수 있게 한다.
      */
-    inner class ItemLongClickListener(var position: Int, var chatRoomList: ChatRoomList) : View.OnLongClickListener {
+    inner class ItemLongClickListener(var position: Int, var chatRoomList: ChatRoomsEntity) : View.OnLongClickListener {
 
         override fun onLongClick(view: View?): Boolean {
             when (view?.id) {
@@ -155,7 +155,7 @@ class ChatRoomListAdapter constructor(
         }
     }
 
-    inner class ItemShortClickListener(var position: Int, var chatRoomList: ChatRoomList) : View.OnClickListener {
+    inner class ItemShortClickListener(var position: Int, var chatRoomList: ChatRoomsEntity) : View.OnClickListener {
         override fun onClick(view: View?) {
             when (view?.id) {
                 R.id.item_chat_room_list -> {

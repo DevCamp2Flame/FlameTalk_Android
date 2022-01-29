@@ -2,8 +2,8 @@ package com.sgs.devcamp2.flametalk_android.di.module
 
 import android.content.Context
 import androidx.room.Room
-import com.sgs.devcamp2.flametalk_android.data.source.local.dao.ChatRoomListDao
 import com.sgs.devcamp2.flametalk_android.data.source.local.database.AppDatabase
+import com.sgs.devcamp2.flametalk_android.data.source.local.database.AppDatabaseImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,17 +17,13 @@ import javax.inject.Singleton
  */
 @Module
 @InstallIn(SingletonComponent::class)
-object DBModule {
+class DBModule {
 
     @Singleton
     @Provides
     fun provideChatRoomListDatabase(
         @ApplicationContext context: Context
     ): AppDatabase = Room
-        .databaseBuilder(context, AppDatabase::class.java, "ChatRoomListDatabase.db")
+        .databaseBuilder(context, AppDatabaseImpl::class.java, AppDatabaseImpl.DB_NAME)
         .build()
-
-    @Singleton
-    @Provides
-    fun provideChatRoomListDao(appDatabase: AppDatabase): ChatRoomListDao = appDatabase.chatRoomListDao()
 }

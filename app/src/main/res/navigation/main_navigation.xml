@@ -154,8 +154,8 @@
         android:label="fragment_invite_room"
         tools:layout="@layout/fragment_invite_room">
         <action
-            android:id="@+id/action_inviteRoomFragment_to_navigation_chatting_ViewPager_Fragment"
-            app:destination="@id/navigation_chatting_ViewPager_Fragment" />
+            android:id="@+id/action_inviteRoomFragment_to_navigation_chat_room_Fragment"
+            app:destination="@id/navigation_chat_room" />
     </fragment>
     <dialog
         android:id="@+id/navigation_chat_Room_Top_Sheet"

@@ -1,4 +1,4 @@
-package com.sgs.devcamp2.flametalk_android.domain.model
+package com.sgs.devcamp2.flametalk_android.data.model.chat
 
 import androidx.annotation.NonNull
 import androidx.room.ColumnInfo
@@ -11,7 +11,7 @@ import javax.annotation.Nonnull
  * @created 2022/01/27
  */
 @Entity
-data class ChatRoom(
+data class Chat(
     @PrimaryKey val message_id: String,
     @Nonnull @ColumnInfo(name = "room_id") val room_id: String,
     @NonNull @ColumnInfo(name = "contents") val contents: String,

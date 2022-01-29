@@ -75,6 +75,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$ver_lifecycle"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$ver_lifecycle"
     implementation "androidx.lifecycle:lifecycle-service:$ver_lifecycle"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.0-alpha03"
 
     //retrofit
     implementation "com.squareup.retrofit2:retrofit:2.9.0"
