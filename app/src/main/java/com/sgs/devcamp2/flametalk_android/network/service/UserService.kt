@@ -9,8 +9,12 @@ import retrofit2.http.POST
 
 interface UserService {
     @POST("/api/auth/signin")
-    suspend fun postSignin(@Body request: SigninRequest): SigninResponse
+    suspend fun postSignin(
+        @Body request: SigninRequest
+    ): SigninResponse
 
     @POST("/api/auth/signup")
-    suspend fun postSignup(@Body request: SignupRequest): SignupResponse
+    suspend fun postSignup(
+        @Body request: SignupRequest
+    ): SignupResponse
 }
