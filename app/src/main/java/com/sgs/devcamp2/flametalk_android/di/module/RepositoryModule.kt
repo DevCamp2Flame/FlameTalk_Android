@@ -22,5 +22,5 @@ interface RepositoryModule {
     fun provideChatRoomListRepository(impl: ChatRoomListRepositoryImp): ChatRoomsRepository
 
     @Binds
-    fun proviteInviteRoomRepository(impl: InviteRoomRepositoryImp): InviteRoomRepository
+    fun provideInviteRoomRepository(impl: InviteRoomRepositoryImp): InviteRoomRepository
 }

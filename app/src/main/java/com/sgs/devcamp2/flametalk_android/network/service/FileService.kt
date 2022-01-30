@@ -1,6 +1,7 @@
 package com.sgs.devcamp2.flametalk_android.network.service
 
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.http.*
 
@@ -16,8 +17,14 @@ interface FileService {
     @Multipart
     @POST("/api/file")
     suspend fun postCreateFile(
+        @Part file: MultipartBody.Part
+    )
+
+    @Multipart
+    @POST("/api/file")
+    suspend fun postCreateFileFromChatRoom(
         @Part file: MultipartBody.Part,
-        @Part chatRoomId: MultipartBody.Part
+        @Part chatRoomId: RequestBody
     )
 
     @GET("/api/file/{fileId}")

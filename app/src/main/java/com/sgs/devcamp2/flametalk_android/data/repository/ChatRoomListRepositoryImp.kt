@@ -4,7 +4,6 @@ import com.sgs.devcamp2.flametalk_android.data.mapper.mapperToChatEntity
 import com.sgs.devcamp2.flametalk_android.data.source.local.database.AppDatabase
 import com.sgs.devcamp2.flametalk_android.domain.entity.ChatRoomsEntity
 import com.sgs.devcamp2.flametalk_android.domain.entity.LocalResults
-import com.sgs.devcamp2.flametalk_android.domain.entity.Results
 import com.sgs.devcamp2.flametalk_android.domain.repository.ChatRoomsRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -27,9 +26,12 @@ class ChatRoomListRepositoryImp @Inject constructor(
     override suspend fun getChatRoomList(): Flow<LocalResults<List<ChatRoomsEntity>>> {
         return flow {
             val response = db.chatRoomDao().getChatRoom()
-            //data source 를 entity로 변환
+            // data source 를 entity로 변환
             val mapResposne = mapperToChatEntity(response)
             emit(LocalResults.Success(mapResposne))
         }.flowOn(ioDispatcher)
+    }
+    override suspend fun deleteAllChatRoom() {
+        return db.chatRoomDao().deleteAllChatRoom()
     }
 }

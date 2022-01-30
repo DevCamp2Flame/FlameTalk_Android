@@ -5,9 +5,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.ChatRoom
-import com.sgs.devcamp2.flametalk_android.domain.entity.ChatRoomsEntity
-import com.sgs.devcamp2.flametalk_android.domain.entity.LocalResults
-import kotlinx.coroutines.flow.Flow
 
 /**
  * @author boris
@@ -21,4 +18,7 @@ interface ChatRoomDao {
 
     @Query("SELECT * FROM chatroom")
     fun getChatRoom(): List<ChatRoom>
+
+    @Query("DELETE FROM chatroom")
+    fun deleteAllChatRoom()
 }

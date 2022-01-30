@@ -37,6 +37,9 @@ class InviteRoomViewModel @Inject constructor(
     private val _uiEvent = MutableStateFlow<UiState<Any>>(UiState.Loading)
     val uiEvent = _uiEvent.asStateFlow()
 
+    private val _uiState = MutableStateFlow<UiState<Boolean>>(UiState.Loading)
+    val uiState = _uiState.asStateFlow()
+
     var friendList = _friendList.asStateFlow()
         get() = _friendList
 
@@ -166,11 +169,13 @@ class InviteRoomViewModel @Inject constructor(
                         is Results.Success ->
                             {
                                 // UiState.Success(result.data)
-                                _uiEvent.value = UiState.Success(result.data)
+                               // _uiEvent.value = UiState.Success(result.data)
+                                _uiState.value = UiState.Success(true)
                             }
                         is Results.Error ->
                             {
-                                _uiEvent.value = UiState.Success(false)
+                                //_uiEvent.value = UiState.Success(false)
+                                _uiState.value = UiState.Error("에러 발생")
                                 null
                             }
                     }
