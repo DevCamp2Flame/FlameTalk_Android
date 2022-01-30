@@ -101,30 +101,20 @@ class EditProfileViewModel @Inject constructor(
         )
     }
 
-    private fun roomIdToMultipart(roomId: String): MultipartBody.Part {
-        return MultipartBody.Part.createFormData(
-            name = "chatroomId",
-            roomId
-        )
-    }
 
     // File Create 통신
     fun postCreateImage() {
         val multipartFile = pathToMultipartFile(_profileImage.value)
-        // val chatRoomId = roomIdToMultipart("22")
 
         // 테스트용 더미 api
         viewModelScope.launch {
             try {
 
-                // fileRepository.get().postFileCreate(multipartFile) -> create
                 // fileRepository.get().getCreatedFile(7) -> get
                 // fileRepository.get().deleteCreatedFile(7) -> delete
                 var response = fileRepository.get().postFileCreate(multipartFile)
                 Log.d(TAG, "EditProfileViewModel - $response")
-                Log.d(TAG, "EditProfileViewModel - postCreateImage() called")
             } catch (ignore: Throwable) {
-                Log.d(TAG, "ignore - $ignore() called")
                 Timber.d("EditProfileViewModel: 알 수 없는 에러 발생")
             }
         }

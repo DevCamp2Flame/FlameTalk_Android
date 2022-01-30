@@ -6,7 +6,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_dialog_top_sheet_top"
             android:layout_width="match_parent"

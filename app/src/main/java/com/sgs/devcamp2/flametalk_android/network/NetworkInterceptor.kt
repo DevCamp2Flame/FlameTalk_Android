@@ -5,7 +5,6 @@ import okhttp3.Interceptor
 import okhttp3.RequestBody
 import okhttp3.Response
 import okio.Buffer
-import timber.log.Timber
 import java.io.IOException
 
 /**
@@ -20,8 +19,9 @@ class NetworkInterceptor(
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
 
-        val request = chain.request().addHeader("Content-Type", "application/json")
-            .addHeader("token", "dummy token")
+        val TAG: String = "로그"
+        val request = chain.request().newBuilder().addHeader("Content-Type", "application/json")
+            .build()
 
 //          val request = chain.request().addHeader("Content-Type", "application/json")
 //        val request = chain.request()
@@ -35,7 +35,7 @@ class NetworkInterceptor(
 
         val response = chain.proceed(request)
 
-        // Timber.d(response.toString())
+// Timber.d(response.toString())
         // Timber.d(JSONObject(response.peekBody(Long.MAX_VALUE).string()).toString(4))
 
         // 서버에서 response 형식을 통일하지 않으면 못 씀

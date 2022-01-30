@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_navigation"
-    app:startDestination="@id/navigation_friend">
+    app:startDestination="@id/navigation_chatting_ViewPager_Fragment">
 
     <fragment
         android:id="@+id/navigation_signin"
@@ -42,8 +42,8 @@
             app:destination="@id/navigation_setting"
             app:popUpTo="@id/navigation_setting" />
         <action
-            android:id="@+id/action_friend_to_chat_list"
-            app:destination="@id/navigation_chat_room_list"
+            android:id="@+id/action_friend_to_navigation_chatting_ViewPager_Fragment"
+            app:destination="@id/navigation_chatting_ViewPager_Fragment"
             app:popUpTo="@id/navigation_chat_room_list" />
         <action
             android:id="@+id/action_friend_to_profile"
@@ -114,7 +114,7 @@
     <!--   오픈 채팅방 리스트-->
     <fragment
         android:id="@+id/navigation_open_chat_room"
-        android:name="com.sgs.devcamp2.flametalk_android.ui.openchatroom.OpenChaRoomFragment"
+        android:name="com.sgs.devcamp2.flametalk_android.ui.openchatroom.OpenChatRoomFragment"
         android:label="OpenChatRoom"
         tools:layout="@layout/fragment_open_chat_room">
     </fragment>
@@ -154,8 +154,8 @@
         android:label="fragment_invite_room"
         tools:layout="@layout/fragment_invite_room">
         <action
-            android:id="@+id/action_inviteRoomFragment_to_navigation_chat_room_list2"
-            app:destination="@id/navigation_chat_room_list" />
+            android:id="@+id/action_inviteRoomFragment_to_navigation_chat_room_Fragment"
+            app:destination="@id/navigation_chat_room" />
     </fragment>
     <dialog
         android:id="@+id/navigation_chat_Room_Top_Sheet"
@@ -165,23 +165,13 @@
             android:id="@+id/action_chatRoomTopSheetFragment_to_inviteRoomFragment"
             app:destination="@id/navigation_invite_room" />
     </dialog>
-    <fragment
-        android:id="@+id/navigation_chat_Room_Camera"
-        android:name="com.sgs.devcamp2.flametalk_android.ui.chatroom.ChatRoomCameraFragment"
-        android:label="fragment_chat_room_camera"
-        tools:layout="@layout/fragment_chat_room_camera" >
-        <action
-            android:id="@+id/action_chatRoomCameraFragment_to_navigation_chat_room"
-            app:destination="@id/navigation_chat_room" />
-    </fragment>
+
     <dialog
         android:id="@+id/navigation_chat_Room_Bottom_Sheet"
         android:name="com.sgs.devcamp2.flametalk_android.ui.chatroom.ChatRoomBottomSheetFragment"
         android:label="fragment_chat_room_bottom_sheet"
         tools:layout="@layout/fragment_chat_room_bottom_sheet" >
-        <action
-            android:id="@+id/action_chatRoomBottomSheetFragment_to_chatRoomCameraFragment"
-            app:destination="@id/navigation_chat_Room_Camera" />
+
     </dialog>
     <fragment
         android:id="@+id/navigation_additional_user_info"
@@ -189,8 +179,20 @@
         android:label="fragment_additional_user_info"
         tools:layout="@layout/fragment_additional_user_info" >
         <action
-            android:id="@+id/action_additionalUserInfoFragment_to_navigation_chat_room_list"
+            android:id="@+id/action_additionalUserInfoFragment_to_navigation_chatting_ViewPager_Fragment"
+            app:destination="@id/navigation_chatting_ViewPager_Fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_chatting_ViewPager_Fragment"
+        android:name="com.sgs.devcamp2.flametalk_android.ui.chattingviewpager.ChattingViewPagerFragment"
+        android:label="fragment_chatting_view_pager"
+        tools:layout="@layout/fragment_chatting_view_pager" >
+        <action
+            android:id="@+id/action_chattingViewPagerFragment2_to_navigation_chat_room_list"
             app:destination="@id/navigation_chat_room_list" />
+        <action
+            android:id="@+id/action_chattingViewPagerFragment2_to_navigation_open_chat_room"
+            app:destination="@id/navigation_open_chat_room" />
     </fragment>
 
 

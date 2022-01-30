@@ -5,6 +5,7 @@ import dagger.Lazy
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -22,8 +23,14 @@ class FileRepository @Inject constructor(
     //  파일 생성
     suspend fun postFileCreate(file: MultipartBody.Part) = withContext(ioDispatcher) {
         try {
-            // fileService.get().postCreateFile(file, chatroomId)
             fileService.get().postCreateFile(file)
+        } catch (e: Exception) {
+            e.stackTraceToString()
+        }
+    }
+    suspend fun postCreateFileFromChatRoom(file: MultipartBody.Part, chatroomId: RequestBody) = withContext(ioDispatcher) {
+        try {
+            fileService.get().postCreateFileFromChatRoom(file, chatroomId)
         } catch (e: Exception) {
             e.stackTraceToString()
         }
