@@ -28,7 +28,7 @@ import kotlinx.coroutines.launch
  */
 
 @AndroidEntryPoint
-class ChatRoomListFragment : Fragment(), ChatRoomListAdapter.ClickCallBack {
+class ChatRoomListFragment : Fragment(), ChatRoomListAdapter.ClickCallBack  {
 
     val TAG: String = "로그"
 
@@ -117,4 +117,5 @@ class ChatRoomListFragment : Fragment(), ChatRoomListAdapter.ClickCallBack {
     override fun onItemShortClicked(position: Int, chatRoomList: ChatRoomsEntity) {
         findNavController().navigate(R.id.navigation_chat_room)
     }
+
 }

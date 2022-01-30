@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -48,7 +47,7 @@ class InviteRoomFragment :
         binding = FragmentInviteRoomBinding.inflate(inflater, container, false)
 
         initUI(this.requireContext())
-        initObserve2()
+        initObserve()
 
         viewLifecycleOwner.lifecycleScope.launch {
             model.friendList.collect {
@@ -74,28 +73,8 @@ class InviteRoomFragment :
 
         return binding.root
     }
-    fun initObserve() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch {
-                    model.uiEvent.collect {
-                        state ->
-                        when (state) {
-                            is UiState.Success ->
-                                {
-                                    // state가 계속 유지되는듯. 따라서 뒤로가기를 눌러도 안돌아감.
-                                    // 이슈
-                                    Log.d(TAG, "UiState - $state() called")
-                                    findNavController().navigate(R.id.navigation_chat_room)
-                                }
-                        }
-                    }
-                }
-            }
-        }
-    }
 
-    fun initObserve2() {
+    fun initObserve() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
@@ -104,12 +83,14 @@ class InviteRoomFragment :
                         when (state) {
                             is UiState.Success ->
                                 {
-                                    findNavController().navigate(R.id.navigation_chat_room)
+                                    findNavController().navigate(R.id.action_inviteRoomFragment_to_navigation_chat_room_Fragment)
                                 }
                             is UiState.Error ->
                                 {
-                                    //Toast.makeText(,state.error,Toast.LENGTH_SHORT).show
                                     requireActivity().showToast(state.error)
+                                }
+                            is UiState.Loading ->
+                                {
                                 }
                         }
                     }
@@ -153,11 +134,16 @@ class InviteRoomFragment :
 
     override fun onStart() {
         super.onStart()
-        Log.d(TAG,"InviteRoomFragment - onStart() called")
+        model.replaceUiState()
     }
 
-    override fun onStop() {
-        super.onStop()
-        Log.d(TAG,"InviteRoomFragment - onStop() called")
+    override fun onResume() {
+        super.onResume()
+        Log.d(TAG, "InviteRoomFragment - onResume() called")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d(TAG, "InviteRoomFragment - onPause() called")
     }
 }

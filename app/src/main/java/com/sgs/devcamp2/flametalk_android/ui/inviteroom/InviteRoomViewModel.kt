@@ -156,7 +156,7 @@ class InviteRoomViewModel @Inject constructor(
     }
 
     fun createRooms() {
-
+        _uiState.value = UiState.Loading
         val inviteRoomReq = InviteRoomReq(
             hostId = "1643163512893324414", isOpen = false,
             users = listOf("1643163512893324414", "1643163512893324415")
@@ -168,18 +168,22 @@ class InviteRoomViewModel @Inject constructor(
                     when (result) {
                         is Results.Success ->
                             {
-                                // UiState.Success(result.data)
-                               // _uiEvent.value = UiState.Success(result.data)
                                 _uiState.value = UiState.Success(true)
                             }
                         is Results.Error ->
                             {
-                                //_uiEvent.value = UiState.Success(false)
+                                // _uiEvent.value = UiState.Success(false)
                                 _uiState.value = UiState.Error("에러 발생")
                                 null
                             }
                     }
                 }
         }
+    }
+
+    fun replaceUiState() {
+        _uiState.value = UiState.Loading
+        _selectedFriendList.value = emptyList()
+        selectedMap.clear()
     }
 }
