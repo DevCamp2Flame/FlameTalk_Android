@@ -1,4 +1,4 @@
-package com.sgs.devcamp2.flametalk_android.ui.profile.edit
+package com.sgs.devcamp2.flametalk_android.ui.profile
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,8 +10,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.sgs.devcamp2.flametalk_android.R
-import com.sgs.devcamp2.flametalk_android.databinding.FragmentEditDescBinding
+import com.sgs.devcamp2.flametalk_android.databinding.FragmentProfileDescBinding
+import com.sgs.devcamp2.flametalk_android.ui.profile.edit.EditProfileViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
@@ -24,10 +24,10 @@ import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
 @ExperimentalCoroutinesApi
-class EditProfileDescFragment : Fragment() {
-    private val binding by lazy { FragmentEditDescBinding.inflate(layoutInflater) }
+class ProfileDescFragment : Fragment() {
+    private val binding by lazy { FragmentProfileDescBinding.inflate(layoutInflater) }
     private val viewModel: EditProfileViewModel by activityViewModels()
-    private val args: EditProfileDescFragmentArgs by navArgs()
+    private val args: ProfileDescFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,6 +49,7 @@ class EditProfileDescFragment : Fragment() {
             binding.edtEditProfileDesc.setText("")
         }
 
+        // 접근한 View에 상관 없이 이전 View로 데이터를 전달할 수 있다.
         binding.tvEditProfileDescConfirm.setOnClickListener {
             viewModel.getProfileDesc(binding.edtEditProfileDesc.text.toString())
             findNavController().navigateUp()

@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sgs.devcamp2.flametalk_android.data.dummy.getDummyUser
 import com.sgs.devcamp2.flametalk_android.network.repository.FileRepository
+import com.sgs.devcamp2.flametalk_android.network.repository.ProfileRepository
+import com.sgs.devcamp2.flametalk_android.network.request.sign.ProfileCreateRequest
 import com.sgs.devcamp2.flametalk_android.network.response.friend.ProfilePreview
 import dagger.Lazy
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,7 +23,8 @@ import timber.log.Timber
 @HiltViewModel
 class EditProfileViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val fileRepository: Lazy<FileRepository>
+    private val fileRepository: Lazy<FileRepository>,
+    private val profileRepository: Lazy<ProfileRepository>
 ) : ViewModel() {
     // 네트워크 통신 데이터 전 더미데이터
     private var dummyUserData: ProfilePreview = getDummyUser()
@@ -76,7 +79,7 @@ class EditProfileViewModel @Inject constructor(
             _backgroundImage.value
 
         )
-        // TODO: 통신 준비
+        // TODO: 프로필 수정 통신
     }
 
     fun setProfileImage(path: String?) {
@@ -112,6 +115,26 @@ class EditProfileViewModel @Inject constructor(
                 fileRepository.get().postFileCreate(multipartFile, "22")
             } catch (ignore: Throwable) {
                 Timber.d("EditProfileViewModel: 알 수 없는 에러 발생")
+            }
+        }
+    }
+
+    fun addProfile() {
+        viewModelScope.launch {
+            try {
+                val request = ProfileCreateRequest(
+                    userId = "1643610416180811276",
+                    imageUrl = _profileImage.value,
+                    bgImageUrl = _backgroundImage.value,
+                    sticker = null,
+                    description = _description.value,
+                    isDefault = false
+                )
+                // TODO: profile, background 이미지 생성 통신 후 await으로 진행
+                val response = profileRepository.get().createProfile(request)
+                Timber.d(response.toString())
+            } catch (ignore: Throwable) {
+                Timber.d("알 수 없는 에러 발생")
             }
         }
     }
