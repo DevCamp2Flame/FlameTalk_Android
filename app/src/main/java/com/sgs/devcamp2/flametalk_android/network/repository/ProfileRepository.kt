@@ -30,6 +30,6 @@ class ProfileRepository @Inject constructor(
     // 프로필 수정
     suspend fun updateProfile(profileId: Long, request: ProfileUpdateRequest) =
         withContext(ioDispatcher) {
-            profileService.get().getProfileUpdate(profileId, request)
+            profileService.get().putProfileUpdate(profileId, request)
         }
 }

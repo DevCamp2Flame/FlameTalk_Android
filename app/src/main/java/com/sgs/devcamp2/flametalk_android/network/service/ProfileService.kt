@@ -12,7 +12,7 @@ interface ProfileService {
 
     // 프로필 수정
     @PUT("/api/profile/me/{profileId}")
-    suspend fun getProfileUpdate(
+    suspend fun putProfileUpdate(
         @Path("profileId") profileId: Long,
         @Body request: ProfileUpdateRequest
     ): ProfileUpdateResponse
