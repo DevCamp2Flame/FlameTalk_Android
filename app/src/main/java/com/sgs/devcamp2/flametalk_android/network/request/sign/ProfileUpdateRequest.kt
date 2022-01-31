@@ -1,4 +1,4 @@
-package com.sgs.devcamp2.flametalk_android.network.response.sign
+package com.sgs.devcamp2.flametalk_android.network.request.sign
 
 import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
@@ -6,20 +6,27 @@ import com.google.gson.annotations.SerializedName
 /**
  * @author 박소연
  * @created 2022/01/20
- * @updated 2022/01/20
- * @desc 프로필 생성 Request Body
+ * @desc 프로필 수정 Request Body
  *
  * [Header]
- * statusCode	{statusCode}
- * Location	    api/profile/{profileId}	성공한 경우 생성된 프로필 id
+ * Content-Type	application/json
+ * token	    {token}     access token값
  * [Body]
- * code	    Integer	응답 코드
- * message	String	응답 메세지
- * id   	Long	프로필 id
- */
+ * userId	    String	유저 id
+ * imageUrl	    String	프로필 사진 url
+ * bgImageUrl	String	프로필 배경 사진 url
+ * sticker	    JSON	프로필에 사용된 스티커 리스트. sticker 참고
+ * description	String	프로필 상태 메세지
+ * isDefault	boolean	기본 프로필 여부
+ *
+ * [sticker]
+ * stickerId	Integer	스티커 id
+ * positionX	Double	스티커 x 좌표
+ * positionY	Double	스티커 y 좌표
+*/
 
 @Keep
-data class ProfileCreateResponse(
+data class ProfileUpdateRequest(
     @SerializedName("userId")
     val userId: String,
     @SerializedName("imageUrl")

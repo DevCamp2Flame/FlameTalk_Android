@@ -7,6 +7,7 @@ import com.sgs.devcamp2.flametalk_android.data.dummy.getDummyUser
 import com.sgs.devcamp2.flametalk_android.network.repository.FileRepository
 import com.sgs.devcamp2.flametalk_android.network.repository.ProfileRepository
 import com.sgs.devcamp2.flametalk_android.network.request.sign.ProfileCreateRequest
+import com.sgs.devcamp2.flametalk_android.network.request.sign.ProfileUpdateRequest
 import com.sgs.devcamp2.flametalk_android.network.response.friend.ProfilePreview
 import dagger.Lazy
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -70,18 +71,6 @@ class EditProfileViewModel @Inject constructor(
         _backgroundImage.value = _userProfile.value!!.backgroundImage.toString()
     }
 
-    fun updateProfileDate() {
-        val profile = ProfilePreview(
-            _userProfile.value!!.userId,
-            _userProfile.value!!.nickname,
-            _profileImage.value,
-            _description.value,
-            _backgroundImage.value
-
-        )
-        // TODO: 프로필 수정 통신
-    }
-
     fun setProfileImage(path: String?) {
         if (path != null) {
             _profileImage.value = path
@@ -134,6 +123,25 @@ class EditProfileViewModel @Inject constructor(
                 val response = profileRepository.get().createProfile(request)
                 Timber.d(response.toString())
             } catch (ignore: Throwable) {
+                Timber.d("알 수 없는 에러 발생")
+            }
+        }
+    }
+
+    fun updateProfileDate(profileId: Long, isDefault: Boolean) {
+        val request = ProfileUpdateRequest(
+            userId = "유저아이디를 똑바로 저장했어야 했는데",
+            imageUrl = _profileImageUrl.value,
+            bgImageUrl = _backgroundImageUrl.value,
+            sticker = null, // TODO: 스티커 정보, 프로필 내 positioning 할 수 있는 상대적 위치 정보
+            description = _description.value,
+            isDefault = isDefault
+        )
+        viewModelScope.launch {
+            try {
+                val response = profileRepository.get().updateProfile(profileId, request)
+                Timber.d(response.toString())
+            } catch (ignored: Throwable) {
                 Timber.d("알 수 없는 에러 발생")
             }
         }

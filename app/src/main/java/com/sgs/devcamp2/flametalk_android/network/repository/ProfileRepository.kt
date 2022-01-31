@@ -2,6 +2,7 @@ package com.sgs.devcamp2.flametalk_android.network.repository
 
 import com.sgs.devcamp2.flametalk_android.network.dao.UserDAO
 import com.sgs.devcamp2.flametalk_android.network.request.sign.ProfileCreateRequest
+import com.sgs.devcamp2.flametalk_android.network.request.sign.ProfileUpdateRequest
 import com.sgs.devcamp2.flametalk_android.network.service.ProfileService
 import dagger.Lazy
 import javax.inject.Inject
@@ -25,4 +26,10 @@ class ProfileRepository @Inject constructor(
     suspend fun createProfile(request: ProfileCreateRequest) = withContext(ioDispatcher) {
         profileService.get().postProfileCreate(request)
     }
+
+    // 프로필 수정
+    suspend fun updateProfile(profileId: Long, request: ProfileUpdateRequest) =
+        withContext(ioDispatcher) {
+            profileService.get().getProfileUpdate(profileId, request)
+        }
 }
