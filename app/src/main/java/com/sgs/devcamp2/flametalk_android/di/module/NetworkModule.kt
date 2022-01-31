@@ -79,6 +79,6 @@ class NetworkModule {
     }
 
     companion object {
-        const val BASE_URL = "http://192.168.1.216:8080"
+        const val BASE_URL = "http://LOCAL_IP:8080" // 테스트 전 PC IP 확인
     }
 }
