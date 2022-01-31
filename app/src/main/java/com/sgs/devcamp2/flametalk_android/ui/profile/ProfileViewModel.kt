@@ -42,6 +42,10 @@ class ProfileViewModel @Inject constructor(
     private val _backgroundImage = MutableStateFlow("")
     val backgroundImage = _backgroundImage.asStateFlow()
 
+    // 에러 // TODO: ERROR response를 따로 받아야 한다.
+    private val _error = MutableStateFlow("")
+    val error = _error.asStateFlow()
+
     init {
         // _userProfile.value = dummyUserData
     }
@@ -56,6 +60,7 @@ class ProfileViewModel @Inject constructor(
                 _backgroundImage.value = response.data.bgImageUrl.toString()
                 Timber.d(response.toString())
             } catch (ignored: Throwable) {
+                // TODO: 프로필 조회 실패 error 처리
                 Timber.d("알 수 없는 오류 발생")
             }
         }

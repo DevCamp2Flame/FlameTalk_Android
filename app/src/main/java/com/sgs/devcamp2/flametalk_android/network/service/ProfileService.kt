@@ -19,8 +19,8 @@ interface ProfileService {
     ): ProfileUpdateResponse
 
     // 프로필 조회
-    @GET("/api/profile")
+    @GET("/api/profile/{profileId}")
     suspend fun getProfile(
-        @Query("profileId") profileId: Long
+        @Path("profileId") profileId: Long
     ): ProfileResponse
 }
