@@ -1,6 +1,5 @@
 package com.sgs.devcamp2.flametalk_android.network
 
-import com.sgs.devcamp2.flametalk_android.util.addHeader
 import java.io.IOException
 import okhttp3.Interceptor
 import okhttp3.RequestBody
@@ -20,14 +19,10 @@ class NetworkInterceptor(
     val tokenSupplier: () -> String?
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
-        val request = chain.request().addHeader("Content-Type", "multipart/form-data")
-            .addHeader("token", "dummy token")
-
-//          val request = chain.request().addHeader("Content-Type", "application/json")
-//        val request = chain.request()
-//            .addHeader("x-access-token", tokenSupplier().also { Timber.d("token: $it") }.toString())
-//            .addHeader("accept", "application/json")
-//            .addHeader("Content-Type", "application/json")
+        val request = chain.request()
+        // TODO: network gateway 완료 후 header 픽스
+        // .addHeader("Content-Type", "application/json")
+        // .addHeader("token", "dummy token")
 
         Timber.d("url -> ${request.url}")
         Timber.d("headers -> ${request.headers}")

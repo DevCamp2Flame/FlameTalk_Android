@@ -79,7 +79,6 @@ class NetworkModule {
     }
 
     companion object {
-        const val BASE_URL = "http://10.0.2.2:8080"
-        const val SOYEON_MAC_URL = "http://10.00.13.235:8080"
+        const val BASE_URL = "http://PC_IP_serial:8080"
     }
 }

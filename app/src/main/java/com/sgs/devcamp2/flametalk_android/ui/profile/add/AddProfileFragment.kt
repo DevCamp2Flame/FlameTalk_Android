@@ -65,6 +65,7 @@ class AddProfileFragment : Fragment() {
     }
 
     private fun initUI() {
+        // TODO: userDAO에서 로컬에 저장된 nickname을 가져온 후 바인딩
     }
 
     // ViewModel StateFlow 변수가 갱신되면 UI에 자동 바인딩한다
