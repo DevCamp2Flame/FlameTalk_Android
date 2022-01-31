@@ -28,6 +28,7 @@ import com.sgs.devcamp2.flametalk_android.databinding.FragmentEditProfileBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 /**
  * @author 박소연

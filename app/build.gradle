@@ -6,6 +6,7 @@ plugins {
     id 'dagger.hilt.android.plugin'
     id 'kotlin-parcelize'
     id 'androidx.navigation.safeargs.kotlin'
+
 }
 
 android {
@@ -73,20 +74,25 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$ver_lifecycle"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$ver_lifecycle"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$ver_lifecycle"
+    implementation "androidx.lifecycle:lifecycle-service:$ver_lifecycle"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.0-alpha03"
 
     //retrofit
     implementation "com.squareup.retrofit2:retrofit:2.9.0"
-    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.9.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-    implementation 'com.google.code.gson:gson:2.8.6'
+
+    implementation "com.squareup.retrofit2:adapter-rxjava2:2.9.0"
+    implementation "com.squareup.retrofit2:converter-gson:2.9.0"
+    implementation "com.squareup.retrofit2:converter-moshi:2.9.0"
+    implementation "com.google.code.gson:gson:2.8.6"
 
     // Moshi - json converter
+
     implementation 'com.squareup.moshi:moshi:1.12.0'
     implementation 'com.squareup.moshi:moshi-kotlin:1.12.0'
     implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
 
     //Retrofit 라이브러리 응답으로 가짜 객체를 만들기 위해
-    implementation 'com.squareup.retrofit2:retrofit-mock:2.6.2'
+    implementation "com.squareup.retrofit2:retrofit-mock:2.9.0"
 
     //Glide
     implementation ("com.github.bumptech.glide:glide:4.11.0") {
@@ -129,15 +135,33 @@ dependencies {
     // coroutine
     testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.1'
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.5.1")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.4.0-alpha01")
 
 
     //firebase
     implementation platform('com.google.firebase:firebase-bom:29.0.2')
     implementation 'com.google.firebase:firebase-auth-ktx:21.0.1'
     implementation 'com.google.android.gms:play-services-auth:20.0.0'
+    implementation 'com.google.firebase:firebase-messaging-ktx'
+    implementation 'com.google.firebase:firebase-analytics-ktx'
 
-    //stomp
-    implementation 'com.github.NaikSoftware:StompProtocolAndroid:1.6.6'
+    //stomp krossbow
+    implementation("org.hildan.krossbow:krossbow-websocket-okhttp:3.1.1")
+    implementation("org.hildan.krossbow:krossbow-stomp-core:3.1.1")
+    implementation("org.hildan.krossbow:krossbow-stomp-kxserialization:3.1.1")
+
+    //viewPager2
+    implementation "androidx.viewpager2:viewpager2:1.0.0"
+
+    //room
+    def room_version = '2.3.0'
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    // optional - Kotlin Extensions and Coroutines support for Room
+    implementation "androidx.room:room-ktx:$room_version"
+
+
+
 
 }
 

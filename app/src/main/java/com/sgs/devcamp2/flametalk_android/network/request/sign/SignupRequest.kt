@@ -1,8 +1,7 @@
 package com.sgs.devcamp2.flametalk_android.network.request.sign
 
 import androidx.annotation.Keep
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import com.google.gson.annotations.SerializedName
 
 /**
  * @author 박소연
@@ -23,24 +22,23 @@ import com.squareup.moshi.JsonClass
  */
 
 @Keep
-@JsonClass(generateAdapter = true)
 data class SignupRequest(
-    @Json(name = "email")
+    @SerializedName("email")
     val email: String,
-    @Json(name = "password")
+    @SerializedName("password")
     val password: String?,
-    @Json(name = "nickname")
+    @SerializedName("nickname")
     val nickname: String,
-    @Json(name = "phoneNumber")
+    @SerializedName("phoneNumber")
     val phoneNumber: String,
-    @Json(name = "birthday")
+    @SerializedName("birthday")
     val birthday: String,
-    @Json(name = "social")
+    @SerializedName("social")
     val social: String,
-    @Json(name = "region")
+    @SerializedName("region")
     val region: String,
-    @Json(name = "language")
+    @SerializedName("language")
     val language: String,
-    @Json(name = "deviceId")
+    @SerializedName("deviceId")
     val deviceId: String
 )

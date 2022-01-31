@@ -1,5 +1,7 @@
 package com.sgs.devcamp2.flametalk_android.di.module
 
+import com.sgs.devcamp2.flametalk_android.data.source.remote.api.ChatRoomsApi
+import com.sgs.devcamp2.flametalk_android.data.source.remote.api.InviteRoomApi
 import com.sgs.devcamp2.flametalk_android.network.NetworkInterceptor
 import com.sgs.devcamp2.flametalk_android.network.dao.UserDAO
 import com.sgs.devcamp2.flametalk_android.network.service.FileService
@@ -9,8 +11,6 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import java.util.concurrent.TimeUnit
-import javax.inject.Singleton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -18,11 +18,14 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
+import javax.inject.Singleton
 
 /**
  * @author 박소연
  * @created 2022/01/17
  * @desc Dagger+Hilt를 이용한 Network Module
+ * data -> source -> remote api들의 의존성 주입
  */
 
 @Module
@@ -44,8 +47,9 @@ class NetworkModule {
     fun provideOkHttp3Client(networkInterceptor: NetworkInterceptor): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(networkInterceptor)
-            .callTimeout(10, TimeUnit.SECONDS)
-            .connectTimeout(10, TimeUnit.SECONDS)
+            .connectTimeout(100, TimeUnit.SECONDS)
+            .readTimeout(100, TimeUnit.SECONDS)
+            .writeTimeout(100, TimeUnit.SECONDS)
             .build()
     }
 
@@ -55,7 +59,6 @@ class NetworkModule {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(client)
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
@@ -76,6 +79,16 @@ class NetworkModule {
     @Singleton
     fun provideProfileService(retrofit: Retrofit): ProfileService {
         return retrofit.create(ProfileService::class.java)
+    }
+
+    fun provideChatRoomsService(retrofit: Retrofit): ChatRoomsApi {
+        return retrofit.create(ChatRoomsApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideInviteRoomApi(retrofit: Retrofit): InviteRoomApi {
+        return retrofit.create(InviteRoomApi::class.java)
     }
 
     companion object {

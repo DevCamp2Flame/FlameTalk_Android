@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.*
-import com.sgs.devcamp2.flametalk_android.network.response.chatlist.ChatList
+import com.sgs.devcamp2.flametalk_android.domain.entity.ChatRoomsEntity
 
 /**
  * 채팅방 리스트 recyclerview Adapter
@@ -18,12 +18,12 @@ import com.sgs.devcamp2.flametalk_android.network.response.chatlist.ChatList
  */
 class ChatRoomListAdapter constructor(
     callback: ClickCallBack
-) : ListAdapter<ChatList, RecyclerView.ViewHolder>(diffUtil) {
+) : ListAdapter<ChatRoomsEntity, RecyclerView.ViewHolder>(diffUtil) {
 // 클래스에서만 한번만 쓸려고하는 것
 
     interface ClickCallBack {
-        fun onItemLongClicked(position: Int, chatList: ChatList)
-        fun onItemShortClicked(position: Int, chatList: ChatList)
+        fun onItemLongClicked(position: Int, chatRoomList: ChatRoomsEntity)
+        fun onItemShortClicked(position: Int, chatRoomList: ChatRoomsEntity)
     }
 
     var clickCallBack: ClickCallBack? = callback
@@ -38,12 +38,12 @@ class ChatRoomListAdapter constructor(
          * notifyDataSetChanged 를 사용하지 않기 위한 방법
          * DiffUtil 를 사용하여 다른 부분만 갱신을 해준다.
          */
-        val diffUtil = object : DiffUtil.ItemCallback<ChatList>() {
-            override fun areItemsTheSame(oldItem: ChatList, newItem: ChatList): Boolean {
-                return oldItem.id == newItem.id
+        val diffUtil = object : DiffUtil.ItemCallback<ChatRoomsEntity>() {
+            override fun areItemsTheSame(oldItem: ChatRoomsEntity, newItem: ChatRoomsEntity): Boolean {
+                return oldItem.room_id == newItem.room_id
             }
 
-            override fun areContentsTheSame(oldItem: ChatList, newItem: ChatList): Boolean {
+            override fun areContentsTheSame(oldItem: ChatRoomsEntity, newItem: ChatRoomsEntity): Boolean {
                 return oldItem == newItem
             }
         }
@@ -84,7 +84,7 @@ class ChatRoomListAdapter constructor(
 
         holder.itemView.setOnLongClickListener(ItemLongClickListener(position, getItem(position)))
         holder.itemView.setOnClickListener(ItemShortClickListener(position, getItem(position)))
-        when (getItem(position).user_list.size) {
+        when (getItem(position).user_size) {
             1 ->
                 {
                     (holder as OneViewHolder).bind(getItem(position))
@@ -109,7 +109,7 @@ class ChatRoomListAdapter constructor(
      */
     override fun getItemViewType(position: Int): Int {
 
-        return currentList[position].user_list.size
+        return currentList[position].user_size
     }
 
     /**
@@ -118,48 +118,48 @@ class ChatRoomListAdapter constructor(
      */
     inner class OneViewHolder(val binding: ItemPersonOneChatListBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(chatList: ChatList) {
-            binding.tvChatRoomListUserName.text = chatList.title
+        fun bind(chatRoomList: ChatRoomsEntity) {
+            binding.tvChatRoomListUserName.text = chatRoomList.title
         }
     }
 
     inner class TwoViewHolder(val binding: ItemPersonTwoChatListBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(chatList: ChatList) {
-            binding.tvChatRoomListUserName.text = chatList.title
+        fun bind(chatRoomList: ChatRoomsEntity) {
+            binding.tvChatRoomListUserName.text = chatRoomList.title
         }
     }
     inner class ThreeViewHolder(val binding: ItemPersonThreeChatListBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(chatList: ChatList) {
-            binding.tvChatRoomListUserName.text = chatList.title
+        fun bind(chatRoomList: ChatRoomsEntity) {
+            binding.tvChatRoomListUserName.text = chatRoomList.title
         }
     }
     inner class FourViewHolder(val binding: ItemPersonFourChatListBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(chatList: ChatList) {
-            binding.tvChatRoomListUserName.text = chatList.title
+        fun bind(chatRoomList: ChatRoomsEntity) {
+            binding.tvChatRoomListUserName.text = chatRoomList.title
         }
     }
 
     /**
      * 각각의 ItemView 에 대해서 LongClick Listener 를 붙여서 클릭시에 dialog callback 을 실행 할 수 있게 한다.
      */
-    inner class ItemLongClickListener(var position: Int, var chatList: ChatList) : View.OnLongClickListener {
+    inner class ItemLongClickListener(var position: Int, var chatRoomList: ChatRoomsEntity) : View.OnLongClickListener {
 
         override fun onLongClick(view: View?): Boolean {
             when (view?.id) {
                 R.id.item_chat_room_list -> {
-                    clickCallBack?.onItemLongClicked(position, chatList)
+                    clickCallBack?.onItemLongClicked(position, chatRoomList)
                 }
             }
             return false
         }
     }
 
-    inner class ItemShortClickListener(var position: Int, var chatList: ChatList) : View.OnClickListener {
+    inner class ItemShortClickListener(var position: Int, var chatRoomList: ChatRoomsEntity) : View.OnClickListener {
         override fun onClick(view: View?) {
             when (view?.id) {
                 R.id.item_chat_room_list -> {
-                    clickCallBack?.onItemShortClicked(position, chatList)
+                    clickCallBack?.onItemShortClicked(position, chatRoomList)
                 }
             }
         }

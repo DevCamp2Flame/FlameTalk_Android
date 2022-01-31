@@ -1,5 +1,8 @@
 package com.sgs.devcamp2.flametalk_android.ui
 
+import android.content.BroadcastReceiver
+import android.content.IntentFilter
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -8,6 +11,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.ActivityMainBinding
+import com.sgs.devcamp2.flametalk_android.services.LaunchBroadCastReceiver
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -19,7 +23,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
+        boardCastIntent()
         initNavigationBar()
     }
 
@@ -41,5 +45,12 @@ class MainActivity : AppCompatActivity() {
 
         binding.btnvView.setupWithNavController(navController)
         binding.btnvView.itemIconTintList = null
+    }
+    fun boardCastIntent() {
+        val br: BroadcastReceiver = LaunchBroadCastReceiver()
+        val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION).apply {
+            addAction("com.course.APP_LAUNCH")
+        }
+        registerReceiver(br, filter)
     }
 }

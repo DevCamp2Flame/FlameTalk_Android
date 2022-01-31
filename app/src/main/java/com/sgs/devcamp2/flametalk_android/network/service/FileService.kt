@@ -1,9 +1,9 @@
 package com.sgs.devcamp2.flametalk_android.network.service
 
 import okhttp3.MultipartBody
-import retrofit2.http.Multipart
-import retrofit2.http.POST
-import retrofit2.http.Part
+import okhttp3.RequestBody
+import okhttp3.ResponseBody
+import retrofit2.http.*
 
 /**
  * @author 박소연
@@ -13,10 +13,27 @@ import retrofit2.http.Part
 
 interface FileService {
     // 파일 생성
+
     @Multipart
     @POST("/api/file")
     suspend fun postCreateFile(
-        @Part record: MultipartBody.Part?,
-        @Part chatroomId: String?
+        @Part file: MultipartBody.Part
     )
+
+    @Multipart
+    @POST("/api/file")
+    suspend fun postCreateFileFromChatRoom(
+        @Part file: MultipartBody.Part,
+        @Part chatRoomId: RequestBody
+    )
+
+    @GET("/api/file/{fileId}")
+    suspend fun getCreatedFile(
+        @Path("fileId") id: Long?
+    ): ResponseBody
+
+    @DELETE("/api/file/{fileId}")
+    suspend fun deleteCreatedFile(
+        @Path("fileId") id: Long?
+    ): ResponseBody
 }

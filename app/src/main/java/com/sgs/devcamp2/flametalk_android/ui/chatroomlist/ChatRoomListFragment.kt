@@ -1,8 +1,7 @@
 package com.sgs.devcamp2.flametalk_android.ui.chatroomlist
 
 import android.app.AlertDialog
-import android.content.Context
-import android.content.DialogInterface
+import android.content.*
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,13 +10,17 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentChatRoomListBinding
-import com.sgs.devcamp2.flametalk_android.network.response.chatlist.ChatList
+import com.sgs.devcamp2.flametalk_android.domain.entity.ChatRoomsEntity
+import com.sgs.devcamp2.flametalk_android.domain.entity.UiState
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 /**
  * 채팅방 리스트 display fragment
@@ -25,7 +28,7 @@ import dagger.hilt.android.AndroidEntryPoint
  */
 
 @AndroidEntryPoint
-class ChatRoomListFragment : Fragment(), ChatRoomListAdapter.ClickCallBack, View.OnClickListener {
+class ChatRoomListFragment : Fragment(), ChatRoomListAdapter.ClickCallBack {
 
     val TAG: String = "로그"
 
@@ -42,17 +45,19 @@ class ChatRoomListFragment : Fragment(), ChatRoomListAdapter.ClickCallBack, View
         binding = FragmentChatRoomListBinding.inflate(inflater, container, false)
         initUI(this.requireContext())
 
-        /**
-         * listAdapter 사용 시 adapter 에서 list type 의 변수를 생성하지 않음
-         * submitList 를 통해서 추가해준다.
-         */
-        model.chatList.observe(
-            this.requireActivity(),
-            Observer {
+//        viewLifecycleOwner.lifecycleScope.launch {
+//            model.uiState.collectLatest {
+//                state ->
+//                when (state) {
+//                    is UiState.Success ->
+//                        {
+//                            adapterRoom.submitList(state.data)
+//                        }
+//                }
+//            }
+//        }
+        initObserve()
 
-                adapterRoom.submitList(it)
-            }
-        )
         return binding.root
     }
 
@@ -60,11 +65,27 @@ class ChatRoomListFragment : Fragment(), ChatRoomListAdapter.ClickCallBack, View
         binding.rvChatListChattingRoom.layoutManager = LinearLayoutManager(context)
         adapterRoom = ChatRoomListAdapter(callback = this)
         binding.rvChatListChattingRoom.adapter = adapterRoom
-
-        binding.ivChatRoomListChat.setOnClickListener(this)
     }
 
-    override fun onItemLongClicked(position: Int, chatList: ChatList) {
+    fun initObserve() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    model.uiState.collect {
+                        state ->
+                        when (state) {
+                            is UiState.Success ->
+                                {
+                                    adapterRoom.submitList(state.data)
+                                }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    override fun onItemLongClicked(position: Int, chatRoomList: ChatRoomsEntity) {
 
         /**
          * itemClickCallback
@@ -84,7 +105,7 @@ class ChatRoomListFragment : Fragment(), ChatRoomListAdapter.ClickCallBack, View
             }
         }
 
-        dialog.setTitle(chatList.title)
+        dialog.setTitle(chatRoomList.title)
         dialog.setItems(
             items, dialogListener
 
@@ -93,16 +114,7 @@ class ChatRoomListFragment : Fragment(), ChatRoomListAdapter.ClickCallBack, View
         true
     }
 
-    override fun onItemShortClicked(position: Int, chatList: ChatList) {
+    override fun onItemShortClicked(position: Int, chatRoomList: ChatRoomsEntity) {
         findNavController().navigate(R.id.navigation_chat_room)
-    }
-
-    override fun onClick(view: View?) {
-        when (view) {
-            binding.ivChatRoomListChat ->
-                {
-                    ChatRoomTopSheetFragment().show(childFragmentManager, "topsheet")
-                }
-        }
     }
 }
