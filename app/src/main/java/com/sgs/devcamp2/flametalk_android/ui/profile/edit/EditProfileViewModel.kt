@@ -128,7 +128,7 @@ class EditProfileViewModel @Inject constructor(
         }
     }
 
-    fun updateProfileDate(profileId: Long, isDefault: Boolean) {
+    fun updateProfileData(profileId: Long, isDefault: Boolean) {
         val request = ProfileUpdateRequest(
             userId = "유저아이디를 똑바로 저장했어야 했는데",
             imageUrl = _profileImageUrl.value,

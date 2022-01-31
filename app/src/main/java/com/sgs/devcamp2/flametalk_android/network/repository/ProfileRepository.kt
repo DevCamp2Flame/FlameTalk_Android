@@ -32,4 +32,9 @@ class ProfileRepository @Inject constructor(
         withContext(ioDispatcher) {
             profileService.get().putProfileUpdate(profileId, request)
         }
+
+    // 프로필 조회
+    suspend fun getProfile(profileId: Long) = withContext(ioDispatcher) {
+        profileService.get().getProfile(profileId)
+    }
 }

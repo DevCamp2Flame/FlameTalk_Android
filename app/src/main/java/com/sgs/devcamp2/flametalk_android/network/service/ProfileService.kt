@@ -2,6 +2,7 @@ package com.sgs.devcamp2.flametalk_android.network.service
 
 import com.sgs.devcamp2.flametalk_android.network.request.sign.ProfileCreateRequest
 import com.sgs.devcamp2.flametalk_android.network.request.sign.ProfileUpdateRequest
+import com.sgs.devcamp2.flametalk_android.network.response.sign.ProfileResponse
 import com.sgs.devcamp2.flametalk_android.network.response.sign.ProfileUpdateResponse
 import retrofit2.http.*
 
@@ -16,4 +17,10 @@ interface ProfileService {
         @Path("profileId") profileId: Long,
         @Body request: ProfileUpdateRequest
     ): ProfileUpdateResponse
+
+    // 프로필 조회
+    @GET("/api/profile")
+    suspend fun getProfile(
+        @Query("profileId") profileId: Long
+    ): ProfileResponse
 }
