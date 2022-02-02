@@ -5,6 +5,7 @@ import com.sgs.devcamp2.flametalk_android.data.source.remote.api.InviteRoomApi
 import com.sgs.devcamp2.flametalk_android.network.NetworkInterceptor
 import com.sgs.devcamp2.flametalk_android.network.dao.UserDAO
 import com.sgs.devcamp2.flametalk_android.network.service.FileService
+import com.sgs.devcamp2.flametalk_android.network.service.ProfileService
 import com.sgs.devcamp2.flametalk_android.network.service.UserService
 import dagger.Module
 import dagger.Provides
@@ -76,6 +77,10 @@ class NetworkModule {
 
     @Provides
     @Singleton
+    fun provideProfileService(retrofit: Retrofit): ProfileService {
+        return retrofit.create(ProfileService::class.java)
+    }
+
     fun provideChatRoomsService(retrofit: Retrofit): ChatRoomsApi {
         return retrofit.create(ChatRoomsApi::class.java)
     }
@@ -87,7 +92,6 @@ class NetworkModule {
     }
 
     companion object {
-        const val BASE_URL = "http://10.0.2.2:8080" // emulator
-        // const val BASE_URL = "http://10.99.30.180:8080" // physical device
+        const val BASE_URL = "http://LOCAL_IP:8080" // 테스트 전 PC IP 확인
     }
 }

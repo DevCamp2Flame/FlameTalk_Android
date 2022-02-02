@@ -48,6 +48,9 @@
         <action
             android:id="@+id/action_friend_to_profile"
             app:destination="@id/navigation_profile" />
+        <action
+            android:id="@+id/action_friend_to_add_profile"
+            app:destination="@+id/navigation_add_profile"/>
     </fragment>
 
     <fragment
@@ -70,6 +73,9 @@
         <argument
             android:name="userInfo"
             app:argType="com.sgs.devcamp2.flametalk_android.network.response.friend.ProfilePreview" />
+        <argument
+            android:name="userId"
+            app:argType="string" />
         <action
             android:id="@+id/action_profile_to_edit"
             app:destination="@id/navigation_edit_profile" />
@@ -83,8 +89,8 @@
         tools:layout="@layout/fragment_edit_profile">
 
         <action
-            android:id="@+id/action_profile_to_edit_desc"
-            app:destination="@id/navigation_edit_profile_desc" />
+            android:id="@+id/action_edit_to_edit_desc"
+            app:destination="@id/navigation_profile_desc" />
         <argument
             android:name="userInfo"
             app:nullable="true"
@@ -92,19 +98,40 @@
             app:argType="com.sgs.devcamp2.flametalk_android.network.response.friend.ProfilePreview" />
     </fragment>
 
+    <!--프로필 생성-->
+    <fragment
+        android:id="@+id/navigation_add_profile"
+        android:name="com.sgs.devcamp2.flametalk_android.ui.profile.add.AddProfileFragment"
+        android:label="AddProfile"
+        tools:layout="@layout/fragment_add_profile">
+
+        <action
+            android:id="@+id/action_add_to_edit_desc"
+            app:destination="@id/navigation_profile_desc" />
+    </fragment>
+
     <!--상태메세지 수정-->
     <fragment
-        android:id="@+id/navigation_edit_profile_desc"
-        android:name="com.sgs.devcamp2.flametalk_android.ui.profile.edit.EditProfileDescFragment"
+        android:id="@+id/navigation_profile_desc"
+        android:name="com.sgs.devcamp2.flametalk_android.ui.profile.ProfileDescFragment"
         android:label="EditDescProfile"
-        tools:layout="@layout/fragment_edit_desc">
+        tools:layout="@layout/fragment_profile_desc">
+
 
         <argument
             android:name="desc"
+            app:nullable="true"
+            android:defaultValue=""
             app:argType="string" />
         <action
             android:id="@+id/action_edit_desc_to_edit"
             app:destination="@id/navigation_edit_profile" />
+        <action
+            android:id="@+id/action_edit_desc_to_add"
+            app:destination="@id/navigation_add_profile" />
+        <argument
+            android:name="startView"
+            app:argType="string" />
     </fragment>
 
     <!--    채팅방 리스트-->

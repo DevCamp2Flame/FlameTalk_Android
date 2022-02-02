@@ -27,7 +27,8 @@ import kotlinx.coroutines.flow.collectLatest
 /**
  * @author 박소연
  * @created 2022/01/17
- * @desc 프로필 상세 보기 (유저, 친)
+ * @updated 2022/01/31
+ * @desc 프로필 상세 보기 (유저, 친구)
  */
 
 @AndroidEntryPoint
@@ -97,7 +98,9 @@ class FriendFragment : Fragment() {
         // 친구 목록 > 프로필 상세 보기 이동
         binding.lFriendMainUser.root.setOnClickListener {
             val friendToProfileDirections: NavDirections =
-                FriendFragmentDirections.actionFriendToProfile(1, viewModel.userProfile.value)
+                FriendFragmentDirections.actionFriendToProfile(
+                    viewType = 1, userInfo = viewModel.userProfile.value, userId = "1"
+                )
             findNavController().navigate(friendToProfileDirections)
         }
     }
@@ -110,19 +113,23 @@ class FriendFragment : Fragment() {
         binding.rvFriendMultiProfile.adapter = multiProfileAdapter
 
         viewModel.multiProfile.observe(
-            viewLifecycleOwner,
-            { it ->
-                it?.let {
-                    if (it.size > 0) {
-                        multiProfileAdapter.data = it
-                        multiProfileAdapter.notifyDataSetChanged()
-                    }
+            viewLifecycleOwner
+        ) { it ->
+            it?.let {
+                if (it.size > 0) {
+                    multiProfileAdapter.data = it
+                    multiProfileAdapter.notifyDataSetChanged()
                 }
             }
-        )
+        }
         // 마지막 아이템: 만들기
         binding.itemFriendAddProfile.imgVerticalProfileNone.toVisible()
         binding.itemFriendAddProfile.tvVerticalProfileNickname.text = "만들기"
+
+        // 친구리스트 > 멀티프로필 생성: 멀티 프로필 만들기
+        binding.itemFriendAddProfile.root.setOnClickListener {
+            findNavController().navigate(R.id.navigation_add_profile)
+        }
     }
 
     // 생일인 친구 리스트 초기화
@@ -131,16 +138,15 @@ class FriendFragment : Fragment() {
         binding.rvFriendBirthday.adapter = birthdayAdapter
 
         viewModel.birthProfile.observe(
-            viewLifecycleOwner,
-            { it ->
-                it?.let {
-                    if (it.size > 0) {
-                        birthdayAdapter.data = it
-                        birthdayAdapter.notifyDataSetChanged()
-                    }
+            viewLifecycleOwner
+        ) { it ->
+            it?.let {
+                if (it.size > 0) {
+                    birthdayAdapter.data = it
+                    birthdayAdapter.notifyDataSetChanged()
                 }
             }
-        )
+        }
         // 마지막 아이템: 친구의 생일을 확인해보세요
         binding.itemFriendMoreBirthday.imgFriendPreviewNone.toVisible()
         binding.itemFriendMoreBirthday.tvFriendPreviewCount.toVisible()
@@ -154,15 +160,14 @@ class FriendFragment : Fragment() {
         binding.rvFriend.adapter = friendAdapter
 
         viewModel.friendProfile.observe(
-            viewLifecycleOwner,
-            { it ->
-                it?.let {
-                    if (it.size > 0) {
-                        friendAdapter.data = it
-                        friendAdapter.notifyDataSetChanged()
-                    }
+            viewLifecycleOwner
+        ) { it ->
+            it?.let {
+                if (it.size > 0) {
+                    friendAdapter.data = it
+                    friendAdapter.notifyDataSetChanged()
                 }
             }
-        )
+        }
     }
 }
