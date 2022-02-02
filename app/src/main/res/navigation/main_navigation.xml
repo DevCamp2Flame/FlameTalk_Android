@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_navigation"
-    app:startDestination="@id/navigation_chatting_ViewPager_Fragment">
+    app:startDestination="@id/navigation_phonebook">
 
     <fragment
         android:id="@+id/navigation_signin"
@@ -48,6 +48,13 @@
         <action
             android:id="@+id/action_friend_to_profile"
             app:destination="@id/navigation_profile" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_phonebook"
+        android:name="com.sgs.devcamp2.flametalk_android.ui.friend.phonebook.PhoneBookFragment"
+        android:label="PhoneBook"
+        tools:layout="@layout/fragment_phone_book">
     </fragment>
 
     <!--프로필 상세보기-->
@@ -182,6 +189,8 @@
             android:id="@+id/action_additionalUserInfoFragment_to_navigation_chatting_ViewPager_Fragment"
             app:destination="@id/navigation_chatting_ViewPager_Fragment" />
     </fragment>
+
+    <!--네이밍 변경이 필요할 것 같습니다-->
     <fragment
         android:id="@+id/navigation_chatting_ViewPager_Fragment"
         android:name="com.sgs.devcamp2.flametalk_android.ui.chattingviewpager.ChattingViewPagerFragment"
