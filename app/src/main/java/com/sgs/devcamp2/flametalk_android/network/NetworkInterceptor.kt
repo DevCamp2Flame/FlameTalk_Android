@@ -1,12 +1,10 @@
 package com.sgs.devcamp2.flametalk_android.network
 
 import java.io.IOException
-import com.sgs.devcamp2.flametalk_android.util.addHeader
 import okhttp3.Interceptor
 import okhttp3.RequestBody
 import okhttp3.Response
 import okio.Buffer
-import java.io.IOException
 
 /**
  * @author 박소연
@@ -21,7 +19,7 @@ class NetworkInterceptor(
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request().newBuilder().addHeader("Content-Type", "application/json")
             .build()
-            // TODO: network gateway 완료 후 header 픽스
+        // TODO: network gateway 완료 후 header 픽스
 //          val request = chain.request().addHeader("Content-Type", "application/json")
 //        val request = chain.request()
 //            .addHeader("x-access-token", tokenSupplier().also { Timber.d("token: $it") }.toString())
@@ -39,9 +37,9 @@ class NetworkInterceptor(
 
         // 서버에서 response 형식을 통일하지 않으면 못 씀
         // response.peekBody(Long.MAX_VALUE).string().let { JSONObject(it) }.let {
-            /*val isSuccess = it["isSuccess"] as Boolean
-            val code = it["code"] as Int
-            val message = it["message"] as String*/
+        /*val isSuccess = it["isSuccess"] as Boolean
+        val code = it["code"] as Int
+        val message = it["message"] as String*/
 
         // if (!isSuccess) throw NetworkError(message)
         // }
