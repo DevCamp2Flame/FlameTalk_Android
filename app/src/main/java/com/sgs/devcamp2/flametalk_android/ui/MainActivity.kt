@@ -1,15 +1,18 @@
 package com.sgs.devcamp2.flametalk_android.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -23,7 +26,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         initNavigationBar()
         model.connectChatServer()
-        model.receivedMessage()
     }
 
     private fun initNavigationBar() {
@@ -33,8 +35,9 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (destination.id == R.id.navigation_signin || destination.id == R.id.navigation_signup ||
                 destination.id == R.id.navigation_chat_room || destination.id == R.id.navigation_profile ||
-                destination.id == R.id.navigation_edit_profile_desc || destination.id == R.id.navigation_edit_profile || destination.id == R.id.navigation_chat_Room_Bottom_Sheet ||
-                destination.id == R.id.navigation_invite_Open_Chat_Room
+                destination.id == R.id.navigation_profile_desc || destination.id == R.id.navigation_edit_profile ||
+                destination.id == R.id.navigation_chat_Room_Bottom_Sheet || destination.id == R.id.navigation_add_profile || destination.id == R.id.navigation_invite_Open_Chat_Room
+
             ) {
                 binding.btnvView.visibility = View.GONE
             } else {
@@ -44,5 +47,13 @@ class MainActivity : AppCompatActivity() {
 
         binding.btnvView.setupWithNavController(navController)
         binding.btnvView.itemIconTintList = null
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        lifecycleScope.launch {
+            Log.d("로그", "MainActivity - onDestroy() called")
+            model.session?.value?.disconnect()
+        }
     }
 }

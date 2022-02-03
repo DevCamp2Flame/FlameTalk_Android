@@ -6,6 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sgs.devcamp2.flametalk_android.data.dummy.getDummyUser
 import com.sgs.devcamp2.flametalk_android.network.repository.FileRepository
+import com.sgs.devcamp2.flametalk_android.network.repository.ProfileRepository
+import com.sgs.devcamp2.flametalk_android.network.request.sign.ProfileCreateRequest
+import com.sgs.devcamp2.flametalk_android.network.request.sign.ProfileUpdateRequest
 import com.sgs.devcamp2.flametalk_android.network.response.friend.ProfilePreview
 import dagger.Lazy
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,7 +25,8 @@ import javax.inject.Inject
 @HiltViewModel
 class EditProfileViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val fileRepository: Lazy<FileRepository>
+    private val fileRepository: Lazy<FileRepository>,
+    private val profileRepository: Lazy<ProfileRepository>
 ) : ViewModel() {
     // 네트워크 통신 데이터 전 더미데이터
     private var dummyUserData: ProfilePreview = getDummyUser()
@@ -68,18 +72,6 @@ class EditProfileViewModel @Inject constructor(
         _backgroundImage.value = _userProfile.value!!.backgroundImage.toString()
     }
 
-    fun updateProfileDate() {
-        val profile = ProfilePreview(
-            _userProfile.value!!.userId,
-            _userProfile.value!!.nickname,
-            _profileImage.value,
-            _description.value,
-            _backgroundImage.value
-
-        )
-        // TODO: 통신 준비
-    }
-
     fun setProfileImage(path: String?) {
         if (path != null) {
             _profileImage.value = path
@@ -116,6 +108,45 @@ class EditProfileViewModel @Inject constructor(
                 Log.d(TAG, "EditProfileViewModel - $response")
             } catch (ignore: Throwable) {
                 Timber.d("EditProfileViewModel: 알 수 없는 에러 발생")
+            }
+        }
+    }
+
+    fun addProfile() {
+        viewModelScope.launch {
+            try {
+                val request = ProfileCreateRequest(
+                    userId = "1643610416180811276",
+                    imageUrl = _profileImage.value,
+                    bgImageUrl = _backgroundImage.value,
+                    sticker = null,
+                    description = _description.value,
+                    isDefault = false
+                )
+                // TODO: profile, background 이미지 생성 통신 후 await으로 진행
+                val response = profileRepository.get().createProfile(request)
+                Timber.d(response.toString())
+            } catch (ignore: Throwable) {
+                Timber.d("알 수 없는 에러 발생")
+            }
+        }
+    }
+
+    fun updateProfileData(profileId: Long, isDefault: Boolean) {
+        val request = ProfileUpdateRequest(
+            userId = "유저아이디를 똑바로 저장했어야 했는데",
+            imageUrl = _profileImageUrl.value,
+            bgImageUrl = _backgroundImageUrl.value,
+            sticker = null, // TODO: 스티커 정보, 프로필 내 positioning 할 수 있는 상대적 위치 정보
+            description = _description.value,
+            isDefault = isDefault
+        )
+        viewModelScope.launch {
+            try {
+                val response = profileRepository.get().updateProfile(profileId, request)
+                Timber.d(response.toString())
+            } catch (ignored: Throwable) {
+                Timber.d("알 수 없는 에러 발생")
             }
         }
     }

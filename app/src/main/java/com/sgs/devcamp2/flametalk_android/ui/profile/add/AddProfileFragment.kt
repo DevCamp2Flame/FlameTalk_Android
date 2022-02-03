@@ -1,4 +1,4 @@
-package com.sgs.devcamp2.flametalk_android.ui.profile.edit
+package com.sgs.devcamp2.flametalk_android.ui.profile.add
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -20,29 +20,26 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.sgs.devcamp2.flametalk_android.R
-import com.sgs.devcamp2.flametalk_android.databinding.FragmentEditProfileBinding
+import com.sgs.devcamp2.flametalk_android.databinding.FragmentAddProfileBinding
+import com.sgs.devcamp2.flametalk_android.ui.profile.edit.EditProfileViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 /**
  * @author 박소연
- * @created 2022/01/18
- * @updated 2022/01/31
- * @desc 프로필 수정 페이지 (배경 이미지, 프로필 이미지, 상태메세지)
+ * @created 2022/01/25
+ * @desc 프로필 생성 페이지 (배경 이미지, 프로필 이미지, 상태메세지)
  */
 
 @AndroidEntryPoint
 @ExperimentalCoroutinesApi
-class EditProfileFragment : Fragment() {
-    private val binding by lazy { FragmentEditProfileBinding.inflate(layoutInflater) }
+class AddProfileFragment : Fragment() {
+    private val binding by lazy { FragmentAddProfileBinding.inflate(layoutInflater) }
     private val viewModel by activityViewModels<EditProfileViewModel>()
-    private val args: EditProfileFragmentArgs by navArgs()
     private val getProfileImageLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK && result.data?.data != null) {
@@ -68,78 +65,68 @@ class EditProfileFragment : Fragment() {
     }
 
     private fun initUI() {
-        // 수정할 유저 정보 담기
-        if (args.userInfo != null && viewModel.userProfile.value == null) {
-            viewModel.setUserProfile(args.userInfo!!)
-        }
+        // TODO: userDAO에서 로컬에 저장된 nickname을 가져온 후 바인딩
     }
 
     // ViewModel StateFlow 변수가 갱신되면 UI에 자동 바인딩한다
     private fun updateUI() {
+
+        // 상태메세지
         lifecycleScope.launchWhenResumed {
-            // 닉네임
-            viewModel.nickname.collectLatest {
-                binding.tvEditProfileNickname.text = it
+            viewModel.description.collectLatest {
+                binding.tvAddProfileDesc.text = it
             }
         }
 
+        // 프로필 이미지
         lifecycleScope.launchWhenResumed {
-            // 상태메세지
-            viewModel.description.collectLatest {
-                binding.tvEditProfileDesc.text = it
-            }
-        }
-        lifecycleScope.launchWhenResumed {
-            // 프로필 사진
             viewModel.profileImage.collectLatest {
-                Glide.with(binding.imgEditProfile)
+                Glide.with(binding.imgAddProfile)
                     .load(it)
                     .apply(RequestOptions.circleCropTransform())
                     .apply(RequestOptions.placeholderOf(R.drawable.ic_person_white_24))
-                    .into(binding.imgEditProfile)
+                    .into(binding.imgAddProfile)
             }
         }
 
+        // 배경 이미지
         lifecycleScope.launchWhenResumed {
             viewModel.backgroundImage.collectLatest {
-                Glide.with(binding.imgEditProfileBg)
+                Glide.with(binding.imgAddProfileBg)
                     .load(it)
-                    .into(binding.imgEditProfileBg)
+                    .into(binding.imgAddProfileBg)
             }
         }
     }
 
     private fun initClickEvent() {
-        binding.tvEditProfileClose.setOnClickListener {
+        binding.tvAddProfileClose.setOnClickListener {
             findNavController().navigateUp()
         }
 
         // 프로필 이미지 변경
-        binding.imgEditProfileGallery.setOnClickListener {
+        binding.imgAddProfileGallery.setOnClickListener {
             // TODO: 프로필 이미지 가져오기
             getProfileImage(PROFILE_IMAGE)
         }
 
         // 배경 이미지 변경
-        binding.imgEditProfileGalleryBg.setOnClickListener {
+        binding.imgAddProfileGalleryBg.setOnClickListener {
             // TODO: 배경 이미지 가져오기
-            // getProfileImage(BACKGROUND_IMAGE)
+            getProfileImage(BACKGROUND_IMAGE)
         }
 
-        // 상태 메세지 변경
-        binding.tvEditProfileDesc.setOnClickListener {
-            val editProfileToDescDirections: NavDirections =
-                EditProfileFragmentDirections.actionEditToEditDesc(desc = viewModel.description.value, startView = "Edit")
-            findNavController().navigate(editProfileToDescDirections)
+        // 상태메세지 생성
+        binding.tvAddProfileDesc.setOnClickListener {
+            val addProfileToDescDirections: NavDirections =
+                AddProfileFragmentDirections.actionAddToEditDesc(startView = "Add")
+            findNavController().navigate(addProfileToDescDirections)
         }
 
         // 프로필 수정 완료
-        binding.tvEditProfileConfirm.setOnClickListener {
+        binding.tvAddProfileConfirm.setOnClickListener {
             // TODO: 프로필 편집 통신
-            viewModel.updateProfileData(
-                profileId = args.userInfo!!.profileId,
-                args.userInfo!!.isDefault
-            )
+            viewModel.addProfile()
             // 파일 통신을 위한 임시 요청
             // File Create 통신
 //            if (viewModel.profileImage.value != "") {

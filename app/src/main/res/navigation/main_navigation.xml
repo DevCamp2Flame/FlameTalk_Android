@@ -5,6 +5,7 @@
     android:id="@+id/main_navigation"
     app:startDestination="@id/navigation_chatting_viewPager_fragment">
 
+
     <fragment
         android:id="@+id/navigation_signin"
         android:name="com.sgs.devcamp2.flametalk_android.ui.signin.SigninFragment"
@@ -48,6 +49,16 @@
         <action
             android:id="@+id/action_friend_to_profile"
             app:destination="@id/navigation_profile" />
+        <action
+            android:id="@+id/action_friend_to_add_profile"
+            app:destination="@+id/navigation_add_profile"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_phonebook"
+        android:name="com.sgs.devcamp2.flametalk_android.ui.friend.phonebook.PhoneBookFragment"
+        android:label="PhoneBook"
+        tools:layout="@layout/fragment_phone_book">
     </fragment>
 
     <!--프로필 상세보기-->
@@ -63,6 +74,9 @@
         <argument
             android:name="userInfo"
             app:argType="com.sgs.devcamp2.flametalk_android.network.response.friend.ProfilePreview" />
+        <argument
+            android:name="userId"
+            app:argType="string" />
         <action
             android:id="@+id/action_profile_to_edit"
             app:destination="@id/navigation_edit_profile" />
@@ -76,8 +90,8 @@
         tools:layout="@layout/fragment_edit_profile">
 
         <action
-            android:id="@+id/action_profile_to_edit_desc"
-            app:destination="@id/navigation_edit_profile_desc" />
+            android:id="@+id/action_edit_to_edit_desc"
+            app:destination="@id/navigation_profile_desc" />
         <argument
             android:name="userInfo"
             app:nullable="true"
@@ -85,19 +99,40 @@
             app:argType="com.sgs.devcamp2.flametalk_android.network.response.friend.ProfilePreview" />
     </fragment>
 
+    <!--프로필 생성-->
+    <fragment
+        android:id="@+id/navigation_add_profile"
+        android:name="com.sgs.devcamp2.flametalk_android.ui.profile.add.AddProfileFragment"
+        android:label="AddProfile"
+        tools:layout="@layout/fragment_add_profile">
+
+        <action
+            android:id="@+id/action_add_to_edit_desc"
+            app:destination="@id/navigation_profile_desc" />
+    </fragment>
+
     <!--상태메세지 수정-->
     <fragment
-        android:id="@+id/navigation_edit_profile_desc"
-        android:name="com.sgs.devcamp2.flametalk_android.ui.profile.edit.EditProfileDescFragment"
+        android:id="@+id/navigation_profile_desc"
+        android:name="com.sgs.devcamp2.flametalk_android.ui.profile.ProfileDescFragment"
         android:label="EditDescProfile"
-        tools:layout="@layout/fragment_edit_desc">
+        tools:layout="@layout/fragment_profile_desc">
+
 
         <argument
             android:name="desc"
+            app:nullable="true"
+            android:defaultValue=""
             app:argType="string" />
         <action
             android:id="@+id/action_edit_desc_to_edit"
             app:destination="@id/navigation_edit_profile" />
+        <action
+            android:id="@+id/action_edit_desc_to_add"
+            app:destination="@id/navigation_add_profile" />
+        <argument
+            android:name="startView"
+            app:argType="string" />
     </fragment>
 
     <!--    채팅방 리스트-->
@@ -109,6 +144,7 @@
         <action
             android:id="@+id/action_navigation_chat_to_chatRoomFragment"
             app:destination="@id/navigation_chat_room" />
+
     </fragment>
 
     <!--   오픈 채팅방 리스트-->
@@ -147,6 +183,9 @@
         <action
             android:id="@+id/action_navigation_chat_room_to_navigation_chat_Room_Bottom_Sheet"
             app:destination="@id/navigation_chat_Room_Bottom_Sheet" />
+        <argument
+            android:name="room_id"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/navigation_invite_room"
@@ -188,6 +227,8 @@
             android:id="@+id/action_additionalUserInfoFragment_to_navigation_chatting_ViewPager_Fragment"
             app:destination="@id/navigation_chatting_viewPager_fragment" />
     </fragment>
+
+    <!--네이밍 변경이 필요할 것 같습니다-->
     <fragment
         android:id="@+id/navigation_chatting_viewPager_fragment"
         android:name="com.sgs.devcamp2.flametalk_android.ui.chattingviewpager.ChattingViewPagerFragment"
@@ -202,6 +243,9 @@
         <action
             android:id="@+id/action_navigation_chatting_ViewPager_Fragment_to_navigation_chat_Room_Top_Sheet"
             app:destination="@id/navigation_chat_Room_Top_Sheet" />
+        <action
+            android:id="@+id/action_navigation_chatting_viewPager_fragment_to_navigation_chat_room"
+            app:destination="@id/navigation_chat_room" />
     </fragment>
     <fragment
         android:id="@+id/navigation_invite_Open_Chat_Room"

@@ -58,7 +58,7 @@ class MultiProfileAdapter(
             // 멀티 프로필 상세보기로 이동
             itemView.setOnClickListener {
                 val friendToFriendProfileDirections: NavDirections =
-                    FriendFragmentDirections.actionFriendToProfile(3, data)
+                    FriendFragmentDirections.actionFriendToProfile(3, data, data.userId.toString())
                 it.findNavController().navigate(friendToFriendProfileDirections)
             }
         }

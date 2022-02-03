@@ -62,7 +62,7 @@ class FriendAdapter(
             // 친구 프로필 상세보기로 이동
             itemView.setOnClickListener {
                 val friendToFriendProfileDirections: NavDirections =
-                    FriendFragmentDirections.actionFriendToProfile(2, data)
+                    FriendFragmentDirections.actionFriendToProfile(2, data, data.userId.toString())
                 it.findNavController().navigate(friendToFriendProfileDirections)
             }
 
