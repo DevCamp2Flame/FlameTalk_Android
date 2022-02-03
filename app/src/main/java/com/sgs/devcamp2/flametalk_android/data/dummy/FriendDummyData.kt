@@ -1,6 +1,6 @@
 package com.sgs.devcamp2.flametalk_android.data.dummy
 
-import com.sgs.devcamp2.flametalk_android.network.response.friend.ProfilePreview
+import com.sgs.devcamp2.flametalk_android.data.model.ProfilePreview
 
 /**
  * @author 박소연

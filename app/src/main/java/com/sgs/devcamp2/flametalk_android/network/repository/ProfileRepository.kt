@@ -13,7 +13,7 @@ import kotlinx.coroutines.withContext
 /**
  * @author 박소연
  * @created 2022/01/25
- * @desc 프로필 생성, 수정, 삭제와 관련된 통신(네트워크, 로컬) 레파지토리
+ * @desc 프로필, 프로필 피드와 관련된 통신(네트워크, 로컬) 레파지토리
  */
 
 @Singleton
@@ -36,5 +36,10 @@ class ProfileRepository @Inject constructor(
     // 프로필 조회
     suspend fun getProfile(profileId: Long) = withContext(ioDispatcher) {
         profileService.get().getProfile(profileId)
+    }
+
+    // 피드 리스트 조회
+    suspend fun getFeedList(profileId: Long, isBackground: Boolean) = withContext(ioDispatcher) {
+        profileService.get().getFeedList(profileId, isBackground)
     }
 }
