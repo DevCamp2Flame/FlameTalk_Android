@@ -64,6 +64,8 @@ class ChattingViewPagerFragment : Fragment(), View.OnClickListener {
                     // ChatRoomTopSheetFragment().show(childFragmentManager, "topsheet")
                     findNavController().navigate(R.id.action_navigation_chatting_ViewPager_Fragment_to_navigation_chat_Room_Top_Sheet)
                 }
+
+
         }
     }
 }

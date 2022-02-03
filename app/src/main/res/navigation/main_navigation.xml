@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_navigation"
-    app:startDestination="@id/navigation_chatting_ViewPager_Fragment">
+    app:startDestination="@id/navigation_chatting_viewPager_fragment">
 
     <fragment
         android:id="@+id/navigation_signin"
@@ -43,7 +43,7 @@
             app:popUpTo="@id/navigation_setting" />
         <action
             android:id="@+id/action_friend_to_navigation_chatting_ViewPager_Fragment"
-            app:destination="@id/navigation_chatting_ViewPager_Fragment"
+            app:destination="@id/navigation_chatting_viewPager_fragment"
             app:popUpTo="@id/navigation_chat_room_list" />
         <action
             android:id="@+id/action_friend_to_profile"
@@ -167,6 +167,9 @@
         <action
             android:id="@+id/action_chatRoomTopSheetFragment_to_inviteRoomFragment"
             app:destination="@id/navigation_invite_room" />
+        <action
+            android:id="@+id/action_navigation_chat_Room_Top_Sheet_to_inviteOpenChatRoom"
+            app:destination="@id/navigation_invite_Open_Chat_Room" />
     </dialog>
 
     <dialog
@@ -183,10 +186,10 @@
         tools:layout="@layout/fragment_additional_user_info" >
         <action
             android:id="@+id/action_additionalUserInfoFragment_to_navigation_chatting_ViewPager_Fragment"
-            app:destination="@id/navigation_chatting_ViewPager_Fragment" />
+            app:destination="@id/navigation_chatting_viewPager_fragment" />
     </fragment>
     <fragment
-        android:id="@+id/navigation_chatting_ViewPager_Fragment"
+        android:id="@+id/navigation_chatting_viewPager_fragment"
         android:name="com.sgs.devcamp2.flametalk_android.ui.chattingviewpager.ChattingViewPagerFragment"
         android:label="fragment_chatting_view_pager"
         tools:layout="@layout/fragment_chatting_view_pager" >
@@ -200,6 +203,11 @@
             android:id="@+id/action_navigation_chatting_ViewPager_Fragment_to_navigation_chat_Room_Top_Sheet"
             app:destination="@id/navigation_chat_Room_Top_Sheet" />
     </fragment>
+    <fragment
+        android:id="@+id/navigation_invite_Open_Chat_Room"
+        android:name="com.sgs.devcamp2.flametalk_android.ui.createopenchatroom.CreateOpenChatRoom"
+        android:label="fragment_invite_open_chat_room"
+        tools:layout="@layout/fragment_create_open_chat_room" />
 
 
 </navigation>

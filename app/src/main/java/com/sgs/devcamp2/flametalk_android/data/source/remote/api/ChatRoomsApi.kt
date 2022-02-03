@@ -14,5 +14,5 @@ import retrofit2.http.Path
 interface ChatRoomsApi {
 
     @GET("user_chatroom/{user_id}")
-    fun getChatRoomList(@Path("user_id") user_id: String): Flow<List<ChatRoom>>
+    fun getChatRoomList(@Path("user_id") user_id: String): List<ChatRoom>
 }

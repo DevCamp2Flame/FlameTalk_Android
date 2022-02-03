@@ -3,7 +3,7 @@ package com.sgs.devcamp2.flametalk_android.ui.inviteroom
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sgs.devcamp2.flametalk_android.data.model.inviteRoom.InviteRoomReq
+import com.sgs.devcamp2.flametalk_android.data.model.inviteroom.InviteRoomReq
 import com.sgs.devcamp2.flametalk_android.domain.entity.Results
 import com.sgs.devcamp2.flametalk_android.domain.entity.UiState
 import com.sgs.devcamp2.flametalk_android.domain.usecase.inviteroom.CreateChatRoomUseCase

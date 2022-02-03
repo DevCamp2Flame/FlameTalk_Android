@@ -1,9 +1,6 @@
 package com.sgs.devcamp2.flametalk_android.data.source.local.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.ChatRoom
 
 /**

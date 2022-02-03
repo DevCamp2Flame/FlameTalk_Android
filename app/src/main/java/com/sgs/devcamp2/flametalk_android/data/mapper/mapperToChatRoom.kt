@@ -1,7 +1,7 @@
 package com.sgs.devcamp2.flametalk_android.data.mapper
 
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.ChatRoom
-import com.sgs.devcamp2.flametalk_android.data.model.inviteRoom.InviteRoomRes
+import com.sgs.devcamp2.flametalk_android.data.model.inviteroom.InviteRoomRes
 import com.sgs.devcamp2.flametalk_android.domain.entity.ChatRoomsEntity
 
 /**

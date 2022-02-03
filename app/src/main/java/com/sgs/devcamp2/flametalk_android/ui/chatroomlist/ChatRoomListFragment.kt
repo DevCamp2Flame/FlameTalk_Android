@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -114,8 +115,9 @@ class ChatRoomListFragment : Fragment(), ChatRoomListAdapter.ClickCallBack  {
         true
     }
 
-    override fun onItemShortClicked(position: Int, chatRoomList: ChatRoomsEntity) {
-        findNavController().navigate(R.id.navigation_chat_room)
+    override fun onItemShortClicked(position: Int, chatRoomsEntity: ChatRoomsEntity) {
+        val bundle = bundleOf("roodId" to chatRoomsEntity.room_id)
+
     }
 
 }

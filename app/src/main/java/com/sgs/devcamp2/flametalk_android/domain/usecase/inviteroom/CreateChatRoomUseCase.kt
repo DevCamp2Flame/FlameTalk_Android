@@ -1,8 +1,8 @@
 package com.sgs.devcamp2.flametalk_android.domain.usecase.inviteroom
 
 import com.sgs.devcamp2.flametalk_android.data.common.WrappedResponse
-import com.sgs.devcamp2.flametalk_android.data.model.inviteRoom.InviteRoomReq
-import com.sgs.devcamp2.flametalk_android.data.model.inviteRoom.InviteRoomRes
+import com.sgs.devcamp2.flametalk_android.data.model.inviteroom.InviteRoomReq
+import com.sgs.devcamp2.flametalk_android.data.model.inviteroom.InviteRoomRes
 import com.sgs.devcamp2.flametalk_android.domain.entity.ChatRoomsEntity
 import com.sgs.devcamp2.flametalk_android.domain.entity.Results
 import com.sgs.devcamp2.flametalk_android.domain.repository.InviteRoomRepository

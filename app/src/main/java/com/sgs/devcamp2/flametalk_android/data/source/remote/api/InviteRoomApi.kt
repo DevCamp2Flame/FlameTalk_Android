@@ -1,8 +1,8 @@
 package com.sgs.devcamp2.flametalk_android.data.source.remote.api
 
 import com.sgs.devcamp2.flametalk_android.data.common.WrappedResponse
-import com.sgs.devcamp2.flametalk_android.data.model.inviteRoom.InviteRoomReq
-import com.sgs.devcamp2.flametalk_android.data.model.inviteRoom.InviteRoomRes
+import com.sgs.devcamp2.flametalk_android.data.model.inviteroom.InviteRoomReq
+import com.sgs.devcamp2.flametalk_android.data.model.inviteroom.InviteRoomRes
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.POST

@@ -3,8 +3,8 @@ package com.sgs.devcamp2.flametalk_android.data.repository
 import android.util.Log
 import com.sgs.devcamp2.flametalk_android.data.common.WrappedResponse
 import com.sgs.devcamp2.flametalk_android.data.mapper.mapperToChatRoom
-import com.sgs.devcamp2.flametalk_android.data.model.inviteRoom.InviteRoomReq
-import com.sgs.devcamp2.flametalk_android.data.model.inviteRoom.InviteRoomRes
+import com.sgs.devcamp2.flametalk_android.data.model.inviteroom.InviteRoomReq
+import com.sgs.devcamp2.flametalk_android.data.model.inviteroom.InviteRoomRes
 import com.sgs.devcamp2.flametalk_android.data.source.local.database.AppDatabase
 import com.sgs.devcamp2.flametalk_android.data.source.remote.api.InviteRoomApi
 import com.sgs.devcamp2.flametalk_android.domain.entity.ChatRoomsEntity
@@ -39,8 +39,8 @@ class InviteRoomRepositoryImp @Inject constructor(
                 val data = body.data!!
                 val chatRoom = ChatRoomsEntity(data.roomId, data.hostId, data.title, data.isOpen, 4)
                 val chatRoomDB = mapperToChatRoom(data)
-                val localResponse = db.chatRoomDao().insert(chatRoomDB) //index 반환
-                Log.d(TAG,"localReposne  - $localResponse() called")
+                val localResponse = db.chatRoomDao().insert(chatRoomDB) // index 반환
+                Log.d(TAG, "localReposne  - $localResponse() called")
                 emit(Results.Success(chatRoom))
             } else {
                 emit(Results.Error("에러 발생"))

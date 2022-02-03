@@ -1,6 +1,7 @@
 package com.sgs.devcamp2.flametalk_android.di.module
 
 import com.sgs.devcamp2.flametalk_android.data.source.remote.api.ChatRoomsApi
+import com.sgs.devcamp2.flametalk_android.data.source.remote.api.CreateOpenChatProfileApi
 import com.sgs.devcamp2.flametalk_android.data.source.remote.api.InviteRoomApi
 import com.sgs.devcamp2.flametalk_android.network.NetworkInterceptor
 import com.sgs.devcamp2.flametalk_android.network.dao.UserDAO
@@ -15,7 +16,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
@@ -84,6 +84,12 @@ class NetworkModule {
     @Singleton
     fun provideInviteRoomApi(retrofit: Retrofit): InviteRoomApi {
         return retrofit.create(InviteRoomApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCreateOpenChatProfile(retrofit: Retrofit): CreateOpenChatProfileApi {
+        return retrofit.create(CreateOpenChatProfileApi::class.java)
     }
 
     companion object {

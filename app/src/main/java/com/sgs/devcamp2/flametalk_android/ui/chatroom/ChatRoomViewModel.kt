@@ -1,27 +1,23 @@
 package com.sgs.devcamp2.flametalk_android.ui.chatroom
 
-import android.content.Context
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.sgs.devcamp2.flametalk_android.data.model.Chat
+import androidx.lifecycle.*
+import com.sgs.devcamp2.flametalk_android.data.model.chat.Chat
+import com.sgs.devcamp2.flametalk_android.data.model.chat.ChatReq
+import com.sgs.devcamp2.flametalk_android.data.model.chat.MessageType
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import okhttp3.OkHttpClient
-import org.hildan.krossbow.stomp.StompClient
-import org.hildan.krossbow.stomp.StompSession
-import org.hildan.krossbow.websocket.okhttp.OkHttpWebSocketClient
-import java.time.Duration
+import org.hildan.krossbow.stomp.conversions.kxserialization.StompSessionWithKxSerialization
+import org.hildan.krossbow.stomp.conversions.kxserialization.convertAndSend
+import org.hildan.krossbow.stomp.use
 import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
 class ChatRoomViewModel @Inject constructor(
-    @ApplicationContext private val context: Context
+    userRepository : UserRepository
 ) : ViewModel() {
+
     val TAG: String = "로그"
 
     private var _chatRoom = MutableStateFlow<List<Chat>>(emptyList())
@@ -30,14 +26,7 @@ class ChatRoomViewModel @Inject constructor(
 
     private var _chat = MutableStateFlow<String>("")
 
-    val okHttpClient = OkHttpClient.Builder()
-        .callTimeout(Duration.ofMinutes(1))
-        .pingInterval(Duration.ofSeconds(10))
-        .build()
-//    val wsClient = OkHttpWebSocketClient(okHttpClient)
-//    val stompClient = StompClient(wsClient)
-//    var url = "ws://10.99.30.180:8080/stomp/chat"
-
+    lateinit var _roomId: String
     /**
      * _chatUserList는 채팅방에 속해 있는 user의 정보를 의미한다. image url, 이름 등이 포함 될 수 있다.
      * Object 대신 String 으로 테스트한다.
@@ -50,9 +39,6 @@ class ChatRoomViewModel @Inject constructor(
     val userRoom: LiveData<MutableList<String>>
         get() = _chatUserList
 
-    val chat: StateFlow<String>
-        get() = _chat
-
     init {
         viewModelScope.launch {
             initChattingText().collect {
@@ -64,20 +50,7 @@ class ChatRoomViewModel @Inject constructor(
                 _chatUserList.value = userlist
             }
         }
-
-//        viewModelScope.launch {
-//            connection().collect {
-//
-//                // var Req: ChatMessageDto = ChatMessageDto("a9024424-e88f-4e6b-b5d6-bd3db709ba87", "김현국", "안녕하세요 ")
-//                //val jsonStompSession = it.withJsonConversions()
-//                // jsonStompSession.convertAndSend("/pub/chat/enter", Json.encodeToString(Req))
-//            }
-//        }
     }
-
-//    fun connection(): Flow<StompSession> = flow {
-//        emit(stompClient.connect(url))
-//    }
 
     fun initChattingText(): Flow<Chat> = flow {
 
@@ -89,14 +62,11 @@ class ChatRoomViewModel @Inject constructor(
         for (i in 0 until 4) {
             val j = randomNumber.nextInt(3)
             val k = randomNumber.nextInt(2)
-            val chatText = Chat(i, "1", "$k", "${textList[j]}")
+            val chatText = Chat("$i", "1", "$k", "${textList[j]}")
             emit(chatText)
         }
+        // ////////////
     }
-
-    /**
-     * 채팅방 유저 생성
-     */
 
     fun initChattingUser(): Flow<String> = flow {
         for (i in 0 until 20) {
@@ -104,6 +74,15 @@ class ChatRoomViewModel @Inject constructor(
         }
     }
 
+    fun pushMessage(session: StompSessionWithKxSerialization) {
+        val chatReq = ChatReq(MessageType.ENTER, _roomId, "user_id", "nick_name", _chat.value)
+        viewModelScope.launch {
+            session.use {
+                s ->
+                s.convertAndSend("/pub/chat/message", chatReq, ChatReq.serializer())
+            }
+        }
+    }
     fun addChatting(chat: Chat) {
         var newList = _chatRoom.value.toMutableList()
         newList.add(chat)
@@ -113,6 +92,7 @@ class ChatRoomViewModel @Inject constructor(
         _chat.value = text
     }
 
-    fun sendMessage() {
+    fun initRoom(roomId: String) {
+        _roomId = roomId
     }
 }

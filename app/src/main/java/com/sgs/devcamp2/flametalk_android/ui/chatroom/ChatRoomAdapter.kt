@@ -7,11 +7,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.sgs.devcamp2.flametalk_android.R
+import com.sgs.devcamp2.flametalk_android.data.model.chat.Chat
 import com.sgs.devcamp2.flametalk_android.databinding.ItemLeftStartTextChatRoomBinding
 import com.sgs.devcamp2.flametalk_android.databinding.ItemLeftTextChatRoomBinding
 import com.sgs.devcamp2.flametalk_android.databinding.ItemRightStartTextChatRoomBinding
 import com.sgs.devcamp2.flametalk_android.databinding.ItemRightTextChatRoomBinding
-import com.sgs.devcamp2.flametalk_android.data.model.Chat
+
 
 class ChatRoomAdapter constructor() : ListAdapter<Chat, RecyclerView.ViewHolder>(diffUtil) {
 
@@ -19,7 +20,7 @@ class ChatRoomAdapter constructor() : ListAdapter<Chat, RecyclerView.ViewHolder>
         val TAG: String = "로그"
         val diffUtil = object : DiffUtil.ItemCallback<Chat>() {
             override fun areItemsTheSame(oldItem: Chat, newItem: Chat): Boolean {
-                return oldItem.id == newItem.id
+                return oldItem.message_id == newItem.message_id
             }
             override fun areContentsTheSame(oldItem: Chat, newItem: Chat): Boolean {
                 return oldItem == newItem
@@ -52,7 +53,7 @@ class ChatRoomAdapter constructor() : ListAdapter<Chat, RecyclerView.ViewHolder>
          * 0일 일때 오른쪽 ViewHolder
          * 1일때 왼쪽 ViewHolder
          */
-        when (getItem(position).user_id) {
+        when (getItem(position).sender_id) {
             "0" ->
                 {
 
@@ -73,7 +74,7 @@ class ChatRoomAdapter constructor() : ListAdapter<Chat, RecyclerView.ViewHolder>
          * user_id = String "0" 일때 Int 0 반환
          * 그외 1 반환
          */
-        return if (currentList[position].user_id == "0") {
+        return if (currentList[position].sender_id == "0") {
             0
         } else {
             1
@@ -85,7 +86,7 @@ class ChatRoomAdapter constructor() : ListAdapter<Chat, RecyclerView.ViewHolder>
      */
     inner class LeftStartViewHolder(val binding: ItemLeftStartTextChatRoomBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(chat: Chat) {
-            binding.tvChatRoomMessage.text = chat.content
+            binding.tvChatRoomMessage.text = chat.contents
         }
     }
 
@@ -94,7 +95,7 @@ class ChatRoomAdapter constructor() : ListAdapter<Chat, RecyclerView.ViewHolder>
      */
     inner class LeftViewHolder(val binding: ItemLeftTextChatRoomBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(chat: Chat) {
-            binding.tvChatRoomMessage.text = chat.content
+            binding.tvChatRoomMessage.text = chat.contents
         }
     }
 
@@ -103,7 +104,7 @@ class ChatRoomAdapter constructor() : ListAdapter<Chat, RecyclerView.ViewHolder>
      */
     inner class RightStartViewHolder(val binding: ItemRightStartTextChatRoomBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(chat: Chat) {
-            binding.tvChatRoomMessage.text = chat.content
+            binding.tvChatRoomMessage.text = chat.contents
         }
     }
 
@@ -112,7 +113,7 @@ class ChatRoomAdapter constructor() : ListAdapter<Chat, RecyclerView.ViewHolder>
      */
     inner class RightViewHolder(val binding: ItemRightTextChatRoomBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(chat: Chat) {
-            binding.tvChatRoomMessage.text = chat.content
+            binding.tvChatRoomMessage.text = chat.contents
         }
     }
 }

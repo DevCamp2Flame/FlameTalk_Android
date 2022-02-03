@@ -1,4 +1,4 @@
-package com.sgs.devcamp2.flametalk_android.data.model.inviteRoom
+package com.sgs.devcamp2.flametalk_android.data.model.inviteroom
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName

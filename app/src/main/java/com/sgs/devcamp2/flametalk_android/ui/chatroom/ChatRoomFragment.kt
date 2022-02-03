@@ -15,10 +15,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.DrawerLayoutChatRoomBinding
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentChatRoomBinding
+import com.sgs.devcamp2.flametalk_android.ui.MainActivityViewModel
 import com.sgs.devcamp2.flametalk_android.util.onTextChanged
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import org.hildan.krossbow.stomp.conversions.kxserialization.withJsonConversions
 
 /**
  * 채팅방 리스트에서 한 채팅 클릭 시 이동하게 될 채팅방 내부 fragment
@@ -30,8 +32,9 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
     lateinit var drawer_bindng: DrawerLayoutChatRoomBinding
     lateinit var adapter: ChatRoomAdapter
     lateinit var userlistAdapter: ChatRoomDrawUserListAdapter
-
+    lateinit var roomId: String
     private val model by activityViewModels<ChatRoomViewModel>()
+    private val webSocketModel by activityViewModels<MainActivityViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,9 +43,8 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
     ): View? {
 
         binding = FragmentChatRoomBinding.inflate(inflater, container, false)
-        drawer_bindng = binding.layoutDrawer
         initUI(this.requireContext())
-
+        model.initRoom(roomId)
         lifecycleScope.launch {
             model.chatRoom.collect {
 
@@ -55,20 +57,24 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
         }
 
         model.userRoom.observe(
-            this.requireActivity(),
-            {
-                userlistAdapter.submitList(it)
-            }
-        )
-
+            this.requireActivity()
+        ) {
+            userlistAdapter.submitList(it)
+        }
         binding.etChatRoomInputText.onTextChanged {
             model.updateTextValue(it.toString())
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            webSocketModel.session?.collect {
+                model.pushMessage(it.withJsonConversions())
+            }
         }
 
         return binding.root
     }
 
     fun initUI(context: Context) {
+        drawer_bindng = binding.layoutDrawer
         binding.rvChatRoom.layoutManager = LinearLayoutManager(context)
         drawer_bindng.rvDrawUserList.layoutManager = LinearLayoutManager(context)
 
@@ -100,9 +106,7 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
             binding.ivChatSend ->
                 {
                     Log.d(TAG, "ChatRoomFragment - onClick() called")
-                    // model.sendMessage(webSocket)
-
-                    model.sendMessage()
+                    webSocketModel.pushMessage(roomId)
                     binding.etChatRoomInputText.setText("")
                 }
         }

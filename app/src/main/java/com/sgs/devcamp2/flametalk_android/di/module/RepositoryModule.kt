@@ -1,9 +1,7 @@
 package com.sgs.devcamp2.flametalk_android.di.module
 
-import com.sgs.devcamp2.flametalk_android.data.repository.ChatRoomListRepositoryImp
-import com.sgs.devcamp2.flametalk_android.data.repository.InviteRoomRepositoryImp
-import com.sgs.devcamp2.flametalk_android.domain.repository.ChatRoomsRepository
-import com.sgs.devcamp2.flametalk_android.domain.repository.InviteRoomRepository
+import com.sgs.devcamp2.flametalk_android.data.repository.*
+import com.sgs.devcamp2.flametalk_android.domain.repository.*
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -23,4 +21,10 @@ interface RepositoryModule {
 
     @Binds
     fun provideInviteRoomRepository(impl: InviteRoomRepositoryImp): InviteRoomRepository
+
+    @Binds
+    fun provideMainActivityRepository(impl: MainActivityRepositoryImpl): MainActivityRepository
+
+    @Binds
+    fun provideCreateOpenChatProfileRepository(impl: CreateOpenChatProfileRepositoryImpl): CreateOpenChatProfileRepository
 }
