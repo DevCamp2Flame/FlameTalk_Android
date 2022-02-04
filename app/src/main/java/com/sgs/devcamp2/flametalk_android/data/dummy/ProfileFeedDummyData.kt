@@ -98,7 +98,7 @@ fun getBackgroundFeed() = arrayListOf(
     )
 )
 
-fun getDummyFeed() = ProfileFeedResponse(
+fun getDummyHorizentalFeed() = ProfileFeedResponse(
     200,
     "피드 리스트 조회 성공",
     ProfileFeedResponse.Data(
@@ -110,13 +110,29 @@ fun getDummyFeed() = ProfileFeedResponse(
                 1,
                 "https://flametalk-bucket.s3.ap-northeast-2.amazonaws.com/profile/flametalk_a_20222621172609.JPG",
                 true,
+                true,
+                "2022-01-14T10:52:39",
+                "2022-01-19T10:52:39"
+            ),
+            Feed(
+                2,
+                "https://flametalk-bucket.s3.ap-northeast-2.amazonaws.com/profile/flametalk_a_20222621172609.JPG",
+                true,
                 false,
                 "2022-01-14T10:52:39",
                 "2022-01-19T10:52:39"
             ),
             Feed(
-                1,
-                "https://flametalk-bucket.s3.ap-northeast-2.amazonaws.com/profile/flametalk_a_20222621172609.JPG",
+                3,
+                "https://cdn.pixabay.com/photo/2019/12/26/10/44/horse-4720178_1280.jpg",
+                true,
+                true,
+                "2022-01-14T10:52:39",
+                "2022-01-19T10:52:39"
+            ),
+            Feed(
+                4,
+                "https://cdn.pixabay.com/photo/2020/11/04/15/29/coffee-beans-5712780_1280.jpg",
                 true,
                 false,
                 "2022-01-14T10:52:39",
