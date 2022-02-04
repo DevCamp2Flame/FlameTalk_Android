@@ -47,4 +47,14 @@ class ProfileRepository @Inject constructor(
     suspend fun getTotalFeedList(profileId: Long) = withContext(ioDispatcher) {
         profileService.get().getTotalFeedList(profileId)
     }
+
+    // 피드 삭제
+    suspend fun deleteFeed(feedId: Long) = withContext(ioDispatcher) {
+        profileService.get().deleteFeed(feedId)
+    }
+
+    // 피드 사진 공개 설정
+    suspend fun updateFeedImageLock(feedId: Long) = withContext(ioDispatcher) {
+        profileService.get().updateFeedImageLock(feedId)
+    }
 }

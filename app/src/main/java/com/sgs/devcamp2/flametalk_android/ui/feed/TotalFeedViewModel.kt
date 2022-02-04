@@ -47,4 +47,28 @@ class TotalFeedViewModel @Inject constructor(
             }
         }
     }
+
+    fun deleteFeed(feedId: Long) {
+        viewModelScope.launch {
+            try {
+                val response = profileRepository.get().deleteFeed(feedId)
+                Timber.d("$response")
+            } catch (ignored: Throwable) {
+                _error?.value = "알 수 없는 에러 발생"
+                Timber.d("Error:  $ignored")
+            }
+        }
+    }
+
+    fun updateFeedImageLock(feedId: Long) {
+        viewModelScope.launch {
+            try {
+                val response = profileRepository.get().updateFeedImageLock(feedId)
+                Timber.d("$response")
+            } catch (ignored: Throwable) {
+                _error?.value = "알 수 없는 에러 발생"
+                Timber.d("Error:  $ignored")
+            }
+        }
+    }
 }
