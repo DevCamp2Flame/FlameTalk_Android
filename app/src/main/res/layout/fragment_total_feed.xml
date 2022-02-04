@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <include
-        android:id="@+id/ab_vertical_profile_feed"
+        android:id="@+id/ab_total_feed"
         layout="@layout/ab_main"
         android:layout_width="match_parent"
         android:layout_height="70dp"
@@ -16,14 +16,14 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/gray"
-        app:layout_constraintTop_toBottomOf="@+id/ab_vertical_profile_feed" />
+        app:layout_constraintTop_toBottomOf="@+id/ab_total_feed" />
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_vertical_profile_feed"
+        android:id="@+id/rv_total_feed"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:overScrollMode="never"
-        app:layout_constraintTop_toBottomOf="@id/ab_vertical_profile_feed"
-        tools:listitem="@layout/item_vertical_profile_feed" />
+        app:layout_constraintTop_toBottomOf="@id/ab_total_feed"
+        tools:listitem="@layout/item_total_feed" />
 </androidx.constraintlayout.widget.ConstraintLayout>

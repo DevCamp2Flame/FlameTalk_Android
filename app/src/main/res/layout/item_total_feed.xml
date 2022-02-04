@@ -6,11 +6,11 @@
     android:layout_height="wrap_content">
 
     <ImageView
-        android:id="@+id/img_vertical_profile_thumbnail"
+        android:id="@+id/img_total_feed_thumbnail"
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_marginStart="12dp"
-        app:layout_constraintBottom_toTopOf="@id/img_vertical_profile"
+        app:layout_constraintBottom_toTopOf="@id/img_total_feed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/avatars" />
@@ -21,24 +21,24 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:textSize="16sp"
-        app:layout_constraintStart_toEndOf="@+id/img_vertical_profile_thumbnail"
-        app:layout_constraintTop_toTopOf="@id/img_vertical_profile_thumbnail"
+        app:layout_constraintStart_toEndOf="@+id/img_total_feed_thumbnail"
+        app:layout_constraintTop_toTopOf="@id/img_total_feed_thumbnail"
         tools:text="나의 배경" />
 
     <TextView
-        android:id="@+id/tv_vertical_profile_update"
+        android:id="@+id/tv_total_feed_update"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:textColor="@color/middle_gray"
         android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@id/tv_vertical_profile_private"
-        app:layout_constraintStart_toEndOf="@+id/img_vertical_profile_thumbnail"
+        app:layout_constraintBottom_toBottomOf="@id/tv_total_feed_private"
+        app:layout_constraintStart_toEndOf="@+id/img_total_feed_thumbnail"
         app:layout_constraintTop_toBottomOf="@id/tv_vertical_profile_type"
         tools:text="방금" />
 
     <TextView
-        android:id="@+id/tv_vertical_profile_private"
+        android:id="@+id/tv_total_feed_private"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
@@ -47,23 +47,23 @@
         android:text="나만보기"
         android:textColor="@color/middle_gray"
         android:textSize="12sp"
-        app:layout_constraintStart_toEndOf="@+id/tv_vertical_profile_update"
+        app:layout_constraintStart_toEndOf="@+id/tv_total_feed_update"
         app:layout_constraintTop_toBottomOf="@id/tv_vertical_profile_type" />
 
     <ImageView
-        android:id="@+id/img_vertical_profile_more"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:id="@+id/img_total_feed_more"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_marginEnd="15dp"
         android:src="@drawable/ic_more_vert_24"
-        app:layout_constraintBottom_toTopOf="@id/img_vertical_profile"
+        app:layout_constraintBottom_toTopOf="@id/img_total_feed"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:tint="@color/gray" />
 
 
     <ImageView
-        android:id="@+id/img_vertical_profile"
+        android:id="@+id/img_total_feed"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="70dp"
@@ -81,6 +81,6 @@
         android:background="@color/light_gray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/img_vertical_profile" />
+        app:layout_constraintTop_toBottomOf="@id/img_total_feed" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
