@@ -1,10 +1,13 @@
 package com.sgs.devcamp2.flametalk_android.ui.feed
 
 import android.content.Context
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sgs.devcamp2.flametalk_android.network.repository.ProfileRepository
 import com.sgs.devcamp2.flametalk_android.network.repository.SignRepository
-import com.sgs.devcamp2.flametalk_android.network.request.sign.SigninRequest
+import com.sgs.devcamp2.flametalk_android.network.response.feed.Feed
 import dagger.Lazy
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -17,39 +20,37 @@ import timber.log.Timber
 @HiltViewModel
 class SingleFeedViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val signRepository: Lazy<SignRepository>
+    private val signRepository: Lazy<SignRepository>,
+    private val profileRepository: Lazy<ProfileRepository>
 ) : ViewModel() {
 
-    // 닉네임
-    private val _nickname = MutableStateFlow("")
-    val nickname = _nickname.asStateFlow()
+    // 프로필 이미지
+    private val _profileImage: MutableStateFlow<String>? = null
+    val profileImage = _profileImage?.asStateFlow()
 
-    // 프로필 상태메세지
-    private val _description = MutableStateFlow("")
-    val description = _description.asStateFlow()
+    // 프로필 아이디
+    private val _profileId: MutableLiveData<Long> = MutableLiveData(0L)
+    val profileId: LiveData<Long> = _profileId
 
-    private val _error = MutableStateFlow("")
-    val error = _error.asStateFlow()
+    // 피드 리스트
+    private val _feeds: MutableLiveData<List<Feed>> = MutableLiveData()
+    val feeds: MutableLiveData<List<Feed>> = _feeds
 
-    fun signIn(email: String, password: String, social: String, deviceId: String) {
+    private val _error: MutableStateFlow<String>? = null
+    val error = _error?.asStateFlow()
+
+    fun getFeedList(profileId: Long, isBackground: Boolean) {
         viewModelScope.launch {
-            val request = SigninRequest(
-                email, password, social, deviceId
-            )
-            val response = signRepository.get().signin(request)
-            // _nickname.value = response.nickname
-            Timber.d("Signin Response: $response")
-//            try {
-//                val request = SigninRequest(
-//                    email, password, social, deviceId
-//                )
-//                val response = signRepository.get().signin(request)
-//                // _nickname.value = response.nickname
-//                Timber.d("Signin Response: $response")
-//            } catch (ignored: Throwable) {
-//                // _error.value = "알 수 없는 에러 발생"
-//                Timber.d("Signin Response error: $_error")
-//            }
+            try {
+                val response = profileRepository.get().getSingleFeedList(profileId, isBackground)
+                _profileImage?.value = response.data.profileImage
+                _feeds.value = response.data.feeds
+
+                Timber.d("$response")
+            } catch (ignored: Throwable) {
+                _error?.value = "알 수 없는 에러 발생"
+                Timber.d("Error:  $ignored")
+            }
         }
     }
 }

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_navigation"
-    app:startDestination="@id/navigation_total_feed">
+    app:startDestination="@id/navigation_single_feed">
 
     <fragment
         android:id="@+id/navigation_signin"
@@ -147,6 +147,14 @@
         <action
             android:id="@+id/action_feed_single_to_total"
             app:destination="@id/navigation_total_feed" />
+        <argument
+            android:name="profileId"
+            app:argType="long"
+            android:defaultValue="1L"/>
+        <argument
+            android:name="isBackground"
+            app:argType="boolean"
+            android:defaultValue="false"/>
     </fragment>
 
     <!--프로필 total 피드-->

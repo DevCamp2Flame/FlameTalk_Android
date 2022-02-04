@@ -57,7 +57,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
-        android:id="@+id/img_single_feed_download"
+        android:id="@+id/img_single_feed_menu"
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_marginBottom="10dp"

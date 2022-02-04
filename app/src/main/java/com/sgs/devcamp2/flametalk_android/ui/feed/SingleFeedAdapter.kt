@@ -18,10 +18,9 @@ import com.sgs.devcamp2.flametalk_android.network.response.feed.Feed
  */
 
 class SingleFeedAdapter(
-    private val context: Context,
-    private val data: List<Feed>
+    private val context: Context
 ) : RecyclerView.Adapter<SingleFeedAdapter.FeedHorizentalViewHolder>() {
-    // var data = arrayListOf<Feed>()
+    var data = listOf<Feed>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeedHorizentalViewHolder {
         return FeedHorizentalViewHolder(

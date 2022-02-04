@@ -39,7 +39,7 @@ class ProfileRepository @Inject constructor(
     }
 
     // 피드 리스트 조회
-    suspend fun getFeedList(profileId: Long, isBackground: Boolean) = withContext(ioDispatcher) {
-        profileService.get().getFeedList(profileId, isBackground)
+    suspend fun getSingleFeedList(profileId: Long, isBackground: Boolean) = withContext(ioDispatcher) {
+        profileService.get().getSingleFeedList(profileId, isBackground)
     }
 }

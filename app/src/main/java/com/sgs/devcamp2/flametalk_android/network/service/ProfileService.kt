@@ -27,7 +27,7 @@ interface ProfileService {
 
     // 피드 리스트 조회
     @GET("/api/membership/feed")
-    suspend fun getFeedList(
+    suspend fun getSingleFeedList(
         @Query("profileId") profileId: Long,
         @Query("isBackground") isBackground: Boolean
     ): ProfileFeedResponse

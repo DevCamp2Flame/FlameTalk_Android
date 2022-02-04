@@ -5,16 +5,18 @@ import android.view.*
 import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.navArgs
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import com.sgs.devcamp2.flametalk_android.R
-import com.sgs.devcamp2.flametalk_android.data.dummy.getDummyHorizentalFeed
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentSingleFeedBinding
 import com.sgs.devcamp2.flametalk_android.util.toInvisible
 import com.sgs.devcamp2.flametalk_android.util.toVisible
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collectLatest
 
 /**
  * @author 박소연
@@ -27,6 +29,11 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 class SingleFeedFragment : Fragment() {
     private val binding by lazy { FragmentSingleFeedBinding.inflate(layoutInflater) }
     private val viewModel by viewModels<SingleFeedViewModel>()
+    private val args: SingleFeedFragmentArgs by navArgs()
+
+    private val singleFeedAdapter: SingleFeedAdapter by lazy {
+        SingleFeedAdapter(requireContext())
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,18 +47,46 @@ class SingleFeedFragment : Fragment() {
     private fun initUI() {
         initEventListener()
 
+        // 서버로부터 피드 리스트 데이터 요청
+        viewModel.getFeedList(args.profileId, args.isBackground)
+
+        viewModel.feeds.observe(
+            viewLifecycleOwner
+        ) { it ->
+            it?.let {
+                if (it.isNotEmpty()) {
+                    singleFeedAdapter.data = it
+                    singleFeedAdapter.notifyDataSetChanged()
+                }
+            }
+        }
+
+        // 에러메세지
+        lifecycleScope.launchWhenResumed {
+            viewModel.error?.collectLatest {
+                if (it != null)
+                    Snackbar.make(requireView(), "알 수 없는 에러 발생", Snackbar.LENGTH_SHORT).show()
+            }
+        }
+
         // ViewPager 초기화
         binding.vpSingleFeed.offscreenPageLimit = 1
-        binding.vpSingleFeed.adapter =
-            SingleFeedAdapter(requireContext(), getDummyHorizentalFeed().data.feeds)
+        binding.vpSingleFeed.adapter = singleFeedAdapter
 
+        Glide.with(binding.imgSingleFeedToTotal)
+            .load(viewModel.profileImage).into(binding.imgSingleFeedToTotal)
+    }
+
+    private fun initEventListener() {
         // 이미지를 슬라이드하며 index, 공개 여부를 변경
         binding.vpSingleFeed.registerOnPageChangeCallback(object : OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 binding.tvSingleFeedIndex.text =
-                    "${position + 1}/${getDummyHorizentalFeed().data.feeds.size}"
-                if (getDummyHorizentalFeed().data.feeds[position].isLock) {
+                    "${position + 1}/${viewModel.feeds.value!!.size}"
+
+                var feeds = viewModel.feeds.value
+                if (feeds?.get(position)!!.isLock) {
                     binding.tvSingleFeedPrivate.toVisible()
                 } else {
                     binding.tvSingleFeedPrivate.toInvisible()
@@ -59,7 +94,8 @@ class SingleFeedFragment : Fragment() {
             }
         })
 
-        binding.imgSingleFeedDownload.setOnClickListener {
+        // 옵션 메뉴: 다운로드, 피드 삭제
+        binding.imgSingleFeedMenu.setOnClickListener {
             var popupMenu = PopupMenu(requireContext(), requireView())
             popupMenu.inflate(R.menu.feed_menu)
             popupMenu.setOnMenuItemClickListener {
@@ -79,11 +115,5 @@ class SingleFeedFragment : Fragment() {
             }
             popupMenu.show()
         }
-
-        Glide.with(binding.imgSingleFeedToTotal)
-            .load(getDummyHorizentalFeed().data.profileImage).into(binding.imgSingleFeedToTotal)
-    }
-
-    private fun initEventListener() {
     }
 }
