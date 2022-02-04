@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.ItemTotalFeedBinding
 import com.sgs.devcamp2.flametalk_android.network.response.feed.Feed
 import com.sgs.devcamp2.flametalk_android.util.toVisible
@@ -21,7 +23,7 @@ import com.sgs.devcamp2.flametalk_android.util.toVisibleGone
 
 class TotalFeedAdapter(
     private val context: Context,
-    private val profileImage: String
+    private val profileImage: String?
 ) : RecyclerView.Adapter<TotalFeedAdapter.ViewHolder>() {
     var data = listOf<Feed>()
 
@@ -62,7 +64,9 @@ class TotalFeedAdapter(
                 binding.tvVerticalProfileType.text = "나의 프로필"
             }
             // 유저 프로필 이미지
-            Glide.with(itemView).load(profileImage).into(binding.imgTotalFeedThumbnail)
+            Glide.with(itemView).load(profileImage)
+                .apply(RequestOptions.placeholderOf(R.drawable.ic_person_white_24))
+                .into(binding.imgTotalFeedThumbnail)
             binding.tvTotalFeedUpdate.text = data.updatedDate
             Glide.with(itemView).load(data.imageUrl).into(binding.imgTotalFeed)
             if (data.isLock) {

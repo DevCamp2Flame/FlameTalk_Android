@@ -25,7 +25,7 @@ class SingleFeedViewModel @Inject constructor(
 ) : ViewModel() {
 
     // 프로필 이미지
-    private val _profileImage: MutableStateFlow<String>? = null
+    private val _profileImage = MutableStateFlow<String>("")
     val profileImage = _profileImage?.asStateFlow()
 
     // 프로필 아이디
@@ -39,11 +39,11 @@ class SingleFeedViewModel @Inject constructor(
     private val _error: MutableStateFlow<String>? = null
     val error = _error?.asStateFlow()
 
-    fun getFeedList(profileId: Long, isBackground: Boolean) {
+    fun getSingleFeedList(profileId: Long, isBackground: Boolean) {
         viewModelScope.launch {
             try {
                 val response = profileRepository.get().getSingleFeedList(profileId, isBackground)
-                _profileImage?.value = response.data.profileImage
+                _profileImage.value = response.data.profileImage
                 _feeds.value = response.data.feeds
 
                 Timber.d("$response")

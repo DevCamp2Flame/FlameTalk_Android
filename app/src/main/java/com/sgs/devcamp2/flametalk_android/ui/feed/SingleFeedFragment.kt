@@ -6,12 +6,14 @@ import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentSingleFeedBinding
+import com.sgs.devcamp2.flametalk_android.ui.profile.ProfileFragmentDirections
 import com.sgs.devcamp2.flametalk_android.util.toInvisible
 import com.sgs.devcamp2.flametalk_android.util.toVisible
 import dagger.hilt.android.AndroidEntryPoint
@@ -48,7 +50,7 @@ class SingleFeedFragment : Fragment() {
         initEventListener()
 
         // 서버로부터 피드 리스트 데이터 요청
-        viewModel.getFeedList(args.profileId, args.isBackground)
+        viewModel.getSingleFeedList(3, args.isBackground)
 
         viewModel.feeds.observe(
             viewLifecycleOwner
@@ -61,8 +63,16 @@ class SingleFeedFragment : Fragment() {
             }
         }
 
+        lifecycleScope.launchWhenStarted {
+            viewModel.profileImage?.collectLatest {
+                if (it != "")
+                    Glide.with(binding.imgSingleFeedToTotal)
+                        .load(it).into(binding.imgSingleFeedToTotal)
+            }
+        }
+
         // 에러메세지
-        lifecycleScope.launchWhenResumed {
+        lifecycleScope.launchWhenStarted {
             viewModel.error?.collectLatest {
                 if (it != null)
                     Snackbar.make(requireView(), "알 수 없는 에러 발생", Snackbar.LENGTH_SHORT).show()
@@ -72,9 +82,6 @@ class SingleFeedFragment : Fragment() {
         // ViewPager 초기화
         binding.vpSingleFeed.offscreenPageLimit = 1
         binding.vpSingleFeed.adapter = singleFeedAdapter
-
-        Glide.with(binding.imgSingleFeedToTotal)
-            .load(viewModel.profileImage).into(binding.imgSingleFeedToTotal)
     }
 
     private fun initEventListener() {
@@ -114,6 +121,16 @@ class SingleFeedFragment : Fragment() {
                 return@setOnMenuItemClickListener false
             }
             popupMenu.show()
+        }
+
+        // 프로필+배경 피드로 이동
+        binding.imgSingleFeedToTotal.setOnClickListener {
+            findNavController().navigate(
+                SingleFeedFragmentDirections.actionFeedSingleToTotal(
+                    3,
+                    viewModel.profileImage.value
+                )
+            )
         }
     }
 }

@@ -70,9 +70,11 @@
             android:name="viewType"
             android:defaultValue="1"
             app:argType="integer" />
+        <!--TODO: delete UserInfo-->
         <argument
             android:name="userInfo"
             app:argType="com.sgs.devcamp2.flametalk_android.data.model.ProfilePreview" />
+        <!--TODO: userId -> profileId and change type to Int-->
         <argument
             android:name="userId"
             app:argType="string" />
@@ -150,7 +152,7 @@
         <argument
             android:name="profileId"
             app:argType="long"
-            android:defaultValue="1L"/>
+            android:defaultValue="0L"/>
         <argument
             android:name="isBackground"
             app:argType="boolean"
@@ -169,6 +171,15 @@
             app:destination="@id/navigation_profile"
             app:popUpTo="@+id/navigation_profile"
             app:popUpToInclusive="true"/>
+
+        <argument
+            android:name="profileId"
+            app:argType="long"
+            android:defaultValue="0L"/>
+        <argument
+            android:name="profileImage"
+            app:argType="string"
+            android:defaultValue=""/>
     </fragment>
 
     <!--    채팅방 리스트-->

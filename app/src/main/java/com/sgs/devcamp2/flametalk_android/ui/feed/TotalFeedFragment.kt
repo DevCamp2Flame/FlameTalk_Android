@@ -6,12 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentTotalFeedBinding
 import com.sgs.devcamp2.flametalk_android.util.toVisible
 import com.sgs.devcamp2.flametalk_android.util.toVisibleGone
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collectLatest
 
 /**
  * @author 박소연
@@ -25,10 +29,11 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 class TotalFeedFragment : Fragment() {
     private val binding by lazy { FragmentTotalFeedBinding.inflate(layoutInflater) }
     private val viewModel: TotalFeedViewModel by viewModels()
+    private val args: TotalFeedFragmentArgs by navArgs()
 
     // 뷰 생성 시점에 adapter 초기화
     private val totalFeedAdapter: TotalFeedAdapter by lazy {
-        TotalFeedAdapter(requireContext(), viewModel.profileImage.value)
+        TotalFeedAdapter(requireContext(), args.profileImage)
     }
 
     override fun onCreateView(
@@ -52,11 +57,18 @@ class TotalFeedFragment : Fragment() {
         binding.abTotalFeed.imgAppbarAddChat.toVisibleGone()
         binding.abTotalFeed.imgAppbarAddFriend.toVisibleGone()
         binding.abTotalFeed.imgAppbarSearch.toVisibleGone()
+
+        binding.abTotalFeed.imgAppbarBack.setOnClickListener {
+            // findNavController().navigateUp()
+            // TODO: Feed Total -> Profile
+        }
     }
 
-    // 멀티프로필 리스트 초기화
+    // 프로필+배경 피드 데이터 초기화
     private fun initFeed() {
+        viewModel.getTotalFeedList(3)
         binding.rvTotalFeed.layoutManager = LinearLayoutManager(requireContext())
+
         binding.rvTotalFeed.adapter = totalFeedAdapter
 
         viewModel.totalFeed.observe(
@@ -67,6 +79,14 @@ class TotalFeedFragment : Fragment() {
                     totalFeedAdapter.data = it
                     totalFeedAdapter.notifyDataSetChanged()
                 }
+            }
+        }
+
+        // 에러메세지
+        lifecycleScope.launchWhenResumed {
+            viewModel.error?.collectLatest {
+                if (it != null)
+                    Snackbar.make(requireView(), "알 수 없는 에러 발생", Snackbar.LENGTH_SHORT).show()
             }
         }
     }

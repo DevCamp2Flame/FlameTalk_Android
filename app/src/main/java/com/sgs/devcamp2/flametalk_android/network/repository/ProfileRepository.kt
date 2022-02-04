@@ -38,8 +38,13 @@ class ProfileRepository @Inject constructor(
         profileService.get().getProfile(profileId)
     }
 
-    // 피드 리스트 조회
+    // 피드 리스트 조회 (프로필 or 배경)
     suspend fun getSingleFeedList(profileId: Long, isBackground: Boolean) = withContext(ioDispatcher) {
         profileService.get().getSingleFeedList(profileId, isBackground)
+    }
+
+    // 피드 리스트 조회 (프로필 + 배경)
+    suspend fun getTotalFeedList(profileId: Long) = withContext(ioDispatcher) {
+        profileService.get().getTotalFeedList(profileId)
     }
 }

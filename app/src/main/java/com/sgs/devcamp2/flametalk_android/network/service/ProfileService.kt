@@ -25,10 +25,16 @@ interface ProfileService {
         @Path("profileId") profileId: Long
     ): ProfileResponse
 
-    // 피드 리스트 조회
+    // 피드 리스트 조회 (프로필 or 배경)
     @GET("/api/membership/feed")
     suspend fun getSingleFeedList(
         @Query("profileId") profileId: Long,
         @Query("isBackground") isBackground: Boolean
+    ): ProfileFeedResponse
+
+    // 피드 리스트 조회 (프로필 + 배경)
+    @GET("/api/membership/feed")
+    suspend fun getTotalFeedList(
+        @Query("profileId") profileId: Long
     ): ProfileFeedResponse
 }

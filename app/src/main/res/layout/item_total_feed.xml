@@ -23,6 +23,7 @@
         android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/img_total_feed_thumbnail"
         app:layout_constraintTop_toTopOf="@id/img_total_feed_thumbnail"
+        app:layout_constraintBottom_toTopOf="@+id/tv_total_feed_update"
         tools:text="나의 배경" />
 
     <TextView
@@ -32,7 +33,7 @@
         android:layout_marginStart="10dp"
         android:textColor="@color/middle_gray"
         android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@id/tv_total_feed_private"
+        app:layout_constraintBottom_toBottomOf="@id/img_total_feed_thumbnail"
         app:layout_constraintStart_toEndOf="@+id/img_total_feed_thumbnail"
         app:layout_constraintTop_toBottomOf="@id/tv_vertical_profile_type"
         tools:text="방금" />
