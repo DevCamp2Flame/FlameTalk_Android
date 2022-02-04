@@ -50,9 +50,34 @@ class ProfileFragment : Fragment() {
         initViewType()
         initUserProfile()
 
+        // 프로필 히스토리 피드로 이동
+        binding.imgProfile.setOnClickListener {
+            findNavController().navigate(
+                ProfileFragmentDirections.actionProfileToFeedSingle(
+                    1,
+                    false
+                )
+            )
+            // TODO: viewModel.profileId.value로 변경
+        }
+
+        // 배경화면 히스토리 피드로 이동
+        binding.imgProfileBg.setOnClickListener {
+            findNavController().navigate(
+                ProfileFragmentDirections.actionProfileToFeedSingle(
+                    1,
+                    true
+                )
+            )
+            // TODO: viewModel.profileId.value로 변경
+        }
+
+        // 프로필 상세 닫기
         binding.imgProfileClose.setOnClickListener {
             findNavController().navigateUp()
         }
+
+        // 친구 즐겨찾기
         binding.imgProfileBookmark.setOnClickListener {
             it.isActivated = !it.isActivated
             Snackbar.make(requireContext(), it, it.isActivated.toString(), Snackbar.LENGTH_SHORT)

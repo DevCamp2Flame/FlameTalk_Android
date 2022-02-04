@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sgs.devcamp2.flametalk_android.data.dummy.getDummyUser
-import com.sgs.devcamp2.flametalk_android.network.repository.ProfileRepository
 import com.sgs.devcamp2.flametalk_android.data.model.ProfilePreview
+import com.sgs.devcamp2.flametalk_android.network.repository.ProfileRepository
 import dagger.Lazy
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -25,6 +25,10 @@ class ProfileViewModel @Inject constructor(
     // 메인 유저 정보 -> 동작하지 않음
     private val _userProfile = MutableStateFlow(dummyUserData)
     val userProfile = _userProfile.asStateFlow()
+
+    // 프로필 아이디
+    private val _profileId = MutableStateFlow<Long>(0)
+    val profileId = _profileId.asStateFlow()
 
     // 닉네임
     private val _nickname = MutableStateFlow("")
