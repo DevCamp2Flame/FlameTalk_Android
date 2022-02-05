@@ -11,15 +11,14 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import java.util.concurrent.TimeUnit
+import javax.inject.Singleton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.TimeUnit
-import javax.inject.Singleton
 
 /**
  * @author 박소연
@@ -92,6 +91,6 @@ class NetworkModule {
     }
 
     companion object {
-        const val BASE_URL = "http://LOCAL_IP:8080" // 테스트 전 PC IP 확인
+        const val BASE_URL = "http://10.99.13.235:8080" // 테스트 전 PC IP 확인
     }
 }
