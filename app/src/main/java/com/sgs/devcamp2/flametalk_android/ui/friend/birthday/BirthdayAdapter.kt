@@ -12,7 +12,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.ItemFriendPreviewBinding
-import com.sgs.devcamp2.flametalk_android.network.response.friend.ProfilePreview
+import com.sgs.devcamp2.flametalk_android.data.model.ProfilePreview
 import com.sgs.devcamp2.flametalk_android.ui.friend.FriendFragmentDirections
 import com.sgs.devcamp2.flametalk_android.util.toVisible
 import com.sgs.devcamp2.flametalk_android.util.toVisibleGone
@@ -60,7 +60,7 @@ class BirthdayAdapter(
             // 친구 프로필 상세보기로 이동
             itemView.setOnClickListener {
                 val friendToFriendProfileDirections: NavDirections =
-                    FriendFragmentDirections.actionFriendToProfile(2, data)
+                    FriendFragmentDirections.actionFriendToProfile(2, data, userId = data.userId.toString())
                 it.findNavController().navigate(friendToFriendProfileDirections)
             }
 

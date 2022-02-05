@@ -12,11 +12,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.firebase.messaging.FirebaseMessaging
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.DrawerLayoutChatRoomBinding
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentChatRoomBinding
-
 import com.sgs.devcamp2.flametalk_android.util.onTextChanged
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -32,7 +30,6 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
     lateinit var drawer_bindng: DrawerLayoutChatRoomBinding
     lateinit var adapter: ChatRoomAdapter
     lateinit var userlistAdapter: ChatRoomDrawUserListAdapter
-
 
     private val model by activityViewModels<ChatRoomViewModel>()
 
@@ -84,7 +81,6 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
         binding.ivChatRoomDraw.setOnClickListener(this)
         binding.ivChatRoomFile.setOnClickListener(this)
         binding.ivChatSend.setOnClickListener(this)
-
     }
 
     override fun onClick(view: View?) {
@@ -104,11 +100,10 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
             binding.ivChatSend ->
                 {
                     Log.d(TAG, "ChatRoomFragment - onClick() called")
-                        //model.sendMessage(webSocket)
+                    // model.sendMessage(webSocket)
 
                     model.sendMessage()
                     binding.etChatRoomInputText.setText("")
-
                 }
         }
     }

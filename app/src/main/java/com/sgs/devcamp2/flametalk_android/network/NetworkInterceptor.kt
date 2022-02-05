@@ -1,12 +1,6 @@
 package com.sgs.devcamp2.flametalk_android.network
 
-import com.google.gson.Gson
-import com.sgs.devcamp2.flametalk_android.FlameTalkApp
-import com.sgs.devcamp2.flametalk_android.network.dao.UserDAO
-import com.sgs.devcamp2.flametalk_android.network.response.ErrorResponse
-import com.sgs.devcamp2.flametalk_android.util.AuthUtil
 import com.sgs.devcamp2.flametalk_android.util.addHeader
-import java.io.IOException
 import okhttp3.Interceptor
 import okhttp3.RequestBody
 import okhttp3.Response

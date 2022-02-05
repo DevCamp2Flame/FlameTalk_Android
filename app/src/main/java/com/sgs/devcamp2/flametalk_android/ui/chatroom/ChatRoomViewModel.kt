@@ -34,9 +34,9 @@ class ChatRoomViewModel @Inject constructor(
         .callTimeout(Duration.ofMinutes(1))
         .pingInterval(Duration.ofSeconds(10))
         .build()
-    val wsClient = OkHttpWebSocketClient(okHttpClient)
-    val stompClient = StompClient(wsClient)
-    var url = "ws://10.99.30.180:8080/stomp/chat"
+//    val wsClient = OkHttpWebSocketClient(okHttpClient)
+//    val stompClient = StompClient(wsClient)
+//    var url = "ws://10.99.30.180:8080/stomp/chat"
 
     /**
      * _chatUserList는 채팅방에 속해 있는 user의 정보를 의미한다. image url, 이름 등이 포함 될 수 있다.
@@ -65,19 +65,19 @@ class ChatRoomViewModel @Inject constructor(
             }
         }
 
-        viewModelScope.launch {
-            connection().collect {
-
-                // var Req: ChatMessageDto = ChatMessageDto("a9024424-e88f-4e6b-b5d6-bd3db709ba87", "김현국", "안녕하세요 ")
-                //val jsonStompSession = it.withJsonConversions()
-                // jsonStompSession.convertAndSend("/pub/chat/enter", Json.encodeToString(Req))
-            }
-        }
+//        viewModelScope.launch {
+//            connection().collect {
+//
+//                // var Req: ChatMessageDto = ChatMessageDto("a9024424-e88f-4e6b-b5d6-bd3db709ba87", "김현국", "안녕하세요 ")
+//                //val jsonStompSession = it.withJsonConversions()
+//                // jsonStompSession.convertAndSend("/pub/chat/enter", Json.encodeToString(Req))
+//            }
+//        }
     }
 
-    fun connection(): Flow<StompSession> = flow {
-        emit(stompClient.connect(url))
-    }
+//    fun connection(): Flow<StompSession> = flow {
+//        emit(stompClient.connect(url))
+//    }
 
     fun initChattingText(): Flow<Chat> = flow {
 

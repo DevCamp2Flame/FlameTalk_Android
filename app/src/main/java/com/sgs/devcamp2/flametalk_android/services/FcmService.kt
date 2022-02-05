@@ -13,8 +13,6 @@ import androidx.navigation.NavDeepLinkBuilder
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.sgs.devcamp2.flametalk_android.R
-import com.sgs.devcamp2.flametalk_android.data.model.ChatList
-import com.sgs.devcamp2.flametalk_android.ui.chatroomlist.ChatRoomListViewModel
 
 /**
  * @author boris
@@ -22,8 +20,8 @@ import com.sgs.devcamp2.flametalk_android.ui.chatroomlist.ChatRoomListViewModel
  */
 class FcmService : FirebaseMessagingService() {
     val TAG: String = "로그"
-    private lateinit var model: ChatRoomListViewModel
-    lateinit var currentList: MutableList<ChatList>
+
+
     override fun onCreate() {
     }
 

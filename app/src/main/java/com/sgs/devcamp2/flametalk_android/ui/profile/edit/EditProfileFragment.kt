@@ -33,6 +33,7 @@ import kotlinx.coroutines.launch
 /**
  * @author 박소연
  * @created 2022/01/18
+ * @updated 2022/01/31
  * @desc 프로필 수정 페이지 (배경 이미지, 프로필 이미지, 상태메세지)
  */
 
@@ -128,18 +129,22 @@ class EditProfileFragment : Fragment() {
         // 상태 메세지 변경
         binding.tvEditProfileDesc.setOnClickListener {
             val editProfileToDescDirections: NavDirections =
-                EditProfileFragmentDirections.actionProfileToEditDesc(viewModel.description.value)
+                EditProfileFragmentDirections.actionEditToEditDesc(desc = viewModel.description.value, startView = "Edit")
             findNavController().navigate(editProfileToDescDirections)
         }
 
         // 프로필 수정 완료
         binding.tvEditProfileConfirm.setOnClickListener {
             // TODO: 프로필 편집 통신
+            viewModel.updateProfileData(
+                profileId = args.userInfo!!.profileId,
+                args.userInfo!!.isDefault
+            )
             // 파일 통신을 위한 임시 요청
             // File Create 통신
-            if (viewModel.profileImage.value != "") {
-                viewModel.postCreateImage()
-            }
+//            if (viewModel.profileImage.value != "") {
+//                viewModel.postCreateImage()
+//            }
         }
     }
 

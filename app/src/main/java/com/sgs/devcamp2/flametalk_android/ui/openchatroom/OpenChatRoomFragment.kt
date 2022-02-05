@@ -6,72 +6,72 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentOpenChatRoomBinding
+import com.sgs.devcamp2.flametalk_android.ui.openchatroom.myopenchatroom.MyOpenChatRoomFragment
+import com.sgs.devcamp2.flametalk_android.ui.openchatroom.myopenprofile.MyOpenChatProfileFragment
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-
-/**
- * @author 박소연
- * @created 2022/01/17
- * @desc 프로필 상세 보기 페이지
- */
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-@ExperimentalCoroutinesApi
-class OpenChaRoomFragment : Fragment() {
-    private val binding by lazy { FragmentOpenChatRoomBinding.inflate(layoutInflater) }
-    private val viewModel: OpenChatRoomViewModel by viewModels()
+class OpenChatRoomFragment : Fragment() {
+    lateinit var binding: FragmentOpenChatRoomBinding
+    lateinit var viewPager: ViewPager2
+    lateinit var tabLayout: TabLayout
+    lateinit var viewpagerAdapter: FragmentStateAdapter
+    lateinit var openChatroomAdapter: OpenChatRoomAdapter
 
-    // 뷰 생성 시점에 adapter 초기화
-    private val openChatRoomAdapter: OpenChatRoomAdapter by lazy {
-        OpenChatRoomAdapter(requireContext())
-    }
+    private val viewModel: OpenChatRoomViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        binding = FragmentOpenChatRoomBinding.inflate(inflater, container, false)
+
         initUI()
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.openChatRoom.observe(
+                viewLifecycleOwner
+            ) {
+                openChatroomAdapter.data = it
+            }
+        }
         return binding.root
     }
 
-    private fun initUI() {
-        initAppbar()
-        initOpenChatRoom()
-        initEventListener()
-    }
+    fun initUI() {
+        viewPager = binding.vpOpenChatRoomInner
+        tabLayout = binding.tblOpenChatRoom
+        binding.rvOpenChatRoom.layoutManager = LinearLayoutManager(context)
 
-    private fun initAppbar() {
-        binding.abOpenChatRoom.tvAppbar.text = "카카오톡오픈채팅"
-    }
+        openChatroomAdapter = OpenChatRoomAdapter(this.requireContext())
 
-    private fun initEventListener() {
-    }
-
-    private fun initOpenChatRoom() {
-        binding.rvOpenChatRoom.layoutManager = LinearLayoutManager(requireContext())
-        binding.rvOpenChatRoom.adapter = openChatRoomAdapter
-
-        viewModel.openChatRoom.observe(
-            viewLifecycleOwner,
-            { it ->
-                it?.let {
-                    if (it.size > 0) {
-                        openChatRoomAdapter.data = it
-                        openChatRoomAdapter.notifyDataSetChanged()
+        viewpagerAdapter = OpenChatRoomViewPagerAdapter(childFragmentManager, lifecycle)
+        (viewpagerAdapter as OpenChatRoomViewPagerAdapter).addFragment(MyOpenChatRoomFragment(), "오픈채팅")
+        (viewpagerAdapter as OpenChatRoomViewPagerAdapter).addFragment(MyOpenChatProfileFragment(), "오픈프로필")
+        viewPager.adapter = viewpagerAdapter
+        TabLayoutMediator(tabLayout, viewPager) {
+            tab, position ->
+            when (position) {
+                0 ->
+                    {
+                        tab.text = (viewpagerAdapter as OpenChatRoomViewPagerAdapter).getPageTitle(0)
                     }
-                }
+                1 ->
+                    {
+                        tab.text = (viewpagerAdapter as OpenChatRoomViewPagerAdapter).getPageTitle(1)
+                    }
             }
-        )
-    }
+        }.attach()
 
-    private fun initMyOpenChatRoom() {
-        // TODO: 나의 오픈 채팅방 리스트
-    }
-
-    private fun initMyOpenChatProfile() {
-        // TODO: 나의 오픈 프로필 리스트
+        binding.rvOpenChatRoom.adapter = openChatroomAdapter
     }
 }

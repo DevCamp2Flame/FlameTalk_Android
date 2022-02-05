@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.ItemPersonInviteRoomSelectedBinding
 import com.sgs.devcamp2.flametalk_android.network.response.friend.Friend
+import com.sgs.devcamp2.flametalk_android.util.disableClickTemporarily
 
 /**
  * @author boris
@@ -58,6 +59,7 @@ class InviteRoomSelectedAdapter constructor(
         var friend: Friend
     ) : View.OnClickListener {
         override fun onClick(view: View?) {
+            view?.disableClickTemporarily()
             when (view?.id) {
                 R.id.layout_invite_room_selected -> {
                     itemClickCallBack?.onItemSelectedClick(friend)

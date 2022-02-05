@@ -34,7 +34,9 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (destination.id == R.id.navigation_signin || destination.id == R.id.navigation_signup ||
                 destination.id == R.id.navigation_chat_room || destination.id == R.id.navigation_profile ||
-                destination.id == R.id.navigation_edit_profile_desc || destination.id == R.id.navigation_edit_profile || destination.id == R.id.navigation_chat_Room_Bottom_Sheet
+                destination.id == R.id.navigation_profile_desc || destination.id == R.id.navigation_edit_profile ||
+                destination.id == R.id.navigation_chat_Room_Bottom_Sheet || destination.id == R.id.navigation_add_profile ||
+                destination.id == R.id.navigation_single_feed || destination.id == R.id.navigation_total_feed
             ) {
                 binding.btnvView.visibility = View.GONE
             } else {

@@ -7,7 +7,7 @@ import com.sgs.devcamp2.flametalk_android.data.dummy.getBirthdayFriend
 import com.sgs.devcamp2.flametalk_android.data.dummy.getDummyFriend
 import com.sgs.devcamp2.flametalk_android.data.dummy.getDummyUser
 import com.sgs.devcamp2.flametalk_android.data.dummy.getMultiProfile
-import com.sgs.devcamp2.flametalk_android.network.response.friend.ProfilePreview
+import com.sgs.devcamp2.flametalk_android.data.model.ProfilePreview
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject

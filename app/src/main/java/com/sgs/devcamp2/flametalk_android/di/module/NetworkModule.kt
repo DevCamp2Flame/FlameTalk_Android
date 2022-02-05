@@ -1,9 +1,12 @@
 package com.sgs.devcamp2.flametalk_android.di.module
 
+import com.sgs.devcamp2.flametalk_android.data.source.remote.api.ChatRoomsApi
+import com.sgs.devcamp2.flametalk_android.data.source.remote.api.InviteRoomApi
 import com.sgs.devcamp2.flametalk_android.network.NetworkInterceptor
 import com.sgs.devcamp2.flametalk_android.network.dao.UserDAO
 import com.sgs.devcamp2.flametalk_android.network.service.AuthService
 import com.sgs.devcamp2.flametalk_android.network.service.FileService
+import com.sgs.devcamp2.flametalk_android.network.service.ProfileService
 import com.sgs.devcamp2.flametalk_android.network.service.UserService
 import dagger.Module
 import dagger.Provides
@@ -16,13 +19,13 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 /**
  * @author 박소연
  * @created 2022/01/17
  * @desc Dagger+Hilt를 이용한 Network Module
+ * data -> source -> remote api들의 의존성 주입
  */
 
 @Module
@@ -57,7 +60,6 @@ class NetworkModule {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(client)
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
@@ -74,8 +76,23 @@ class NetworkModule {
         return retrofit.create(FileService::class.java)
     }
 
+    @Provides
+    @Singleton
+    fun provideProfileService(retrofit: Retrofit): ProfileService {
+        return retrofit.create(ProfileService::class.java)
+    }
+
+    fun provideChatRoomsService(retrofit: Retrofit): ChatRoomsApi {
+        return retrofit.create(ChatRoomsApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideInviteRoomApi(retrofit: Retrofit): InviteRoomApi {
+        return retrofit.create(InviteRoomApi::class.java)
+    }
+
     companion object {
-        // const val BASE_URL = "http://10.0.2.2:8080" //emulator
-        const val BASE_URL = "http://10.99.30.180:8080" // physical device
+        const val BASE_URL = "http://10.99.13.235:8080" // 테스트 전 PC IP 확인
     }
 }
