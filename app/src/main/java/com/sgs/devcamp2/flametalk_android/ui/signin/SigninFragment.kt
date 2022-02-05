@@ -111,17 +111,33 @@ class SigninFragment : Fragment() {
             binding.edtSigninEmail.text.toString(),
             binding.edtSigninPwd.text.toString(),
             "LOGIN",
-            Settings.Secure.getString(context!!.contentResolver, Settings.Secure.ANDROID_ID)
+            Settings.Secure.getString(requireContext().contentResolver, Settings.Secure.ANDROID_ID)
         )
 
         // 로그인된 유저의 닉네임 띄움
         lifecycleScope.launch {
             viewModel.nickname.collectLatest {
-                if (it != "") {
+                if (it.isNotBlank()) {
                     Snackbar.make(requireView(), "${it}님 로그인 되었습니다.", Snackbar.LENGTH_SHORT).show()
-                } else {
-                    Snackbar.make(requireView(), "로그인에 실패했습니다.", Snackbar.LENGTH_SHORT).show()
-                    findNavController().navigateUp()
+                    findNavController().navigate(R.id.navigation_friend)
+                }
+            }
+        }
+
+        // 로그인 결과
+        lifecycleScope.launch {
+            viewModel.message.collectLatest {
+                if (it.isNotBlank()) {
+                    Snackbar.make(requireView(), it, Snackbar.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+        // 에러 메세지
+        lifecycleScope.launch {
+            viewModel.error.collectLatest {
+                if (it.isNotBlank()) {
+                    Snackbar.make(requireView(), it, Snackbar.LENGTH_SHORT).show()
                 }
             }
         }

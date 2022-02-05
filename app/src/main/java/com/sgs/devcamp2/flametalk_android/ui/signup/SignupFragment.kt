@@ -47,12 +47,16 @@ class SignupFragment : Fragment() {
         }
 
         binding.btnSignupEmailCheck.setOnClickListener {
-
+            emailDoubleCheck()
         }
 
         // 회원가입 요청
         binding.btnSignupConfirm.setOnClickListener {
-            submitSignup()
+            if (viewModel.emailCheck?.value == true) {
+                submitSignup()
+            } else {
+                Snackbar.make(requireView(), "이메일 중복확인이 필요합니다.", Snackbar.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -67,7 +71,7 @@ class SignupFragment : Fragment() {
             "LOGIN",
             "82",
             "KR",
-            Settings.Secure.getString(context!!.contentResolver, Settings.Secure.ANDROID_ID)
+            Settings.Secure.getString(requireContext().contentResolver, Settings.Secure.ANDROID_ID)
         )
 
         // 회원가입 된 유저의 닉네임 띄움
@@ -85,15 +89,15 @@ class SignupFragment : Fragment() {
     }
 
     private fun emailDoubleCheck() {
-        // 이벤트가 발생하면 회원가입 요청을 보냄
+        // 회원가입 통신 요청
         viewModel.emailCheck(binding.edtSignupEmail.toString())
 
         // 회원가입 된 유저의 닉네임 띄움
         lifecycleScope.launch {
-            viewModel.emailCheck.collectLatest {
-                if (it) {
+            viewModel.emailCheck?.collectLatest {
+                if (it && it != null) {
                     Snackbar.make(requireView(), "사용 가능한 이메일입니다.", Snackbar.LENGTH_SHORT).show()
-                } else {
+                } else if (!it != null) {
                     Snackbar.make(requireView(), "이미 가입된 이메일입니다.", Snackbar.LENGTH_SHORT).show()
                 }
             }

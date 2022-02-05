@@ -37,6 +37,9 @@ class NetworkModule {
     fun provideNetworkInterceptor(userDAO: UserDAO): NetworkInterceptor {
         return NetworkInterceptor(userDAO) {
             runBlocking(Dispatchers.IO) {
+                userDAO.user.first()?.userId
+                userDAO.user.first()?.nickname
+                userDAO.user.first()?.status
                 userDAO.user.first()?.accessToken
                 userDAO.user.first()?.refreshToken
             }

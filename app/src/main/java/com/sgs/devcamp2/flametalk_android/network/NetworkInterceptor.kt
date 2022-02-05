@@ -1,10 +1,16 @@
 package com.sgs.devcamp2.flametalk_android.network
 
+import com.google.gson.Gson
+import com.sgs.devcamp2.flametalk_android.FlameTalkApp
+import com.sgs.devcamp2.flametalk_android.network.dao.UserDAO
+import com.sgs.devcamp2.flametalk_android.network.response.ErrorResponse
+import com.sgs.devcamp2.flametalk_android.util.AuthUtil
 import com.sgs.devcamp2.flametalk_android.util.addHeader
 import okhttp3.Interceptor
 import okhttp3.RequestBody
 import okhttp3.Response
 import okio.Buffer
+import okio.IOException
 import org.json.JSONObject
 import timber.log.Timber
 
@@ -36,18 +42,6 @@ class NetworkInterceptor(
 
         Timber.d(response.toString())
         Timber.d(JSONObject(response.peekBody(Long.MAX_VALUE).string()).toString(4))
-
-        // 통일된 응답을 logging
-        response.peekBody(Long.MAX_VALUE).string().let { JSONObject(it) }.let {
-
-            val status = it["status"] as Int
-            val message = it["message"] as String
-            val data = it["data"] as JSONObject
-
-            Timber.d("url -> $status")
-            Timber.d("headers -> $message")
-            Timber.d("body -> $data")
-        }
 
         try {
             // 성공이 아니고 응답 body 비어있는 경우
@@ -81,7 +75,7 @@ class NetworkInterceptor(
         return response
     }
 
-    fun RequestBody.toBodyInfo(): String? {
+    private fun RequestBody.toBodyInfo(): String? {
         return try {
             val copy = this
             val buffer = Buffer()

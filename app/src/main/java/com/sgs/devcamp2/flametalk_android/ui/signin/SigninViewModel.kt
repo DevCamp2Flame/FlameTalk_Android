@@ -21,15 +21,14 @@ class SigninViewModel @Inject constructor(
 ) : ViewModel() {
 
     // 닉네임
-    private val _nickname = MutableStateFlow("")
-    val nickname = _nickname.asStateFlow()
+    private val _nickname = MutableStateFlow("") // <String>? = null
+    val nickname = _nickname?.asStateFlow()
 
-    // 프로필 상태메세지
-    private val _description = MutableStateFlow("")
-    val description = _description.asStateFlow()
+    private val _message = MutableStateFlow("")
+    val message = _message?.asStateFlow()
 
     private val _error = MutableStateFlow("")
-    val error = _error.asStateFlow()
+    val error = _error?.asStateFlow()
 
     fun signIn(email: String, password: String, social: String, deviceId: String) {
         viewModelScope.launch {
@@ -38,17 +37,15 @@ class SigninViewModel @Inject constructor(
                     email, password, social, deviceId
                 )
                 val response = signRepository.get().signin(request)
-                _nickname.value = response.data.nickname
-
-                Timber.d("$TAG Success Response: $response")
+                if (response.status == 201) {
+                    _nickname.value = response.data.nickname
+                } else {
+                    _message.value = response.message
+                }
             } catch (ignored: Throwable) {
-                _error.value = "알 수 없는 에러 발생"
-                Timber.d("$TAG Success Response: $_error")
+                _error?.value = "알 수 없는 에러 발생"
+                Timber.d("Success Response: $_error")
             }
         }
-    }
-
-    companion object {
-        final const val TAG = "SigninViewModel"
     }
 }
