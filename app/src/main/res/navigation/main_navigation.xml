@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_navigation"
-    app:startDestination="@id/navigation_single_feed">
+    app:startDestination="@id/navigation_total_feed">
 
     <fragment
         android:id="@+id/navigation_signin"
@@ -156,7 +156,7 @@
         <argument
             android:name="isBackground"
             app:argType="boolean"
-            android:defaultValue="false"/>
+            android:defaultValue="true"/>
     </fragment>
 
     <!--프로필 total 피드-->

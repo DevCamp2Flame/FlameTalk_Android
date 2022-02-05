@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cst_single_feed"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black">
@@ -38,11 +39,28 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/avatars" />
 
+    <TextView
+        android:id="@+id/tv_single_feed_empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:lineHeight="50dp"
+        android:text="피드 데이터가\n없습니다."
+        android:textColor="@color/middle_gray"
+        android:textSize="40dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/vp_single_feed"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/vp_single_feed"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginVertical="90dp" />
+        android:layout_marginVertical="90dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_single_feed_private"
@@ -50,8 +68,9 @@
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:drawableStart="@drawable/ic_lock_white_24"
-        android:text="나만보기"
         android:gravity="center"
+        android:text="나만보기"
+        android:visibility="gone"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

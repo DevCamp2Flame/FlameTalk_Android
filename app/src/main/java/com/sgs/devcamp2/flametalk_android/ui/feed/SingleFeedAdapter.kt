@@ -4,10 +4,12 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.sgs.devcamp2.flametalk_android.databinding.ItemSingleFeedBinding
 import com.sgs.devcamp2.flametalk_android.network.response.feed.Feed
+import com.sgs.devcamp2.flametalk_android.util.SimpleDiffUtilCallback
 
 /**
  * @author 박소연
@@ -19,7 +21,7 @@ import com.sgs.devcamp2.flametalk_android.network.response.feed.Feed
 
 class SingleFeedAdapter(
     private val context: Context
-) : RecyclerView.Adapter<SingleFeedAdapter.FeedHorizentalViewHolder>() {
+) : ListAdapter<Feed, SingleFeedAdapter.FeedHorizentalViewHolder>(SimpleDiffUtilCallback()) {
     var data = listOf<Feed>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeedHorizentalViewHolder {

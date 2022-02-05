@@ -13,9 +13,9 @@ import com.bumptech.glide.Glide
 import com.google.android.material.snackbar.Snackbar
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentSingleFeedBinding
-import com.sgs.devcamp2.flametalk_android.ui.profile.ProfileFragmentDirections
 import com.sgs.devcamp2.flametalk_android.util.toInvisible
 import com.sgs.devcamp2.flametalk_android.util.toVisible
+import com.sgs.devcamp2.flametalk_android.util.toVisibleGone
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
@@ -32,6 +32,10 @@ class SingleFeedFragment : Fragment() {
     private val binding by lazy { FragmentSingleFeedBinding.inflate(layoutInflater) }
     private val viewModel by viewModels<SingleFeedViewModel>()
     private val args: SingleFeedFragmentArgs by navArgs()
+
+    // TODO: 뷰 연결 후 삭제할 변수
+    val profileId = 4L
+    val isBackground = false // args.isBackground
 
     private val singleFeedAdapter: SingleFeedAdapter by lazy {
         SingleFeedAdapter(requireContext())
@@ -50,15 +54,20 @@ class SingleFeedFragment : Fragment() {
         initEventListener()
 
         // 서버로부터 피드 리스트 데이터 요청
-        viewModel.getSingleFeedList(3, args.isBackground)
+        viewModel.getSingleFeedList(
+            profileId,
+            isBackground
+        ) // TODO change: viewModel.getTotalFeedList(args.args.profileId)
 
         viewModel.feeds.observe(
             viewLifecycleOwner
         ) { it ->
             it?.let {
-                if (it.isNotEmpty()) {
-                    singleFeedAdapter.data = it
-                    singleFeedAdapter.notifyDataSetChanged()
+                singleFeedAdapter.data = it
+                singleFeedAdapter.notifyDataSetChanged()
+
+                if (it.isEmpty()) {
+                    binding.tvSingleFeedEmpty.toVisible()
                 }
             }
         }
@@ -71,11 +80,30 @@ class SingleFeedFragment : Fragment() {
             }
         }
 
+        // TODO: response로 Feed Data가 오면 확인
+        lifecycleScope.launchWhenStarted {
+            viewModel.lockChanged?.collectLatest {
+                when (it) {
+                    true -> binding.tvSingleFeedPrivate.toVisibleGone()
+                    false -> binding.tvSingleFeedPrivate.toVisible()
+                }
+            }
+        }
+
         // 에러메세지
         lifecycleScope.launchWhenStarted {
             viewModel.error?.collectLatest {
                 if (it != null)
                     Snackbar.make(requireView(), "알 수 없는 에러 발생", Snackbar.LENGTH_SHORT).show()
+            }
+        }
+
+        // 리스트 재요청
+        lifecycleScope.launchWhenResumed {
+            viewModel.reload.collectLatest {
+                if (it) { // TODO change: viewModel.getTotalFeedList(args.args.profileId)
+                    viewModel.getSingleFeedList(profileId, isBackground)
+                }
             }
         }
 
@@ -89,6 +117,9 @@ class SingleFeedFragment : Fragment() {
         binding.vpSingleFeed.registerOnPageChangeCallback(object : OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
+                // 현재 보고있는 피드 position을 ViewModel에 알려준다
+                viewModel.currentImagePosition(position)
+
                 binding.tvSingleFeedIndex.text =
                     "${position + 1}/${viewModel.feeds.value!!.size}"
 
@@ -103,19 +134,20 @@ class SingleFeedFragment : Fragment() {
 
         // 옵션 메뉴: 다운로드, 피드 삭제
         binding.imgSingleFeedMenu.setOnClickListener {
-            var popupMenu = PopupMenu(requireContext(), requireView())
+            var popupMenu = PopupMenu(this.activity, binding.vpSingleFeed)
             popupMenu.inflate(R.menu.feed_menu)
             popupMenu.setOnMenuItemClickListener {
                 when (it.itemId) {
                     R.id.menu_download -> {
-                        // TODO: 이미지 다운로드 통신 진행
-                        Snackbar.make(requireView(), "다운로드를 시작합니다...", Snackbar.LENGTH_SHORT).show()
+                        viewModel.downloadItem()
                     }
                     R.id.menu_delete -> {
-                        Snackbar.make(requireView(), "피드를 삭제했습니다", Snackbar.LENGTH_SHORT).show()
+                        viewModel.deleteFeed()
+                        // Snackbar.make(requireView(), "피드를 삭제했습니다", Snackbar.LENGTH_SHORT).show()
                     }
                     else -> {
-                        Snackbar.make(requireView(), "else...", Snackbar.LENGTH_SHORT).show()
+                        viewModel.updateFeedImageLock()
+                        // Snackbar.make(requireView(), "else...", Snackbar.LENGTH_SHORT).show()
                     }
                 }
                 return@setOnMenuItemClickListener false
@@ -127,7 +159,7 @@ class SingleFeedFragment : Fragment() {
         binding.imgSingleFeedToTotal.setOnClickListener {
             findNavController().navigate(
                 SingleFeedFragmentDirections.actionFeedSingleToTotal(
-                    3,
+                    profileId,
                     viewModel.profileImage.value
                 )
             )

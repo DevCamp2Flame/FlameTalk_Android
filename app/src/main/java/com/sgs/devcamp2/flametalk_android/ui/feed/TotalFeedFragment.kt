@@ -31,9 +31,24 @@ class TotalFeedFragment : Fragment() {
     private val viewModel: TotalFeedViewModel by viewModels()
     private val args: TotalFeedFragmentArgs by navArgs()
 
+    // TODO: 뷰 연결 후 삭제할 변수
+    val profileId = 9L
+
     // 뷰 생성 시점에 adapter 초기화
     private val totalFeedAdapter: TotalFeedAdapter by lazy {
-        TotalFeedAdapter(requireContext(), args.profileImage)
+        TotalFeedAdapter(
+            requireContext(),
+            args.profileImage,
+            onClickDownloadItem = {
+                // viewModel.downloadItem(it.feedId)
+            },
+            onClickDeleteItem = {
+                viewModel.deleteFeed(it.feedId)
+            },
+            onClickChangeLockItem = {
+                viewModel.updateFeedImageLock(it.feedId)
+            }
+        )
     }
 
     override fun onCreateView(
@@ -58,6 +73,7 @@ class TotalFeedFragment : Fragment() {
         binding.abTotalFeed.imgAppbarAddFriend.toVisibleGone()
         binding.abTotalFeed.imgAppbarSearch.toVisibleGone()
 
+        // 뒤로가기 버튼을 누르면 이전의 single Feed의 UI stack을 pop하고 프로필 상세보기로 랜딩한다.
         binding.abTotalFeed.imgAppbarBack.setOnClickListener {
             // findNavController().navigateUp()
             // TODO: Feed Total -> Profile
@@ -66,27 +82,45 @@ class TotalFeedFragment : Fragment() {
 
     // 프로필+배경 피드 데이터 초기화
     private fun initFeed() {
-        viewModel.getTotalFeedList(3)
+        // TODO change: viewModel.getTotalFeedList(args.args.profileId)
+        viewModel.getTotalFeedList(profileId)
         binding.rvTotalFeed.layoutManager = LinearLayoutManager(requireContext())
-
         binding.rvTotalFeed.adapter = totalFeedAdapter
 
         viewModel.totalFeed.observe(
             viewLifecycleOwner
         ) { it ->
             it?.let {
-                if (it.isNotEmpty()) {
-                    totalFeedAdapter.data = it
-                    totalFeedAdapter.notifyDataSetChanged()
+                totalFeedAdapter.data = it
+                totalFeedAdapter.notifyDataSetChanged()
+
+                if (it.isEmpty()) {
+                    binding.tvSingleFeedEmpty.toVisible()
                 }
             }
         }
 
         // 에러메세지
-        lifecycleScope.launchWhenResumed {
+        lifecycleScope.launchWhenStarted {
             viewModel.error?.collectLatest {
                 if (it != null)
                     Snackbar.make(requireView(), "알 수 없는 에러 발생", Snackbar.LENGTH_SHORT).show()
+            }
+        }
+        // 성공메세지
+        lifecycleScope.launchWhenResumed {
+            viewModel.message?.collectLatest {
+                if (it != null)
+                    Snackbar.make(requireView(), it, Snackbar.LENGTH_SHORT).show()
+            }
+        }
+
+        // 리스트 재요청
+        lifecycleScope.launchWhenResumed {
+            viewModel.reload.collectLatest {
+                if (it) { // TODO change: viewModel.getTotalFeedList(args.args.profileId)
+                    viewModel.getTotalFeedList(profileId)
+                }
             }
         }
     }

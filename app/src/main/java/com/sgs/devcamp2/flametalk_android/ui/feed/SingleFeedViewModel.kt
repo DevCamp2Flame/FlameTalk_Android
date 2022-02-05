@@ -25,7 +25,7 @@ class SingleFeedViewModel @Inject constructor(
 ) : ViewModel() {
 
     // 프로필 이미지
-    private val _profileImage = MutableStateFlow<String>("")
+    private val _profileImage = MutableStateFlow("")
     val profileImage = _profileImage?.asStateFlow()
 
     // 프로필 아이디
@@ -35,6 +35,21 @@ class SingleFeedViewModel @Inject constructor(
     // 피드 리스트
     private val _feeds: MutableLiveData<List<Feed>> = MutableLiveData()
     val feeds: MutableLiveData<List<Feed>> = _feeds
+
+    // 피드 재호출할지 여부
+    private val _reload = MutableStateFlow(false)
+    val reload = _reload?.asStateFlow()
+
+    // 피드 재호출할지 여부
+    private val _lockChanged: MutableStateFlow<Boolean>? = null
+    val lockChanged = _lockChanged?.asStateFlow()
+
+    private val _message: MutableStateFlow<String>? = null
+    val message = _message?.asStateFlow()
+
+    // 현재 보고있는 image feed position
+    private val _currentPosition = MutableStateFlow(1)
+    val currentPosition = _currentPosition?.asStateFlow()
 
     private val _error: MutableStateFlow<String>? = null
     val error = _error?.asStateFlow()
@@ -52,5 +67,71 @@ class SingleFeedViewModel @Inject constructor(
                 Timber.d("Error:  $ignored")
             }
         }
+    }
+
+    // TODO: Single, Total Feed가 메뉴 통신이 겹치기 때문에 ViewModel을 공유할 수 있다.
+    // TODO: file 다운로드 요청
+    fun downloadItem() {
+        viewModelScope.launch {
+            try {
+                // val response = fileRepository.get().downloadItem(fileId)
+                // Timber.d("$response")
+            } catch (ignored: Throwable) {
+                _error?.value = "알 수 없는 에러 발생"
+                Timber.d("Error:  $ignored")
+            }
+        }
+    }
+
+    fun deleteFeed() {
+        viewModelScope.launch {
+            try {
+                val item = feeds.value?.get(_currentPosition.value)
+                val response = profileRepository.get().deleteFeed(item!!.feedId)
+                _message?.value = response.message
+
+                // 피드 아이템이 삭제되면 리스트를 재호출한다
+                if (response.status == 200) {
+                    _reload.value = true
+                } else {
+                    _reload.value = false
+                    _message?.value = response.message
+                }
+
+                _reload.value = false
+                Timber.d("$response")
+                Timber.d("아이템 삭제 요청 ${item!!.feedId}")
+            } catch (ignored: Throwable) {
+                _error?.value = "알 수 없는 에러 발생"
+                Timber.d("Error:  $ignored")
+            }
+        }
+    }
+
+    fun updateFeedImageLock() {
+        viewModelScope.launch {
+            try {
+                val item = feeds.value?.get(_currentPosition.value)
+                val response = profileRepository.get().updateFeedImageLock(item!!.feedId)
+
+                if (response.status == 200) {
+                    _lockChanged?.value = true // TODO: 서버 response의 결과 할당
+                    _reload.value = true
+                } else {
+                    _reload.value = false
+                    _message?.value = response.message
+                }
+
+                Timber.d("$response")
+                Timber.d("아이템 숨김여부 변경 요청 ${item!!.feedId}")
+            } catch (ignored: Throwable) {
+                _error?.value = "알 수 없는 에러 발생"
+                Timber.d("Error:  $ignored")
+            }
+        }
+    }
+
+    fun currentImagePosition(position: Int) {
+        _currentPosition.value = position
     }
 }

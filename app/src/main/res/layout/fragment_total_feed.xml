@@ -18,7 +18,6 @@
         android:background="@color/gray"
         app:layout_constraintTop_toBottomOf="@+id/ab_total_feed" />
 
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_total_feed"
         android:layout_width="match_parent"
@@ -26,4 +25,20 @@
         android:overScrollMode="never"
         app:layout_constraintTop_toBottomOf="@id/ab_total_feed"
         tools:listitem="@layout/item_total_feed" />
+
+    <TextView
+        android:id="@+id/tv_single_feed_empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:lineHeight="50dp"
+        android:text="피드 데이터가\n없습니다."
+        android:visibility="gone"
+        android:textColor="@color/middle_gray"
+        android:textSize="40dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ab_total_feed"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

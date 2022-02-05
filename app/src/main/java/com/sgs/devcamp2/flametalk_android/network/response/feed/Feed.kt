@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
 @Keep
 data class Feed(
     @SerializedName("feedId")
-    val feedId: Int,
+    val feedId: Long,
     @SerializedName("imageUrl")
     val imageUrl: String,
     @SerializedName("isBackground")
