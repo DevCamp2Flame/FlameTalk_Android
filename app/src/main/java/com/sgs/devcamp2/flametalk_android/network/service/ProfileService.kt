@@ -4,8 +4,9 @@ import com.sgs.devcamp2.flametalk_android.network.request.sign.ProfileCreateRequ
 import com.sgs.devcamp2.flametalk_android.network.request.sign.ProfileUpdateRequest
 import com.sgs.devcamp2.flametalk_android.network.response.CommonResponse
 import com.sgs.devcamp2.flametalk_android.network.response.feed.ProfileFeedResponse
-import com.sgs.devcamp2.flametalk_android.network.response.sign.ProfileResponse
-import com.sgs.devcamp2.flametalk_android.network.response.sign.ProfileUpdateResponse
+import com.sgs.devcamp2.flametalk_android.network.response.profile.ProfileListResponse
+import com.sgs.devcamp2.flametalk_android.network.response.profile.ProfileResponse
+import com.sgs.devcamp2.flametalk_android.network.response.profile.ProfileUpdateResponse
 import retrofit2.http.*
 
 /**
@@ -15,6 +16,7 @@ import retrofit2.http.*
  */
 
 interface ProfileService {
+    /*  프로필 */
     // 프로필 생성
     @POST("/api/membership/profile")
     suspend fun postProfileCreate(@Body request: ProfileCreateRequest)
@@ -32,6 +34,11 @@ interface ProfileService {
         @Path("profileId") profileId: Long
     ): ProfileResponse
 
+    // 프로필 리스트 조회 (기본프로필, 멀티프로필)
+    @GET("/api/membership/profile")
+    suspend fun getProfileList(): ProfileListResponse
+
+    /*  프로필 */
     // 피드 리스트 조회 (프로필 or 배경)
     @GET("/api/membership/feed")
     suspend fun getSingleFeedList(
