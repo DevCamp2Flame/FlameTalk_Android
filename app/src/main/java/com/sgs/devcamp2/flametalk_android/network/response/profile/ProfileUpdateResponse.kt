@@ -1,4 +1,4 @@
-package com.sgs.devcamp2.flametalk_android.network.response.sign
+package com.sgs.devcamp2.flametalk_android.network.response.profile
 
 import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
