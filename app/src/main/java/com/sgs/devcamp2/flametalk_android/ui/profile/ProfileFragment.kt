@@ -21,7 +21,6 @@ import com.sgs.devcamp2.flametalk_android.util.toVisibleGone
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
-import timber.log.Timber
 
 /**
  * @author 박소연
@@ -41,7 +40,7 @@ class ProfileFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         initUI()
         return binding.root
     }
@@ -84,25 +83,26 @@ class ProfileFragment : Fragment() {
                 .show()
         }
         binding.cstProfileEdit.setOnClickListener {
-            findNavController().navigate(ProfileFragmentDirections.actionProfileToEdit(args.userInfo))
+            // TODO: 통신 응답으로 넘어온 유저 데이터를 넘겨야 한다
+            // findNavController().navigate(ProfileFragmentDirections.actionProfileToEdit(args.userInfo))
         }
     }
 
     // 메인 유저, 친구 여부에 따라 UI가 다름
     private fun initViewType() {
-        Timber.d("UserInfo" + args.userInfo)
+        // Timber.d("UserInfo" + args.userInfo)
         when (args.viewType) {
-            1 -> { // 내 프로필
+            USER_DEFAULT_PROFILE -> { // 내 프로필
                 binding.imgProfileBookmark.toInvisible()
                 binding.imgProfileFriend.toVisibleGone()
                 binding.tvProfileFriend.toVisibleGone()
                 swapViewVisibility(binding.cstProfileChat, binding.cstProfileEdit)
             }
-            2 -> { // 친구 프로필
+            FRIEND_PROFILE -> { // 친구 프로필
                 binding.imgProfileBookmark.toVisible()
                 swapViewVisibility(binding.cstProfileEdit, binding.cstProfileChat)
             }
-            3 -> { // 내 멀티 프로필
+            USER_MULTI_PROFILE -> { // 내 멀티 프로필
                 binding.imgProfileBookmark.toInvisible()
                 binding.imgProfileFriend.toVisible()
                 binding.tvProfileFriend.toVisible()
@@ -138,5 +138,11 @@ class ProfileFragment : Fragment() {
                     .into(binding.imgProfileBg)
             }
         }
+    }
+
+    companion object {
+        const val USER_DEFAULT_PROFILE = 1
+        const val FRIEND_PROFILE = 2
+        const val USER_MULTI_PROFILE = 3
     }
 }
