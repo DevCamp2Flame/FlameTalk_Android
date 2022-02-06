@@ -12,6 +12,12 @@
         <item name="android:windowMinWidthMinor">100%</item>
     </style>
 
+    <!--스위치 커스텀-->
+    <style name="CustomSwitch">
+        <item name="colorControlActivated">@color/flame_blue</item>
+        <item name="colorSwitchThumbNormal">@color/white</item>
+    </style>
+
     <style name="tab_layout" parent="Widget.Design.TabLayout">
         <item name="tabSelectedTextColor">#1268F3</item>
         <item name="tabTextColor">@color/gray</item>

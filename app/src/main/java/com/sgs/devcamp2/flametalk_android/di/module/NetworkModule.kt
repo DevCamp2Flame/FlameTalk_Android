@@ -4,6 +4,7 @@ import com.sgs.devcamp2.flametalk_android.data.source.remote.api.ChatRoomsApi
 import com.sgs.devcamp2.flametalk_android.data.source.remote.api.InviteRoomApi
 import com.sgs.devcamp2.flametalk_android.network.NetworkInterceptor
 import com.sgs.devcamp2.flametalk_android.network.dao.UserDAO
+import com.sgs.devcamp2.flametalk_android.network.service.AuthService
 import com.sgs.devcamp2.flametalk_android.network.service.FileService
 import com.sgs.devcamp2.flametalk_android.network.service.ProfileService
 import com.sgs.devcamp2.flametalk_android.network.service.UserService
@@ -30,13 +31,13 @@ import retrofit2.converter.gson.GsonConverterFactory
 @Module
 @InstallIn(SingletonComponent::class)
 class NetworkModule {
+
     @Provides
     @Singleton
     fun provideNetworkInterceptor(userDAO: UserDAO): NetworkInterceptor {
-        return NetworkInterceptor {
+        return NetworkInterceptor(userDAO) {
             runBlocking(Dispatchers.IO) {
                 userDAO.user.first()?.accessToken
-                userDAO.user.first()?.refreshToken
             }
         }
     }
