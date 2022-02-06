@@ -13,6 +13,7 @@ import kotlinx.coroutines.withContext
 /**
  * @author 박소연
  * @created 2022/01/25
+ * @created 2022/02/06
  * @desc 프로필, 프로필 피드와 관련된 통신(네트워크, 로컬) 레파지토리
  */
 
@@ -22,6 +23,9 @@ class ProfileRepository @Inject constructor(
     private val userDAO: Lazy<UserDAO>,
     private val ioDispatcher: CoroutineDispatcher
 ) {
+    /**
+     *   Profile
+     */
     // 프로필 생성
     suspend fun createProfile(request: ProfileCreateRequest) = withContext(ioDispatcher) {
         profileService.get().postProfileCreate(request)
@@ -43,6 +47,9 @@ class ProfileRepository @Inject constructor(
         profileService.get().getProfileList()
     }
 
+    /**
+     *   Feed
+     */
     // 피드 리스트 조회 (프로필 or 배경)
     suspend fun getSingleFeedList(profileId: Long, isBackground: Boolean) = withContext(ioDispatcher) {
         profileService.get().getSingleFeedList(profileId, isBackground)

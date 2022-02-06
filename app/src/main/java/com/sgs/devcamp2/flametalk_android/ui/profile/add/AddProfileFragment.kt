@@ -101,7 +101,7 @@ class AddProfileFragment : Fragment() {
 
     private fun initClickEvent() {
         binding.tvAddProfileClose.setOnClickListener {
-            findNavController().navigateUp()
+            findNavController().popBackStack()
         }
 
         // 프로필 이미지 변경
@@ -126,7 +126,6 @@ class AddProfileFragment : Fragment() {
         // 프로필 수정 완료
         binding.tvAddProfileConfirm.setOnClickListener {
             // TODO: 프로필 편집 통신
-            viewModel.addProfile()
             // 파일 통신을 위한 임시 요청
             // File Create 통신
 //            if (viewModel.profileImage.value != "") {

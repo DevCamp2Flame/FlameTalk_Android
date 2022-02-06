@@ -28,7 +28,6 @@ import com.sgs.devcamp2.flametalk_android.databinding.FragmentEditProfileBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 /**
  * @author 박소연
@@ -69,8 +68,9 @@ class EditProfileFragment : Fragment() {
 
     private fun initUI() {
         // 수정할 유저 정보 담기
-        if (args.userInfo != null && viewModel.userProfile.value == null) {
-            viewModel.setUserProfile(args.userInfo!!)
+        if (args.userInfo != null && viewModel.userProfileDummy.value == null) {
+            // TODO: ProfileDummyData -> ProfileResponse
+            // viewModel.setUserProfile(args.userInfo!!)
         }
     }
 
