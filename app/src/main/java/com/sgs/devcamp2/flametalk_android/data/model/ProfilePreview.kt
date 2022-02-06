@@ -1,25 +1,28 @@
 package com.sgs.devcamp2.flametalk_android.data.model
 
-import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import androidx.annotation.Keep
+import com.google.gson.annotations.SerializedName
 
 /**
- *  ProfilePreview
+ * @author 박소연
+ * @created 2022/02/06
+ * @desc 프로필 미리보기 리스트 item
  *
- *   nickname 유저 닉네임
- *   image 프로필 이미지
- *   description 상태 메세지
- *   backgroundImage 배경 이미지
+ * [Profiles]
+ * id	        Long	프로필 id
+ * imageUrl 	String	프로필 사진 S3 url
+ * description	String	프로필 상태 메세지
+ * isDefault	boolean	기본 프로필 여부
  */
 
-// TODO:친구 리스트 통신 후 삭제해야 한다.
-@Parcelize
+@Keep
 data class ProfilePreview(
-    val userId: Int,
-    val profileId: Long,
-    val nickname: String,
-    val image: String?,
-    val description: String?,
-    val backgroundImage: String?,
-    val isDefault: Boolean = false
-) : Parcelable
+    @SerializedName("id")
+    val id: Long,
+    @SerializedName("imageUrl")
+    val imageUrl: String,
+    @SerializedName("description")
+    val description: String,
+    @SerializedName("isDefault")
+    val isDefault: Boolean
+)

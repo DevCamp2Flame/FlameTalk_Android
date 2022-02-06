@@ -8,12 +8,12 @@ import com.sgs.devcamp2.flametalk_android.network.request.sign.SignupRequest
 import dagger.Lazy
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import javax.inject.Inject
 
 /**
  * @author 박소연
@@ -27,12 +27,18 @@ class SignupViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val signRepository: Lazy<SignRepository>,
 ) : ViewModel() {
-    private val _isSuccess = MutableStateFlow(false)
-    val isSuccess = _isSuccess.asStateFlow()
+
+    // 회원가입 성공 여부
+    private val _isSuccess: MutableStateFlow<Boolean>? = null
+    val isSuccess = _isSuccess?.asStateFlow()
 
     // 유저 닉네임
     private val _nickname: MutableStateFlow<String> = MutableStateFlow("")
     val nickname: StateFlow<String> = _nickname
+
+    // 이메일 체크 성공여부
+    private val _emailCheck: MutableStateFlow<Boolean>? = null
+    val emailCheck = _emailCheck?.asStateFlow()
 
     private val _error = MutableStateFlow("")
     val error = _error.asStateFlow()
@@ -57,7 +63,7 @@ class SignupViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val response = signRepository.get().signup(request)
-                _nickname.value = response.nickname
+                _nickname.value = response.data.nickname
 
                 Timber.d("Signup Response: $response")
             } catch (ignored: Throwable) {
@@ -65,5 +71,24 @@ class SignupViewModel @Inject constructor(
                 Timber.d("Signup Response: $_error")
             }
         }
+    }
+
+    // 이메일 체크 통신
+    fun emailCheck(email: String) {
+        viewModelScope.launch {
+            try {
+                val response = signRepository.get().emailCheck(email)
+                _emailCheck?.value = response.data
+
+                Timber.d("$TAG Success Response: $response")
+            } catch (ignored: Throwable) {
+                _error.value = "알 수 없는 에러 발생"
+                Timber.d("$TAG Success Response: $_error")
+            }
+        }
+    }
+
+    companion object {
+        final const val TAG = "SignupViewModel"
     }
 }

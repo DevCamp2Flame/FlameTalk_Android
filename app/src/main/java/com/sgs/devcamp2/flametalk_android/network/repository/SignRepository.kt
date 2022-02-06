@@ -1,8 +1,10 @@
 package com.sgs.devcamp2.flametalk_android.network.repository
 
+import com.sgs.devcamp2.flametalk_android.data.model.User
 import com.sgs.devcamp2.flametalk_android.network.dao.UserDAO
 import com.sgs.devcamp2.flametalk_android.network.request.sign.SigninRequest
 import com.sgs.devcamp2.flametalk_android.network.request.sign.SignupRequest
+import com.sgs.devcamp2.flametalk_android.network.response.sign.SigninResponse
 import com.sgs.devcamp2.flametalk_android.network.service.UserService
 import dagger.Lazy
 import javax.inject.Inject
@@ -29,6 +31,40 @@ class SignRepository @Inject constructor(
 
     // 로그인
     suspend fun signin(request: SigninRequest) = withContext(ioDispatcher) {
-        userService.get().postSignin(request)
+        userService.get().postSignin(request).also { saveUser(it) }
+    }
+
+    // 로그인 후 유저 정보 저장
+    private suspend fun saveUser(response: SigninResponse) = withContext(ioDispatcher) {
+        val result = response.data
+
+        if (result.userId == null) return@withContext
+        if (result.nickname == null) return@withContext
+        if (result.status == null) return@withContext
+        if (result.accessToken == null) return@withContext
+        if (result.refreshToken == null) return@withContext
+        userDAO.get().setUser(
+            User(
+                result.userId,
+                result.nickname,
+                result.status,
+                result.accessToken,
+                result.refreshToken
+            )
+        )
+    }
+
+    // 이메일 중복체크
+    suspend fun emailCheck(email: String) = withContext(ioDispatcher) {
+        userService.get().getEmailCheck(email)
+    }
+
+    // 탈퇴
+    suspend fun leaveUser() = withContext(ioDispatcher) {
+        userService.get().deleteLeaveUser()
+            .also {
+                if (it.status == 200)
+                    userDAO.get().setUser(null)
+            }
     }
 }

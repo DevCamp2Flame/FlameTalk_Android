@@ -5,22 +5,25 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sgs.devcamp2.flametalk_android.data.dummy.getDummyUser
+import com.sgs.devcamp2.flametalk_android.data.model.ProfileDummyPreview
 import com.sgs.devcamp2.flametalk_android.network.repository.FileRepository
 import com.sgs.devcamp2.flametalk_android.network.repository.ProfileRepository
 import com.sgs.devcamp2.flametalk_android.network.request.sign.ProfileCreateRequest
 import com.sgs.devcamp2.flametalk_android.network.request.sign.ProfileUpdateRequest
-import com.sgs.devcamp2.flametalk_android.data.model.ProfilePreview
 import dagger.Lazy
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import java.io.File
+import javax.inject.Inject
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import timber.log.Timber
-import java.io.File
-import javax.inject.Inject
 
 @HiltViewModel
 class EditProfileViewModel @Inject constructor(
@@ -29,11 +32,12 @@ class EditProfileViewModel @Inject constructor(
     private val profileRepository: Lazy<ProfileRepository>
 ) : ViewModel() {
     // 네트워크 통신 데이터 전 더미데이터
-    private var dummyUserData: ProfilePreview = getDummyUser()
+    private var dummyUserData: ProfileDummyPreview = getDummyUser()
     val TAG: String = "로그"
+
     // 메인 유저 정보
-    private val _userProfile: MutableStateFlow<ProfilePreview?> = MutableStateFlow(null)
-    val userProfile: MutableStateFlow<ProfilePreview?> = _userProfile
+    private val _userProfileDummy: MutableStateFlow<ProfileDummyPreview?> = MutableStateFlow(null)
+    val userProfileDummy: MutableStateFlow<ProfileDummyPreview?> = _userProfileDummy
 
     // 닉네임
     private val _nickname = MutableStateFlow("")
@@ -63,13 +67,13 @@ class EditProfileViewModel @Inject constructor(
         _description.value = desc
     }
 
-    fun setUserProfile(data: ProfilePreview) {
-        _userProfile.value = data
+    fun setUserProfile(data: ProfileDummyPreview) {
+        _userProfileDummy.value = data
 
-        _nickname.value = _userProfile.value!!.nickname
-        _description.value = _userProfile.value!!.description.toString()
-        _profileImage.value = _userProfile.value!!.image.toString()
-        _backgroundImage.value = _userProfile.value!!.backgroundImage.toString()
+        _nickname.value = _userProfileDummy.value!!.nickname
+        _description.value = _userProfileDummy.value!!.description.toString()
+        _profileImage.value = _userProfileDummy.value!!.image.toString()
+        _backgroundImage.value = _userProfileDummy.value!!.backgroundImage.toString()
     }
 
     fun setProfileImage(path: String?) {
@@ -93,7 +97,6 @@ class EditProfileViewModel @Inject constructor(
         )
     }
 
-
     // File Create 통신
     fun postCreateImage() {
         val multipartFile = pathToMultipartFile(_profileImage.value)
@@ -112,11 +115,15 @@ class EditProfileViewModel @Inject constructor(
         }
     }
 
-    fun addProfile() {
+    suspend fun addProfile() {
+        val imagePath = CoroutineScope(Dispatchers.IO).async {
+            postCreateImage()
+        }.await()
+
         viewModelScope.launch {
             try {
                 val request = ProfileCreateRequest(
-                    userId = "1643610416180811276",
+                    userId = "1644063192322270856",
                     imageUrl = _profileImage.value,
                     bgImageUrl = _backgroundImage.value,
                     sticker = null,

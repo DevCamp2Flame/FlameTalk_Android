@@ -2,6 +2,7 @@ package com.sgs.devcamp2.flametalk_android.network.request.sign
 
 import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
+import com.sgs.devcamp2.flametalk_android.data.model.Sticker
 
 /**
  * @author 박소연
@@ -43,14 +44,4 @@ data class ProfileCreateRequest(
     val description: String?,
     @SerializedName("isDefault")
     val isDefault: Boolean
-) {
-    @Keep
-    data class Sticker(
-        @SerializedName("stickerId")
-        val stickerId: Int,
-        @SerializedName("positionX")
-        val positionX: Double,
-        @SerializedName("positionY")
-        val positionY: Double
-    )
-}
+)

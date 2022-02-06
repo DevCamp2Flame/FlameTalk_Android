@@ -5,13 +5,14 @@ import com.google.gson.annotations.SerializedName
 
 /**
  * @author 박소연
- * @created 2022/01/20
- * @updated 2022/01/26
- * @desc 로그인 Response Body
+ * @created 2022/01/26
+ * @updated
+ * @desc 토큰 재발급 Response Body
  *
  * [User Login API]
  * status	    int 	상태 코드
  * message	    String	status 메시지
+ *
  * userId	    String	이메일
  * nickname	    String	별명
  * status	    String	권한 & 상태
@@ -20,7 +21,7 @@ import com.google.gson.annotations.SerializedName
  */
 
 @Keep
-data class SigninResponse(
+data class RenewTokenResponse(
     @SerializedName("status")
     val status: Int,
     @SerializedName("message")
