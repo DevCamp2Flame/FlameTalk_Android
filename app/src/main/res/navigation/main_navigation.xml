@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_navigation"
-    app:startDestination="@id/navigation_total_feed">
+    app:startDestination="@id/navigation_friend">
 
     <fragment
         android:id="@+id/navigation_signin"
@@ -70,14 +70,9 @@
             android:name="viewType"
             android:defaultValue="1"
             app:argType="integer" />
-        <!--TODO: delete UserInfo-->
         <argument
-            android:name="userInfo"
-            app:argType="com.sgs.devcamp2.flametalk_android.data.model.ProfilePreview" />
-        <!--TODO: userId -> profileId and change type to Int-->
-        <argument
-            android:name="userId"
-            app:argType="string" />
+            android:name="profileId"
+            app:argType="long" />
         <action
             android:id="@+id/action_profile_to_edit"
             app:destination="@id/navigation_edit_profile" />
@@ -102,7 +97,7 @@
             android:name="userInfo"
             app:nullable="true"
             android:defaultValue="@null"
-            app:argType="com.sgs.devcamp2.flametalk_android.data.model.ProfilePreview" />
+            app:argType="com.sgs.devcamp2.flametalk_android.network.response.profile.Profile" />
     </fragment>
 
     <!--프로필 생성-->

@@ -84,13 +84,14 @@ class ProfileFragment : Fragment() {
         }
         binding.cstProfileEdit.setOnClickListener {
             // TODO: 통신 응답으로 넘어온 유저 데이터를 넘겨야 한다
-            // findNavController().navigate(ProfileFragmentDirections.actionProfileToEdit(args.userInfo))
+            findNavController().navigate(
+                ProfileFragmentDirections.actionProfileToEdit(viewModel.userProfile.value)
+            )
         }
     }
 
     // 메인 유저, 친구 여부에 따라 UI가 다름
     private fun initViewType() {
-        // Timber.d("UserInfo" + args.userInfo)
         when (args.viewType) {
             USER_DEFAULT_PROFILE -> { // 내 프로필
                 binding.imgProfileBookmark.toInvisible()
@@ -112,29 +113,17 @@ class ProfileFragment : Fragment() {
 
     // 유저프로필 초기화
     private fun initUserProfile() {
-        viewModel.getProfileData(profileId = 1)
+        viewModel.getProfileData(profileId = args.profileId)
 
-        lifecycleScope.launchWhenCreated {
-            viewModel.nickname.collectLatest {
-                binding.tvProfileNickname.text = it
-            }
-        }
-        lifecycleScope.launchWhenCreated {
-            viewModel.description.collectLatest {
-                binding.tvProfileDesc.text = it
-            }
-        }
-        lifecycleScope.launchWhenCreated {
-            viewModel.profileImage.collectLatest {
+        lifecycleScope.launchWhenResumed {
+            viewModel.userProfile.collectLatest {
+                binding.tvProfileNickname.text = it?.nickname
+                binding.tvProfileDesc.text = it?.description
                 Glide.with(binding.imgProfile)
-                    .load(it).apply(RequestOptions.circleCropTransform())
+                    .load(it?.imageUrl).apply(RequestOptions.circleCropTransform())
                     .apply(RequestOptions.placeholderOf(R.drawable.ic_person_white_24))
                     .into(binding.imgProfile)
-            }
-        }
-        lifecycleScope.launchWhenCreated {
-            viewModel.backgroundImage.collectLatest {
-                Glide.with(binding.imgProfileBg).load(it)
+                Glide.with(binding.imgProfileBg).load(it?.bgImageUrl)
                     .into(binding.imgProfileBg)
             }
         }
