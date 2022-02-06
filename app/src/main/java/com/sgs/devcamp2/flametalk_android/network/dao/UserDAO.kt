@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 
 /**
  * @author 박소연
@@ -105,6 +106,7 @@ class UserDAO @Inject constructor(
         setStatus(user?.status)
         setAccessToken(user?.accessToken)
         setRefreshToken(user?.refreshToken)
+        Timber.d("유저 생성 성공 $user")
     }
 
     // 토큰 갱신
