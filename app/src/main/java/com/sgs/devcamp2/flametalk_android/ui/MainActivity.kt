@@ -11,6 +11,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.ActivityMainBinding
+import com.sgs.devcamp2.flametalk_android.domain.entity.UiState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -20,12 +21,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navHostFragment: NavHostFragment
     private lateinit var navController: NavController
     private val model by viewModels<MainActivityViewModel>()
-
+    val TAG: String = "로그"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         initNavigationBar()
-        model.connectChatServer()
+        //    model.connectChatServer()
+        //     initReceiveMessage()
+        model.getDeviceToken(this)
     }
 
     private fun initNavigationBar() {
@@ -36,8 +39,7 @@ class MainActivity : AppCompatActivity() {
             if (destination.id == R.id.navigation_signin || destination.id == R.id.navigation_signup ||
                 destination.id == R.id.navigation_chat_room || destination.id == R.id.navigation_profile ||
                 destination.id == R.id.navigation_profile_desc || destination.id == R.id.navigation_edit_profile ||
-                destination.id == R.id.navigation_chat_Room_Bottom_Sheet || destination.id == R.id.navigation_add_profile || destination.id == R.id.navigation_invite_Open_Chat_Room
-
+                destination.id == R.id.navigation_chat_Room_Bottom_Sheet || destination.id == R.id.navigation_add_profile || destination.id == R.id.navigation_invite_open_chat_room
             ) {
                 binding.btnvView.visibility = View.GONE
             } else {
@@ -49,11 +51,24 @@ class MainActivity : AppCompatActivity() {
         binding.btnvView.itemIconTintList = null
     }
 
+    private fun initReceiveMessage() {
+        lifecycleScope.launch {
+            model.session.collect { state ->
+                when (state) {
+                    is UiState.Success -> {
+                        Log.d(TAG, "MainActivity - CONNECT WEBSOCKET")
+                    }
+                    is UiState.Loading -> {
+                        Log.d(TAG, "MainActivity - initReceiveMessage() called")
+                    }
+                    is UiState.Error -> {
+                    }
+                }
+            }
+        }
+    }
+
     override fun onDestroy() {
         super.onDestroy()
-        lifecycleScope.launch {
-            Log.d("로그", "MainActivity - onDestroy() called")
-            model.session?.value?.disconnect()
-        }
     }
 }

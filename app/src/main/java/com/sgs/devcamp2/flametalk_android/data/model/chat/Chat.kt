@@ -16,7 +16,7 @@ import javax.annotation.Nonnull
     foreignKeys = [
         ForeignKey(
             entity = ChatRoom::class,
-            parentColumns = arrayOf("room_id"),
+            parentColumns = arrayOf("id"),
             childColumns = arrayOf("room_id"),
             onDelete = ForeignKey.CASCADE
 
@@ -27,5 +27,6 @@ data class Chat(
     @PrimaryKey val message_id: String,
     @Nonnull @ColumnInfo(name = "room_id") val room_id: String,
     @Nonnull @ColumnInfo(name = "sender_id") val sender_id: String,
+    @Nonnull @ColumnInfo(name = "nickname") val nickname: String,
     @Nonnull @ColumnInfo(name = "contents") val contents: String,
 )

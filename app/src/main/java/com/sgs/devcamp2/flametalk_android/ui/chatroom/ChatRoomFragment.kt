@@ -2,7 +2,6 @@ package com.sgs.devcamp2.flametalk_android.ui.chatroom
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -11,16 +10,17 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.DrawerLayoutChatRoomBinding
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentChatRoomBinding
+import com.sgs.devcamp2.flametalk_android.domain.entity.UiState
 import com.sgs.devcamp2.flametalk_android.ui.MainActivityViewModel
 import com.sgs.devcamp2.flametalk_android.util.onTextChanged
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import org.hildan.krossbow.stomp.conversions.kxserialization.withJsonConversions
 
 /**
  * 채팅방 리스트에서 한 채팅 클릭 시 이동하게 될 채팅방 내부 fragment
@@ -32,24 +32,18 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
     lateinit var drawer_bindng: DrawerLayoutChatRoomBinding
     lateinit var adapter: ChatRoomAdapter
     lateinit var userlistAdapter: ChatRoomDrawUserListAdapter
-    lateinit var roomId: String
     private val model by activityViewModels<ChatRoomViewModel>()
     private val webSocketModel by activityViewModels<MainActivityViewModel>()
-
+    private val args by navArgs<ChatRoomFragmentArgs>()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         binding = FragmentChatRoomBinding.inflate(inflater, container, false)
         initUI(this.requireContext())
-        model.initRoom(roomId)
         lifecycleScope.launch {
             model.chatRoom.collect {
-
-                Log.d(TAG, "adapter currentList hashcode - ${adapter.currentList.hashCode()}")
-                Log.d(TAG, "newList hashcode - ${it.hashCode()}")
                 adapter.submitList(it) {
                     binding.rvChatRoom.smoothScrollToPosition(it.size)
                 }
@@ -63,11 +57,6 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
         }
         binding.etChatRoomInputText.onTextChanged {
             model.updateTextValue(it.toString())
-        }
-        viewLifecycleOwner.lifecycleScope.launch {
-            webSocketModel.session?.collect {
-                model.pushMessage(it.withJsonConversions())
-            }
         }
 
         return binding.root
@@ -87,28 +76,47 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
         binding.ivChatRoomDraw.setOnClickListener(this)
         binding.ivChatRoomFile.setOnClickListener(this)
         binding.ivChatSend.setOnClickListener(this)
+
+        subscribeRoom()
+    }
+
+    fun subscribeRoom() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            webSocketModel.session.collect {
+                state ->
+                when (state) {
+                    is UiState.Success ->
+                        {
+                            model.receivedMessage(state.data, args.roomId)
+                        }
+                }
+            }
+        }
     }
 
     override fun onClick(view: View?) {
         when (view) {
-            binding.ivChatRoomDraw ->
-                {
-                    Log.d(TAG, "ChatRoomFragment - onClick() called")
-                    binding.layoutChatRoomDraw.openDrawer(Gravity.RIGHT)
+            binding.ivChatRoomDraw -> {
+                binding.layoutChatRoomDraw.openDrawer(Gravity.RIGHT)
+            }
+            binding.ivChatRoomFile -> {
+                findNavController().navigate(R.id.action_navigation_chat_room_to_navigation_chat_Room_Bottom_Sheet)
+            }
+            binding.ivChatSend -> {
+                model.initRoom(args.roomId)
+                viewLifecycleOwner.lifecycleScope.launch {
+                    webSocketModel.session.collect {
+                        state ->
+                        when (state) {
+                            is UiState.Success ->
+                                {
+                                    model.pushMessage(args.roomId, state.data, model.chat.value)
+                                }
+                        }
+                    }
                 }
-            binding.ivChatRoomFile ->
-                {
-                    Log.d(TAG, "ChatRoomFragment - onClick() called")
-                    // ChatRoomBottomSheetFragment().show(childFragmentManager, "bottomSheet")
-                    findNavController().navigate(R.id.action_navigation_chat_room_to_navigation_chat_Room_Bottom_Sheet)
-                }
-
-            binding.ivChatSend ->
-                {
-                    Log.d(TAG, "ChatRoomFragment - onClick() called")
-                    webSocketModel.pushMessage(roomId)
-                    binding.etChatRoomInputText.setText("")
-                }
+                binding.etChatRoomInputText.setText("")
+            }
         }
     }
 }

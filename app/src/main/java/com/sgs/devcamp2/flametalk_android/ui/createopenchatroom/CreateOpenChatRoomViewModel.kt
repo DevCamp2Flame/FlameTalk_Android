@@ -30,4 +30,7 @@ class CreateOpenChatRoomViewModel @Inject constructor() : ViewModel() {
         _openChatRoomTitle.value = input
         Log.d("로그", "$input")
     }
+
+    fun createOpenChatRoom() {
+    }
 }

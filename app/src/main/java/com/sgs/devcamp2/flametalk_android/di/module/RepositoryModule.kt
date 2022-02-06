@@ -17,14 +17,14 @@ import dagger.hilt.components.SingletonComponent
 interface RepositoryModule {
 
     @Binds
-    fun provideChatRoomListRepository(impl: ChatRoomListRepositoryImp): ChatRoomsRepository
-
-    @Binds
-    fun provideInviteRoomRepository(impl: InviteRoomRepositoryImp): InviteRoomRepository
-
-    @Binds
     fun provideMainActivityRepository(impl: MainActivityRepositoryImpl): MainActivityRepository
 
     @Binds
-    fun provideCreateOpenChatProfileRepository(impl: CreateOpenChatProfileRepositoryImpl): CreateOpenChatProfileRepository
+    fun provideOpenProfileRepository(impl: OpenProfileRepositoryImpl): OpenProfileRepository
+
+    @Binds
+    fun provideChatRepository(impl: ChatRepositoryImp): ChatRepository
+
+    @Binds
+    fun provideChatRoomApiRepository(impl: ChatRoomRepositoryImpl): ChatRoomRepository
 }

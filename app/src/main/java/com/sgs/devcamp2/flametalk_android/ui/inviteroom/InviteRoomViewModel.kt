@@ -3,7 +3,7 @@ package com.sgs.devcamp2.flametalk_android.ui.inviteroom
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sgs.devcamp2.flametalk_android.data.model.inviteroom.InviteRoomReq
+import com.sgs.devcamp2.flametalk_android.data.model.chatroom.createchatroom.CreateChatRoomReq
 import com.sgs.devcamp2.flametalk_android.domain.entity.Results
 import com.sgs.devcamp2.flametalk_android.domain.entity.UiState
 import com.sgs.devcamp2.flametalk_android.domain.usecase.inviteroom.CreateChatRoomUseCase
@@ -157,12 +157,17 @@ class InviteRoomViewModel @Inject constructor(
 
     fun createRooms() {
         _uiState.value = UiState.Loading
-        val inviteRoomReq = InviteRoomReq(
-            hostId = "1643163512893324414", isOpen = false,
-            users = listOf("1643163512893324414", "1643163512893324415")
+        val createChatRoomReq = CreateChatRoomReq(
+            hostId = "1643163512893324414",
+            hostOpenProfileId = null,
+            isOpen = false,
+            users = listOf("1643163512893324414", "1643163512893324415"),
+            title = null,
+            thumbnail = null
+
         )
         viewModelScope.launch {
-            createChatRoomUseCase.invoke(inviteRoomReq = inviteRoomReq)
+            createChatRoomUseCase.invoke(createChatRoomReq)
                 .collect {
                     result ->
                     when (result) {

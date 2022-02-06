@@ -104,6 +104,10 @@ class CreateOpenChatRoom : Fragment(), View.OnClickListener {
                 {
                     getProfileImage(2)
                 }
+            binding.tvInviteOpenChatRoomSubmit ->
+                {
+                    model.createOpenChatRoom()
+                }
         }
     }
     // 이미지 변경

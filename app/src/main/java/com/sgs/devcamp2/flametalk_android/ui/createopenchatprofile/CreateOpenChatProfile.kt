@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +21,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentCreateOpenChatProfileBinding
 import com.sgs.devcamp2.flametalk_android.domain.entity.UiState
 import com.sgs.devcamp2.flametalk_android.util.onTextChanged
@@ -28,7 +31,7 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class CreateOpenChatProfile : Fragment(), View.OnClickListener {
-
+    val TAG: String = "로그"
     lateinit var binding: FragmentCreateOpenChatProfileBinding
     private val model by viewModels<CreateOpenChatProfileViewModel>()
     private val getProfileImageLauncher =
@@ -45,22 +48,36 @@ class CreateOpenChatProfile : Fragment(), View.OnClickListener {
     ): View? {
         binding = FragmentCreateOpenChatProfileBinding.inflate(inflater, container, false)
         initUI()
-
+        submitOpenProfile()
+        initObserve()
         return binding.root
     }
     fun initUI() {
-        binding.etCreateOpenChatRoomProfileName.setText("") // user 이름 가져오기
-        binding.etCreateOpenChatRoomProfileName.onTextChanged {
+        binding.etCreateOpenChatProfileName.setText("") // user 이름 가져오기
+        binding.etCreateOpenChatProfileName.onTextChanged {
+            Log.d("로그", "CreateOpenChatProfile - ${it?.toString()}")
             model.updateName(it.toString())
         }
-        binding.etCreateOpenChatRoomProfileDescription.onTextChanged {
+        binding.etCreateOpenChatProfileDescription.onTextChanged {
+            Log.d("로그", "CreateOpenChatProfile - ${it?.toString()}")
             model.updateDescription(it.toString())
         }
-        binding.tvCreateOpenChatRoomSubmit.setOnClickListener(this)
-        binding.ivCreateOpenChatRoomBackgroundImgSelect.setOnClickListener(this)
-        // initObserve()
+        binding.tvCreateOpenChatProfileSubmit.setOnClickListener(this)
+        binding.ivCreateOpenChatProfileBackgroundImgSelect.setOnClickListener(this)
     }
     fun initObserve() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    model.profile_image.collect {
+                        Glide.with(this@CreateOpenChatProfile).load(it)
+                            .into(binding.ivCreateOpenChatProfile)
+                    }
+                }
+            }
+        }
+    }
+    fun submitOpenProfile() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
@@ -69,11 +86,12 @@ class CreateOpenChatProfile : Fragment(), View.OnClickListener {
                         when (state) {
                             is UiState.Success ->
                                 {
-                                    // progress bar visible gone
+                                    binding.pbCreateOpenChatProfileLoading.visibility = View.GONE
+                                    findNavController().popBackStack()
                                 }
                             is UiState.Loading ->
                                 {
-                                    // progress bar visible visible
+                                    binding.pbCreateOpenChatProfileLoading.visibility = View.VISIBLE
                                 }
                             is UiState.Error ->
                                 {
@@ -87,12 +105,13 @@ class CreateOpenChatProfile : Fragment(), View.OnClickListener {
     }
     override fun onClick(view: View?) {
         when (view) {
-            binding.tvCreateOpenChatRoomSubmit ->
+            binding.tvCreateOpenChatProfileSubmit ->
                 {
                     model.createOpenProfile()
                 }
-            binding.ivCreateOpenChatRoomBackgroundImgSelect ->
+            binding.ivCreateOpenChatProfileBackgroundImgSelect ->
                 {
+                    getProfileImage(2)
                 }
         }
     }

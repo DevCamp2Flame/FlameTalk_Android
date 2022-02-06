@@ -1,8 +1,9 @@
 package com.sgs.devcamp2.flametalk_android.domain.usecase.chatroomlist
 
-import com.sgs.devcamp2.flametalk_android.domain.entity.ChatRoomsEntity
-import com.sgs.devcamp2.flametalk_android.domain.entity.LocalResults
-import com.sgs.devcamp2.flametalk_android.domain.repository.ChatRoomsRepository
+import com.sgs.devcamp2.flametalk_android.data.common.WrappedResponse
+import com.sgs.devcamp2.flametalk_android.data.model.chatroom.getchatroomlist.GetChatRoomListRes
+import com.sgs.devcamp2.flametalk_android.domain.entity.Results
+import com.sgs.devcamp2.flametalk_android.domain.repository.ChatRoomRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -13,9 +14,9 @@ import javax.inject.Inject
  * 따라서 return 을 entity로 받고서 mapper를 통해서 data -> entity로 바꿔준다.
  */
 class GetChatRoomListUseCase @Inject constructor(
-    private val repository: ChatRoomsRepository
+    private val repository: ChatRoomRepository
 ) {
-    suspend fun invoke(): Flow<LocalResults<List<ChatRoomsEntity>>> {
-        return repository.getChatRoomList()
+    suspend fun invoke(isOpen: Boolean): Flow<Results<GetChatRoomListRes, WrappedResponse<GetChatRoomListRes>>> {
+        return repository.getChatRoomList(isOpen)
     }
 }

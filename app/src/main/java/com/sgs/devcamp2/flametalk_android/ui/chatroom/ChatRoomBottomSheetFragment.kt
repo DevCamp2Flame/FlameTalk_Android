@@ -46,7 +46,7 @@ class ChatRoomBottomSheetFragment : DialogFragment(), View.OnClickListener {
                 lifecycleScope.launch {
 
                     // findNavController().previousBackStackEntry?.savedStateHandle?.set("chat", Chat(4, "4", "4", "$imageBitMap"))
-                    model.addChatting(Chat("4", "4", "2", "그라하하하하하하하하"))
+                    model.addChatting(Chat("4", "4", "2", "그라하하하하하하하하", "ff"))
                 }
             }
         }

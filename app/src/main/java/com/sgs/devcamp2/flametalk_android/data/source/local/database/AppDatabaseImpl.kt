@@ -12,10 +12,8 @@ import com.sgs.devcamp2.flametalk_android.data.model.chatroom.ChatRoom
  */
 
 @Database(
-    entities = [ChatRoom::class, Chat::class], version = 1, exportSchema = false,
-
-)
-abstract class AppDatabaseImpl : RoomDatabase(), AppDatabase {
+    entities = [ChatRoom::class, Chat::class], version = 1, exportSchema = true,
+)abstract class AppDatabaseImpl : RoomDatabase(), AppDatabase {
     companion object {
         const val DB_NAME = "AppDatabase.db"
     }

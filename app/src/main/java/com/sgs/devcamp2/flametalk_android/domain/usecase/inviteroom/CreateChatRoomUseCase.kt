@@ -1,11 +1,11 @@
 package com.sgs.devcamp2.flametalk_android.domain.usecase.inviteroom
 
 import com.sgs.devcamp2.flametalk_android.data.common.WrappedResponse
-import com.sgs.devcamp2.flametalk_android.data.model.inviteroom.InviteRoomReq
-import com.sgs.devcamp2.flametalk_android.data.model.inviteroom.InviteRoomRes
-import com.sgs.devcamp2.flametalk_android.domain.entity.ChatRoomsEntity
+import com.sgs.devcamp2.flametalk_android.data.model.chatroom.createchatroom.CreateChatRoomReq
+import com.sgs.devcamp2.flametalk_android.data.model.chatroom.createchatroom.CreateChatRoomRes
 import com.sgs.devcamp2.flametalk_android.domain.entity.Results
-import com.sgs.devcamp2.flametalk_android.domain.repository.InviteRoomRepository
+import com.sgs.devcamp2.flametalk_android.domain.entity.chatroom.CreateChatRoomEntity
+import com.sgs.devcamp2.flametalk_android.domain.repository.ChatRoomRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -14,10 +14,10 @@ import javax.inject.Inject
  * @created 2022/01/29
  */
 class CreateChatRoomUseCase @Inject constructor(
-    private val repository: InviteRoomRepository
+    private val repository: ChatRoomRepository
 ) {
-    suspend fun invoke(inviteRoomReq: InviteRoomReq):
-        Flow<Results<ChatRoomsEntity, WrappedResponse<InviteRoomRes>>> {
-        return repository.createRoom(inviteRoomReq)
+    suspend fun invoke(createChatRoomReq: CreateChatRoomReq):
+        Flow<Results<CreateChatRoomEntity, WrappedResponse<CreateChatRoomRes>>> {
+        return repository.createChatRoom(createChatRoomReq)
     }
 }

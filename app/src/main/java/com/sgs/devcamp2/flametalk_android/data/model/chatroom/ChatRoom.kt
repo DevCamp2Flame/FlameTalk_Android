@@ -8,11 +8,12 @@ import androidx.room.PrimaryKey
 /**
  * @author boris
  * @created 2022/01/27
+ * 수정요망
  */
 @Entity(tableName = "chatroom")
 data class ChatRoom(
 
-    @PrimaryKey val room_id: String,
+    @PrimaryKey @ColumnInfo(name = "id") val id: String,
     @NonNull @ColumnInfo(name = "title") val title: String,
     @NonNull @ColumnInfo(name = "is_open") val is_open: Boolean,
     @NonNull @ColumnInfo(name = "user_size") val user_size: Int,

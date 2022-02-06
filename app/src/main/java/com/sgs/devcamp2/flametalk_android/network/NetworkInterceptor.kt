@@ -1,10 +1,11 @@
 package com.sgs.devcamp2.flametalk_android.network
 
-import java.io.IOException
+import android.util.Log
 import com.sgs.devcamp2.flametalk_android.util.addHeader
 import okhttp3.Interceptor
 import okhttp3.RequestBody
 import okhttp3.Response
+import okhttp3.internal.http.RealResponseBody
 import okio.Buffer
 import java.io.IOException
 
@@ -20,8 +21,9 @@ class NetworkInterceptor(
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request().newBuilder().addHeader("Content-Type", "application/json")
+            .addHeader("ACCESS-TOKEN", "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxNjQzOTg2OTEyMjgyNjU4MzUwIiwibmlja25hbWUiOiJraW1kYXEiLCJzdGF0dXMiOiJST0xFX0dVRVNUIiwiZGV2aWNlSWQiOiIxMjM0NTY3ODkwMTIzNDU2IiwiaWF0IjoxNjQ0MDI1OTAyLCJleHAiOjE2NDQyNDE5MDJ9.VeImBN3vhqxYj9Z-EO_oqrxZqUKDrOuleNjCz4ukW-0")
             .build()
-            // TODO: network gateway 완료 후 header 픽스
+        // TODO: network gateway 완료 후 header 픽스
 //          val request = chain.request().addHeader("Content-Type", "application/json")
 //        val request = chain.request()
 //            .addHeader("x-access-token", tokenSupplier().also { Timber.d("token: $it") }.toString())
@@ -33,7 +35,6 @@ class NetworkInterceptor(
         // Timber.d("body -> ${request.body?.toBodyInfo()}")
 
         val response = chain.proceed(request)
-
 // Timber.d(response.toString())
         // Timber.d(JSONObject(response.peekBody(Long.MAX_VALUE).string()).toString(4))
 

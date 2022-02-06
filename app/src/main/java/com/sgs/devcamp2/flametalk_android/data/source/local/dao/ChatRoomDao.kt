@@ -2,6 +2,7 @@ package com.sgs.devcamp2.flametalk_android.data.source.local.dao
 
 import androidx.room.*
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.ChatRoom
+import kotlinx.coroutines.flow.Flow
 
 /**
  * @author boris
@@ -14,7 +15,7 @@ interface ChatRoomDao {
     suspend fun insert(chatroom: ChatRoom): Long
 
     @Query("SELECT * FROM chatroom")
-    fun getChatRoom(): List<ChatRoom>
+    fun getChatRoom(): Flow<List<ChatRoom>>
 
     @Query("DELETE FROM chatroom")
     fun deleteAllChatRoom()

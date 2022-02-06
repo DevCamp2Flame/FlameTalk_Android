@@ -65,7 +65,7 @@ class ChatRoomTopSheetFragment : DialogFragment(), View.OnClickListener {
                 }
             binding.ivDialogTopSheetOpenChat ->
                 {
-                    findNavController().navigate(R.id.navigation_invite_Open_Chat_Room)
+                    findNavController().navigate(R.id.navigation_invite_open_chat_room)
                     this.dismiss()
                 }
         }

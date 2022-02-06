@@ -153,7 +153,7 @@
         android:name="com.sgs.devcamp2.flametalk_android.ui.openchatroom.OpenChatRoomFragment"
         android:label="OpenChatRoom"
         tools:layout="@layout/fragment_open_chat_room">
-    </fragment>
+           </fragment>
 
     <fragment
         android:id="@+id/navigation_setting"
@@ -208,7 +208,7 @@
             app:destination="@id/navigation_invite_room" />
         <action
             android:id="@+id/action_navigation_chat_Room_Top_Sheet_to_inviteOpenChatRoom"
-            app:destination="@id/navigation_invite_Open_Chat_Room" />
+            app:destination="@id/navigation_invite_open_chat_room" />
     </dialog>
 
     <dialog
@@ -246,12 +246,41 @@
         <action
             android:id="@+id/action_navigation_chatting_viewPager_fragment_to_navigation_chat_room"
             app:destination="@id/navigation_chat_room" />
+        <action
+            android:id="@+id/action_navigation_chatting_viewPager_fragment_to_navigation_my_open_profile_detail"
+            app:destination="@id/navigation_my_open_profile_detail" />
     </fragment>
     <fragment
-        android:id="@+id/navigation_invite_Open_Chat_Room"
+        android:id="@+id/navigation_invite_open_chat_room"
         android:name="com.sgs.devcamp2.flametalk_android.ui.createopenchatroom.CreateOpenChatRoom"
         android:label="fragment_invite_open_chat_room"
         tools:layout="@layout/fragment_create_open_chat_room" />
+    <fragment
+        android:id="@+id/navigation_create_open_chat_profile"
+        android:name="com.sgs.devcamp2.flametalk_android.ui.createopenchatprofile.CreateOpenChatProfile"
+        android:label="fragment_create_open_chat_profile"
+        tools:layout="@layout/fragment_create_open_chat_profile" />
+    <fragment
+        android:id="@+id/navigation_my_open_profile_detail"
+        android:name="com.sgs.devcamp2.flametalk_android.ui.openchatroom.myopenprofiledetail.MyOpenProfileDetailFragment"
+        android:label="fragment_my_open_profile_detail"
+        tools:layout="@layout/fragment_my_open_profile_detail" >
+        <argument
+            android:name="openProfile"
+            app:argType="com.sgs.devcamp2.flametalk_android.data.model.openprofile.getopenprofilelist.OpenProfile" />
+        <action
+            android:id="@+id/action_navigation_my_open_profile_detail_to_editMyOpenProfileDetailFragment"
+            app:destination="@id/navigation_edit_my_open_profile_detail" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_edit_my_open_profile_detail"
+        android:name="com.sgs.devcamp2.flametalk_android.ui.openchatroom.editmyopenprofiledetail.EditMyOpenProfileDetailFragment"
+        android:label="fragment_edit_my_open_profile_detail"
+        tools:layout="@layout/fragment_edit_my_open_profile_detail" >
+        <argument
+            android:name="openProfile"
+            app:argType="com.sgs.devcamp2.flametalk_android.data.model.openprofile.getopenprofilelist.OpenProfile" />
+    </fragment>
 
 
 </navigation>

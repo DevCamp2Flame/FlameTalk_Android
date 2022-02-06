@@ -1,18 +1,16 @@
 package com.sgs.devcamp2.flametalk_android.ui.openchatroom
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.sgs.devcamp2.flametalk_android.R
-import com.sgs.devcamp2.flametalk_android.data.model.openchat.OpenChatRoomPreview
+import com.sgs.devcamp2.flametalk_android.data.model.chatroom.getchatroomlist.UserChatRoom
 import com.sgs.devcamp2.flametalk_android.databinding.ItemOpenChatRoomBinding
-import com.sgs.devcamp2.flametalk_android.util.SimpleDiffUtilCallback
 
 /**
  * @author 박소연
@@ -21,60 +19,49 @@ import com.sgs.devcamp2.flametalk_android.util.SimpleDiffUtilCallback
  * @desc 오픈채팅 메인화면의 추천 채팅 리스트 adapter
  *       오픈채팅방 리스트를 클릭하면 특정 채팅방에 참여할 수 있음
  */
-
 class OpenChatRoomAdapter(
     private val context: Context
-) : ListAdapter<OpenChatRoomPreview, OpenChatRoomAdapter.OpenChatRoomHolder>(SimpleDiffUtilCallback()) {
-    var data = arrayListOf<OpenChatRoomPreview>()
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OpenChatRoomHolder {
-        return OpenChatRoomHolder(
-            ItemOpenChatRoomBinding.inflate(
-                LayoutInflater.from(context),
-                parent,
-                false
-            )
-        )
-    }
-
-    override fun getItemCount(): Int {
-        return data.size
-    }
-
-    override fun onBindViewHolder(holder: OpenChatRoomHolder, position: Int) {
-        holder.bind(data[position])
-    }
-
-    inner class OpenChatRoomHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        lateinit var binding: ItemOpenChatRoomBinding
-
-        constructor(binding: ItemOpenChatRoomBinding) : this(binding.root) {
-            Log.d("ViewHolder", " create")
-            this.binding = binding
-        }
-
-        fun bind(data: OpenChatRoomPreview) {
-            // TODO: 오픈 채팅방으로 이동
-            itemView.setOnClickListener {
+) : ListAdapter<UserChatRoom, RecyclerView.ViewHolder>(diffUtil) {
+    companion object {
+        val TAG: String = "로그"
+        val diffUtil = object : DiffUtil.ItemCallback<UserChatRoom>() {
+            override fun areItemsTheSame(oldItem: UserChatRoom, newItem: UserChatRoom): Boolean {
+                return oldItem.id == newItem.id
             }
 
+            override fun areContentsTheSame(oldItem: UserChatRoom, newItem: UserChatRoom): Boolean {
+                return oldItem == newItem
+            }
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_open_chat_room, parent, false)
+
+        return OpenChatRoomViewHolder(ItemOpenChatRoomBinding.bind(view))
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        (holder as OpenChatRoomViewHolder).bind(getItem(position))
+    }
+
+    inner class OpenChatRoomViewHolder(val binding: ItemOpenChatRoomBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(data: UserChatRoom) {
             initFriendList(data)
         }
 
-        private fun initFriendList(data: OpenChatRoomPreview) {
+        private fun initFriendList(data: UserChatRoom) {
             Glide.with(itemView).load(data.thumbnail).apply(RequestOptions.centerCropTransform())
                 .apply(RequestOptions.placeholderOf(R.drawable.ic_person_white_24))
                 .into(binding.imgOpenChatRoom)
-            Glide.with(itemView).load(data.hostProfile).apply(RequestOptions.circleCropTransform())
-                .apply(RequestOptions.placeholderOf(R.drawable.ic_person_white_24))
-                .into(binding.imgOpenChatRoomOwner)
+//            Glide.with(itemView).load(data.).apply(RequestOptions.circleCropTransform())
+//                .apply(RequestOptions.placeholderOf(R.drawable.ic_person_white_24))
+//                .into(binding.imgOpenChatRoomOwner)
             binding.tvOpenChatRoomTitle.text = data.title
-            binding.tvOpenChatRoomDesc.text = data.desc
+            // binding.tvOpenChatRoomDesc.text = data.
             binding.tvOpenChatRoomCount.text = data.count.toString() + "명"
         }
-    }
-
-    companion object {
-        final const val TAG = "FriendAdapter"
     }
 }

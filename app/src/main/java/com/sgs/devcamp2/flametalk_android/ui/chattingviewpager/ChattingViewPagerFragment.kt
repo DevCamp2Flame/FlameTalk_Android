@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
@@ -35,8 +36,8 @@ class ChattingViewPagerFragment : Fragment(), View.OnClickListener {
 
     fun initUI() {
         viewPager = binding.vpChatRoom
+        viewPager.getChildAt(0).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
         tabLayout = binding.layoutChatViewPagerTab
-
         viewpagerAdapter = ChattingViewPagerAdapter(childFragmentManager, lifecycle)
         (viewpagerAdapter as ChattingViewPagerAdapter).addFragment(ChatRoomListFragment(), "채팅")
         (viewpagerAdapter as ChattingViewPagerAdapter).addFragment(OpenChatRoomFragment(), "오픈 채팅")
@@ -64,8 +65,6 @@ class ChattingViewPagerFragment : Fragment(), View.OnClickListener {
                     // ChatRoomTopSheetFragment().show(childFragmentManager, "topsheet")
                     findNavController().navigate(R.id.action_navigation_chatting_ViewPager_Fragment_to_navigation_chat_Room_Top_Sheet)
                 }
-
-
         }
     }
 }
