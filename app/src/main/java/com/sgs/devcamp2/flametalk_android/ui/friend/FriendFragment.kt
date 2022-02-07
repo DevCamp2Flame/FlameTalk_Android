@@ -9,11 +9,11 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.google.android.material.snackbar.Snackbar
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentFriendBinding
 import com.sgs.devcamp2.flametalk_android.ui.friend.birthday.BirthdayAdapter
@@ -39,6 +39,7 @@ import timber.log.Timber
 class FriendFragment : Fragment() {
     private val binding by lazy { FragmentFriendBinding.inflate(layoutInflater) }
     private val viewModel: FriendViewModel by viewModels()
+    private val args: FriendFragmentArgs by navArgs()
 
     // 뷰 생성 시점에 adapter 초기화
     private val multiProfileAdapter: MultiProfileAdapter by lazy {
@@ -80,7 +81,10 @@ class FriendFragment : Fragment() {
 
     // 프로필 초기화
     private fun initUserProfiles() {
-        // viewModel.getProfileList()
+        if (args.isCreated) {
+            viewModel.getProfileList()
+        }
+
         initMainProfile()
         initMultiProfile()
 
