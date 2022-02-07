@@ -4,6 +4,8 @@ import com.sgs.devcamp2.flametalk_android.network.request.FileCreateRequest
 import com.sgs.devcamp2.flametalk_android.network.response.CommonResponse
 import com.sgs.devcamp2.flametalk_android.network.response.file.FileCreateResponse
 import com.sgs.devcamp2.flametalk_android.network.response.file.FileGetResponse
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.http.*
 
 /**
@@ -18,7 +20,8 @@ interface FileService {
     @Multipart
     @POST("/api/file")
     suspend fun postCreateFile(
-        @Body request: FileCreateRequest
+        @Part file: MultipartBody.Part,
+        @Part("chatroomId") title: RequestBody?,
     ): FileCreateResponse
 
     // 파일 조회

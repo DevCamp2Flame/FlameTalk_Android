@@ -1,12 +1,13 @@
 package com.sgs.devcamp2.flametalk_android.network.repository
 
-import com.sgs.devcamp2.flametalk_android.network.request.FileCreateRequest
 import com.sgs.devcamp2.flametalk_android.network.service.FileService
 import dagger.Lazy
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 
 /**
  * @author 박소연
@@ -21,9 +22,10 @@ class FileRepository @Inject constructor(
     private val ioDispatcher: CoroutineDispatcher,
 ) {
     //  파일 생성
-    suspend fun postFileCreate(body: FileCreateRequest) = withContext(ioDispatcher) {
-        fileService.get().postCreateFile(body)
-    }
+    suspend fun postFileCreate(file: MultipartBody.Part, chatroomId: RequestBody?) =
+        withContext(ioDispatcher) {
+            fileService.get().postCreateFile(file, chatroomId)
+        }
 
     //  파일 조회
     suspend fun getFile(fileId: Long) = withContext(ioDispatcher) {
