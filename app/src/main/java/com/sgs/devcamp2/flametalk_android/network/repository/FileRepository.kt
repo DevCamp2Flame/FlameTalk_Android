@@ -1,17 +1,17 @@
 package com.sgs.devcamp2.flametalk_android.network.repository
 
+import com.sgs.devcamp2.flametalk_android.network.request.FileCreateRequest
 import com.sgs.devcamp2.flametalk_android.network.service.FileService
 import dagger.Lazy
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.withContext
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 
 /**
  * @author 박소연
  * @created 2022/01/24
+ * @updated 2022/02/07
  * @desc 파일과 관련된 통신(네트워크, 로컬) 레파지토리
  */
 
@@ -21,28 +21,22 @@ class FileRepository @Inject constructor(
     private val ioDispatcher: CoroutineDispatcher,
 ) {
     //  파일 생성
-    suspend fun postFileCreate(file: MultipartBody.Part) = withContext(ioDispatcher) {
-        try {
-            fileService.get().postCreateFile(file)
-        } catch (e: Exception) {
-            e.stackTraceToString()
-        }
-    }
-    suspend fun postCreateFileFromChatRoom(file: MultipartBody.Part, chatroomId: RequestBody) = withContext(ioDispatcher) {
-        try {
-            fileService.get().postCreateFileFromChatRoom(file, chatroomId)
-        } catch (e: Exception) {
-            e.stackTraceToString()
-        }
+    suspend fun postFileCreate(body: FileCreateRequest) = withContext(ioDispatcher) {
+        fileService.get().postCreateFile(body)
     }
 
     //  파일 조회
-    suspend fun getCreatedFile(fileId: Long?) = withContext(ioDispatcher) {
-        fileService.get().getCreatedFile(fileId)
+    suspend fun getFile(fileId: Long) = withContext(ioDispatcher) {
+        fileService.get().getFile(fileId)
     }
 
-    //  파일 삭제
-    suspend fun deleteCreatedFile(fileId: Long?) = withContext(ioDispatcher) {
-        fileService.get().deleteCreatedFile(fileId)
+    //  파일 id로 삭제
+    suspend fun deleteFileById(fileId: Long) = withContext(ioDispatcher) {
+        fileService.get().deleteFileById(fileId)
+    }
+
+    //  파일 url로 삭제
+    suspend fun deleteFileByUrl(fileUrl: String) = withContext(ioDispatcher) {
+        fileService.get().deleteFileByUrl(fileUrl)
     }
 }
