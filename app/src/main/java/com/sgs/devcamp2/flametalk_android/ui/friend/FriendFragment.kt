@@ -63,15 +63,6 @@ class FriendFragment : Fragment() {
     private fun initUI() {
         initAppbar()
         initUserProfiles()
-
-        // 에러 메세지
-        lifecycleScope.launch {
-            viewModel.error.collectLatest {
-                if (it.isNotEmpty()) {
-                    Snackbar.make(requireView(), it, Snackbar.LENGTH_SHORT).show()
-                }
-            }
-        }
     }
 
     private fun initAppbar() {

@@ -7,8 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.sgs.devcamp2.flametalk_android.data.dummy.getBirthdayFriend
 import com.sgs.devcamp2.flametalk_android.data.dummy.getDummyFriend
 import com.sgs.devcamp2.flametalk_android.data.model.ProfileDummyPreview
-import com.sgs.devcamp2.flametalk_android.network.repository.ProfileRepository
 import com.sgs.devcamp2.flametalk_android.data.model.ProfilePreview
+import com.sgs.devcamp2.flametalk_android.network.repository.ProfileRepository
 import dagger.Lazy
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
