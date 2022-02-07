@@ -3,7 +3,6 @@ package com.sgs.devcamp2.flametalk_android.ui.profile.add
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sgs.devcamp2.flametalk_android.data.model.Profile
 import com.sgs.devcamp2.flametalk_android.network.dao.UserDAO
 import com.sgs.devcamp2.flametalk_android.network.repository.FileRepository
 import com.sgs.devcamp2.flametalk_android.network.repository.ProfileRepository
@@ -22,20 +21,16 @@ import timber.log.Timber
 @HiltViewModel
 class AddProfileViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val fileRepository: Lazy<FileRepository>,
     private val userDAO: UserDAO,
+    private val fileRepository: Lazy<FileRepository>,
     private val profileRepository: Lazy<ProfileRepository>
 ) : ViewModel() {
-
-    // 메인 유저 정보
-    private val _userProfile: MutableStateFlow<Profile?> = MutableStateFlow(null)
-    val userProfile: MutableStateFlow<Profile?> = _userProfile
 
     // 유저 Id
     private val _userId = MutableStateFlow("")
     val userId = _userId.asStateFlow()
 
-    // 유저 Id
+    // 유저 닉네임
     private val _nickname = MutableStateFlow("")
     val nickname = _nickname.asStateFlow()
 
