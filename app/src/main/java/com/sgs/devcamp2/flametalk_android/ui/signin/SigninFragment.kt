@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -43,6 +44,7 @@ import kotlinx.coroutines.launch
 class SigninFragment : Fragment() {
     private val binding by lazy { FragmentSigninBinding.inflate(layoutInflater) }
     private val viewModel by viewModels<SigninViewModel>()
+    private val args: SigninFragmentArgs by navArgs()
 
     // firebase google auth
     @Inject
@@ -63,6 +65,9 @@ class SigninFragment : Fragment() {
     }
 
     private fun initUI() {
+        binding.edtSigninEmail.setText(args.id)
+        binding.edtSigninPwd.setText(args.password)
+
         initEventListener()
         initGoogleSignin()
     }
@@ -117,7 +122,7 @@ class SigninFragment : Fragment() {
         // 로그인된 유저의 닉네임 띄움
         lifecycleScope.launch {
             viewModel.nickname.collectLatest {
-                if (it.isNotBlank()) {
+                if (it.isNotEmpty()) {
                     Snackbar.make(requireView(), "${it}님 로그인 되었습니다.", Snackbar.LENGTH_SHORT).show()
                     findNavController().navigate(R.id.navigation_friend)
                 }
@@ -126,8 +131,8 @@ class SigninFragment : Fragment() {
 
         // 로그인 결과
         lifecycleScope.launch {
-            viewModel.message.collectLatest {
-                if (it.isNotBlank()) {
+            viewModel.message.collect {
+                if (it.isNotEmpty()) {
                     Snackbar.make(requireView(), it, Snackbar.LENGTH_SHORT).show()
                 }
             }
@@ -136,7 +141,7 @@ class SigninFragment : Fragment() {
         // 에러 메세지
         lifecycleScope.launch {
             viewModel.error.collectLatest {
-                if (it.isNotBlank()) {
+                if (it.isNotEmpty()) {
                     Snackbar.make(requireView(), it, Snackbar.LENGTH_SHORT).show()
                 }
             }

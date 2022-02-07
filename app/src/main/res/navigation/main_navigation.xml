@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_navigation"
-    app:startDestination="@id/navigation_friend">
+    app:startDestination="@id/navigation_signin">
 
     <fragment
         android:id="@+id/navigation_signin"
@@ -14,11 +14,18 @@
             android:id="@+id/action_signin_to_friend"
             app:destination="@id/navigation_friend"
             app:popUpTo="@id/navigation_friend" />
-
         <action
             android:id="@+id/action_signin_to_signup"
             app:destination="@id/navigation_signup"
             app:popUpTo="@id/navigation_signup" />
+        <argument
+            android:name="id"
+            android:defaultValue=""
+            app:argType="string" />
+        <argument
+            android:name="password"
+            android:defaultValue=""
+            app:argType="string" />
     </fragment>
 
     <fragment
@@ -29,7 +36,8 @@
         <action
             android:id="@+id/action_signup_to_signin"
             app:destination="@id/navigation_signin"
-            app:popUpTo="@id/navigation_signin" />
+            app:popUpTo="@id/navigation_signin"
+            app:popUpToInclusive="true"/>
     </fragment>
 
     <fragment
@@ -97,7 +105,7 @@
             android:name="userInfo"
             app:nullable="true"
             android:defaultValue="@null"
-            app:argType="com.sgs.devcamp2.flametalk_android.network.response.profile.Profile" />
+            app:argType="com.sgs.devcamp2.flametalk_android.data.model.Profile" />
     </fragment>
 
     <!--프로필 생성-->
