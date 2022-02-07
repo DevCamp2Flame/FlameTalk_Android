@@ -31,6 +31,7 @@ class SignRepository @Inject constructor(
 
     // 로그인
     suspend fun signin(request: SigninRequest) = withContext(ioDispatcher) {
+        userDAO.get().removeToken()
         userService.get().postSignin(request).also { saveUser(it) }
     }
 
@@ -56,6 +57,7 @@ class SignRepository @Inject constructor(
 
     // 이메일 중복체크
     suspend fun emailCheck(email: String) = withContext(ioDispatcher) {
+        userDAO.get().removeToken()
         userService.get().getEmailCheck(email)
     }
 

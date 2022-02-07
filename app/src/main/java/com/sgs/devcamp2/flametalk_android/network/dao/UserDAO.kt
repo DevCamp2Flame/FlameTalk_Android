@@ -124,6 +124,10 @@ class UserDAO @Inject constructor(
         setRefreshToken(null)
     }
 
+    suspend fun removeToken() = withContext(ioDispatcher) {
+        setAccessToken(null)
+    }
+
     // TODO: 시리얼라이저 구현해야함.
     companion object {
         private val USER_ID_KEY = stringPreferencesKey("user.userId")
