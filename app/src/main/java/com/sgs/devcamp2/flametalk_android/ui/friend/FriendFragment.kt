@@ -81,10 +81,6 @@ class FriendFragment : Fragment() {
 
     // 프로필 초기화
     private fun initUserProfiles() {
-        if (args.isCreated) {
-            viewModel.getProfileList()
-        }
-
         initMainProfile()
         initMultiProfile()
 
