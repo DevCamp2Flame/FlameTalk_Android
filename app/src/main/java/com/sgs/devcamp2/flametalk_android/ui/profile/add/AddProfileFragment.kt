@@ -105,7 +105,7 @@ class AddProfileFragment : Fragment() {
 
         // 프로필 생성 성공 여부
         lifecycleScope.launchWhenResumed {
-            viewModel.isSuccess?.collectLatest {
+            viewModel.isSuccess.collectLatest {
                 if (it != null) {
                     if (it) {
                         val addProfileToFriendDirections: NavDirections =

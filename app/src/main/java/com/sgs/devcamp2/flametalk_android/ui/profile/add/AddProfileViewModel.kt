@@ -12,8 +12,8 @@ import dagger.Lazy
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import timber.log.Timber
@@ -59,8 +59,8 @@ class AddProfileViewModel @Inject constructor(
     val message = _message.asStateFlow()
 
     // 메세지
-    private val _isSuccess: MutableStateFlow<Boolean>? = null
-    val isSuccess = _isSuccess?.asStateFlow()
+    private val _isSuccess: MutableStateFlow<Boolean?> = MutableStateFlow(null)
+    val isSuccess = _isSuccess.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -93,50 +93,61 @@ class AddProfileViewModel @Inject constructor(
     // 갤러리에서 가져온 프로필, 배경 이미지를 파일 서버로 보내고 파일서버 url을 받는다.
     fun addProfile() {
         viewModelScope.launch {
-            if (_profileImage.value != "") {
-                _profileImageUrl.value = postCreateImage(PROFILE_IMAGE)
+            val deferred = viewModelScope.async {
+                // list 내의 작업을 비동기적으로 요청하고 모든 요청이 완료될 때 까지 기다린다.
+                val postUploadFiles = listOf(
+                    async {
+                        if (_profileImage.value != "") {
+                            postCreateImage(PROFILE_IMAGE)
+                        }
+                    },
+                    async {
+                        if (_backgroundImage.value != "") {
+                            postCreateImage(BACKGROUND_IMAGE)
+                        }
+                    }
+                )
+                postUploadFiles.awaitAll()
             }
-
-            if (_backgroundImage.value != "") {
-                _backgroundImageUrl.value = postCreateImage(BACKGROUND_IMAGE)
-            }
+            // 파일 통신이 모두 끝나면 프로필 생성 요청을 보낸다
+            deferred.await()
+            postProfile()
         }
-        postProfile()
     }
 
     // File Create 통신
-    private fun postCreateImage(type: Int): String {
-        var multipartFile: MultipartBody.Part? = null
-        var url: String = ""
-
-        when (type) {
-            PROFILE_IMAGE -> {
-                multipartFile =
-                    pathToMultipartImageFile(_profileImage.value, "image/*".toMediaTypeOrNull())
-            }
-            BACKGROUND_IMAGE -> {
-                multipartFile =
-                    pathToMultipartImageFile(_backgroundImage.value, "image/*".toMediaTypeOrNull())
-            }
-        }
-
+    private suspend fun postCreateImage(type: Int) {
         // 파일 서버로 이미지를 보내고 url path 리턴
-        viewModelScope.launch {
+        val deferred = viewModelScope.async {
+            val multipartFile: MultipartBody.Part? = when (type) {
+                PROFILE_IMAGE -> {
+                    pathToMultipartImageFile(_profileImage.value, "image/*".toMediaTypeOrNull())
+                }
+                BACKGROUND_IMAGE -> {
+                    pathToMultipartImageFile(_backgroundImage.value, "image/*".toMediaTypeOrNull())
+                }
+                else -> { // 실행되지 않음
+                    null
+                }
+            }
+
             try {
                 val response = fileRepository.get().postFileCreate(multipartFile!!, null)
-                response.data.url
 
-                if (response.status == 201) {
-                    url = response.data.url
+                if (response.status == 200) {
+                    if (type == PROFILE_IMAGE) {
+                        _profileImageUrl.value = response.data.url
+                    } else if (type == BACKGROUND_IMAGE) {
+                        _backgroundImageUrl.value = response.data.url
+                    }
                 } else {
                     _message.value = response.message
                 }
-                Timber.d("Success $response")
             } catch (ignore: Throwable) {
                 Timber.d("Fail $ignore")
             }
         }
-        return url
+        deferred.await()
     }
 
     private fun postProfile() {
@@ -146,16 +157,20 @@ class AddProfileViewModel @Inject constructor(
                     userId = _userId.value,
                     imageUrl = _profileImageUrl.value,
                     bgImageUrl = _backgroundImageUrl.value,
-                    sticker = null,
+                    sticker = null, // TODO: Add Sticker Model
                     description = _description.value,
                     isDefault = false
                 )
                 val response = profileRepository.get().createProfile(request)
 
-                _isSuccess?.value = response.status == 200
+                Timber.d("response")
+                if (response.status == 201) {
+                    _isSuccess.value = true
+                    Timber.d("Response.status is 201")
+                }
                 _message.value = response.message
-
-                Timber.d("Success $response")
+                Timber.d("All Image Create Completed $response")
+                Timber.d("Success ${_isSuccess.value}")
             } catch (ignore: Throwable) {
                 Timber.d("Fail $ignore")
             }
