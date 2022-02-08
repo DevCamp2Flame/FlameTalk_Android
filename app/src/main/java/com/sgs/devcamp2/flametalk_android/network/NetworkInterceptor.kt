@@ -38,7 +38,20 @@ class NetworkInterceptor(
         Timber.d("headers -> ${request.headers}")
         Timber.d("body -> ${request.body?.toBodyInfo()}")
 
-        val response = chain.proceed(request)
+        var response = chain.proceed(request)
+
+        if (!response.isSuccessful) {
+            Timber.d("Code ${response.code}")
+        }
+
+//        if (response.code == false) {
+//            val request = chain.request()
+//                .addHeader("Content-Type", "multipart/form-data")
+//                .addHeader(
+//                    "ACCESS-TOKEN",
+//                    tokenSupplier().also { Timber.d("ACCESS-TOKEN: $it") }.toString()
+//                )
+//        }
 
         Timber.d(response.toString())
         Timber.d(JSONObject(response.peekBody(Long.MAX_VALUE).string()).toString(4))
@@ -53,14 +66,20 @@ class NetworkInterceptor(
 
                 when (responseBody.status) {
                     // access-token 만료, refresh-token 유효 => token 모두 갱신
-                    307 -> {
+                    302 -> {
+                        // TODO: request를 보내는 retrofit 객체를 새로 생성해야 함
                         tokenSupplier()?.let {
-                            // TODO: hilt를 통해 authService를 주입받지 않고 토큰을 재요청 해야한다.
-                            // AuthUtil().postRefreshToken(authService, userDAO)
+                            val request = chain.request()
+                                .addHeader("ACCESS-TOKEN", userDAO.getAccessToken().toString())
+                                .addHeader("REFRESH-TOKEN", userDAO.getRefreshToken().toString())
+                            response = chain.proceed(request.newBuilder().build())
+
+                            // TODO: response를 받으면 pickBody를 codeGen 방식으로 다시 해야 함
+                            Timber.d("RenewToken Response: $response")
                         }
                     }
                     // access-token 만료, refresh-token 만료 => 로그아웃
-                    else -> {
+                    307 -> {
                         Timber.d("$responseBody")
                         FlameTalkApp.currentActivity()?.let { AuthUtil().logout(it, userDAO) }
                     }
