@@ -1,8 +1,11 @@
 package com.sgs.devcamp2.flametalk_android.data.repository
 
 import com.sgs.devcamp2.flametalk_android.data.common.WrappedResponse
+import com.sgs.devcamp2.flametalk_android.data.mapper.mapperToChatModel
 import com.sgs.devcamp2.flametalk_android.data.mapper.mapperToCreateChatRoomEntity
 import com.sgs.devcamp2.flametalk_android.data.mapper.mapperToGetChatRoomEntity
+import com.sgs.devcamp2.flametalk_android.data.mapper.mapperToThumbnail
+import com.sgs.devcamp2.flametalk_android.data.model.chat.ChatWithRoomId
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.closechatroom.CloseChatRoomReq
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.createchatroom.CreateChatRoomReq
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.createchatroom.CreateChatRoomRes
@@ -14,6 +17,7 @@ import com.sgs.devcamp2.flametalk_android.data.model.chatroom.updatechatroom.Upd
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.updateopenchatroomprofile.UpdateOpenChatRoomProfileReq
 import com.sgs.devcamp2.flametalk_android.data.source.local.database.AppDatabase
 import com.sgs.devcamp2.flametalk_android.data.source.remote.api.ChatRoomApi
+import com.sgs.devcamp2.flametalk_android.domain.entity.LocalResults
 import com.sgs.devcamp2.flametalk_android.domain.entity.Results
 import com.sgs.devcamp2.flametalk_android.domain.entity.chatroom.CreateChatRoomEntity
 import com.sgs.devcamp2.flametalk_android.domain.entity.chatroom.GetChatRoomEntity
@@ -51,6 +55,14 @@ class ChatRoomRepositoryImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
+    override suspend fun getChatList(chatroomId: String): Flow<LocalResults<ChatWithRoomId>> {
+        return flow {
+            local.chatRoomDao().getChatRoomWithId(chatroomId).collect {
+                emit(LocalResults.Success(it))
+            }
+        }.flowOn(ioDispatcher)
+    }
+
     override suspend fun getChatRoom(userChatroomId: Long): Flow<Results<GetChatRoomEntity, WrappedResponse<GetChatRoomRes>>> {
         return flow {
             val response = remote.getChatRoom(userChatroomId)
@@ -72,6 +84,14 @@ class ChatRoomRepositoryImpl @Inject constructor(
                 if (response.body()!!.status == 200) {
                     val body = response.body()!!
                     val data = body.data!!
+                    for (i in 0 until data.userChatrooms.size) {
+                        val chatRoom = mapperToChatModel(i, data)
+                        local.chatRoomDao().insert(chatRoom)
+                        for (j in 0 until data.userChatrooms[i].thumbnail.size) {
+                            val thumbnail = mapperToThumbnail(data.userChatrooms[i].chatroomId, data.userChatrooms[i].thumbnail[j])
+                            local.chatRoomDao().insertThumbnail(thumbnail)
+                        }
+                    }
                     emit(Results.Success(data))
                 }
             }

@@ -70,4 +70,6 @@ class EditMyOpenProfileDetailViewModel @Inject constructor(
     fun updateDescription(input: String) {
         _editMyOpenProfileDescription.value = input
     }
+
+
 }

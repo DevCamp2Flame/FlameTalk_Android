@@ -4,6 +4,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.sgs.devcamp2.flametalk_android.data.model.chat.Chat
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.ChatRoom
+import com.sgs.devcamp2.flametalk_android.data.model.chatroom.Thumbnail
 
 /**
  * @author boris
@@ -12,7 +13,7 @@ import com.sgs.devcamp2.flametalk_android.data.model.chatroom.ChatRoom
  */
 
 @Database(
-    entities = [ChatRoom::class, Chat::class], version = 1, exportSchema = true,
+    entities = [ChatRoom::class, Chat::class, Thumbnail::class] , version = 1, exportSchema = true,
 )abstract class AppDatabaseImpl : RoomDatabase(), AppDatabase {
     companion object {
         const val DB_NAME = "AppDatabase.db"

@@ -15,7 +15,8 @@ import com.sgs.devcamp2.flametalk_android.domain.entity.chatroom.GetChatRoomEnti
 fun mapperToChatRoomEntityList(getChatRoomListRes: GetChatRoomListRes): List<ChatRoomEntity> {
     return getChatRoomListRes.userChatrooms.map {
         ChatRoomEntity(
-            it.id,
+            it.chatroomId,
+            it.userChatroomId,
             it.title,
             it.thumbnail,
             it.lastReadMessageId,
@@ -26,6 +27,7 @@ fun mapperToChatRoomEntityList(getChatRoomListRes: GetChatRoomListRes): List<Cha
 }
 fun mapperToCreateChatRoomEntity(createChatRoomRes: CreateChatRoomRes): CreateChatRoomEntity {
     return CreateChatRoomEntity(
+        chatroomId = createChatRoomRes.chatroomId,
         userChatRoomId = createChatRoomRes.userChatroomId,
         title = createChatRoomRes.title,
         inputLock = false,

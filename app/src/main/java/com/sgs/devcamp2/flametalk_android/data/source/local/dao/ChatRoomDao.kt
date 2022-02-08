@@ -1,7 +1,9 @@
 package com.sgs.devcamp2.flametalk_android.data.source.local.dao
 
 import androidx.room.*
+import com.sgs.devcamp2.flametalk_android.data.model.chat.ChatWithRoomId
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.ChatRoom
+import com.sgs.devcamp2.flametalk_android.data.model.chatroom.Thumbnail
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -11,12 +13,16 @@ import kotlinx.coroutines.flow.Flow
  */
 @Dao
 interface ChatRoomDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(chatroom: ChatRoom): Long
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insert(chatroom: ChatRoom): Long
 
     @Query("SELECT * FROM chatroom")
     fun getChatRoom(): Flow<List<ChatRoom>>
 
-    @Query("DELETE FROM chatroom")
-    fun deleteAllChatRoom()
+    @Transaction
+    @Query("SELECT * FROM chatroom Where chatroom.id LIKE :chatroomId")
+    fun getChatRoomWithId(chatroomId: String): Flow<ChatWithRoomId>
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insertThumbnail(thumbnail: Thumbnail)
 }

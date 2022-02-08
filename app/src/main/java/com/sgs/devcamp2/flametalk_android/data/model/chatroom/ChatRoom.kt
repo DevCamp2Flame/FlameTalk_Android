@@ -1,6 +1,5 @@
 package com.sgs.devcamp2.flametalk_android.data.model.chatroom
 
-import androidx.annotation.NonNull
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -14,7 +13,11 @@ import androidx.room.PrimaryKey
 data class ChatRoom(
 
     @PrimaryKey @ColumnInfo(name = "id") val id: String,
-    @NonNull @ColumnInfo(name = "title") val title: String,
-    @NonNull @ColumnInfo(name = "is_open") val is_open: Boolean,
-    @NonNull @ColumnInfo(name = "user_size") val user_size: Int,
+    @ColumnInfo(name = "userChatroomId") val userChatroomId: Long,
+    @ColumnInfo(name = "title") val title: String,
+    @ColumnInfo(name = "lastReadMessageId") val lastReadMessageId: String,
+    @ColumnInfo(name = "inputLock") val inputLock: Boolean,
+    @ColumnInfo(name = "count") val count: Int,
+    @ColumnInfo(name = "updated_at") val updated_at: Long
+
 )

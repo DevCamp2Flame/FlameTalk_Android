@@ -76,14 +76,13 @@ class EditMyOpenProfileDetailFragment : Fragment(), View.OnClickListener {
             model.editMyOpenProfileImage.collect {
                 Glide.with(this@EditMyOpenProfileDetailFragment)
                     .load(it)
+
                     .into(binding.ivEditMyOpenProfileDetailImage)
             }
         }
 
         binding.etEditMyOpenChatProfileName.setText(args.openProfile.nickname)
-
         binding.etEditMyOpenChatProfileDescription.setText(args.openProfile.description)
-
         binding.tvEditMyOpenProfileDetailSubmit.setOnClickListener(this)
         binding.layoutEditMyOpenProfileDetailImage.setOnClickListener(this)
         binding.etEditMyOpenChatProfileName.onTextChanged {

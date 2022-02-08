@@ -1,6 +1,7 @@
 package com.sgs.devcamp2.flametalk_android.di.module
 
 import com.sgs.devcamp2.flametalk_android.domain.repository.*
+import com.sgs.devcamp2.flametalk_android.domain.usecase.chatroom.*
 import com.sgs.devcamp2.flametalk_android.domain.usecase.chatroomlist.GetChatRoomListUseCase
 import com.sgs.devcamp2.flametalk_android.domain.usecase.createopenchatprofile.CreateOpenProfileUseCase
 import com.sgs.devcamp2.flametalk_android.domain.usecase.inviteroom.CreateChatRoomUseCase
@@ -53,5 +54,26 @@ object UseCaseModule {
     @Provides
     fun provideDeleteOpenProfileUseCase(repository: OpenProfileRepository): DeleteOpenProfileUseCase {
         return DeleteOpenProfileUseCase(repository = repository)
+    }
+    @Provides
+    fun provideDeleteChatRoomUseCase(repository: ChatRoomRepository): DeleteChatRoomUseCase {
+        return DeleteChatRoomUseCase(repository = repository)
+    }
+    @Provides
+    fun provideUpdateChatRoomUseCase(repository: ChatRoomRepository): UpdateChatRoomUseCase {
+        return UpdateChatRoomUseCase(repository = repository)
+    }
+    @Provides
+    fun provideCloseChatRoomUseCase(repository: ChatRoomRepository): CloseChatRoomUseCase {
+        return CloseChatRoomUseCase(repository = repository)
+    }
+
+    @Provides
+    fun provideGetChatListUseCase(repository: ChatRoomRepository): GetChatListUseCase {
+        return GetChatListUseCase(repository = repository)
+    }
+    @Provides
+    fun providePushChatUseCase(repository: ChatRepository): PushChatUseCase {
+        return PushChatUseCase(repository = repository)
     }
 }

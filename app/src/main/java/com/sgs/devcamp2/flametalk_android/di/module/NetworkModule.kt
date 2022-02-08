@@ -91,6 +91,6 @@ class NetworkModule {
         return retrofit.create(OpenProfileApi::class.java)
     }
     companion object {
-        const val BASE_URL = "http://10.0.2.2:8080" // 테스트 전 PC IP 확인
+        const val BASE_URL = "http://10.0.2.2:8086" // 테스트 전 PC IP 확인
     }
 }

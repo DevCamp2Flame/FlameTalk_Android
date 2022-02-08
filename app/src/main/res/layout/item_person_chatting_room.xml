@@ -20,7 +20,7 @@
             android:id="@+id/iv_chat_room_draw_user_image"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:src="@drawable/dummy"
+            android:src="@drawable/ic_person_black_24"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

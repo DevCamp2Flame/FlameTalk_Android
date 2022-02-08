@@ -254,12 +254,52 @@
                     android:layout_marginLeft="10dp"
                     android:text="대화상대 초대"
                     android:textColor="#1268F3"
+                    app:layout_constraintBottom_toBottomOf="@+id/layout_draw_user_add"
                     app:layout_constraintStart_toEndOf="@id/layout_draw_user_add"
-                    app:layout_constraintTop_toBottomOf="@id/tv_draw_user_list_title" />
+                    app:layout_constraintTop_toTopOf="@+id/layout_draw_user_add" />
+
+
+
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_chat_room_draw_image_area"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                app:layout_constraintTop_toBottomOf="@+id/layout_draw_user_list"
+                app:layout_constraintStart_toStartOf="parent"
+                android:background="@drawable/bg_chat_list_round"
+                android:layout_marginStart="5dp"
+                >
+
+
+                <ImageView
+                    android:id="@+id/iv_chat_room_draw_user_image"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:src="@drawable/ic_person_black_24"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    />
+
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/tv_chat_room_draw_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@+id/rv_draw_user_list"
+                app:layout_constraintStart_toEndOf="@+id/layout_chat_room_draw_image_area"
+                app:layout_constraintTop_toTopOf="@+id/layout_chat_room_draw_image_area"
+                android:layout_marginStart="20dp"
+                tools:text="김현국" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_draw_user_list"
@@ -269,14 +309,9 @@
                 android:overScrollMode="never"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/layout_draw_user_list"
-
+                app:layout_constraintTop_toBottomOf="@id/layout_chat_room_draw_image_area"
                 />
-
-
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-
     </androidx.core.widget.NestedScrollView>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -286,7 +321,6 @@
         android:padding="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-
         app:layout_constraintStart_toStartOf="parent">
 
 
@@ -298,6 +332,14 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_draw_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_settings_gray"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

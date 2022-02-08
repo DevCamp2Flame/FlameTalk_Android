@@ -12,6 +12,5 @@ data class ChatEntity(
     val type: String,
     val sender_id: String,
     val room_id: String,
-    val contents: String,
-    val created_at: String
+    val contents: String
 )

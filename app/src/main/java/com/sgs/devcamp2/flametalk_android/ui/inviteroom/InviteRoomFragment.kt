@@ -113,6 +113,7 @@ class InviteRoomFragment :
         binding.rvInviteRoomSelected.adapter = inviteRoomSelectedAdapter
 
         binding.tvInviteRoomSubmit.setOnClickListener(this)
+        binding.layoutInviteRoomBack.setOnClickListener(this)
     }
 
     override fun onItemClicked(friend: Friend, position: Int, adapter: InviteRoomAdapter) {
@@ -127,8 +128,18 @@ class InviteRoomFragment :
     override fun onClick(view: View?) {
         when (view) {
             binding.tvInviteRoomSubmit -> {
-                model.createRooms()
+                // model.createRooms()
+                var users: MutableList<String> = emptyList<String>().toMutableList()
+                for (i in 0 until model.selectedFriendList.value.size) {
+                    users.add(model.selectedFriendList.value[i].nickname)
+                }
+                val action = InviteRoomFragmentDirections.actionNavigationInviteRoomToCreateChatRoomFragment2(users.toTypedArray())
+                findNavController().navigate(action)
             }
+            binding.layoutInviteRoomBack ->
+                {
+                    findNavController().popBackStack()
+                }
         }
     }
 

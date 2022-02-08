@@ -6,5 +6,5 @@ package com.sgs.devcamp2.flametalk_android.data.model.chatroom.closechatroom
  */
 data class CloseChatRoomReq(
     val userChatroomId: Long,
-    val lastReadMessageId: Long
+    val lastReadMessageId: String
 )

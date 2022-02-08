@@ -12,5 +12,5 @@ import com.sgs.devcamp2.flametalk_android.data.model.chat.Chat
 @Dao
 interface ChatDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(chat: Chat): Long
+    fun insert(chat: Chat): Long
 }

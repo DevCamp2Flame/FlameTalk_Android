@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.ChatRoom
+import kotlinx.serialization.Serializable
 import javax.annotation.Nonnull
 
 /**
@@ -23,6 +24,7 @@ import javax.annotation.Nonnull
         )
     ]
 )
+@Serializable
 data class Chat(
     @PrimaryKey val message_id: String,
     @Nonnull @ColumnInfo(name = "room_id") val room_id: String,

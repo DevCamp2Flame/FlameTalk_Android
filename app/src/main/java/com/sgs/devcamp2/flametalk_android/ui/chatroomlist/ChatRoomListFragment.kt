@@ -47,6 +47,7 @@ class ChatRoomListFragment : Fragment(), ChatRoomListAdapter.ClickCallBack {
         binding.rvChatListChattingRoom.layoutManager = LinearLayoutManager(context)
         adapterRoom = ChatRoomListAdapter(callback = this)
         binding.rvChatListChattingRoom.adapter = adapterRoom
+        model.getChatRoomList()
     }
 
     fun initObserve() {
@@ -94,8 +95,8 @@ class ChatRoomListFragment : Fragment(), ChatRoomListAdapter.ClickCallBack {
     override fun onItemShortClicked(position: Int, userChatRoom: UserChatRoom) {
         var action =
             ChattingViewPagerFragmentDirections.actionNavigationChattingViewPagerFragmentToNavigationChatRoom(
-
-                ""
+                userChatRoom.chatroomId,
+                userChatRoom, userChatRoom.userChatroomId,
             )
         findNavController().navigate(action)
     }

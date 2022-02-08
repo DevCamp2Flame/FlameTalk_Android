@@ -12,7 +12,7 @@ import com.sgs.devcamp2.flametalk_android.data.model.chatroom.ChatRoom
 data class ChatWithRoomId(
     @Embedded val room: ChatRoom,
     @Relation(
-        parentColumn = "room_id",
+        parentColumn = "id",
         entityColumn = "room_id"
     )
     val chatList: List<Chat>

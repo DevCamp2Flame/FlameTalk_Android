@@ -22,6 +22,7 @@ class NetworkInterceptor(
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request().newBuilder().addHeader("Content-Type", "application/json")
             .addHeader("ACCESS-TOKEN", "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxNjQzOTg2OTEyMjgyNjU4MzUwIiwibmlja25hbWUiOiJraW1kYXEiLCJzdGF0dXMiOiJST0xFX0dVRVNUIiwiZGV2aWNlSWQiOiIxMjM0NTY3ODkwMTIzNDU2IiwiaWF0IjoxNjQ0MDI1OTAyLCJleHAiOjE2NDQyNDE5MDJ9.VeImBN3vhqxYj9Z-EO_oqrxZqUKDrOuleNjCz4ukW-0")
+            .addHeader("USER-ID","1643986912282658350")
             .build()
         // TODO: network gateway 완료 후 header 픽스
 //          val request = chain.request().addHeader("Content-Type", "application/json")

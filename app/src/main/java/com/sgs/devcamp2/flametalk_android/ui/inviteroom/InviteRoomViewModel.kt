@@ -158,11 +158,11 @@ class InviteRoomViewModel @Inject constructor(
     fun createRooms() {
         _uiState.value = UiState.Loading
         val createChatRoomReq = CreateChatRoomReq(
-            hostId = "1643163512893324414",
+            hostId = "1643986912282658350",
             hostOpenProfileId = null,
             isOpen = false,
-            users = listOf("1643163512893324414", "1643163512893324415"),
-            title = null,
+            users = listOf("1643986912282658350", "1644196296080985280"),
+            title = "채팅방 생성 두명",
             thumbnail = null
 
         )
