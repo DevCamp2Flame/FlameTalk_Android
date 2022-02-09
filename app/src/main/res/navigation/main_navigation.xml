@@ -61,6 +61,19 @@
             app:destination="@+id/navigation_add_profile"/>
     </fragment>
 
+    <!--휴대폰 번호로 친구 추가-->
+    <fragment
+        android:id="@+id/navigation_add_friend"
+        android:name="com.sgs.devcamp2.flametalk_android.ui.signup.SignupFragment"
+        android:label="Signup"
+        tools:layout="@layout/fragment_signup">
+        <action
+            android:id="@+id/action_signup_to_signin"
+            app:destination="@id/navigation_signin"
+            app:popUpTo="@id/navigation_signin"
+            app:popUpToInclusive="true"/>
+    </fragment>
+
     <fragment
         android:id="@+id/navigation_phonebook"
         android:name="com.sgs.devcamp2.flametalk_android.ui.friend.phonebook.PhoneBookFragment"
