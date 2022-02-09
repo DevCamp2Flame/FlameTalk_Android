@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.google.android.material.snackbar.Snackbar
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentFriendBinding
 import com.sgs.devcamp2.flametalk_android.ui.friend.birthday.BirthdayAdapter
@@ -80,7 +79,6 @@ class FriendFragment : Fragment() {
 
     // 프로필 초기화
     private fun initUserProfiles() {
-        // viewModel.getProfileList()
         initMainProfile()
         initMultiProfile()
 
@@ -195,7 +193,5 @@ class FriendFragment : Fragment() {
 
     companion object {
         const val USER_DEFAULT_PROFILE = 1
-        // const val FRIEND_PROFILE = 2
-        // const val USER_MULTI_PROFILE = 3
     }
 }
