@@ -26,6 +26,7 @@ import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.sgs.devcamp2.flametalk_android.data.model.chatroom.Thumbnail
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentUpdateChatRoomBinding
 import com.sgs.devcamp2.flametalk_android.domain.entity.UiState
 import com.sgs.devcamp2.flametalk_android.util.onTextChanged
@@ -47,24 +48,34 @@ class UpdateChatRoomFragment :
                 model.setBackgroundImage(uriToPath(result.data!!.data!!))
             } else {
                 // RESULT_CANCLE
-                if (args.userChatRoom.thumbnail.size == 1) {
-                    if (binding.layoutPersonOneImage.root.visibility == View.GONE) {
-                        binding.layoutPersonOneImage.root.visibility == View.VISIBLE
-                        binding.ivUpdateChatRoomProfileImage.visibility = View.GONE
-                        initGlidePersonOne()
+                lifecycleScope.launch {
+                    model.thumbnailWithRoomId.collect {
+                        state ->
+                        when (state) {
+                            is UiState.Success ->
+                                {
+                                    if (state.data.thumbnailList.size == 1) {
+                                        if (binding.layoutPersonOneImage.root.visibility == View.GONE) {
+                                            binding.layoutPersonOneImage.root.visibility == View.VISIBLE
+                                            binding.ivUpdateChatRoomProfileImage.visibility = View.GONE
+                                            initGlidePersonOne(state.data.thumbnailList)
+                                        }
+                                    } else if (state.data.thumbnailList.size == 1) {
+                                        binding.layoutPersonTwoImage.root.visibility == View.VISIBLE
+                                        binding.ivUpdateChatRoomProfileImage.visibility = View.GONE
+                                        initGlidePersonTwo(state.data.thumbnailList)
+                                    } else if (state.data.thumbnailList.size == 3) {
+                                        binding.layoutPersonThreeImage.root.visibility == View.VISIBLE
+                                        binding.ivUpdateChatRoomProfileImage.visibility = View.GONE
+                                        initGlidePersonThree(state.data.thumbnailList)
+                                    } else {
+                                        binding.layoutPersonOneImage.root.visibility == View.VISIBLE
+                                        binding.ivUpdateChatRoomProfileImage.visibility = View.GONE
+                                        initGlidePersonFour(state.data.thumbnailList)
+                                    }
+                                }
+                        }
                     }
-                } else if (args.userChatRoom.thumbnail.size == 1) {
-                    binding.layoutPersonTwoImage.root.visibility == View.VISIBLE
-                    binding.ivUpdateChatRoomProfileImage.visibility = View.GONE
-                    initGlidePersonTwo()
-                } else if (args.userChatRoom.thumbnail.size == 3) {
-                    binding.layoutPersonThreeImage.root.visibility == View.VISIBLE
-                    binding.ivUpdateChatRoomProfileImage.visibility = View.GONE
-                    initGlidePersonThree()
-                } else {
-                    binding.layoutPersonOneImage.root.visibility == View.VISIBLE
-                    binding.ivUpdateChatRoomProfileImage.visibility = View.GONE
-                    initGlidePersonFour()
                 }
             }
         }
@@ -77,6 +88,7 @@ class UpdateChatRoomFragment :
         binding = FragmentUpdateChatRoomBinding.inflate(inflater, container, false)
         initUI()
         initObserve()
+        initObserve()
         return binding.root
     }
 
@@ -87,25 +99,42 @@ class UpdateChatRoomFragment :
             model.updateTitle(it.toString())
         }
         binding.tvUpdateChatRoomSubmit.setOnClickListener(this)
-        binding.etUpdateChatRoomTitleName.setText(args.userChatRoom.title)
-        binding.swUpdateChatRoomLock.isChecked = args.userChatRoom.inputLock
-        when (args.userChatRoom.thumbnail.size) {
-            1 -> {
-                initGlidePersonOne()
-            }
-            2 -> {
-                initGlidePersonTwo()
-            }
-            3 -> {
-                initGlidePersonThree()
-            }
-            else -> {
-                initGlidePersonFour()
-            }
-        }
+
+        model.getThumbnailList(args.chatroomId)
     }
 
     fun initObserve() {
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    model.thumbnailWithRoomId.collect {
+                        state ->
+                        when (state) {
+                            is UiState.Success ->
+                                {
+                                    binding.etUpdateChatRoomTitleName.setText(state.data.room.title)
+                                    binding.swUpdateChatRoomLock.isChecked = state.data.room.inputLock
+                                    when (state.data.thumbnailList.size) {
+                                        1 -> {
+                                            initGlidePersonOne(state.data.thumbnailList)
+                                        }
+                                        2 -> {
+                                            initGlidePersonTwo(state.data.thumbnailList)
+                                        }
+                                        3 -> {
+                                            initGlidePersonThree(state.data.thumbnailList)
+                                        }
+                                        else -> {
+                                            initGlidePersonFour(state.data.thumbnailList)
+                                        }
+                                    }
+                                }
+                        }
+                    }
+                }
+            }
+        }
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
@@ -141,9 +170,6 @@ class UpdateChatRoomFragment :
 
     override fun onClick(view: View?) {
         when (view) {
-            binding.layoutUpdateChatRoomName -> {
-                // 채팅방 이름 수정 창 이동
-            }
             binding.layoutUpdateChatRoomArrowSpace -> {
                 findNavController().popBackStack()
             }
@@ -172,7 +198,17 @@ class UpdateChatRoomFragment :
             }
             binding.tvUpdateChatRoomSubmit -> {
                 // 확인 버튼
-                model.updateChatRoom(args.userChatroomId, args.userChatRoom.thumbnail)
+                viewLifecycleOwner.lifecycleScope.launch {
+                    model.thumbnailWithRoomId.collect{
+                        state->
+                        when (state){
+                            is UiState.Success->
+                            {
+                                model.updateChatRoom(state.data.room.userChatroomId,state.data.thumbnailList)
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -233,58 +269,58 @@ class UpdateChatRoomFragment :
         return path
     }
 
-    fun initGlidePersonOne() {
+    fun initGlidePersonOne(thumbnailList: List<Thumbnail>) {
         binding.layoutPersonOneImage.root.visibility = View.VISIBLE
         Glide.with(binding.layoutPersonOneImage.ivPersonOneImg)
-            .load(args.userChatRoom.thumbnail[0])
+            .load(thumbnailList[0].image)
             .transform(CenterCrop(), RoundedCorners(35))
             .into(binding.layoutPersonOneImage.ivPersonOneImg)
         binding.layoutPersonOneImage.root.setOnClickListener(this)
     }
-    fun initGlidePersonTwo() {
+    fun initGlidePersonTwo(thumbnailList: List<Thumbnail>) {
         binding.layoutPersonTwoImage.root.visibility = View.VISIBLE
         Glide.with(binding.layoutPersonTwoImage.ivPersonTwoImg1)
-            .load(args.userChatRoom.thumbnail[0])
+            .load(thumbnailList[0].image)
             .transform(CenterCrop(), RoundedCorners(35))
             .into(binding.layoutPersonTwoImage.ivPersonTwoImg1)
         Glide.with(binding.layoutPersonTwoImage.ivPersonTwoImg2)
-            .load(args.userChatRoom.thumbnail[1])
+            .load(thumbnailList[1].image)
             .transform(CenterCrop(), RoundedCorners(35))
             .into(binding.layoutPersonTwoImage.ivPersonTwoImg2)
         binding.layoutPersonTwoImage.root.setOnClickListener(this)
     }
-    fun initGlidePersonThree() {
+    fun initGlidePersonThree(thumbnailList: List<Thumbnail>) {
         binding.layoutPersonThreeImage.root.visibility = View.VISIBLE
         Glide.with(binding.layoutPersonThreeImage.ivPersonThreeImg1)
-            .load(args.userChatRoom.thumbnail[0])
+            .load(thumbnailList[0].image)
             .transform(CenterCrop(), RoundedCorners(35))
             .into(binding.layoutPersonThreeImage.ivPersonThreeImg1)
         Glide.with(binding.layoutPersonThreeImage.ivPersonThreeImg2)
-            .load(args.userChatRoom.thumbnail[1])
+            .load(thumbnailList[1].image)
             .transform(CenterCrop(), RoundedCorners(35))
             .into(binding.layoutPersonThreeImage.ivPersonThreeImg2)
         Glide.with(binding.layoutPersonThreeImage.ivPersonThreeImg3)
-            .load(args.userChatRoom.thumbnail[2])
+            .load(thumbnailList[2].image)
             .transform(CenterCrop(), RoundedCorners(35))
             .into(binding.layoutPersonThreeImage.ivPersonThreeImg3)
         binding.layoutPersonThreeImage.root.setOnClickListener(this)
     }
-    fun initGlidePersonFour() {
+    fun initGlidePersonFour(thumbnailList: List<Thumbnail>) {
         binding.layoutPersonFourImage.root.visibility = View.VISIBLE
         Glide.with(binding.layoutPersonFourImage.ivPersonFourImg1)
-            .load(args.userChatRoom.thumbnail[0])
+            .load(thumbnailList[0].image)
             .transform(CenterCrop(), RoundedCorners(35))
             .into(binding.layoutPersonFourImage.ivPersonFourImg1)
         Glide.with(binding.layoutPersonFourImage.ivPersonFourImg2)
-            .load(args.userChatRoom.thumbnail[1])
+            .load(thumbnailList[1].image)
             .transform(CenterCrop(), RoundedCorners(35))
             .into(binding.layoutPersonFourImage.ivPersonFourImg2)
         Glide.with(binding.layoutPersonFourImage.ivPersonFourImg3)
-            .load(args.userChatRoom.thumbnail[2])
+            .load(thumbnailList[2].image)
             .transform(CenterCrop(), RoundedCorners(35))
             .into(binding.layoutPersonFourImage.ivPersonFourImg3)
         Glide.with(binding.layoutPersonFourImage.ivPersonFourImg4)
-            .load(args.userChatRoom.thumbnail[3])
+            .load(thumbnailList[3].image)
             .transform(CenterCrop(), RoundedCorners(35))
             .into(binding.layoutPersonFourImage.ivPersonFourImg4)
         binding.layoutPersonFourImage.root.setOnClickListener(this)

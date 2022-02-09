@@ -15,7 +15,7 @@ data class ChatRoom(
     @PrimaryKey @ColumnInfo(name = "id") val id: String,
     @ColumnInfo(name = "userChatroomId") val userChatroomId: Long,
     @ColumnInfo(name = "title") val title: String,
-    @ColumnInfo(name = "lastReadMessageId") val lastReadMessageId: String,
+    @ColumnInfo(name = "lastReadMessageId") val lastReadMessageId: String?,
     @ColumnInfo(name = "inputLock") val inputLock: Boolean,
     @ColumnInfo(name = "count") val count: Int,
     @ColumnInfo(name = "updated_at") val updated_at: Long

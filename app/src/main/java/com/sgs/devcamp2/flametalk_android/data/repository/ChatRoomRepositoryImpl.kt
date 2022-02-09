@@ -1,11 +1,9 @@
 package com.sgs.devcamp2.flametalk_android.data.repository
 
 import com.sgs.devcamp2.flametalk_android.data.common.WrappedResponse
-import com.sgs.devcamp2.flametalk_android.data.mapper.mapperToChatModel
-import com.sgs.devcamp2.flametalk_android.data.mapper.mapperToCreateChatRoomEntity
-import com.sgs.devcamp2.flametalk_android.data.mapper.mapperToGetChatRoomEntity
-import com.sgs.devcamp2.flametalk_android.data.mapper.mapperToThumbnail
+import com.sgs.devcamp2.flametalk_android.data.mapper.*
 import com.sgs.devcamp2.flametalk_android.data.model.chat.ChatWithRoomId
+import com.sgs.devcamp2.flametalk_android.data.model.chatroom.ThumbnailWithRoomId
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.closechatroom.CloseChatRoomReq
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.createchatroom.CreateChatRoomReq
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.createchatroom.CreateChatRoomRes
@@ -19,7 +17,7 @@ import com.sgs.devcamp2.flametalk_android.data.source.local.database.AppDatabase
 import com.sgs.devcamp2.flametalk_android.data.source.remote.api.ChatRoomApi
 import com.sgs.devcamp2.flametalk_android.domain.entity.LocalResults
 import com.sgs.devcamp2.flametalk_android.domain.entity.Results
-import com.sgs.devcamp2.flametalk_android.domain.entity.chatroom.CreateChatRoomEntity
+import com.sgs.devcamp2.flametalk_android.domain.entity.chatroom.ChatRoomEntity
 import com.sgs.devcamp2.flametalk_android.domain.entity.chatroom.GetChatRoomEntity
 import com.sgs.devcamp2.flametalk_android.domain.repository.ChatRoomRepository
 import kotlinx.coroutines.CoroutineDispatcher
@@ -37,15 +35,17 @@ class ChatRoomRepositoryImpl @Inject constructor(
     private val local: AppDatabase,
     private val remote: ChatRoomApi
 ) : ChatRoomRepository {
-    override suspend fun createChatRoom(createChatRoomReq: CreateChatRoomReq): Flow<Results<CreateChatRoomEntity, WrappedResponse<CreateChatRoomRes>>> {
+    override suspend fun createChatRoom(createChatRoomReq: CreateChatRoomReq): Flow<Results<ChatRoomEntity, WrappedResponse<CreateChatRoomRes>>> {
         return flow {
             val response = remote.createChatRoom(createChatRoomReq)
             if (response.isSuccessful) {
                 if (response.body()!!.status == 200) {
                     val body = response.body()!!
                     val data = body.data!!
-                    val createChatRoomEntity = mapperToCreateChatRoomEntity(data)
-                    emit(Results.Success(createChatRoomEntity))
+                    val chatroomModel = mapperToChatRoomModel(data)
+                    local.chatRoomDao().insert(chatroomModel)
+                    val chatRoomEntity = mapperToChatRoomEntity(data)
+                    emit(Results.Success(chatRoomEntity))
                 }
             }
         }.flowOn(ioDispatcher)
@@ -153,6 +153,13 @@ class ChatRoomRepositoryImpl @Inject constructor(
                 if (response.body()!!.status == 200) {
                     emit(Results.Success(true))
                 }
+            }
+        }.flowOn(ioDispatcher)
+    }
+    override suspend fun getThumbnailList(chatroomId: String): Flow<LocalResults<ThumbnailWithRoomId>> {
+        return flow<LocalResults<ThumbnailWithRoomId>> {
+            local.chatRoomDao().getThumbnailWithRoomId(chatroomId).collect {
+                emit(LocalResults.Success(it))
             }
         }.flowOn(ioDispatcher)
     }

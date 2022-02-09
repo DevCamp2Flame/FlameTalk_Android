@@ -30,5 +30,7 @@ data class Chat(
     @Nonnull @ColumnInfo(name = "room_id") val room_id: String,
     @Nonnull @ColumnInfo(name = "sender_id") val sender_id: String,
     @Nonnull @ColumnInfo(name = "nickname") val nickname: String,
-    @Nonnull @ColumnInfo(name = "contents") val contents: String,
+    @ColumnInfo(name = "contents") val contents: String?,
+    @ColumnInfo(name = "file_url") val file_url: String?,
+    @Nonnull @ColumnInfo(name = "timestamp") val timeStamp: Long
 )

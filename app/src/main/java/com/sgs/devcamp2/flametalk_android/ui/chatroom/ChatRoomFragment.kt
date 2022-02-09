@@ -17,7 +17,6 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.sgs.devcamp2.flametalk_android.R
-import com.sgs.devcamp2.flametalk_android.data.model.chat.ChatEntity
 import com.sgs.devcamp2.flametalk_android.databinding.DrawerLayoutChatRoomBinding
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentChatRoomBinding
 import com.sgs.devcamp2.flametalk_android.domain.entity.UiState
@@ -46,13 +45,7 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
     ): View? {
         binding = FragmentChatRoomBinding.inflate(inflater, container, false)
         initUI(this.requireContext())
-        lifecycleScope.launch {
-            model.chatRoom.collect {
-                adapter.submitList(it) {
-                    binding.rvChatRoom.smoothScrollToPosition(it.size)
-                }
-            }
-        }
+
         binding.etChatRoomInputText.onTextChanged {
             model.updateTextValue(it.toString())
         }
@@ -77,65 +70,79 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
         drawer_binding.ivDrawExit.setOnClickListener(this)
         drawer_binding.ivDrawSetting.setOnClickListener(this)
         initObserve()
+
         model.getChatList(args.chatroomId)
     }
 
     fun subscribeRoom() {
-        lifecycleScope.launch {
-            webSocketModel.session.collect {
-                state ->
+        // session이 연결되어 있는 상태라면, 메세지를 받을 준비를 한다.
+        lifecycleScope.launchWhenCreated {
+            webSocketModel.session.collect { state ->
                 when (state) {
-                    is UiState.Success ->
-                        {
-                            // 내가 보낸 메시지도 받게 되므로 이 순간에 db를 연결한다.
-                            model.receivedMessage(state.data, args.chatroomId)
-                        }
+                    is UiState.Success -> {
+                        // 내가 보낸 메시지도 받게 되므로 이 순간에 db를 연결한다.
+                        model.receivedMessage(state.data, args.chatroomId)
+                    }
                 }
             }
         }
     }
+
     fun initObserve() {
+        // 타이틀과 채팅방 인원수 init
         viewLifecycleOwner.lifecycleScope.launch {
-            model.drawUserState.collect {
+            model.userChatRoom.collect {
                 state ->
                 when (state) {
                     is UiState.Success ->
                         {
-                            Glide.with(drawer_binding.ivChatRoomDrawUserImage).load(state.data.profileImage).into(drawer_binding.ivChatRoomDrawUserImage)
-                            drawer_binding.tvChatRoomDrawUser.text = state.data.profileNickname
-                            userlistAdapter.submitList(state.data.profiles)
-                        }
-                    is UiState.Error ->
-                        {
+
+                            binding.tvChatRoomTitle.text = state.data.title
+                            binding.tvChatRoomUserCount.text = state.data.count.toString()
                         }
                 }
             }
         }
+
+        // drawer view에 정보 업데이트
         viewLifecycleOwner.lifecycleScope.launch {
-            model.chatList.collect {
-                state ->
+            model.drawUserState.collect { state ->
                 when (state) {
-                    is UiState.Success ->
-                        {
-                            // 채팅 데이터 observe
-                            Log.d(TAG, "ChatRoomFragment - chatList collect () called")
-                            adapter.submitList(state.data)
-                            model.updateLastReadMessage(state.data[state.data.size - 1].message_id)
-                        }
+                    is UiState.Success -> {
+                        Glide.with(drawer_binding.ivChatRoomDrawUserImage)
+                            .load(state.data.profileImage)
+                            .into(drawer_binding.ivChatRoomDrawUserImage)
+                        drawer_binding.tvChatRoomDrawUser.text = state.data.profileNickname
+                        userlistAdapter.submitList(state.data.profiles)
+                    }
+                    is UiState.Error -> {
+                    }
                 }
             }
         }
+        // db에서 불러온 chat list adapter로 넘기기
         viewLifecycleOwner.lifecycleScope.launch {
-            model.deleteUiState.collect {
-                state ->
+            model.chatList.collect { state ->
                 when (state) {
-                    is UiState.Success ->
-                        {
-                            findNavController().popBackStack()
-                        }
-                    is UiState.Error ->
-                        {
-                        }
+                    is UiState.Success -> {
+                        // 채팅 데이터 observe
+                        Log.d(TAG, "ChatRoomFragment - chatList collect () called")
+                        adapter.submitList(state.data)
+                        binding.rvChatRoom.smoothScrollToPosition(state.data.size)
+                        model.updateLastReadMessage(state.data[state.data.size - 1].message_id)
+                    }
+                }
+            }
+        }
+        // drawer view에 채팅방 나가기
+        viewLifecycleOwner.lifecycleScope.launch {
+            model.deleteUiState.collect { state ->
+                when (state) {
+                    is UiState.Success -> {
+                        findNavController().popBackStack()
+                    }
+                    is UiState.Error -> {
+                    }
                 }
             }
         }
@@ -144,44 +151,62 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
     override fun onClick(view: View?) {
         when (view) {
             binding.ivChatRoomDraw -> {
-                binding.layoutChatRoomDraw.openDrawer(Gravity.RIGHT)
-                model.getChatRoomDetail(userChatroomId = args.userChatroomId)
+                viewLifecycleOwner.lifecycleScope.launch {
+                    model.userChatRoom.collect {
+                        state ->
+                        when (state) {
+                            is UiState.Success ->
+                                {
+                                    binding.layoutChatRoomDraw.openDrawer(Gravity.RIGHT)
+                                    model.getChatRoomDetail(userChatroomId = state.data.userChatroomId)
+                                }
+                        }
+                    }
+                }
             }
             binding.ivChatRoomFile -> {
                 findNavController().navigate(R.id.action_navigation_chat_room_to_navigation_chat_Room_Bottom_Sheet)
             }
             binding.ivChatSend -> {
-                model.initRoom(args.chatroomId)
-
-                // 후에 서버로 올릴떄
-//                viewLifecycleOwner.lifecycleScope.launch {
-//                    webSocketModel.session.collect {
-//                        state ->
-//                        when (state) {
-//                            is UiState.Success ->
-//                                {
-                // 서버에 보내고 반환이 된다면 디비에 저장한다.
-//                                    model.pushMessage(args.chatroomId, state.data, model.chat.value)
-//                                }
-//                        }
-//                    }
-//                }
                 if (model.chat.value != "") {
-                    val chatEntity = ChatEntity("talk", "1643986912282658350", args.chatroomId, model.chat.value)
-                    model.pushMessage(chatEntity)
                 }
-
+                viewLifecycleOwner.lifecycleScope.launch {
+                    webSocketModel.session.collect { state ->
+                        when (state) {
+                            is UiState.Success -> {
+                                model.pushMessage(
+                                    "TALK",
+                                    args.chatroomId,
+                                    state.data,
+                                    model.chat.value
+                                )
+                            }
+                        }
+                    }
+                }
                 binding.etChatRoomInputText.setText("")
             }
-            drawer_binding.ivDrawExit ->
-                {
-                    exitDialog()
+            drawer_binding.ivDrawExit -> {
+                exitDialog()
+            }
+            drawer_binding.ivDrawSetting -> {
+                // thumbnail이 포함된 정보를 넘겨야한다.
+                viewLifecycleOwner.lifecycleScope.launch {
+                    model.userChatRoom.collect {
+                        state ->
+                        when (state) {
+                            is UiState.Success ->
+                                {
+                                    val action =
+                                        ChatRoomFragmentDirections.actionNavigationChatRoomToUpdateChatRoomFragment(
+                                            chatroomId = state.data.id
+                                        )
+                                    findNavController().navigate(action)
+                                }
+                        }
+                    }
                 }
-            drawer_binding.ivDrawSetting ->
-                {
-                    val action = ChatRoomFragmentDirections.actionNavigationChatRoomToUpdateChatRoomFragment(args.userChatroomId, args.userChatRoom)
-                    findNavController().navigate(action)
-                }
+            }
         }
     }
 
@@ -190,13 +215,21 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
         var dialogListener = DialogInterface.OnClickListener { _, which ->
             run {
                 when (which) {
-                    DialogInterface.BUTTON_NEGATIVE ->
-                        {
+                    DialogInterface.BUTTON_NEGATIVE -> {
+                    }
+                    DialogInterface.BUTTON_POSITIVE -> {
+                        viewLifecycleOwner.lifecycleScope.launch {
+                            model.userChatRoom.collect {
+                                state ->
+                                when (state) {
+                                    is UiState.Success ->
+                                        {
+                                            model.deleteChatRoom(userChatroomId = state.data.userChatroomId)
+                                        }
+                                }
+                            }
                         }
-                    DialogInterface.BUTTON_POSITIVE ->
-                        {
-                            model.deleteChatRoom(userChatroomId = args.userChatroomId)
-                        }
+                    }
                 }
             }
         }
@@ -209,14 +242,24 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //   testLifeCycle()
-        // 구독 유지
         subscribeRoom()
     }
 
     override fun onPause() {
         super.onPause()
-        Log.d(TAG, "ChatRoomFragment - onPause() called")
-        model.closeChatRoom(userChatroomId = args.userChatroomId, lastReadMessageId = model.lastReadMessageId.value)
+        lifecycleScope.launch {
+            model.userChatRoom.collect {
+                state ->
+                when (state) {
+                    is UiState.Success ->
+                        {
+                            model.closeChatRoom(
+                                userChatroomId = state.data.userChatroomId,
+                                lastReadMessageId = state.data.lastReadMessageId!!
+                            )
+                        }
+                }
+            }
+        }
     }
 }

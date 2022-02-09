@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "80d71ef1e0dde1f312bdeaebac20c0f1",
+    "identityHash": "3b177d8b24905bfedf3f361a3cf01bf7",
     "entities": [
       {
         "tableName": "chatroom",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `userChatroomId` INTEGER NOT NULL, `title` TEXT NOT NULL, `lastReadMessageId` TEXT NOT NULL, `inputLock` INTEGER NOT NULL, `count` INTEGER NOT NULL, `updated_at` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `userChatroomId` INTEGER NOT NULL, `title` TEXT NOT NULL, `lastReadMessageId` TEXT, `inputLock` INTEGER NOT NULL, `count` INTEGER NOT NULL, `updated_at` INTEGER NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -30,7 +30,7 @@
             "fieldPath": "lastReadMessageId",
             "columnName": "lastReadMessageId",
             "affinity": "TEXT",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "inputLock",
@@ -62,7 +62,7 @@
       },
       {
         "tableName": "chat",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`message_id` TEXT NOT NULL, `room_id` TEXT NOT NULL, `sender_id` TEXT NOT NULL, `nickname` TEXT NOT NULL, `contents` TEXT NOT NULL, PRIMARY KEY(`message_id`), FOREIGN KEY(`room_id`) REFERENCES `chatroom`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`message_id` TEXT NOT NULL, `room_id` TEXT NOT NULL, `sender_id` TEXT NOT NULL, `nickname` TEXT NOT NULL, `contents` TEXT, `file_url` TEXT, `timestamp` INTEGER NOT NULL, PRIMARY KEY(`message_id`), FOREIGN KEY(`room_id`) REFERENCES `chatroom`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "message_id",
@@ -92,6 +92,18 @@
             "fieldPath": "contents",
             "columnName": "contents",
             "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "file_url",
+            "columnName": "file_url",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "timeStamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
             "notNull": true
           }
         ],
@@ -159,12 +171,44 @@
             ]
           }
         ]
+      },
+      {
+        "tableName": "chatroom_update",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `lastReadMessageId` TEXT NOT NULL, `updated_at` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastReadMessageId",
+            "columnName": "lastReadMessageId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updated_at",
+            "columnName": "updated_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '80d71ef1e0dde1f312bdeaebac20c0f1')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '3b177d8b24905bfedf3f361a3cf01bf7')"
     ]
   }
 }

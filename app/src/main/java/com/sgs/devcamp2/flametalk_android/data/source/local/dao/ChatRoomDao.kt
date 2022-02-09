@@ -3,7 +3,9 @@ package com.sgs.devcamp2.flametalk_android.data.source.local.dao
 import androidx.room.*
 import com.sgs.devcamp2.flametalk_android.data.model.chat.ChatWithRoomId
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.ChatRoom
+import com.sgs.devcamp2.flametalk_android.data.model.chatroom.ChatRoomUpdate
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.Thumbnail
+import com.sgs.devcamp2.flametalk_android.data.model.chatroom.ThumbnailWithRoomId
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -25,4 +27,11 @@ interface ChatRoomDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertThumbnail(thumbnail: Thumbnail)
+
+    @Transaction
+    @Query("SELECT * FROM chatroom where chatroom.id LIKE :chatroomId")
+    fun getThumbnailWithRoomId(chatroomId: String): Flow<ThumbnailWithRoomId>
+
+    @Update(entity = ChatRoom::class)
+    fun updateLastReadMessageId(chatroomUpdate: ChatRoomUpdate)
 }

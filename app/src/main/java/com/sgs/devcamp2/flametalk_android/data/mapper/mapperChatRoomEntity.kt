@@ -2,7 +2,6 @@ package com.sgs.devcamp2.flametalk_android.data.mapper
 
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.createchatroom.CreateChatRoomRes
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.getchatroom.GetChatRoomRes
-import com.sgs.devcamp2.flametalk_android.data.model.chatroom.getchatroomlist.GetChatRoomListRes
 import com.sgs.devcamp2.flametalk_android.domain.entity.chatroom.ChatRoomEntity
 import com.sgs.devcamp2.flametalk_android.domain.entity.chatroom.CreateChatRoomEntity
 import com.sgs.devcamp2.flametalk_android.domain.entity.chatroom.GetChatRoomEntity
@@ -12,29 +11,20 @@ import com.sgs.devcamp2.flametalk_android.domain.entity.chatroom.GetChatRoomEnti
  * @created 2022/02/05
  */
 
-fun mapperToChatRoomEntityList(getChatRoomListRes: GetChatRoomListRes): List<ChatRoomEntity> {
-    return getChatRoomListRes.userChatrooms.map {
-        ChatRoomEntity(
-            it.chatroomId,
-            it.userChatroomId,
-            it.title,
-            it.thumbnail,
-            it.lastReadMessageId,
-            it.inputLock,
-            it.count
-        )
-    }
-}
-fun mapperToCreateChatRoomEntity(createChatRoomRes: CreateChatRoomRes): CreateChatRoomEntity {
-    return CreateChatRoomEntity(
-        chatroomId = createChatRoomRes.chatroomId,
-        userChatRoomId = createChatRoomRes.userChatroomId,
-        title = createChatRoomRes.title,
-        inputLock = false,
-        count = createChatRoomRes.count
 
+fun mapperToChatRoomEntity(createChatRoomRes: CreateChatRoomRes): ChatRoomEntity {
+    return ChatRoomEntity(
+        createChatRoomRes.chatroomId,
+        createChatRoomRes.userChatroomId,
+        createChatRoomRes.title,
+        emptyList(),
+        "",
+        false,
+        createChatRoomRes.count
     )
 }
+
+
 fun mapperToGetChatRoomEntity(getChatRoomRes: GetChatRoomRes): GetChatRoomEntity {
     return GetChatRoomEntity(
         profileNickname = getChatRoomRes.profileNickname,

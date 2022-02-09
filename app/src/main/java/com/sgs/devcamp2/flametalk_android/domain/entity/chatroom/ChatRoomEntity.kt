@@ -1,9 +1,13 @@
 package com.sgs.devcamp2.flametalk_android.domain.entity.chatroom
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
 /**
  * @author boris
  * @created 2022/02/05
  */
+@Parcelize
 data class ChatRoomEntity(
     val chatroomId: String,
     val userChatroomId: Long,
@@ -12,4 +16,4 @@ data class ChatRoomEntity(
     val lastReadMessageId: String,
     val inputLock: Boolean,
     val count: Int
-)
+) : Parcelable

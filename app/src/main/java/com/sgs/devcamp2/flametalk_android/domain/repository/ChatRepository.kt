@@ -1,7 +1,6 @@
 package com.sgs.devcamp2.flametalk_android.domain.repository
 
-import com.sgs.devcamp2.flametalk_android.data.model.chat.Chat
-import com.sgs.devcamp2.flametalk_android.data.model.chat.ChatEntity
+import com.sgs.devcamp2.flametalk_android.data.model.chat.ChatRes
 import com.sgs.devcamp2.flametalk_android.domain.entity.LocalResults
 import kotlinx.coroutines.flow.Flow
 
@@ -10,6 +9,5 @@ import kotlinx.coroutines.flow.Flow
  * @created 2022/01/31
  */
 interface ChatRepository {
-    suspend fun saveReceivedMessage(chat: Chat): Flow<Long>
-    fun savePushMessage(chatEntity: ChatEntity)
+    fun saveReceivedMessage(chatRes: ChatRes): Flow<Long>
 }

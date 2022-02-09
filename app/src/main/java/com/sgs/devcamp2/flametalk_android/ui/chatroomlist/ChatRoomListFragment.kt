@@ -96,7 +96,6 @@ class ChatRoomListFragment : Fragment(), ChatRoomListAdapter.ClickCallBack {
         var action =
             ChattingViewPagerFragmentDirections.actionNavigationChattingViewPagerFragmentToNavigationChatRoom(
                 userChatRoom.chatroomId,
-                userChatRoom, userChatRoom.userChatroomId,
             )
         findNavController().navigate(action)
     }

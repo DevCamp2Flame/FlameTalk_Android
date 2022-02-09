@@ -17,7 +17,6 @@ import javax.inject.Inject
 class MainActivityRepositoryImpl @Inject constructor(
     private val ioDispatcher: CoroutineDispatcher,
     private val stompClient: StompClient,
-    private val db: AppDatabase
 ) : MainActivityRepository {
     override suspend fun connectWebSocket(): Flow<StompSession> {
         return flow {
@@ -27,6 +26,6 @@ class MainActivityRepositoryImpl @Inject constructor(
     }
 
     companion object {
-        val WEB_SOCKET_URL = "ws://10.0.2.2:8080/stomp/chat/websocket"
+        val WEB_SOCKET_URL = "ws://192.168.0.100:8085/stomp/chat/websocket"
     }
 }

@@ -8,16 +8,15 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.data.model.chat.Chat
-import com.sgs.devcamp2.flametalk_android.databinding.ItemLeftStartTextChatRoomBinding
-import com.sgs.devcamp2.flametalk_android.databinding.ItemLeftTextChatRoomBinding
-import com.sgs.devcamp2.flametalk_android.databinding.ItemRightStartTextChatRoomBinding
-import com.sgs.devcamp2.flametalk_android.databinding.ItemRightTextChatRoomBinding
-
+import com.sgs.devcamp2.flametalk_android.databinding.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 class ChatRoomAdapter constructor() : ListAdapter<Chat, RecyclerView.ViewHolder>(diffUtil) {
 
     companion object {
         val TAG: String = "로그"
+        val simpleFormat = SimpleDateFormat("kk:mm", Locale("ko", "KR"))
         val diffUtil = object : DiffUtil.ItemCallback<Chat>() {
             override fun areItemsTheSame(oldItem: Chat, newItem: Chat): Boolean {
                 return oldItem.message_id == newItem.message_id
@@ -66,12 +65,7 @@ class ChatRoomAdapter constructor() : ListAdapter<Chat, RecyclerView.ViewHolder>
     }
 
     override fun getItemViewType(position: Int): Int {
-        // return currentList[position].user_id
 
-        /**
-         * user_id = String "0" 일때 Int 0 반환
-         * 그외 1 반환
-         */
         return if (currentList[position].sender_id == "1643986912282658350") {
             0
         } else {
@@ -79,12 +73,20 @@ class ChatRoomAdapter constructor() : ListAdapter<Chat, RecyclerView.ViewHolder>
         }
     }
 
+    inner class InviteMessageViewHolder(val binding: ItemFirstInviteBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(chat: Chat) {
+            binding.tvItemFirstInviteMessage.text = chat.contents
+        }
+    }
     /**
      * 내가 아닌 다른 사용자가 보낸 첫번째 메세지 ViewHolder
      */
     inner class LeftStartViewHolder(val binding: ItemLeftStartTextChatRoomBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(chat: Chat) {
             binding.tvLeftStartTextChatRoomMessage.text = chat.contents
+            val date = Date(chat.timeStamp)
+            val str_date = simpleFormat.format(date)
+            binding.tvLeftStartTextChatRoomListDate.text = str_date
         }
     }
 
@@ -103,6 +105,10 @@ class ChatRoomAdapter constructor() : ListAdapter<Chat, RecyclerView.ViewHolder>
     inner class RightStartViewHolder(val binding: ItemRightStartTextChatRoomBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(chat: Chat) {
             binding.tvRightStartTextChatRoomMessage.text = chat.contents
+
+            val date = Date(chat.timeStamp)
+            val str_date = simpleFormat.format(date)
+            binding.tvRightStartTextChatRoomListDate.text = str_date
         }
     }
 

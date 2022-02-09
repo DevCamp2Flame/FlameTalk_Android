@@ -4,13 +4,14 @@ import kotlinx.serialization.Serializable
 
 /**
  * @author boris
- * @created 2022/01/27
+ * @created 2022/02/09
  */
-
 @Serializable
-data class ChatEntity(
+data class ChatReq(
     val type: String,
-    val sender_id: String,
     val room_id: String,
-    val contents: String
+    val sender_id: String,
+    val nickname: String,
+    val contents: String?,
+    val file_url: String?,
 )

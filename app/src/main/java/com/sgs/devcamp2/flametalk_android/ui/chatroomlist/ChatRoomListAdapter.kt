@@ -1,6 +1,5 @@
 package com.sgs.devcamp2.flametalk_android.ui.chatroomlist
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +12,8 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.getchatroomlist.UserChatRoom
 import com.sgs.devcamp2.flametalk_android.databinding.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * 채팅방 리스트 recyclerview Adapter
@@ -23,7 +24,7 @@ import com.sgs.devcamp2.flametalk_android.databinding.*
 class ChatRoomListAdapter constructor(
     callback: ClickCallBack
 ) : ListAdapter<UserChatRoom, RecyclerView.ViewHolder>(diffUtil) {
-// 클래스에서만 한번만 쓸려고하는 것
+    // 클래스에서만 한번만 쓸려고하는 것
     interface ClickCallBack {
         fun onItemLongClicked(position: Int, userChatRoom: UserChatRoom)
         fun onItemShortClicked(position: Int, userChatRoom: UserChatRoom)
@@ -33,6 +34,7 @@ class ChatRoomListAdapter constructor(
     val TAG: String = "로그"
 
     companion object {
+        val simpleFormat = SimpleDateFormat("yyyy-MM-dd kk:mm", Locale("ko", "KR"))
         private const val ONEPERSON = 1
         private const val TWOPERSON = 2
         private const val THREEPERSON = 3
@@ -86,23 +88,17 @@ class ChatRoomListAdapter constructor(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         holder.itemView.setOnLongClickListener(ItemLongClickListener(position, getItem(position)))
         holder.itemView.setOnClickListener(ItemShortClickListener(position, getItem(position)))
-        Log.d(TAG, "getItem(position) - ${getItem(position)}() called")
-        Log.d(TAG, "getItem(position) - ${getItem(position).thumbnail.size}() called")
         when (getItem(position).thumbnail.size) {
             1 -> {
-                Log.d(TAG, "ChatRoomListAdapter - ${getItem(position).thumbnail.size}() called")
                 (holder as OneViewHolder).bind(getItem(position))
             }
             2 -> {
-                Log.d(TAG, "ChatRoomListAdapter - ${getItem(position).thumbnail.size}() called")
                 (holder as TwoViewHolder).bind(getItem(position))
             }
             3 -> {
-                Log.d(TAG, "ChatRoomListAdapter - ${getItem(position).thumbnail.size}() called")
                 (holder as ThreeViewHolder).bind(getItem(position))
             }
             else -> {
-                Log.d(TAG, "ChatRoomListAdapter - ${getItem(position).thumbnail.size}() called")
                 (holder as FourViewHolder).bind(getItem(position))
             }
         }
@@ -120,20 +116,22 @@ class ChatRoomListAdapter constructor(
     inner class OneViewHolder(val binding: ItemPersonOneChatListBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(userChatRoom: UserChatRoom) {
-//            binding.ivOneChatRoomListUserImg.loadOneImage(
-//                userChatRoom.thumbnail[0]
-//            )
-            Glide.with(binding.ivOneChatRoomListUserImg).load(userChatRoom.thumbnail[0]).transform(CenterCrop(), RoundedCorners(40)).into(binding.ivOneChatRoomListUserImg)
+            Glide.with(binding.ivOneChatRoomListUserImg).load(userChatRoom.thumbnail[0])
+                .transform(CenterCrop(), RoundedCorners(40)).into(binding.ivOneChatRoomListUserImg)
             binding.tvOneChatRoomListUserName.text = userChatRoom.title
+            binding.tvOneChatRoomListUserCount.text = userChatRoom.count.toString()
         }
     }
 
     inner class TwoViewHolder(val binding: ItemPersonTwoChatListBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(userChatRoom: UserChatRoom) {
-            Glide.with(binding.ivTwoChatRoomListUserImg).load(userChatRoom.thumbnail[0]).transform(CenterCrop(), RoundedCorners(30)).into(binding.ivTwoChatRoomListUserImg)
-            Glide.with(binding.ivTwoChatRoomListUserImg2).load(userChatRoom.thumbnail[1]).transform(CenterCrop(), RoundedCorners(30)).into(binding.ivTwoChatRoomListUserImg2)
+            Glide.with(binding.ivTwoChatRoomListUserImg).load(userChatRoom.thumbnail[0])
+                .transform(CenterCrop(), RoundedCorners(30)).into(binding.ivTwoChatRoomListUserImg)
+            Glide.with(binding.ivTwoChatRoomListUserImg2).load(userChatRoom.thumbnail[1])
+                .transform(CenterCrop(), RoundedCorners(30)).into(binding.ivTwoChatRoomListUserImg2)
             binding.tvTwoChatRoomListUserName.text = userChatRoom.title
+            binding.tvTwoChatRoomListUserCount.text = userChatRoom.count.toString()
         }
     }
 
@@ -143,20 +141,30 @@ class ChatRoomListAdapter constructor(
             Glide.with(binding.ivThreeChatRoomListUserImg)
                 .load(userChatRoom.thumbnail[0]).transform(CenterCrop(), RoundedCorners(15))
                 .into(binding.ivThreeChatRoomListUserImg)
-            Glide.with(binding.ivThreeChatRoomListUserImg2).load(userChatRoom.thumbnail[1]).transform(CenterCrop(), RoundedCorners(15)).into(binding.ivThreeChatRoomListUserImg2)
-            Glide.with(binding.ivThreeChatRoomListUserImg3).load(userChatRoom.thumbnail[2]).transform(CenterCrop(), RoundedCorners(15)).into(binding.ivThreeChatRoomListUserImg3)
+            Glide.with(binding.ivThreeChatRoomListUserImg2).load(userChatRoom.thumbnail[1])
+                .transform(CenterCrop(), RoundedCorners(15))
+                .into(binding.ivThreeChatRoomListUserImg2)
+            Glide.with(binding.ivThreeChatRoomListUserImg3).load(userChatRoom.thumbnail[2])
+                .transform(CenterCrop(), RoundedCorners(15))
+                .into(binding.ivThreeChatRoomListUserImg3)
             binding.tvThreeChatRoomListUserName.text = userChatRoom.title
+            binding.tvThreeChatRoomListUserCount.text = userChatRoom.count.toString()
         }
     }
 
     inner class FourViewHolder(val binding: ItemPersonFourChatListBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(userChatRoom: UserChatRoom) {
-            Glide.with(binding.ivFourChatRoomListUserImg).load(userChatRoom.thumbnail[0]).transform(CenterCrop(), RoundedCorners(5)).into(binding.ivFourChatRoomListUserImg)
-            Glide.with(binding.ivFourChatRoomListUserImg2).load(userChatRoom.thumbnail[1]).transform(CenterCrop(), RoundedCorners(5)).into(binding.ivFourChatRoomListUserImg2)
-            Glide.with(binding.ivFourChatRoomListUserImg3).load(userChatRoom.thumbnail[2]).transform(CenterCrop(), RoundedCorners(5)).into(binding.ivFourChatRoomListUserImg3)
-            Glide.with(binding.ivFourChatRoomListUserImg4).load(userChatRoom.thumbnail[3]).transform(CenterCrop(), RoundedCorners(5)).into(binding.ivFourChatRoomListUserImg4)
+            Glide.with(binding.ivFourChatRoomListUserImg).load(userChatRoom.thumbnail[0])
+                .transform(CenterCrop(), RoundedCorners(5)).into(binding.ivFourChatRoomListUserImg)
+            Glide.with(binding.ivFourChatRoomListUserImg2).load(userChatRoom.thumbnail[1])
+                .transform(CenterCrop(), RoundedCorners(5)).into(binding.ivFourChatRoomListUserImg2)
+            Glide.with(binding.ivFourChatRoomListUserImg3).load(userChatRoom.thumbnail[2])
+                .transform(CenterCrop(), RoundedCorners(5)).into(binding.ivFourChatRoomListUserImg3)
+            Glide.with(binding.ivFourChatRoomListUserImg4).load(userChatRoom.thumbnail[3])
+                .transform(CenterCrop(), RoundedCorners(5)).into(binding.ivFourChatRoomListUserImg4)
             binding.tvFourChatRoomListUserName.text = userChatRoom.title
+            binding.tvFourChatRoomListUserCount.text = userChatRoom.count.toString()
         }
     }
     /**
@@ -169,18 +177,15 @@ class ChatRoomListAdapter constructor(
                 R.id.item_one_chat_room_list -> {
                     clickCallBack?.onItemLongClicked(position, userChatRoom)
                 }
-                R.id.item_two_chat_room_list ->
-                    {
-                        clickCallBack?.onItemLongClicked(position, userChatRoom)
-                    }
-                R.id.item_three_chat_room_list ->
-                    {
-                        clickCallBack?.onItemLongClicked(position, userChatRoom)
-                    }
-                R.id.item_four_chat_room_list ->
-                    {
-                        clickCallBack?.onItemLongClicked(position, userChatRoom)
-                    }
+                R.id.item_two_chat_room_list -> {
+                    clickCallBack?.onItemLongClicked(position, userChatRoom)
+                }
+                R.id.item_three_chat_room_list -> {
+                    clickCallBack?.onItemLongClicked(position, userChatRoom)
+                }
+                R.id.item_four_chat_room_list -> {
+                    clickCallBack?.onItemLongClicked(position, userChatRoom)
+                }
             }
             return false
         }

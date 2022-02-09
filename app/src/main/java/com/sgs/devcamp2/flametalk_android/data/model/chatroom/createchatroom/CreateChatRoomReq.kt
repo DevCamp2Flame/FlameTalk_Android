@@ -10,7 +10,7 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class CreateChatRoomReq(
     val hostId: String,
-    val hostOpenProfileId: String?,
+    val hostOpenProfileId: Long?,
     val isOpen: Boolean,
     val users: List<String>,
     val title: String?,

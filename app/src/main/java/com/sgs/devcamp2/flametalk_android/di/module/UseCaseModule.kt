@@ -72,8 +72,9 @@ object UseCaseModule {
     fun provideGetChatListUseCase(repository: ChatRoomRepository): GetChatListUseCase {
         return GetChatListUseCase(repository = repository)
     }
+
     @Provides
-    fun providePushChatUseCase(repository: ChatRepository): PushChatUseCase {
-        return PushChatUseCase(repository = repository)
+    fun provideGetThumbnailListUseCase(repository: ChatRoomRepository): GetThumbnailListUseCase {
+        return GetThumbnailListUseCase(repository = repository)
     }
 }

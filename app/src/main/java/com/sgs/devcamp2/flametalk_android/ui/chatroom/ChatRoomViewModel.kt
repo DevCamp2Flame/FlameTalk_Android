@@ -3,7 +3,9 @@ package com.sgs.devcamp2.flametalk_android.ui.chatroom
 import android.util.Log
 import androidx.lifecycle.*
 import com.sgs.devcamp2.flametalk_android.data.model.chat.Chat
-import com.sgs.devcamp2.flametalk_android.data.model.chat.ChatEntity
+import com.sgs.devcamp2.flametalk_android.data.model.chat.ChatReq
+import com.sgs.devcamp2.flametalk_android.data.model.chat.ChatRes
+import com.sgs.devcamp2.flametalk_android.data.model.chatroom.ChatRoom
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.closechatroom.CloseChatRoomReq
 import com.sgs.devcamp2.flametalk_android.domain.entity.LocalResults
 import com.sgs.devcamp2.flametalk_android.domain.entity.Results
@@ -19,7 +21,6 @@ import org.hildan.krossbow.stomp.conversions.kxserialization.StompSessionWithKxS
 import org.hildan.krossbow.stomp.conversions.kxserialization.convertAndSend
 import org.hildan.krossbow.stomp.conversions.kxserialization.subscribe
 import org.hildan.krossbow.stomp.conversions.kxserialization.withJsonConversions
-import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -29,20 +30,10 @@ class ChatRoomViewModel @Inject constructor(
     private val deleteChatRoomUseCase: DeleteChatRoomUseCase,
     private val closeChatRoomUseCase: CloseChatRoomUseCase,
     private val getChatListUseCase: GetChatListUseCase,
-    private val pushChatUseCase: PushChatUseCase
 ) : ViewModel() {
     val TAG: String = "로그"
-    private var _chatRoom = MutableStateFlow<List<Chat>>(emptyList())
-    private var list = mutableListOf<Chat>()
     private var _chat = MutableStateFlow<String>("")
     var chat = _chat.asStateFlow()
-    /**
-     * _chatUserList는 채팅방에 속해 있는 user의 정보를 의미한다. image url, 이름 등이 포함 될 수 있다.
-     * Object 대신 String 으로 테스트한다.
-     */
-
-    val chatRoom = _chatRoom.asStateFlow()
-    lateinit var _roomId: String
     lateinit var _jsonStompSessions: StompSessionWithKxSerialization
     private var _drawUserState = MutableStateFlow<UiState<GetChatRoomEntity>>(UiState.Loading)
     var drawUserState = _drawUserState.asStateFlow()
@@ -50,99 +41,96 @@ class ChatRoomViewModel @Inject constructor(
     var deleteUiState = _deleteUiState.asStateFlow()
     private var _chatList = MutableStateFlow<UiState<List<Chat>>>(UiState.Loading)
     var chatList = _chatList.asStateFlow()
-
     private var _lastReadMessageId = MutableStateFlow("")
     var lastReadMessageId = _lastReadMessageId.asStateFlow()
+    private var _uiState = MutableStateFlow<UiState<Long>>(UiState.Loading)
+    var uiState = _uiState.asStateFlow()
+
+    private var _userChatRoom = MutableStateFlow<UiState<ChatRoom>>(UiState.Loading)
+    var userChatRoom = _userChatRoom.asStateFlow()
+
+
 
     fun getChatList(chatroomId: String) {
         viewModelScope.launch {
-            getChatListUseCase.invoke(chatroomId).collect {
-                result ->
+            getChatListUseCase.invoke(chatroomId).collect { result ->
                 when (result) {
-                    is LocalResults.Success ->
-                        {
-                            _chatList.value = UiState.Success(result.data.chatList)
-                        }
-                }
-            }
-        }
-    }
-    fun getChatRoomDetail(userChatroomId: Long) {
-        viewModelScope.launch {
-            getChatRoomInfoUseCase.invoke(userChatroomId).collect {
-                result ->
-                when (result) {
-                    is Results.Success ->
-                        {
-                            _drawUserState.value = UiState.Success(result.data)
-                        }
-                    is Results.Error ->
-                        {
-                        }
+                    is LocalResults.Success -> {
+                        _chatList.value = UiState.Success(result.data.chatList)
+                        _userChatRoom.value = UiState.Success(result.data.room)
+
+                    }
                 }
             }
         }
     }
 
-    fun pushMessage(chatEntity: ChatEntity) {
+    fun getChatRoomDetail(userChatroomId: Long) {
         viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                pushChatUseCase.invoke(chatEntity)
+            getChatRoomInfoUseCase.invoke(userChatroomId).collect { result ->
+                when (result) {
+                    is Results.Success -> {
+                        _drawUserState.value = UiState.Success(result.data)
+                    }
+                    is Results.Error -> {
+                    }
+                }
             }
         }
-    }
-    fun addChatting(chat: Chat) {
-        var newList = _chatRoom.value.toMutableList()
-        newList.add(chat)
-        _chatRoom.value = newList
     }
 
     fun updateTextValue(text: String) {
         _chat.value = text
     }
-    fun updateLastReadMessage(input : String)
-    {
-        _lastReadMessageId.value = input
-    }
 
-    fun initRoom(roomId: String) {
-        _roomId = roomId
+    fun updateLastReadMessage(input: String) {
+        _lastReadMessageId.value = input
     }
 
     fun deleteChatRoom(userChatroomId: Long) {
         viewModelScope.launch {
-            deleteChatRoomUseCase.invoke(userChatroomId).collect {
-                result ->
+            deleteChatRoomUseCase.invoke(userChatroomId).collect { result ->
                 when (result) {
-                    is Results.Success ->
-                        {
-                            _deleteUiState.value = UiState.Success(true)
-                        }
-                }
-            }
-        }
-    }
-    fun receivedMessage(session: StompSession, roomId: String) {
-        viewModelScope.launch {
-            _jsonStompSessions = session.withJsonConversions()
-            val subscription: Flow<Chat> =
-                _jsonStompSessions.subscribe("/sub/chat/room/$roomId", Chat.serializer())
-            val collectorJob = launch {
-                subscription.collect { msg ->
-                     _lastReadMessageId.value = msg.sender_id //내가 읽은 메세지 초기화
-                    saveReceivedMessageUseCase.invoke(msg)
+                    is Results.Success -> {
+                        _deleteUiState.value = UiState.Success(true)
+                    }
                 }
             }
         }
     }
 
-    fun pushMessage(roomId: String, session: StompSession, contents: String) {
+    fun receivedMessage(session: StompSession, roomId: String) {
+        viewModelScope.launch {
+            _jsonStompSessions = session.withJsonConversions()
+            val subscription: Flow<ChatRes> =
+                _jsonStompSessions.subscribe("/sub/chat/room/$roomId", ChatRes.serializer())
+            val collectorJob = launch {
+                subscription.collect { msg ->
+                    _lastReadMessageId.value = msg.sender_id // 내가 읽은 메세지 초기화
+                    Log.d(TAG, "msg - $msg() called")
+                    saveReceivedMessageUseCase.invoke(msg).collect {
+                        // state 변경  pushstate겠다
+                        Log.d(TAG, "msg - $it() called")
+                        _uiState.value = UiState.Success(it)
+                    }
+                }
+            }
+        }
+    }
+
+    fun disconnectStomp() {
+        viewModelScope.launch {
+        }
+    }
+
+    fun pushMessage(messageType: String, roomId: String, session: StompSession, contents: String) {
         viewModelScope.launch {
             // sender id -> user_id 로 변경하고
             // nickname도 변경
-            val chatReq = ChatEntity("talk", "1643986912282658350", roomId, contents)
             _jsonStompSessions = session.withJsonConversions()
-            _jsonStompSessions.convertAndSend("/pub/chat/message", chatReq, ChatEntity.serializer())
+            // 만약 message type이 INVITE일 경우 한번 더 메세지를 보내자.
+            val chatReq = ChatReq(messageType, roomId, "1643986912282658350", "닉네임", contents, null)
+            _jsonStompSessions.convertAndSend("/pub/chat/message", chatReq, ChatReq.serializer())
         }
     }
 

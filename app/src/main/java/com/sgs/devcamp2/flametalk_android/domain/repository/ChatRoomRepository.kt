@@ -2,6 +2,7 @@ package com.sgs.devcamp2.flametalk_android.domain.repository
 
 import com.sgs.devcamp2.flametalk_android.data.common.WrappedResponse
 import com.sgs.devcamp2.flametalk_android.data.model.chat.ChatWithRoomId
+import com.sgs.devcamp2.flametalk_android.data.model.chatroom.ThumbnailWithRoomId
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.closechatroom.CloseChatRoomReq
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.createchatroom.CreateChatRoomReq
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.createchatroom.CreateChatRoomRes
@@ -13,7 +14,7 @@ import com.sgs.devcamp2.flametalk_android.data.model.chatroom.updatechatroom.Upd
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.updateopenchatroomprofile.UpdateOpenChatRoomProfileReq
 import com.sgs.devcamp2.flametalk_android.domain.entity.LocalResults
 import com.sgs.devcamp2.flametalk_android.domain.entity.Results
-import com.sgs.devcamp2.flametalk_android.domain.entity.chatroom.CreateChatRoomEntity
+import com.sgs.devcamp2.flametalk_android.domain.entity.chatroom.ChatRoomEntity
 import com.sgs.devcamp2.flametalk_android.domain.entity.chatroom.GetChatRoomEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -24,7 +25,7 @@ import kotlinx.coroutines.flow.Flow
  */
 interface ChatRoomRepository {
 
-    suspend fun createChatRoom(createChatRoomReq: CreateChatRoomReq): Flow<Results<CreateChatRoomEntity, WrappedResponse<CreateChatRoomRes>>>
+    suspend fun createChatRoom(createChatRoomReq: CreateChatRoomReq): Flow<Results<ChatRoomEntity, WrappedResponse<CreateChatRoomRes>>>
     suspend fun enterChatRoom()
     suspend fun getChatRoom(userChatroomId: Long): Flow<Results<GetChatRoomEntity, WrappedResponse<GetChatRoomRes>>>
     suspend fun getChatRoomList(isOpen: Boolean): Flow<Results<GetChatRoomListRes, WrappedResponse<GetChatRoomListRes>>>
@@ -33,6 +34,6 @@ interface ChatRoomRepository {
     suspend fun closeChatRoom(closeChatRoomReq: CloseChatRoomReq): Flow<Results<Boolean, WrappedResponse<Nothing>>>
     suspend fun updateOpenChatRoomProfile(updateOpenChatRoomProfileReq: UpdateOpenChatRoomProfileReq): Flow<Results<Boolean, WrappedResponse<Nothing>>>
     suspend fun leaveChatRoom(userChatroomId: Long): Flow<Results<Boolean, WrappedResponse<Nothing>>>
-
     suspend fun getChatList(chatroomId: String): Flow<LocalResults<ChatWithRoomId>>
+    suspend fun getThumbnailList(chatroomId: String): Flow<LocalResults<ThumbnailWithRoomId>>
 }
