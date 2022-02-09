@@ -5,6 +5,7 @@ import com.sgs.devcamp2.flametalk_android.network.request.friend.AddFriendReques
 import com.sgs.devcamp2.flametalk_android.network.request.friend.FriendStatusRequest
 import com.sgs.devcamp2.flametalk_android.network.response.CommonResponse
 import com.sgs.devcamp2.flametalk_android.network.response.friend.AddFriendResponse
+import com.sgs.devcamp2.flametalk_android.network.response.friend.FriendListResponse
 import com.sgs.devcamp2.flametalk_android.network.response.friend.FriendStatusResponse
 import retrofit2.http.*
 
@@ -33,7 +34,7 @@ interface FriendService {
         @Query("isBirthday") isBirthday: Boolean?,
         @Query("isHidden") isHidden: Boolean?,
         @Query("isBlocked") isBlocked: Boolean?
-    )
+    ): FriendListResponse
 
     // 친구 숨김, 차단여부 변경
     @PUT("/api/membership/friend/{friendId}")
