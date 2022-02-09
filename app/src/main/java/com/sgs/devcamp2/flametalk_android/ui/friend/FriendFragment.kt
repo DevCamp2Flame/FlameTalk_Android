@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.google.android.material.snackbar.Snackbar
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentFriendBinding
 import com.sgs.devcamp2.flametalk_android.ui.friend.birthday.BirthdayAdapter
@@ -159,15 +158,13 @@ class FriendFragment : Fragment() {
         binding.rvFriendBirthday.layoutManager = LinearLayoutManager(requireContext())
         binding.rvFriendBirthday.adapter = birthdayAdapter
 
-        viewModel.birthProfileDummy.observe(
-            viewLifecycleOwner
-        ) { it ->
-//            it?.let {
-//                if (it.size > 0) {
-//                    birthdayAdapter.data = it
-//                    birthdayAdapter.notifyDataSetChanged()
-//                }
-//            }
+        lifecycleScope.launch {
+            viewModel.birthProfile.collectLatest {
+                if (it.size > 0) {
+                    birthdayAdapter.data = it
+                    birthdayAdapter.notifyDataSetChanged()
+                }
+            }
         }
         // 마지막 아이템: 친구의 생일을 확인해보세요
         binding.itemFriendMoreBirthday.imgFriendPreviewNone.toVisible()
@@ -180,22 +177,19 @@ class FriendFragment : Fragment() {
     private fun initFriendProfile() {
         binding.rvFriend.layoutManager = LinearLayoutManager(requireContext())
         binding.rvFriend.adapter = friendAdapter
-
-        viewModel.friendProfileDummy.observe(
-            viewLifecycleOwner
-        ) { it ->
-            it?.let {
-//                if (it.size > 0) {
-//                    friendAdapter.data = it
-//                    friendAdapter.notifyDataSetChanged()
-//                }
+        lifecycleScope.launch {
+            viewModel.friendProfile.collectLatest {
+                if (it.size > 0) {
+                    friendAdapter.data = it
+                    friendAdapter.notifyDataSetChanged()
+                } else {
+                    //  TODO: 연락처 친구 동기화 다이얼로그
+                }
             }
         }
     }
 
     companion object {
         const val USER_DEFAULT_PROFILE = 1
-        // const val FRIEND_PROFILE = 2
-        // const val USER_MULTI_PROFILE = 3
     }
 }

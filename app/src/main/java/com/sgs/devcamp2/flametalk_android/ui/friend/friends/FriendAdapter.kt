@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.sgs.devcamp2.flametalk_android.R
+import com.sgs.devcamp2.flametalk_android.data.model.Friend
 import com.sgs.devcamp2.flametalk_android.databinding.ItemFriendPreviewBinding
-import com.sgs.devcamp2.flametalk_android.data.model.ProfilePreview
 import com.sgs.devcamp2.flametalk_android.ui.friend.FriendFragmentDirections
 import com.sgs.devcamp2.flametalk_android.util.SimpleDiffUtilCallback
 import com.sgs.devcamp2.flametalk_android.util.toVisible
@@ -28,8 +28,8 @@ import com.sgs.devcamp2.flametalk_android.util.toVisibleGone
 
 class FriendAdapter(
     private val context: Context
-) : ListAdapter<ProfilePreview, FriendAdapter.FriendViewHolder>(SimpleDiffUtilCallback()) {
-    var data = listOf<ProfilePreview>()
+) : ListAdapter<Friend, FriendAdapter.FriendViewHolder>(SimpleDiffUtilCallback()) {
+    var data = listOf<Friend>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FriendViewHolder {
         return FriendViewHolder(
@@ -56,26 +56,30 @@ class FriendAdapter(
             this.binding = binding
         }
 
-        fun bind(data: ProfilePreview) {
+        fun bind(data: Friend) {
             // 친구 프로필 상세보기로 이동
             itemView.setOnClickListener {
                 val friendToFriendProfileDirections: NavDirections =
-                    FriendFragmentDirections.actionFriendToProfile(FRIEND_PROFILE, data.id)
+                    FriendFragmentDirections.actionFriendToProfile(
+                        FRIEND_PROFILE,
+                        data.preview.profileId
+                    )
                 it.findNavController().navigate(friendToFriendProfileDirections)
             }
 
             initFriendList(data)
         }
 
-        private fun initFriendList(data: ProfilePreview) {
-            Glide.with(itemView).load(data.imageUrl).apply(RequestOptions.circleCropTransform())
+        private fun initFriendList(data: Friend) {
+            Glide.with(itemView).load(data.preview.imageUrl)
+                .apply(RequestOptions.circleCropTransform())
                 .apply(RequestOptions.placeholderOf(R.drawable.ic_person_white_24))
                 .into(binding.imgFriendPreview)
             binding.tvFriendPreviewNickname.text = "친구 이름"
 
-            if (data.description.isNotEmpty()) {
+            if (data.preview.description.isNotEmpty()) {
                 binding.tvFriendPreviewDesc.toVisible()
-                binding.tvFriendPreviewDesc.text = data.description
+                binding.tvFriendPreviewDesc.text = data.preview.description
             } else {
                 binding.tvFriendPreviewDesc.toVisibleGone()
             }

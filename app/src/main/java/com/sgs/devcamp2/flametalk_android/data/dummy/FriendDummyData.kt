@@ -1,5 +1,7 @@
 package com.sgs.devcamp2.flametalk_android.data.dummy
 
+import com.sgs.devcamp2.flametalk_android.data.model.Friend
+import com.sgs.devcamp2.flametalk_android.data.model.FriendPreview
 import com.sgs.devcamp2.flametalk_android.data.model.ProfileDummyPreview
 
 /**
@@ -57,90 +59,91 @@ fun getMultiProfile() = listOf(
 
 // 생일인 친구
 fun getBirthdayFriend() = listOf(
-    ProfileDummyPreview(2, 6, "최수연6", null, "소연 짱 팬222", null),
-    ProfileDummyPreview(
-        3,
-        7,
-        "김다롬7",
-        "https://cdn.pixabay.com/photo/2018/03/26/02/05/cat-3261420__480.jpg",
-        null,
-        "https://cdn.pixabay.com/photo/2017/07/25/01/22/cat-2536662__480.jpg",
+    Friend(
+        12,
+        "1643163512893324414",
+        "플레임 소연",
+        FriendPreview(
+            2,
+            "https://cdn.pixabay.com/photo/2018/03/26/02/05/cat-3261420__480.jpg",
+            "끝까지 열심히!!"
+        )
+    ),
+    Friend(
+        15,
+        "1643163512893324415",
+        "플레임 수연",
+        FriendPreview(
+            21,
+            "https://cdn.pixabay.com/photo/2017/07/25/01/22/cat-2536662__480.jpg",
+            "안녕..."
+        )
     )
 )
 
 // 친구 리스트
 fun getDummyFriend() = listOf(
-    ProfileDummyPreview(4, 8, "최수연", null, "소연 짱 팬", null),
-    ProfileDummyPreview(
-        5,
-        9,
-        "김다롬",
-        "https://cdn.pixabay.com/photo/2017/07/25/01/22/cat-2536662__480.jpg",
-        null,
-        null
-    ),
-    ProfileDummyPreview(
-        6,
-        10,
-        "최수연2",
-        null,
-        "소연 짱 팬222",
-        null
-    ),
-    ProfileDummyPreview(
-        7,
-        11,
-        "김다롬2",
-        "https://cdn.pixabay.com/photo/2017/11/14/13/06/kitty-2948404__480.jpg",
-        null,
-        "https://cdn.pixabay.com/photo/2017/07/25/01/22/cat-2536662__480.jpg",
-    ),
-    ProfileDummyPreview(
-        8,
+    Friend(
         12,
-        "최수연3",
-        "https://cdn.pixabay.com/photo/2016/01/20/13/05/cat-1151519__480.jpg",
-        "소연 짱 팬333",
-        null
+        "1643163512893324414",
+        "플레임 소연",
+        FriendPreview(
+            2,
+            "https://cdn.pixabay.com/photo/2017/07/25/01/22/cat-2536662__480.jpg",
+            "끝까지 열심히!!"
+        )
     ),
-    ProfileDummyPreview(
-        9,
-        13,
-        "최수연4",
-        null,
-        "소연 짱 팬",
-        null
-    ),
-    ProfileDummyPreview(
-        10,
-        14,
-        "김다롬5",
-        "https://cdn.pixabay.com/photo/2017/02/15/12/12/cat-2068462__480.jpg",
-        null,
-        null
-    ),
-    ProfileDummyPreview(
-        11,
+    Friend(
         15,
-        "최수연6",
-        null,
-        "소연 짱 팬222",
-        null
+        "1643163512893324415",
+        "플레임 수연",
+        FriendPreview(
+            21,
+            "https://cdn.pixabay.com/photo/2017/11/14/13/06/kitty-2948404__480.jpg",
+            "안녕..."
+        )
     ),
-    ProfileDummyPreview(
+    Friend(
         12,
-        16,
-        "김다롬7",
-        "https://cdn.pixabay.com/photo/2017/11/14/13/06/kitty-2948404__480.jpg",
-        null,
-        null
+        "1643163512893324414",
+        "플레임 소연",
+        FriendPreview(
+            2,
+            "https://cdn.pixabay.com/photo/2017/07/25/01/22/cat-2536662__480.jpg",
+            "끝까지 열심히!!"
+        )
     ),
-    ProfileDummyPreview(
-        13,
-        17,
-        "최수연8",
-        "https://cdn.pixabay.com/photo/2018/03/26/02/05/cat-3261420__480.jpg",
-        "소연 짱 팬333",
-        null
+    Friend(
+        15,
+        "1643163512893324415",
+        "플레임 수연",
+        FriendPreview(
+            21,
+            "https://cdn.pixabay.com/photo/2016/01/20/13/05/cat-1151519__480.jpg",
+            "안녕..."
+        )
+    )
+)
+
+fun getDummyHiddenFriend() = listOf(
+    Friend(
+        12,
+        "1643163512893324414",
+        "플레임 소연",
+        FriendPreview(
+            2,
+            "https://cdn.pixabay.com/photo/2018/03/26/02/05/cat-3261420__480.jpg",
+            "끝까지 열심히!!"
+        )
+    ),
+    Friend(
+        15,
+        "1643163512893324415",
+        "플레임 수연",
+        FriendPreview(
+            21,
+            "https://cdn.pixabay.com/photo/2017/11/14/13/06/kitty-2948404__480.jpg",
+            "안녕..."
+        )
     )
 )
