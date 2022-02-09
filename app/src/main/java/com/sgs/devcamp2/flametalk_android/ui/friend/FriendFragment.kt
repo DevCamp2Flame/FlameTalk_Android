@@ -9,7 +9,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -39,7 +38,6 @@ import timber.log.Timber
 class FriendFragment : Fragment() {
     private val binding by lazy { FragmentFriendBinding.inflate(layoutInflater) }
     private val viewModel: FriendViewModel by viewModels()
-    private val args: FriendFragmentArgs by navArgs()
 
     // 뷰 생성 시점에 adapter 초기화
     private val multiProfileAdapter: MultiProfileAdapter by lazy {
@@ -195,7 +193,5 @@ class FriendFragment : Fragment() {
 
     companion object {
         const val USER_DEFAULT_PROFILE = 1
-        // const val FRIEND_PROFILE = 2
-        // const val USER_MULTI_PROFILE = 3
     }
 }

@@ -59,10 +59,6 @@
         <action
             android:id="@+id/action_friend_to_add_profile"
             app:destination="@+id/navigation_add_profile"/>
-        <argument
-            android:name="isCreated"
-            android:defaultValue="false"
-            app:argType="boolean" />
     </fragment>
 
     <fragment

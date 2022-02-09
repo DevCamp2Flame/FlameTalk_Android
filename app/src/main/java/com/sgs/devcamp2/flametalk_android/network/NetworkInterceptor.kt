@@ -44,15 +44,6 @@ class NetworkInterceptor(
             Timber.d("Code ${response.code}")
         }
 
-//        if (response.code == false) {
-//            val request = chain.request()
-//                .addHeader("Content-Type", "multipart/form-data")
-//                .addHeader(
-//                    "ACCESS-TOKEN",
-//                    tokenSupplier().also { Timber.d("ACCESS-TOKEN: $it") }.toString()
-//                )
-//        }
-
         Timber.d(response.toString())
         Timber.d(JSONObject(response.peekBody(Long.MAX_VALUE).string()).toString(4))
 

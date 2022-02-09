@@ -1,6 +1,5 @@
 package com.sgs.devcamp2.flametalk_android.network.service
 
-import com.sgs.devcamp2.flametalk_android.network.request.FileCreateRequest
 import com.sgs.devcamp2.flametalk_android.network.response.CommonResponse
 import com.sgs.devcamp2.flametalk_android.network.response.file.FileCreateResponse
 import com.sgs.devcamp2.flametalk_android.network.response.file.FileGetResponse

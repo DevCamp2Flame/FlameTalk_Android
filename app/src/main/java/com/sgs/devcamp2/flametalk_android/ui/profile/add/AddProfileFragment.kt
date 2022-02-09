@@ -107,15 +107,7 @@ class AddProfileFragment : Fragment() {
         lifecycleScope.launchWhenResumed {
             viewModel.isSuccess.collectLatest {
                 if (it != null) {
-                    if (it) {
-                        val addProfileToFriendDirections: NavDirections =
-                            AddProfileFragmentDirections.actionAddToFriend(true)
-                        findNavController().navigate(addProfileToFriendDirections)
-                    } else {
-                        val addProfileToFriendDirections: NavDirections =
-                            AddProfileFragmentDirections.actionAddToFriend(false)
-                        findNavController().navigate(addProfileToFriendDirections)
-                    }
+                    findNavController().navigate(R.id.navigation_friend)
                 }
             }
         }
