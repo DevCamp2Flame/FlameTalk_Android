@@ -7,6 +7,7 @@ import com.sgs.devcamp2.flametalk_android.data.dummy.getBirthdayFriend
 import com.sgs.devcamp2.flametalk_android.data.dummy.getDummyFriend
 import com.sgs.devcamp2.flametalk_android.data.model.Friend
 import com.sgs.devcamp2.flametalk_android.data.model.ProfilePreview
+import com.sgs.devcamp2.flametalk_android.network.repository.FriendRepository
 import com.sgs.devcamp2.flametalk_android.network.repository.ProfileRepository
 import dagger.Lazy
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +20,8 @@ import timber.log.Timber
 @HiltViewModel
 class FriendViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val profileRepository: Lazy<ProfileRepository>
+    private val profileRepository: Lazy<ProfileRepository>,
+    private val friendRepository: Lazy<FriendRepository>
 ) : ViewModel() {
     // 네트워크 통신 데이터 전 더미데이터
     private var dummyBirthdayData: List<Friend> = getBirthdayFriend()
@@ -42,8 +44,8 @@ class FriendViewModel @Inject constructor(
     val multiProfile: MutableStateFlow<List<ProfilePreview>> = _multiProfile
 
     // 생일인 친구 리스트
-    private val _birthProfile = MutableStateFlow<List<Friend>>(emptyList())
-    val birthProfile: MutableStateFlow<List<Friend>> = _birthProfile
+    private val _birthProfile = MutableStateFlow<List<Friend>?>(emptyList())
+    val birthProfile: MutableStateFlow<List<Friend>?> = _birthProfile
 
     // 친구 리스트
     private val _friendProfile = MutableStateFlow<List<Friend>>(emptyList())
@@ -59,6 +61,8 @@ class FriendViewModel @Inject constructor(
 
     init {
         getProfileList()
+        // getFriendList(BIRTHDAY_FRIEND)
+        // getFriendList(FRIEND)
 
         _birthProfile.value = dummyBirthdayData
         _friendProfile.value = dummyFriendData
@@ -94,5 +98,35 @@ class FriendViewModel @Inject constructor(
                 Timber.d("Fail Response: $_error")
             }
         }
+    }
+
+    fun getFriendList(type: Int) {
+        viewModelScope.launch {
+            try {
+                val response = when (type) {
+                    BIRTHDAY_FRIEND -> friendRepository.get().getFriendList(true, false, false)
+                    FRIEND -> friendRepository.get().getFriendList(null, false, false)
+                    else -> null
+                }
+
+                if (response?.status == 200) {
+                    _birthProfile.value = response.data
+
+                    // Result
+                    Timber.d("Birthday Response ${response.data}")
+                    Timber.d("Birthday Friend ${_birthProfile.value}")
+                } else {
+                    _message.value = response!!.message
+                }
+            } catch (error: Throwable) {
+                _error.value = error.toString()
+                Timber.d("Fail Response: $_error")
+            }
+        }
+    }
+
+    companion object {
+        const val BIRTHDAY_FRIEND = 100
+        const val FRIEND = 200
     }
 }
