@@ -37,9 +37,10 @@
             android:id="@+id/action_signup_to_signin"
             app:destination="@id/navigation_signin"
             app:popUpTo="@id/navigation_signin"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true" />
     </fragment>
 
+    <!--친구 리스트 메인-->
     <fragment
         android:id="@+id/navigation_friend"
         android:name="com.sgs.devcamp2.flametalk_android.ui.friend.FriendFragment"
@@ -58,7 +59,7 @@
             app:destination="@id/navigation_profile" />
         <action
             android:id="@+id/action_friend_to_add_profile"
-            app:destination="@+id/navigation_add_profile"/>
+            app:destination="@+id/navigation_add_profile" />
     </fragment>
 
     <!--휴대폰 번호로 친구 추가-->
@@ -71,15 +72,14 @@
             android:id="@+id/action_signup_to_signin"
             app:destination="@id/navigation_signin"
             app:popUpTo="@id/navigation_signin"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
         android:id="@+id/navigation_phonebook"
         android:name="com.sgs.devcamp2.flametalk_android.ui.friend.phonebook.PhoneBookFragment"
         android:label="PhoneBook"
-        tools:layout="@layout/fragment_phone_book">
-    </fragment>
+        tools:layout="@layout/fragment_phone_book"></fragment>
 
     <!--프로필 상세보기-->
     <fragment
@@ -103,6 +103,32 @@
             app:destination="@id/navigation_single_feed" />
     </fragment>
 
+    <!--숨김 친구-->
+    <fragment
+        android:id="@+id/navigation_hidden_friend"
+        android:name="com.sgs.devcamp2.flametalk_android.ui.friend.hidden.HiddenFragment"
+        android:label="HiddenFriend"
+        tools:layout="@layout/fragment_hidden_friend">
+        <action
+            android:id="@+id/action_hidden_to_friend"
+            app:destination="@id/navigation_friend"
+            app:popUpTo="@id/navigation_friend"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <!--차단 친구-->
+    <fragment
+        android:id="@+id/navigation_blocked_friend"
+        android:name="com.sgs.devcamp2.flametalk_android.ui.friend.blocked.BlockedFragment"
+        android:label="BlockedFriend"
+        tools:layout="@layout/fragment_blocked_friend">
+        <action
+            android:id="@+id/action_blocked_to_friend"
+            app:destination="@id/navigation_friend"
+            app:popUpTo="@id/navigation_friend"
+            app:popUpToInclusive="true" />
+    </fragment>
+
     <!--프로필 편집-->
     <fragment
         android:id="@+id/navigation_edit_profile"
@@ -116,9 +142,9 @@
 
         <argument
             android:name="userInfo"
-            app:nullable="true"
             android:defaultValue="@null"
-            app:argType="com.sgs.devcamp2.flametalk_android.data.model.Profile" />
+            app:argType="com.sgs.devcamp2.flametalk_android.data.model.Profile"
+            app:nullable="true" />
     </fragment>
 
     <!--프로필 생성-->
@@ -141,9 +167,9 @@
         tools:layout="@layout/fragment_profile_desc">
         <argument
             android:name="desc"
-            app:nullable="true"
             android:defaultValue=""
-            app:argType="string" />
+            app:argType="string"
+            app:nullable="true" />
         <action
             android:id="@+id/action_edit_desc_to_edit"
             app:destination="@id/navigation_edit_profile" />
@@ -167,12 +193,12 @@
             app:destination="@id/navigation_total_feed" />
         <argument
             android:name="profileId"
-            app:argType="long"
-            android:defaultValue="0L"/>
+            android:defaultValue="0L"
+            app:argType="long" />
         <argument
             android:name="isBackground"
-            app:argType="boolean"
-            android:defaultValue="true"/>
+            android:defaultValue="true"
+            app:argType="boolean" />
     </fragment>
 
     <!--프로필 total 피드-->
@@ -186,16 +212,16 @@
             android:id="@+id/action_feed_total_to_profile"
             app:destination="@id/navigation_profile"
             app:popUpTo="@+id/navigation_profile"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true" />
 
         <argument
             android:name="profileId"
-            app:argType="long"
-            android:defaultValue="0L"/>
+            android:defaultValue="0L"
+            app:argType="long" />
         <argument
             android:name="profileImage"
-            app:argType="string"
-            android:defaultValue=""/>
+            android:defaultValue=""
+            app:argType="string" />
     </fragment>
 
     <!--    채팅방 리스트-->
@@ -214,8 +240,7 @@
         android:id="@+id/navigation_open_chat_room"
         android:name="com.sgs.devcamp2.flametalk_android.ui.openchatroom.OpenChatRoomFragment"
         android:label="OpenChatRoom"
-        tools:layout="@layout/fragment_open_chat_room">
-    </fragment>
+        tools:layout="@layout/fragment_open_chat_room"></fragment>
 
     <fragment
         android:id="@+id/navigation_setting"
@@ -258,7 +283,7 @@
     <dialog
         android:id="@+id/navigation_chat_Room_Top_Sheet"
         android:name="com.sgs.devcamp2.flametalk_android.ui.chatroomlist.ChatRoomTopSheetFragment"
-        android:label="fragment_chat_room_top_sheet" >
+        android:label="fragment_chat_room_top_sheet">
         <action
             android:id="@+id/action_chatRoomTopSheetFragment_to_inviteRoomFragment"
             app:destination="@id/navigation_invite_room" />
@@ -268,14 +293,14 @@
         android:id="@+id/navigation_chat_Room_Bottom_Sheet"
         android:name="com.sgs.devcamp2.flametalk_android.ui.chatroom.ChatRoomBottomSheetFragment"
         android:label="fragment_chat_room_bottom_sheet"
-        tools:layout="@layout/fragment_chat_room_bottom_sheet" >
+        tools:layout="@layout/fragment_chat_room_bottom_sheet">
 
     </dialog>
     <fragment
         android:id="@+id/navigation_additional_user_info"
         android:name="com.sgs.devcamp2.flametalk_android.ui.signup.AdditionalUserInfoFragment"
         android:label="fragment_additional_user_info"
-        tools:layout="@layout/fragment_additional_user_info" >
+        tools:layout="@layout/fragment_additional_user_info">
         <action
             android:id="@+id/action_additionalUserInfoFragment_to_navigation_chatting_ViewPager_Fragment"
             app:destination="@id/navigation_chatting_ViewPager_Fragment" />
@@ -286,7 +311,7 @@
         android:id="@+id/navigation_chatting_ViewPager_Fragment"
         android:name="com.sgs.devcamp2.flametalk_android.ui.chattingviewpager.ChattingViewPagerFragment"
         android:label="fragment_chatting_view_pager"
-        tools:layout="@layout/fragment_chatting_view_pager" >
+        tools:layout="@layout/fragment_chatting_view_pager">
         <action
             android:id="@+id/action_chattingViewPagerFragment2_to_navigation_chat_room_list"
             app:destination="@id/navigation_chat_room_list" />

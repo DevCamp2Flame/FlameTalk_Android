@@ -11,6 +11,18 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"
         app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/tv_blocked_friend_empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="25sp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="숨김 친구가 없습니다."/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_hidden_friend"

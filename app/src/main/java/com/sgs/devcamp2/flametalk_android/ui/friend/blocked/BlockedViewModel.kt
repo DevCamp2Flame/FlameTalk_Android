@@ -87,8 +87,8 @@ class BlockedViewModel @Inject constructor(
                     // TODO: 친구 리스트 조회 시, isMarked, isHidden, isBlocked 속성 값을 같이 보내줘야 함
                     assignedProfileId = _selectedFriend.value!!.preview.profileId,
                     isMarked = true,
-                    isHidden = !_isSelected.value, // 사실 이것도 이상함
-                    isBlocked = true,
+                    isHidden = true,
+                    isBlocked = !_isSelected.value, // 사실 이것도 이상함
                 )
                 val response = friendRepository.get().putFriendStatus(friendId, request)
 

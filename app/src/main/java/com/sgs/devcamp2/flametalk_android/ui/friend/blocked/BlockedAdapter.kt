@@ -80,7 +80,7 @@ class BlockedAdapter(
                 .apply(RequestOptions.circleCropTransform())
                 .apply(RequestOptions.placeholderOf(R.drawable.ic_person_white_24))
                 .into(binding.imgFriendStatus)
-            binding.tvFriendStatusNickname.text = "친구 이름"
+            binding.tvFriendStatusNickname.text = data.nickname
             binding.tvFriendStatus.isSelected = true
         }
     }

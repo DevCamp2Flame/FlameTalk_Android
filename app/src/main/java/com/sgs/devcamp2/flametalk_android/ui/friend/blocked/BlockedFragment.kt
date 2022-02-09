@@ -76,11 +76,11 @@ class BlockedFragment : Fragment() {
 
     // 프로필 초기화
     private fun initUserProfiles() {
-        initBirthdayProfile()
+        initBlockedProfile()
     }
 
     // 차단 친구 리스트 초기화
-    private fun initBirthdayProfile() {
+    private fun initBlockedProfile() {
         binding.rvBlockedFriend.layoutManager = LinearLayoutManager(requireContext())
         binding.rvBlockedFriend.adapter = blockedAdapter
 
