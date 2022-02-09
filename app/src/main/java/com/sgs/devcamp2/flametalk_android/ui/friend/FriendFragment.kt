@@ -23,6 +23,8 @@ import com.sgs.devcamp2.flametalk_android.util.toVisibleGone
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import timber.log.Timber
 
 /**
  * @author 박소연
@@ -52,17 +54,14 @@ class FriendFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         initUI()
         return binding.root
     }
 
     private fun initUI() {
         initAppbar()
-        initUserProfile()
-        initMultiProfile()
-        initBirthdayProfile()
-        initFriendProfile()
+        initUserProfiles()
     }
 
     private fun initAppbar() {
@@ -78,28 +77,51 @@ class FriendFragment : Fragment() {
         }
     }
 
+    // 프로필 초기화
+    private fun initUserProfiles() {
+        initMainProfile()
+        initMultiProfile()
+
+        // 생일, 친구 프로필
+        initBirthdayProfile()
+        initFriendProfile()
+    }
+
     // 유저프로필 초기화
-    private fun initUserProfile() {
-        lifecycleScope.launchWhenStarted {
-            viewModel.userProfile.collectLatest {
-                Glide.with(binding.lFriendMainUser.imgFriendPreview)
-                    .load(it.image).apply(RequestOptions.circleCropTransform())
-                    .apply(RequestOptions.placeholderOf(R.drawable.ic_person_white_24))
-                    .into(binding.lFriendMainUser.imgFriendPreview)
-                binding.lFriendMainUser.tvFriendPreviewNickname.text = it.nickname
-                if (it.description.isNullOrBlank()) {
-                    binding.lFriendMainUser.tvFriendPreviewDesc.toVisibleGone()
-                } else {
-                    binding.lFriendMainUser.tvFriendPreviewDesc.text = it.description
+    // 유저 닉네임은 list 데이터로 넘어오지 않기 때문에 따로 observe
+    private fun initMainProfile() {
+
+        lifecycleScope.launch {
+            viewModel.nickname.collectLatest {
+                if (it.isNotEmpty()) {
+                    multiProfileAdapter.nickname = it
+                    binding.lFriendMainUser.tvFriendPreviewNickname.text = it
                 }
             }
         }
 
-        // 친구 목록 > 프로필 상세 보기 이동
+        lifecycleScope.launchWhenResumed {
+            viewModel.userProfile.collectLatest {
+                Glide.with(binding.lFriendMainUser.imgFriendPreview)
+                    .load(it?.imageUrl).apply(RequestOptions.circleCropTransform())
+                    .apply(RequestOptions.placeholderOf(R.drawable.ic_person_white_24))
+                    .into(binding.lFriendMainUser.imgFriendPreview)
+
+                if (it?.description.isNullOrEmpty()) {
+                    binding.lFriendMainUser.tvFriendPreviewDesc.toVisibleGone()
+                } else {
+                    binding.lFriendMainUser.tvFriendPreviewDesc.toVisible()
+                    binding.lFriendMainUser.tvFriendPreviewDesc.text = it?.description
+                    Timber.d("description ${it?.description}")
+                }
+            }
+        }
+
+        // 내 프로필 미리보기 > 프로필 상세 보기 이동
         binding.lFriendMainUser.root.setOnClickListener {
             val friendToProfileDirections: NavDirections =
                 FriendFragmentDirections.actionFriendToProfile(
-                    viewType = 1, userInfo = viewModel.userProfile.value, userId = "1"
+                    viewType = USER_DEFAULT_PROFILE, profileId = viewModel.userProfile.value!!.id
                 )
             findNavController().navigate(friendToProfileDirections)
         }
@@ -112,11 +134,9 @@ class FriendFragment : Fragment() {
         )
         binding.rvFriendMultiProfile.adapter = multiProfileAdapter
 
-        viewModel.multiProfile.observe(
-            viewLifecycleOwner
-        ) { it ->
-            it?.let {
-                if (it.size > 0) {
+        lifecycleScope.launchWhenResumed {
+            viewModel.multiProfile.collectLatest {
+                if (it.isNotEmpty()) {
                     multiProfileAdapter.data = it
                     multiProfileAdapter.notifyDataSetChanged()
                 }
@@ -137,15 +157,15 @@ class FriendFragment : Fragment() {
         binding.rvFriendBirthday.layoutManager = LinearLayoutManager(requireContext())
         binding.rvFriendBirthday.adapter = birthdayAdapter
 
-        viewModel.birthProfile.observe(
+        viewModel.birthProfileDummy.observe(
             viewLifecycleOwner
         ) { it ->
-            it?.let {
-                if (it.size > 0) {
-                    birthdayAdapter.data = it
-                    birthdayAdapter.notifyDataSetChanged()
-                }
-            }
+//            it?.let {
+//                if (it.size > 0) {
+//                    birthdayAdapter.data = it
+//                    birthdayAdapter.notifyDataSetChanged()
+//                }
+//            }
         }
         // 마지막 아이템: 친구의 생일을 확인해보세요
         binding.itemFriendMoreBirthday.imgFriendPreviewNone.toVisible()
@@ -159,15 +179,19 @@ class FriendFragment : Fragment() {
         binding.rvFriend.layoutManager = LinearLayoutManager(requireContext())
         binding.rvFriend.adapter = friendAdapter
 
-        viewModel.friendProfile.observe(
+        viewModel.friendProfileDummy.observe(
             viewLifecycleOwner
         ) { it ->
             it?.let {
-                if (it.size > 0) {
-                    friendAdapter.data = it
-                    friendAdapter.notifyDataSetChanged()
-                }
+//                if (it.size > 0) {
+//                    friendAdapter.data = it
+//                    friendAdapter.notifyDataSetChanged()
+//                }
             }
         }
+    }
+
+    companion object {
+        const val USER_DEFAULT_PROFILE = 1
     }
 }

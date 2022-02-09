@@ -1,7 +1,6 @@
 package com.sgs.devcamp2.flametalk_android.ui.friend.friends
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +12,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.ItemFriendPreviewBinding
-import com.sgs.devcamp2.flametalk_android.network.response.friend.ProfilePreview
+import com.sgs.devcamp2.flametalk_android.data.model.ProfilePreview
 import com.sgs.devcamp2.flametalk_android.ui.friend.FriendFragmentDirections
 import com.sgs.devcamp2.flametalk_android.util.SimpleDiffUtilCallback
 import com.sgs.devcamp2.flametalk_android.util.toVisible
@@ -30,7 +29,7 @@ import com.sgs.devcamp2.flametalk_android.util.toVisibleGone
 class FriendAdapter(
     private val context: Context
 ) : ListAdapter<ProfilePreview, FriendAdapter.FriendViewHolder>(SimpleDiffUtilCallback()) {
-    var data = arrayListOf<ProfilePreview>()
+    var data = listOf<ProfilePreview>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FriendViewHolder {
         return FriendViewHolder(
@@ -54,7 +53,6 @@ class FriendAdapter(
         lateinit var binding: ItemFriendPreviewBinding
 
         constructor(binding: ItemFriendPreviewBinding) : this(binding.root) {
-            Log.d("ViewHolder", " create")
             this.binding = binding
         }
 
@@ -62,7 +60,7 @@ class FriendAdapter(
             // 친구 프로필 상세보기로 이동
             itemView.setOnClickListener {
                 val friendToFriendProfileDirections: NavDirections =
-                    FriendFragmentDirections.actionFriendToProfile(2, data, data.userId.toString())
+                    FriendFragmentDirections.actionFriendToProfile(FRIEND_PROFILE, data.id)
                 it.findNavController().navigate(friendToFriendProfileDirections)
             }
 
@@ -70,12 +68,12 @@ class FriendAdapter(
         }
 
         private fun initFriendList(data: ProfilePreview) {
-            Glide.with(itemView).load(data.image).apply(RequestOptions.circleCropTransform())
+            Glide.with(itemView).load(data.imageUrl).apply(RequestOptions.circleCropTransform())
                 .apply(RequestOptions.placeholderOf(R.drawable.ic_person_white_24))
                 .into(binding.imgFriendPreview)
-            binding.tvFriendPreviewNickname.text = data.nickname
+            binding.tvFriendPreviewNickname.text = "친구 이름"
 
-            if (data.description != null) {
+            if (data.description.isNotEmpty()) {
                 binding.tvFriendPreviewDesc.toVisible()
                 binding.tvFriendPreviewDesc.text = data.description
             } else {
@@ -85,6 +83,6 @@ class FriendAdapter(
     }
 
     companion object {
-        final const val TAG = "FriendAdapter"
+        const val FRIEND_PROFILE = 2
     }
 }

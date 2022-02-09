@@ -22,20 +22,30 @@ import com.google.gson.annotations.SerializedName
 
 @Keep
 data class SignupResponse(
-    @SerializedName("userId")
-    val userId: String,
-    @SerializedName("email")
-    val email: String,
-    @SerializedName("nickname")
-    val nickname: String,
-    @SerializedName("phoneNumber")
-    val phoneNumber: String,
-    @SerializedName("birthday")
-    val birthday: String,
-    @SerializedName("social")
-    val social: String,
-    @SerializedName("region")
-    val region: String,
-    @SerializedName("language")
-    val language: String
-)
+    @SerializedName("status")
+    val status: Int,
+    @SerializedName("message")
+    val message: String,
+    @SerializedName("data")
+    val data: Data
+) {
+    @Keep
+    data class Data(
+        @SerializedName("userId")
+        val userId: String,
+        @SerializedName("email")
+        val email: String,
+        @SerializedName("nickname")
+        val nickname: String,
+        @SerializedName("phoneNumber")
+        val phoneNumber: String,
+        @SerializedName("birthday")
+        val birthday: String,
+        @SerializedName("social")
+        val social: String,
+        @SerializedName("region")
+        val region: String,
+        @SerializedName("language")
+        val language: String
+    )
+}

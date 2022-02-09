@@ -8,12 +8,11 @@ import com.sgs.devcamp2.flametalk_android.network.request.sign.SignupRequest
 import dagger.Lazy
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import javax.inject.Inject
 
 /**
  * @author 박소연
@@ -27,12 +26,18 @@ class SignupViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val signRepository: Lazy<SignRepository>,
 ) : ViewModel() {
-    private val _isSuccess = MutableStateFlow(false)
-    val isSuccess = _isSuccess.asStateFlow()
 
     // 유저 닉네임
-    private val _nickname: MutableStateFlow<String> = MutableStateFlow("")
-    val nickname: StateFlow<String> = _nickname
+    private val _nickname = MutableStateFlow("")
+    val nickname = _nickname?.asStateFlow()
+
+    // 이메일 체크 성공여부
+    private val _emailCheck = MutableStateFlow(false)
+    val emailCheck = _emailCheck.asStateFlow()
+
+    // TODO: StateFlow -> Single StateFlow Event
+    private val _message = MutableStateFlow("")
+    val message = _message.asStateFlow()
 
     private val _error = MutableStateFlow("")
     val error = _error.asStateFlow()
@@ -57,13 +62,53 @@ class SignupViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val response = signRepository.get().signup(request)
-                _nickname.value = response.nickname
 
-                Timber.d("Signup Response: $response")
+                when (response.status) {
+                    201 -> {
+                        _nickname?.value = response.data.nickname
+                    }
+                    409 -> {
+                        _nickname?.value = response.data.nickname
+                        _message.value = response.message
+                    }
+                    else -> {
+                        _message.value = response.message
+                    }
+                }
+
+                Timber.d("Success: $response")
+            } catch (ignored: Throwable) {
+                Timber.d("Fail: $ignored")
+            }
+        }.also { messageCleanup() }
+    }
+
+    // 이메일 체크 통신
+    fun emailCheck(email: String) {
+        viewModelScope.launch {
+            try {
+                val response = signRepository.get().emailCheck(email)
+
+                if (response.status == 200) {
+                    _message.value = "유효한 이메일입니다."
+                    _emailCheck.value = true
+                } else {
+                    _message.value = response.message
+                    _emailCheck.value = false
+                }
+                Timber.d("$TAG Success Response: $response")
             } catch (ignored: Throwable) {
                 _error.value = "알 수 없는 에러 발생"
-                Timber.d("Signup Response: $_error")
+                Timber.d("$TAG Success Response: $_error")
             }
-        }
+        }.also { messageCleanup() }
+    }
+
+    private fun messageCleanup() {
+        _message.value = ""
+    }
+
+    companion object {
+        final const val TAG = "SignupViewModel"
     }
 }

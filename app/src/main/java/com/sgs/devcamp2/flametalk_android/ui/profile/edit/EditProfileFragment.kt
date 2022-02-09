@@ -28,7 +28,6 @@ import com.sgs.devcamp2.flametalk_android.databinding.FragmentEditProfileBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 /**
  * @author 박소연
@@ -68,8 +67,19 @@ class EditProfileFragment : Fragment() {
     }
 
     private fun initUI() {
+        // 프로필 이미지
+        Glide.with(binding.imgEditProfile)
+            .load(args.userInfo!!.imageUrl)
+            .apply(RequestOptions.circleCropTransform())
+            .apply(RequestOptions.placeholderOf(R.drawable.ic_person_white_24))
+            .into(binding.imgEditProfile)
+        // 배경 이미지
+        Glide.with(binding.imgEditProfileBg)
+            .load(args.userInfo!!.bgImageUrl)
+            .into(binding.imgEditProfileBg)
+
         // 수정할 유저 정보 담기
-        if (args.userInfo != null && viewModel.userProfile.value == null) {
+        if (args.userInfo != null) {
             viewModel.setUserProfile(args.userInfo!!)
         }
     }
@@ -92,19 +102,23 @@ class EditProfileFragment : Fragment() {
         lifecycleScope.launchWhenResumed {
             // 프로필 사진
             viewModel.profileImage.collectLatest {
-                Glide.with(binding.imgEditProfile)
-                    .load(it)
-                    .apply(RequestOptions.circleCropTransform())
-                    .apply(RequestOptions.placeholderOf(R.drawable.ic_person_white_24))
-                    .into(binding.imgEditProfile)
+                if (it != "") {
+                    Glide.with(binding.imgEditProfile)
+                        .load(it)
+                        .apply(RequestOptions.circleCropTransform())
+                        .apply(RequestOptions.placeholderOf(R.drawable.ic_person_white_24))
+                        .into(binding.imgEditProfile)
+                }
             }
         }
 
         lifecycleScope.launchWhenResumed {
             viewModel.backgroundImage.collectLatest {
-                Glide.with(binding.imgEditProfileBg)
-                    .load(it)
-                    .into(binding.imgEditProfileBg)
+                if (it != "") {
+                    Glide.with(binding.imgEditProfileBg)
+                        .load(it)
+                        .into(binding.imgEditProfileBg)
+                }
             }
         }
     }
@@ -129,22 +143,16 @@ class EditProfileFragment : Fragment() {
         // 상태 메세지 변경
         binding.tvEditProfileDesc.setOnClickListener {
             val editProfileToDescDirections: NavDirections =
-                EditProfileFragmentDirections.actionEditToEditDesc(desc = viewModel.description.value, startView = "Edit")
+                EditProfileFragmentDirections.actionEditToEditDesc(
+                    desc = viewModel.description.value,
+                    startView = "Edit"
+                )
             findNavController().navigate(editProfileToDescDirections)
         }
 
         // 프로필 수정 완료
         binding.tvEditProfileConfirm.setOnClickListener {
-            // TODO: 프로필 편집 통신
-            viewModel.updateProfileData(
-                profileId = args.userInfo!!.profileId,
-                args.userInfo!!.isDefault
-            )
-            // 파일 통신을 위한 임시 요청
-            // File Create 통신
-//            if (viewModel.profileImage.value != "") {
-//                viewModel.postCreateImage()
-//            }
+            viewModel.updateProfile()
         }
     }
 

@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_navigation"
-    app:startDestination="@id/navigation_chatting_viewPager_fragment">
-
+    app:startDestination="@id/navigation_signin">
 
     <fragment
         android:id="@+id/navigation_signin"
@@ -15,11 +14,18 @@
             android:id="@+id/action_signin_to_friend"
             app:destination="@id/navigation_friend"
             app:popUpTo="@id/navigation_friend" />
-
         <action
             android:id="@+id/action_signin_to_signup"
             app:destination="@id/navigation_signup"
             app:popUpTo="@id/navigation_signup" />
+        <argument
+            android:name="id"
+            android:defaultValue=""
+            app:argType="string" />
+        <argument
+            android:name="password"
+            android:defaultValue=""
+            app:argType="string" />
     </fragment>
 
     <fragment
@@ -30,7 +36,8 @@
         <action
             android:id="@+id/action_signup_to_signin"
             app:destination="@id/navigation_signin"
-            app:popUpTo="@id/navigation_signin" />
+            app:popUpTo="@id/navigation_signin"
+            app:popUpToInclusive="true"/>
     </fragment>
 
     <fragment
@@ -72,14 +79,15 @@
             android:defaultValue="1"
             app:argType="integer" />
         <argument
-            android:name="userInfo"
-            app:argType="com.sgs.devcamp2.flametalk_android.network.response.friend.ProfilePreview" />
-        <argument
-            android:name="userId"
-            app:argType="string" />
+            android:name="profileId"
+            app:argType="long" />
         <action
             android:id="@+id/action_profile_to_edit"
             app:destination="@id/navigation_edit_profile" />
+
+        <action
+            android:id="@+id/action_profile_to_feed_single"
+            app:destination="@id/navigation_single_feed" />
     </fragment>
 
     <!--프로필 편집-->
@@ -92,11 +100,12 @@
         <action
             android:id="@+id/action_edit_to_edit_desc"
             app:destination="@id/navigation_profile_desc" />
+
         <argument
             android:name="userInfo"
             app:nullable="true"
             android:defaultValue="@null"
-            app:argType="com.sgs.devcamp2.flametalk_android.network.response.friend.ProfilePreview" />
+            app:argType="com.sgs.devcamp2.flametalk_android.data.model.Profile" />
     </fragment>
 
     <!--프로필 생성-->
@@ -109,6 +118,12 @@
         <action
             android:id="@+id/action_add_to_edit_desc"
             app:destination="@id/navigation_profile_desc" />
+
+        <action
+            android:id="@+id/action_add_to_friend"
+            app:destination="@id/navigation_friend"
+            app:popUpTo="@id/navigation_friend"
+            app:popUpToInclusive="true"/>
     </fragment>
 
     <!--상태메세지 수정-->
@@ -117,8 +132,6 @@
         android:name="com.sgs.devcamp2.flametalk_android.ui.profile.ProfileDescFragment"
         android:label="EditDescProfile"
         tools:layout="@layout/fragment_profile_desc">
-
-
         <argument
             android:name="desc"
             app:nullable="true"
@@ -129,10 +142,55 @@
             app:destination="@id/navigation_edit_profile" />
         <action
             android:id="@+id/action_edit_desc_to_add"
-            app:destination="@id/navigation_add_profile" />
+            app:destination="@id/navigation_add_profile"
+            app:popUpTo="@id/navigation_add_profile"
+            app:popUpToInclusive="true" />
         <argument
             android:name="startView"
             app:argType="string" />
+    </fragment>
+
+    <!--프로필 single 피드-->
+    <fragment
+        android:id="@+id/navigation_single_feed"
+        android:name="com.sgs.devcamp2.flametalk_android.ui.feed.SingleFeedFragment"
+        android:label="SingleFeed"
+        tools:layout="@layout/fragment_single_feed">
+
+        <action
+            android:id="@+id/action_feed_single_to_total"
+            app:destination="@id/navigation_total_feed" />
+        <argument
+            android:name="profileId"
+            app:argType="long"
+            android:defaultValue="0L"/>
+        <argument
+            android:name="isBackground"
+            app:argType="boolean"
+            android:defaultValue="true"/>
+    </fragment>
+
+    <!--프로필 total 피드-->
+    <fragment
+        android:id="@+id/navigation_total_feed"
+        android:name="com.sgs.devcamp2.flametalk_android.ui.feed.TotalFeedFragment"
+        android:label="TotalFeed"
+        tools:layout="@layout/fragment_total_feed">
+
+        <action
+            android:id="@+id/action_feed_total_to_profile"
+            app:destination="@id/navigation_profile"
+            app:popUpTo="@+id/navigation_profile"
+            app:popUpToInclusive="true"/>
+
+        <argument
+            android:name="profileId"
+            app:argType="long"
+            android:defaultValue="0L"/>
+        <argument
+            android:name="profileImage"
+            app:argType="string"
+            android:defaultValue=""/>
     </fragment>
 
     <!--    채팅방 리스트-->

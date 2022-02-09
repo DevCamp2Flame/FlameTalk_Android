@@ -17,8 +17,8 @@
 
             <ImageView
                 android:id="@+id/img_signup_back"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_margin="10dp"
                 android:foregroundTint="@color/flame_blue"
                 android:src="@drawable/ic_back_arrow_blue_34"
@@ -37,40 +37,20 @@
                 app:layout_constraintStart_toEndOf="@id/img_signup_back"
                 app:layout_constraintTop_toTopOf="@id/img_signup_back" />
 
-            <View
-                android:id="@+id/v_signup_profile"
-                android:layout_width="90dp"
-                android:layout_height="90dp"
-                android:layout_marginTop="40dp"
-                android:background="@drawable/bg_sky_blue_70"
-                android:src="@drawable/ic_person_white_24"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/img_signup_back" />
-
-            <ImageView
-                android:id="@+id/img_signup_profile"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:src="@drawable/ic_person_white_24"
-                app:layout_constraintBottom_toBottomOf="@id/v_signup_profile"
-                app:layout_constraintEnd_toEndOf="@id/v_signup_profile"
-                app:layout_constraintStart_toStartOf="@id/v_signup_profile"
-                app:layout_constraintTop_toTopOf="@id/v_signup_profile" />
 
             <EditText
                 android:id="@+id/edt_signup_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="50dp"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="100dp"
                 android:hint="이름"
                 android:outlineSpotShadowColor="@color/gray"
                 android:paddingHorizontal="20dp"
                 android:paddingVertical="15dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/v_signup_profile" />
+                app:layout_constraintTop_toTopOf="@+id/img_signup_back" />
 
             <EditText
                 android:id="@+id/edt_signup_email"

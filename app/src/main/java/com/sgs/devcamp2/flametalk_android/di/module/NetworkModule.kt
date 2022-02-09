@@ -4,6 +4,7 @@ import com.google.gson.GsonBuilder
 import com.sgs.devcamp2.flametalk_android.data.source.remote.api.*
 import com.sgs.devcamp2.flametalk_android.network.NetworkInterceptor
 import com.sgs.devcamp2.flametalk_android.network.dao.UserDAO
+import com.sgs.devcamp2.flametalk_android.network.service.AuthService
 import com.sgs.devcamp2.flametalk_android.network.service.FileService
 import com.sgs.devcamp2.flametalk_android.network.service.ProfileService
 import com.sgs.devcamp2.flametalk_android.network.service.UserService
@@ -11,14 +12,14 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import java.util.concurrent.TimeUnit
+import javax.inject.Singleton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.TimeUnit
-import javax.inject.Singleton
 
 /**
  * @author 박소연
@@ -30,13 +31,13 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 class NetworkModule {
+
     @Provides
     @Singleton
     fun provideNetworkInterceptor(userDAO: UserDAO): NetworkInterceptor {
-        return NetworkInterceptor {
+        return NetworkInterceptor(userDAO) {
             runBlocking(Dispatchers.IO) {
                 userDAO.user.first()?.accessToken
-                userDAO.user.first()?.refreshToken
             }
         }
     }
@@ -92,5 +93,6 @@ class NetworkModule {
     }
     companion object {
         const val BASE_URL = "http://192.168.0.100:8086" // 테스트 전 PC IP 확인
+
     }
 }

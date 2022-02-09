@@ -1,6 +1,6 @@
 package com.sgs.devcamp2.flametalk_android.data.dummy
 
-import com.sgs.devcamp2.flametalk_android.network.response.friend.ProfilePreview
+import com.sgs.devcamp2.flametalk_android.data.model.ProfileDummyPreview
 
 /**
  * @author 박소연
@@ -10,7 +10,7 @@ import com.sgs.devcamp2.flametalk_android.network.response.friend.ProfilePreview
  */
 
 // 유저 정보 1개
-fun getDummyUser() = ProfilePreview(
+fun getDummyUser() = ProfileDummyPreview(
     1,
     1,
     "박소연",
@@ -20,8 +20,8 @@ fun getDummyUser() = ProfilePreview(
 )
 
 // 멀티프로필
-fun getMultiProfile() = arrayListOf(
-    ProfilePreview(
+fun getMultiProfile() = listOf(
+    ProfileDummyPreview(
         1,
         2,
         "박소연2",
@@ -29,7 +29,7 @@ fun getMultiProfile() = arrayListOf(
         "아자아자",
         "https://cdn.pixabay.com/photo/2017/02/15/12/12/cat-2068462__480.jpg",
     ),
-    ProfilePreview(
+    ProfileDummyPreview(
         1,
         3,
         "박소연3",
@@ -37,7 +37,7 @@ fun getMultiProfile() = arrayListOf(
         "아자아자",
         "https://cdn.pixabay.com/photo/2017/02/15/12/12/cat-2068462__480.jpg",
     ),
-    ProfilePreview(
+    ProfileDummyPreview(
         1,
         4,
         "박소연4",
@@ -45,7 +45,7 @@ fun getMultiProfile() = arrayListOf(
         "아자아자",
         "https://cdn.pixabay.com/photo/2017/07/25/01/22/cat-2536662__480.jpg",
     ),
-    ProfilePreview(
+    ProfileDummyPreview(
         1,
         5,
         "박소연5",
@@ -56,9 +56,9 @@ fun getMultiProfile() = arrayListOf(
 )
 
 // 생일인 친구
-fun getBirthdayFriend() = arrayListOf(
-    ProfilePreview(2, 6, "최수연6", null, "소연 짱 팬222", null),
-    ProfilePreview(
+fun getBirthdayFriend() = listOf(
+    ProfileDummyPreview(2, 6, "최수연6", null, "소연 짱 팬222", null),
+    ProfileDummyPreview(
         3,
         7,
         "김다롬7",
@@ -69,9 +69,9 @@ fun getBirthdayFriend() = arrayListOf(
 )
 
 // 친구 리스트
-fun getDummyFriend() = arrayListOf(
-    ProfilePreview(4, 8, "최수연", null, "소연 짱 팬", null),
-    ProfilePreview(
+fun getDummyFriend() = listOf(
+    ProfileDummyPreview(4, 8, "최수연", null, "소연 짱 팬", null),
+    ProfileDummyPreview(
         5,
         9,
         "김다롬",
@@ -79,7 +79,7 @@ fun getDummyFriend() = arrayListOf(
         null,
         null
     ),
-    ProfilePreview(
+    ProfileDummyPreview(
         6,
         10,
         "최수연2",
@@ -87,7 +87,7 @@ fun getDummyFriend() = arrayListOf(
         "소연 짱 팬222",
         null
     ),
-    ProfilePreview(
+    ProfileDummyPreview(
         7,
         11,
         "김다롬2",
@@ -95,7 +95,7 @@ fun getDummyFriend() = arrayListOf(
         null,
         "https://cdn.pixabay.com/photo/2017/07/25/01/22/cat-2536662__480.jpg",
     ),
-    ProfilePreview(
+    ProfileDummyPreview(
         8,
         12,
         "최수연3",
@@ -103,7 +103,7 @@ fun getDummyFriend() = arrayListOf(
         "소연 짱 팬333",
         null
     ),
-    ProfilePreview(
+    ProfileDummyPreview(
         9,
         13,
         "최수연4",
@@ -111,7 +111,7 @@ fun getDummyFriend() = arrayListOf(
         "소연 짱 팬",
         null
     ),
-    ProfilePreview(
+    ProfileDummyPreview(
         10,
         14,
         "김다롬5",
@@ -119,7 +119,7 @@ fun getDummyFriend() = arrayListOf(
         null,
         null
     ),
-    ProfilePreview(
+    ProfileDummyPreview(
         11,
         15,
         "최수연6",
@@ -127,7 +127,7 @@ fun getDummyFriend() = arrayListOf(
         "소연 짱 팬222",
         null
     ),
-    ProfilePreview(
+    ProfileDummyPreview(
         12,
         16,
         "김다롬7",
@@ -135,7 +135,7 @@ fun getDummyFriend() = arrayListOf(
         null,
         null
     ),
-    ProfilePreview(
+    ProfileDummyPreview(
         13,
         17,
         "최수연8",

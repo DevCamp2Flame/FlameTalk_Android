@@ -3,6 +3,7 @@ package com.sgs.devcamp2.flametalk_android.ui.signin
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -28,14 +30,21 @@ import java.util.*
 import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+
+/**
+ * @author 박소연
+ * @created 2022/01/19
+ * @updated 2022/01/26
+ * @desc 로그인 화면. (이메일을 이용한 자체 로그인, Google 로그인)
+ */
 
 @AndroidEntryPoint
 @ExperimentalCoroutinesApi
 class SigninFragment : Fragment() {
     private val binding by lazy { FragmentSigninBinding.inflate(layoutInflater) }
-
-    // lateinit var binding: FragmentSigninBinding
-    private val viewModel by viewModels<SigninViewModel>() // by viewModels()
+    private val viewModel by viewModels<SigninViewModel>()
+    private val args: SigninFragmentArgs by navArgs()
 
     // firebase google auth
     @Inject
@@ -50,13 +59,15 @@ class SigninFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // binding = FragmentSigninBinding.inflate(inflater, container, false)
         initUI()
 
         return binding.root
     }
 
     private fun initUI() {
+        binding.edtSigninEmail.setText(args.id)
+        binding.edtSigninPwd.setText(args.password)
+
         initEventListener()
         initGoogleSignin()
     }
@@ -99,27 +110,42 @@ class SigninFragment : Fragment() {
             }
     }
 
+    // [소연] 로그인
     private fun submitLogin() {
-        // 이벤트가 발생하면 로그 요청을 보냄
         viewModel.signIn( // 이메일, 비번, 소셜, 디바이스ID
             binding.edtSigninEmail.text.toString(),
             binding.edtSigninPwd.text.toString(),
             "LOGIN",
-            UUID.randomUUID().toString()
+            Settings.Secure.getString(requireContext().contentResolver, Settings.Secure.ANDROID_ID)
         )
 
         // 로그인된 유저의 닉네임 띄움
-//        lifecycleScope.launchWhenResumed {
-//            viewModel.nickname.collectLatest {
-//                if (it != "") {
-//                    Snackbar.make(requireView(), "${it}님 로그인 되었습니다.", Snackbar.LENGTH_SHORT).show()
-//                } else {
-//                    Snackbar.make(requireView(), "로그인에 실패했습니다.", Snackbar.LENGTH_SHORT).show()
-//                    findNavController().navigateUp()
-//                }
-//            }
-//        }
+        lifecycleScope.launch {
+            viewModel.nickname.collectLatest {
+                if (it.isNotEmpty()) {
+                    Snackbar.make(requireView(), "${it}님 로그인 되었습니다.", Snackbar.LENGTH_SHORT).show()
+                    findNavController().navigate(R.id.navigation_friend)
+                }
+            }
+        }
 
+        // 로그인 결과
+        lifecycleScope.launch {
+            viewModel.message.collect {
+                if (it.isNotEmpty()) {
+                    Snackbar.make(requireView(), it, Snackbar.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+        // 에러 메세지
+        lifecycleScope.launch {
+            viewModel.error.collectLatest {
+                if (it.isNotEmpty()) {
+                    Snackbar.make(requireView(), it, Snackbar.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
 
     private fun googleLogin() {

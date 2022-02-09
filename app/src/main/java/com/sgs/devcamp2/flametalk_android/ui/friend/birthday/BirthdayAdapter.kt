@@ -7,13 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.NavDirections
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.ItemFriendPreviewBinding
-import com.sgs.devcamp2.flametalk_android.network.response.friend.ProfilePreview
+import com.sgs.devcamp2.flametalk_android.data.model.ProfilePreview
 import com.sgs.devcamp2.flametalk_android.ui.friend.FriendFragmentDirections
+import com.sgs.devcamp2.flametalk_android.util.SimpleDiffUtilCallback
 import com.sgs.devcamp2.flametalk_android.util.toVisible
 import com.sgs.devcamp2.flametalk_android.util.toVisibleGone
 
@@ -27,8 +29,8 @@ import com.sgs.devcamp2.flametalk_android.util.toVisibleGone
 
 class BirthdayAdapter(
     private val context: Context
-) : RecyclerView.Adapter<BirthdayAdapter.BirthdayViewHolder>() {
-    var data = arrayListOf<ProfilePreview>()
+) : ListAdapter<ProfilePreview, BirthdayAdapter.BirthdayViewHolder>(SimpleDiffUtilCallback()) {
+    var data = listOf<ProfilePreview>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BirthdayViewHolder {
         return BirthdayViewHolder(
@@ -60,7 +62,10 @@ class BirthdayAdapter(
             // 친구 프로필 상세보기로 이동
             itemView.setOnClickListener {
                 val friendToFriendProfileDirections: NavDirections =
-                    FriendFragmentDirections.actionFriendToProfile(2, data, userId = data.userId.toString())
+                    FriendFragmentDirections.actionFriendToProfile(
+                        FRIEND_PROFILE,
+                        data.id
+                    )
                 it.findNavController().navigate(friendToFriendProfileDirections)
             }
 
@@ -68,10 +73,10 @@ class BirthdayAdapter(
         }
 
         private fun initBirthdayList(data: ProfilePreview) {
-            Glide.with(itemView).load(data.image).apply(RequestOptions.circleCropTransform())
+            Glide.with(itemView).load(data.imageUrl).apply(RequestOptions.circleCropTransform())
                 .apply(RequestOptions.placeholderOf(R.drawable.ic_person_white_24))
                 .into(binding.imgFriendPreview)
-            binding.tvFriendPreviewNickname.text = data.nickname
+            binding.tvFriendPreviewNickname.text = "친구 이름" // data.nickname
 
             if (data.description != null) {
                 binding.tvFriendPreviewDesc.toVisible()
@@ -80,5 +85,9 @@ class BirthdayAdapter(
                 binding.tvFriendPreviewDesc.toVisibleGone()
             }
         }
+    }
+
+    companion object {
+        const val FRIEND_PROFILE = 2
     }
 }

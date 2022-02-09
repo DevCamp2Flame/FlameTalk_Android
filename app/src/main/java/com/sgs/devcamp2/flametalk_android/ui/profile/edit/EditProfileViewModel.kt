@@ -1,39 +1,45 @@
 package com.sgs.devcamp2.flametalk_android.ui.profile.edit
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sgs.devcamp2.flametalk_android.data.dummy.getDummyUser
+import com.sgs.devcamp2.flametalk_android.data.model.Profile
+import com.sgs.devcamp2.flametalk_android.data.model.ProfileDummyPreview
+import com.sgs.devcamp2.flametalk_android.data.model.Sticker
+import com.sgs.devcamp2.flametalk_android.network.dao.UserDAO
 import com.sgs.devcamp2.flametalk_android.network.repository.FileRepository
 import com.sgs.devcamp2.flametalk_android.network.repository.ProfileRepository
-import com.sgs.devcamp2.flametalk_android.network.request.sign.ProfileCreateRequest
 import com.sgs.devcamp2.flametalk_android.network.request.sign.ProfileUpdateRequest
-import com.sgs.devcamp2.flametalk_android.network.response.friend.ProfilePreview
+import com.sgs.devcamp2.flametalk_android.util.pathToMultipartImageFile
 import dagger.Lazy
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.asRequestBody
 import timber.log.Timber
-import java.io.File
-import javax.inject.Inject
 
 @HiltViewModel
 class EditProfileViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
+    private val userDAO: UserDAO,
     private val fileRepository: Lazy<FileRepository>,
     private val profileRepository: Lazy<ProfileRepository>
 ) : ViewModel() {
-    // 네트워크 통신 데이터 전 더미데이터
-    private var dummyUserData: ProfilePreview = getDummyUser()
-    val TAG: String = "로그"
+
     // 메인 유저 정보
-    private val _userProfile: MutableStateFlow<ProfilePreview?> = MutableStateFlow(null)
-    val userProfile: MutableStateFlow<ProfilePreview?> = _userProfile
+    private val _userProfileDummy: MutableStateFlow<ProfileDummyPreview?> = MutableStateFlow(null)
+    val userProfileDummy: MutableStateFlow<ProfileDummyPreview?> = _userProfileDummy
+
+    // 유저 id
+    private val _userId = MutableStateFlow("")
+    val userId = _userId.asStateFlow()
+
+    // 프로필 id
+    private val _profileId = MutableStateFlow(0L)
+    val profileId = _profileId.asStateFlow()
 
     // 닉네임
     private val _nickname = MutableStateFlow("")
@@ -59,17 +65,44 @@ class EditProfileViewModel @Inject constructor(
     private val _backgroundImageUrl = MutableStateFlow("")
     val backgroundImageUrl = _backgroundImageUrl.asStateFlow()
 
-    fun getProfileDesc(desc: String) {
+    // 스티커
+    private val _stickers = MutableStateFlow<List<Sticker>>(emptyList())
+    val stickers = _stickers.asStateFlow()
+
+    // 배경 이미지 url
+    private val _isDefault: MutableStateFlow<Boolean?> = MutableStateFlow(null)
+    val isDefault = _isDefault.asStateFlow()
+
+    // 메세지
+    private val _message = MutableStateFlow("")
+    val message = _message.asStateFlow()
+
+    // 메세지
+    private val _isSuccess: MutableStateFlow<Boolean?> = MutableStateFlow(null)
+    val isSuccess = _isSuccess.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            userDAO.user.collect {
+                if (it != null) {
+                    _userId.value = it.userId
+                    _nickname.value = it.nickname
+                }
+            }
+        }
+    }
+
+    fun setProfileDesc(desc: String) {
         _description.value = desc
     }
 
-    fun setUserProfile(data: ProfilePreview) {
-        _userProfile.value = data
-
-        _nickname.value = _userProfile.value!!.nickname
-        _description.value = _userProfile.value!!.description.toString()
-        _profileImage.value = _userProfile.value!!.image.toString()
-        _backgroundImage.value = _userProfile.value!!.backgroundImage.toString()
+    fun setUserProfile(data: Profile) {
+        _profileId.value = data.profileId
+        _description.value = data.description.toString()
+        _profileImageUrl.value = data.imageUrl.toString()
+        _backgroundImageUrl.value = data.bgImageUrl.toString()
+        _isDefault.value = data.isDefault
+        _stickers.value = data.sticker!!
     }
 
     fun setProfileImage(path: String?) {
@@ -84,70 +117,87 @@ class EditProfileViewModel @Inject constructor(
         }
     }
 
-    private fun pathToMultipartFile(url: String): MultipartBody.Part {
-        val file = File(url)
-        val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
-
-        return MultipartBody.Part.createFormData(
-            "file", file.name, requestFile
-        )
+    fun updateProfile() {
+        viewModelScope.launch {
+            val deferred = viewModelScope.async {
+                // list 내의 작업을 비동기적으로 요청하고 모든 요청이 완료될 때 까지 기다린다.
+                val postUploadFiles = listOf(
+                    async {
+                        if (_profileImage.value != "") {
+                            postCreateImage(PROFILE_IMAGE)
+                        }
+                    },
+                    async {
+                        if (_backgroundImage.value != "") {
+                            postCreateImage(BACKGROUND_IMAGE)
+                        }
+                    }
+                )
+                postUploadFiles.awaitAll()
+            }
+            // 파일 통신이 모두 끝나면 프로필 생성 요청을 보낸다
+            deferred.await()
+            updateProfileData()
+        }
     }
-
 
     // File Create 통신
-    fun postCreateImage() {
-        val multipartFile = pathToMultipartFile(_profileImage.value)
+    private suspend fun postCreateImage(type: Int) {
+        // 파일 서버로 이미지를 보내고 url path 리턴
+        val deferred = viewModelScope.async {
+            val multipartFile: MultipartBody.Part? = when (type) {
+                PROFILE_IMAGE -> {
+                    pathToMultipartImageFile(_profileImage.value, "image/*".toMediaTypeOrNull())
+                }
+                BACKGROUND_IMAGE -> {
+                    pathToMultipartImageFile(_backgroundImage.value, "image/*".toMediaTypeOrNull())
+                }
+                else -> { // 실행되지 않음
+                    null
+                }
+            }
 
-        // 테스트용 더미 api
-        viewModelScope.launch {
             try {
+                val response = fileRepository.get().postFileCreate(multipartFile!!, null)
 
-                // fileRepository.get().getCreatedFile(7) -> get
-                // fileRepository.get().deleteCreatedFile(7) -> delete
-                var response = fileRepository.get().postFileCreate(multipartFile)
-                Log.d(TAG, "EditProfileViewModel - $response")
+                if (response.status == 200) {
+                    if (type == PROFILE_IMAGE) {
+                        _profileImageUrl.value = response.data.url
+                    } else if (type == BACKGROUND_IMAGE) {
+                        _backgroundImageUrl.value = response.data.url
+                    }
+                } else {
+                    _message.value = response.message
+                }
             } catch (ignore: Throwable) {
-                Timber.d("EditProfileViewModel: 알 수 없는 에러 발생")
+                Timber.d("Fail $ignore")
             }
         }
+        deferred.await()
     }
 
-    fun addProfile() {
-        viewModelScope.launch {
-            try {
-                val request = ProfileCreateRequest(
-                    userId = "1643610416180811276",
-                    imageUrl = _profileImage.value,
-                    bgImageUrl = _backgroundImage.value,
-                    sticker = null,
-                    description = _description.value,
-                    isDefault = false
-                )
-                // TODO: profile, background 이미지 생성 통신 후 await으로 진행
-                val response = profileRepository.get().createProfile(request)
-                Timber.d(response.toString())
-            } catch (ignore: Throwable) {
-                Timber.d("알 수 없는 에러 발생")
-            }
-        }
-    }
-
-    fun updateProfileData(profileId: Long, isDefault: Boolean) {
+    //
+    fun updateProfileData() {
         val request = ProfileUpdateRequest(
-            userId = "유저아이디를 똑바로 저장했어야 했는데",
+            userId = _userId.value,
             imageUrl = _profileImageUrl.value,
             bgImageUrl = _backgroundImageUrl.value,
             sticker = null, // TODO: 스티커 정보, 프로필 내 positioning 할 수 있는 상대적 위치 정보
             description = _description.value,
-            isDefault = isDefault
+            isDefault = _isDefault.value!!
         )
         viewModelScope.launch {
             try {
-                val response = profileRepository.get().updateProfile(profileId, request)
+                val response = profileRepository.get().updateProfile(_profileId.value, request)
                 Timber.d(response.toString())
             } catch (ignored: Throwable) {
                 Timber.d("알 수 없는 에러 발생")
             }
         }
+    }
+
+    companion object {
+        private const val PROFILE_IMAGE = 1
+        private const val BACKGROUND_IMAGE = 2
     }
 }

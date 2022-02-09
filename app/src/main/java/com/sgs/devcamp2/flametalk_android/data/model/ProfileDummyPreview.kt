@@ -1,4 +1,4 @@
-package com.sgs.devcamp2.flametalk_android.network.response.friend
+package com.sgs.devcamp2.flametalk_android.data.model
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
@@ -14,7 +14,7 @@ import kotlinx.android.parcel.Parcelize
 
 // TODO:친구 리스트 통신 후 삭제해야 한다.
 @Parcelize
-data class ProfilePreview(
+data class ProfileDummyPreview(
     val userId: Int,
     val profileId: Long,
     val nickname: String,
