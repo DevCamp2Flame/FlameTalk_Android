@@ -1,5 +1,6 @@
 # FlameTalk_Android
-### SGS DevCamp2 flame팀의 KakaoTalk clone project입니다🔥
+### SGS DevCamp2 flame팀의 메신저 clone project입니다🔥
+
 
 <br/>
 
@@ -9,6 +10,12 @@
 | [박소연](https://github.com/paksuua) | [김현국](https://github.com/014967) |
 
 ## 4. Project Info
+### 0) Version Info
+- **TargetSDK: API level 31** (R)
+- MinimumSDK : API level 26 (Oreo)  
+- compileSDK: API level 31 (R)
+<br/><br/><br/>
+
 version info, skills, library, 
 ### 📚 1) Library
 |                  Library             |          Description   |
@@ -43,10 +50,6 @@ convention, git flow
 <!-- 
 
 <br/><br/>
-## ✔ Target Version
-- Minimum : API level 24 (Nougat)  
-- Recommended: **API level 30** (R)
-<br/><br/><br/>
 ## 📑 Commit Convention
 📌[관련된 좋은 글](https://chris.beams.io/posts/git-commit)
 <br/>
