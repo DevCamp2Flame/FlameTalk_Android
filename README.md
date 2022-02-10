@@ -10,6 +10,28 @@
 
 ## 4. Project Info
 version info, skills, library, 
+### 📚 1) Library
+|                  Library             |          Description   |
+| ----------------------------------- | ------------------------------------------- |
+| Navigation          |  Fragment간 화면 전환 관리. 뷰 스택 관리    |
+| Timber          |  앱 추출 시 Logging 코드를 지워줌   |
+| KTX          |  Android Life Cycle 관리   |
+| Retrofit2  | Http Rest 통신 라이브러리  |
+| Hilt, Dagger | 파일 의존성 주입 관리 |
+| Glide | 이미지 로드 및 캐싱 라이브러리 |
+| OkHttp ||
+| DataStore ||
+| Firebase ||
+| Coroutine | 비동기 처리 |
+| Firebase | FCM push 알림 |
+| stomp krossbow | STOMP 프로토콜을 이용하여 SpringWebSocket 통신을 도와주는 라이브러리 |
+| ViewPager2 | 스와이프 하여 전환할 수 있는 UI 라이브러리 |
+| Room | SQLite를 추상화하여 이용 가능하게 한 Android localDB 관련 라이브러리 |
+
+### 📚 2) 핵심 기능 구현
+1. Hilt2+ Dagger2를 이용한 의존성 관리
+2. 
+
 
 ## 3. Research
 
