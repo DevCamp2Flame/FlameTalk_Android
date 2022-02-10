@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -17,10 +16,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentInviteRoomBinding
 import com.sgs.devcamp2.flametalk_android.domain.entity.UiState
-import com.sgs.devcamp2.flametalk_android.network.response.friend.Friend
+import com.sgs.devcamp2.flametalk_android.network.response.friend.TempFriend
 import com.sgs.devcamp2.flametalk_android.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -134,14 +132,14 @@ class InviteRoomFragment :
         binding.tvInviteRoomSubmit.setOnClickListener(this)
     }
 
-    override fun onItemClicked(friend: Friend, position: Int, adapter: InviteRoomAdapter) {
-        model.addFriendList(friend, position, adapter)
+    override fun onItemClicked(tempFriend: TempFriend, position: Int, adapter: InviteRoomAdapter) {
+        model.addFriendList(tempFriend, position, adapter)
     }
-    override fun onItemMarkClicked(friend: Friend, position: Int, adapter: InviteRoomMarkAdapter) {
-        model.addMarkList(friend, position, adapter)
+    override fun onItemMarkClicked(tempFriend: TempFriend, position: Int, adapter: InviteRoomMarkAdapter) {
+        model.addMarkList(tempFriend, position, adapter)
     }
-    override fun onItemSelectedClick(friend: Friend) {
-        model.removeSelectedItem(friend)
+    override fun onItemSelectedClick(tempFriend: TempFriend) {
+        model.removeSelectedItem(tempFriend)
     }
     override fun onClick(view: View?) {
         when (view) {

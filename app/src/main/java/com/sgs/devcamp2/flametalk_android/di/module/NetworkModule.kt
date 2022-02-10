@@ -4,10 +4,7 @@ import com.sgs.devcamp2.flametalk_android.data.source.remote.api.ChatRoomsApi
 import com.sgs.devcamp2.flametalk_android.data.source.remote.api.InviteRoomApi
 import com.sgs.devcamp2.flametalk_android.network.NetworkInterceptor
 import com.sgs.devcamp2.flametalk_android.network.dao.UserDAO
-import com.sgs.devcamp2.flametalk_android.network.service.AuthService
-import com.sgs.devcamp2.flametalk_android.network.service.FileService
-import com.sgs.devcamp2.flametalk_android.network.service.ProfileService
-import com.sgs.devcamp2.flametalk_android.network.service.UserService
+import com.sgs.devcamp2.flametalk_android.network.service.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -79,6 +76,12 @@ class NetworkModule {
     @Singleton
     fun provideProfileService(retrofit: Retrofit): ProfileService {
         return retrofit.create(ProfileService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFriendService(retrofit: Retrofit): FriendService {
+        return retrofit.create(FriendService::class.java)
     }
 
     fun provideChatRoomsService(retrofit: Retrofit): ChatRoomsApi {

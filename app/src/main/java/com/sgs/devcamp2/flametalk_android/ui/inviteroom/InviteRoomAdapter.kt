@@ -9,28 +9,28 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.ItemPersonInviteRoomBinding
-import com.sgs.devcamp2.flametalk_android.network.response.friend.Friend
+import com.sgs.devcamp2.flametalk_android.network.response.friend.TempFriend
 
 /**
  * @author boris
  * @created 2022/01/12
  */
 class InviteRoomAdapter(callback: InviteRoomFragment) :
-    ListAdapter<Friend, RecyclerView.ViewHolder>(diffUtil) {
+    ListAdapter<TempFriend, RecyclerView.ViewHolder>(diffUtil) {
     interface ItemClickCallBack {
-        fun onItemClicked(friend: Friend, position: Int, adapter: InviteRoomAdapter)
+        fun onItemClicked(tempFriend: TempFriend, position: Int, adapter: InviteRoomAdapter)
     }
 
     val itemClickCallBack = callback
 
     companion object {
         val TAG: String = "로그"
-        val diffUtil = object : DiffUtil.ItemCallback<Friend>() {
-            override fun areItemsTheSame(oldItem: Friend, newItem: Friend): Boolean {
+        val diffUtil = object : DiffUtil.ItemCallback<TempFriend>() {
+            override fun areItemsTheSame(oldItem: TempFriend, newItem: TempFriend): Boolean {
                 return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: Friend, newItem: Friend): Boolean {
+            override fun areContentsTheSame(oldItem: TempFriend, newItem: TempFriend): Boolean {
                 return oldItem.selected == newItem.selected
             }
         }
@@ -48,18 +48,18 @@ class InviteRoomAdapter(callback: InviteRoomFragment) :
 
     inner class PersonViewHolder(val binding: ItemPersonInviteRoomBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(friend: Friend, position: Int) {
+        fun bind(tempFriend: TempFriend, position: Int) {
 
-            binding.ivInviteRoomRadioButton.isActivated = friend.selected != "0"
+            binding.ivInviteRoomRadioButton.isActivated = tempFriend.selected != "0"
             binding.layoutInviteRoomItem.setOnClickListener(
-                ItemClickListener(friend, position, binding)
+                ItemClickListener(tempFriend, position, binding)
             )
-            binding.tvInviteRoomUserName.text = friend.nickname
+            binding.tvInviteRoomUserName.text = tempFriend.nickname
         }
     }
 
     inner class ItemClickListener(
-        var friend: Friend,
+        var tempFriend: TempFriend,
         var position: Int,
         var binding: ItemPersonInviteRoomBinding
 
@@ -73,23 +73,23 @@ class InviteRoomAdapter(callback: InviteRoomFragment) :
                     } else {
                         binding.ivInviteRoomRadioButton.isActivated = true
                     }
-                    itemClickCallBack?.onItemClicked(friend, position, this@InviteRoomAdapter)
+                    itemClickCallBack?.onItemClicked(tempFriend, position, this@InviteRoomAdapter)
                 }
             }
         }
     }
     fun putActivate(position: Int) {
-        var list: MutableList<Friend> = currentList.toMutableList()
-        var friend: Friend = currentList[position].copy()
-        friend.selected = "1"
-        list[position] = friend
+        var list: MutableList<TempFriend> = currentList.toMutableList()
+        var tempFriend: TempFriend = currentList[position].copy()
+        tempFriend.selected = "1"
+        list[position] = tempFriend
         submitList(list)
     }
     fun removeActivate(position: Int) {
-        var list: MutableList<Friend> = currentList.toMutableList()
-        var friend: Friend = currentList[position].copy()
-        friend.selected = "0"
-        list[position] = friend
+        var list: MutableList<TempFriend> = currentList.toMutableList()
+        var tempFriend: TempFriend = currentList[position].copy()
+        tempFriend.selected = "0"
+        list[position] = tempFriend
         submitList(list)
     }
 }

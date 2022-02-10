@@ -108,6 +108,12 @@ class ProfileFragment : Fragment() {
                 binding.imgProfileFriend.toVisible()
                 binding.tvProfileFriend.toVisible()
             }
+            BLOCKED_PROFILE -> { // 차단된 프로필
+                // TODO: 차단 해제 여부 버튼 노출
+            }
+            HIDDEN_PROFILE -> { // 숨긴 프로필
+                // TODO: 숨김 해제 여부 버튼 노출
+            }
         }
     }
 
@@ -133,5 +139,7 @@ class ProfileFragment : Fragment() {
         const val USER_DEFAULT_PROFILE = 1
         const val FRIEND_PROFILE = 2
         const val USER_MULTI_PROFILE = 3
+        const val BLOCKED_PROFILE = 4
+        const val HIDDEN_PROFILE = 5
     }
 }
