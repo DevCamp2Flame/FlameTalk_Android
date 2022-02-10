@@ -12,7 +12,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.data.model.Friend
-import com.sgs.devcamp2.flametalk_android.databinding.ItemFriendStatusBinding
+import com.sgs.devcamp2.flametalk_android.databinding.ItemFriendHiddenBinding
 import com.sgs.devcamp2.flametalk_android.ui.friend.FriendFragmentDirections
 import com.sgs.devcamp2.flametalk_android.util.SimpleDiffUtilCallback
 
@@ -33,7 +33,7 @@ class HiddenAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            ItemFriendStatusBinding.inflate(
+            ItemFriendHiddenBinding.inflate(
                 LayoutInflater.from(context),
                 parent,
                 false
@@ -50,9 +50,9 @@ class HiddenAdapter(
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        lateinit var binding: ItemFriendStatusBinding
+        lateinit var binding: ItemFriendHiddenBinding
 
-        constructor(binding: ItemFriendStatusBinding) : this(binding.root) {
+        constructor(binding: ItemFriendHiddenBinding) : this(binding.root) {
             this.binding = binding
         }
 
@@ -68,7 +68,10 @@ class HiddenAdapter(
             }
 
             // 숨김 여부를 누르면 숨김 여부 변경 callback을 return
-            onChangeHidden(data)
+            binding.tvFriendStatus.setOnClickListener {
+                onChangeHidden(data)
+                it.isSelected = !it.isSelected
+            }
 
             initFriendList(data)
         }

@@ -12,7 +12,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.data.model.Friend
-import com.sgs.devcamp2.flametalk_android.databinding.ItemFriendStatusBinding
+import com.sgs.devcamp2.flametalk_android.databinding.ItemFriendBlockBinding
 import com.sgs.devcamp2.flametalk_android.ui.friend.FriendFragmentDirections
 import com.sgs.devcamp2.flametalk_android.util.SimpleDiffUtilCallback
 
@@ -27,13 +27,13 @@ import com.sgs.devcamp2.flametalk_android.util.SimpleDiffUtilCallback
 class BlockedAdapter(
     private val context: Context,
     val onClickProfile: (friend: Friend) -> Unit,
-    val onChangeHidden: (friend: Friend) -> Unit
+    val onChangeBlock: (friend: Friend) -> Unit
 ) : ListAdapter<Friend, BlockedAdapter.ViewHolder>(SimpleDiffUtilCallback()) {
     var data = listOf<Friend>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            ItemFriendStatusBinding.inflate(
+            ItemFriendBlockBinding.inflate(
                 LayoutInflater.from(context),
                 parent,
                 false
@@ -50,9 +50,9 @@ class BlockedAdapter(
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        lateinit var binding: ItemFriendStatusBinding
+        lateinit var binding: ItemFriendBlockBinding
 
-        constructor(binding: ItemFriendStatusBinding) : this(binding.root) {
+        constructor(binding: ItemFriendBlockBinding) : this(binding.root) {
             this.binding = binding
         }
 
@@ -69,7 +69,8 @@ class BlockedAdapter(
 
             // 숨김 여부를 누르면 숨김 여부 변경 callback을 return
             binding.tvFriendStatus.setOnClickListener {
-                onChangeHidden(data)
+                onChangeBlock(data)
+                it.isSelected = !it.isSelected
             }
 
             initFriendList(data)

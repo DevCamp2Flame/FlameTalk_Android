@@ -26,14 +26,15 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="닉네임" />
 
-    <TextView
+    <ToggleButton
         android:id="@+id/tv_friend_status"
         android:layout_width="80dp"
         android:layout_height="35dp"
         android:layout_marginEnd="20dp"
         android:background="@drawable/selector_friend_check"
         android:gravity="center"
-        android:text="숨기기"
+        android:textOn="숨김취소"
+        android:textOff="숨기기"
         android:textAlignment="gravity"
         android:textColor="@color/white"
         android:textStyle="bold"

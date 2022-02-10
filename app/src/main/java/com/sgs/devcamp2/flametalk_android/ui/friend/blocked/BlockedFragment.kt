@@ -8,8 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDirections
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentBlockedFriendBinding
@@ -46,7 +44,7 @@ class BlockedFragment : Fragment() {
                     )
                 findNavController().navigate(blockedToFriendProfileDirections)
             },
-            onChangeHidden = {
+            onChangeBlock = {
                 viewModel.changeBlockStatue(it.friendId)
             }
         )
