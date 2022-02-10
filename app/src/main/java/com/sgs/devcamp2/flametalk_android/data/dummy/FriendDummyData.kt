@@ -3,6 +3,7 @@ package com.sgs.devcamp2.flametalk_android.data.dummy
 import com.sgs.devcamp2.flametalk_android.data.model.Friend
 import com.sgs.devcamp2.flametalk_android.data.model.FriendPreview
 import com.sgs.devcamp2.flametalk_android.data.model.ProfileDummyPreview
+import com.sgs.devcamp2.flametalk_android.data.model.ProfilePreview
 
 /**
  * @author 박소연
@@ -22,38 +23,31 @@ fun getDummyUser() = ProfileDummyPreview(
 )
 
 // 멀티프로필
-fun getMultiProfile() = listOf(
-    ProfileDummyPreview(
+// id, image,
+fun getDummyProfiles() = listOf(
+    ProfilePreview(
         1,
-        2,
-        "박소연2",
         "https://cdn.pixabay.com/photo/2018/03/26/02/05/cat-3261420__480.jpg",
-        "아자아자",
-        "https://cdn.pixabay.com/photo/2017/02/15/12/12/cat-2068462__480.jpg",
+        "desc1",
+        true
     ),
-    ProfileDummyPreview(
-        1,
+    ProfilePreview(
+        2,
+        "https://cdn.pixabay.com/photo/2017/02/15/12/12/cat-2068462__480.jpg",
+        "desc2",
+        false
+    ),
+    ProfilePreview(
         3,
-        "박소연3",
-        "https://cdn.pixabay.com/photo/2017/02/15/12/12/cat-2068462__480.jpg",
-        "아자아자",
-        "https://cdn.pixabay.com/photo/2017/02/15/12/12/cat-2068462__480.jpg",
-    ),
-    ProfileDummyPreview(
-        1,
-        4,
-        "박소연4",
         "https://cdn.pixabay.com/photo/2014/04/13/20/49/cat-323262__480.jpg",
-        "아자아자",
-        "https://cdn.pixabay.com/photo/2017/07/25/01/22/cat-2536662__480.jpg",
+        "desc3",
+        false
     ),
-    ProfileDummyPreview(
-        1,
-        5,
-        "박소연5",
+    ProfilePreview(
+        4,
         "https://cdn.pixabay.com/photo/2017/07/25/01/22/cat-2536662__480.jpg",
-        "아자아자",
-        null
+        "desc4",
+        false
     )
 )
 
