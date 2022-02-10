@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_navigation"
-    app:startDestination="@id/navigation_add_friend">
+    app:startDestination="@id/navigation_search">
 
     <fragment
         android:id="@+id/navigation_signin"
@@ -60,6 +60,9 @@
         <action
             android:id="@+id/action_friend_to_add_profile"
             app:destination="@+id/navigation_add_profile" />
+        <action
+            android:id="@+id/action_friend_to_search"
+            app:destination="@+id/navigation_search"/>
     </fragment>
 
     <!--휴대폰 번호로 친구 추가-->
@@ -72,6 +75,19 @@
             android:id="@+id/action_add_to_friend"
             app:destination="@id/navigation_friend"
             app:popUpTo="@id/navigation_friend"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <!--친구 검색-->
+    <fragment
+        android:id="@+id/navigation_search"
+        android:name="com.sgs.devcamp2.flametalk_android.ui.search.SearchFragment"
+        android:label="SearchFragment"
+        tools:layout="@layout/fragment_search">
+        <action
+            android:id="@+id/action_search_to_profile"
+            app:destination="@id/navigation_profile"
+            app:popUpTo="@id/navigation_profile"
             app:popUpToInclusive="true" />
     </fragment>
 

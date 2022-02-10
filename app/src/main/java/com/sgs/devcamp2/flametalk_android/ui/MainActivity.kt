@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
                 destination.id == R.id.navigation_chat_Room_Bottom_Sheet || destination.id == R.id.navigation_add_profile ||
                 destination.id == R.id.navigation_single_feed || destination.id == R.id.navigation_total_feed ||
                 destination.id == R.id.navigation_blocked_friend || destination.id == R.id.navigation_hidden_friend ||
-                destination.id == R.id.navigation_add_friend
+                destination.id == R.id.navigation_add_friend || destination.id == R.id.navigation_search
             ) {
                 binding.btnvView.visibility = View.GONE
             } else {
