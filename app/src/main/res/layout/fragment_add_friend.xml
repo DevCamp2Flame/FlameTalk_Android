@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/img_signup_back"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_margin="20dp"
+        android:foregroundTint="@color/flame_blue"
+        android:src="@drawable/ic_back_arrow_blue_34"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="연락처로 친구 추가"
+        android:textColor="@color/flame_blue"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/img_signup_back"
+        app:layout_constraintStart_toEndOf="@id/img_signup_back"
+        app:layout_constraintTop_toTopOf="@id/img_signup_back" />
+
+
+    <!--추가할 친구에게 보여질 프로필 선택-->
+    <View
+        android:id="@+id/v_add_friend_select"
+        android:layout_width="match_parent"
+        android:layout_height="190dp"
+        android:layout_marginTop="40dp"
+        android:background="@color/flame_sky_blue3"
+        app:layout_constraintStart_toEndOf="@id/img_signup_back"
+        app:layout_constraintTop_toBottomOf="@id/img_signup_back" />
+
+    <TextView
+        android:id="@+id/tv_add_friend_select"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:text="보여질 프로필 선택"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@id/img_signup_back"
+        app:layout_constraintTop_toTopOf="@id/v_add_friend_select" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_add_friend_select"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal"
+        android:overScrollMode="never"
+        android:padding="10dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintTop_toBottomOf="@+id/tv_add_friend_select"
+        tools:layout_editor_absoluteX="-199dp"
+        tools:listitem="@layout/item_vertical_profile" />
+
+    <EditText
+        android:id="@+id/edt_add_friend_tel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="30dp"
+        android:layout_marginTop="50dp"
+        android:hint="휴대폰 번호 (ex. 010-0000-0000)"
+        android:outlineSpotShadowColor="@color/gray"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rv_add_friend_select" />
+
+    <ImageView
+        android:id="@+id/edt_add_friend_clear"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/ic_cancle"
+        app:layout_constraintBottom_toBottomOf="@+id/edt_add_friend_tel"
+        app:layout_constraintEnd_toEndOf="@+id/edt_add_friend_tel"
+        app:layout_constraintTop_toTopOf="@+id/edt_add_friend_tel"
+        app:tint="@color/gray" />
+
+    <TextView
+        android:id="@+id/tv_add_friend_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:textColor="@color/stove_orange"
+        app:layout_constraintStart_toStartOf="@+id/edt_add_friend_tel"
+        app:layout_constraintTop_toBottomOf="@+id/edt_add_friend_tel"
+        tools:text="전화번호 양식이 틀렸습니다" />
+
+
+    <CheckedTextView
+        android:id="@+id/ckt_add_friend_confirm"
+        android:layout_width="90dp"
+        android:layout_height="40dp"
+        android:layout_margin="20dp"
+        android:background="@drawable/bg_button_blue_10"
+        android:gravity="center"
+        android:text="확인"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="17sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/bg_button_lightgray_10"
+        app:layout_constraintBottom_toBottomOf="@+id/item_add_friend"
+        app:layout_constraintEnd_toEndOf="@+id/item_add_friend"
+        app:layout_constraintStart_toStartOf="@+id/item_add_friend"
+        app:layout_constraintTop_toTopOf="@+id/item_add_friend" />
+
+    <include
+        android:id="@+id/item_add_friend"
+        layout="@layout/item_friend_preview"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="30dp"
+        android:layout_marginTop="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edt_add_friend_tel" />
+
+    <TextView
+        android:id="@+id/tv_add_friend_result"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        tools:text="친구 추가가 완료되었습니다"
+        android:textColor="@color/flame_blue"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/item_add_friend"
+        app:layout_constraintStart_toStartOf="@+id/item_add_friend"
+        app:layout_constraintTop_toBottomOf="@+id/item_add_friend" />
+</androidx.constraintlayout.widget.ConstraintLayout>

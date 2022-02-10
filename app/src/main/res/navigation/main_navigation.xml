@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_navigation"
-    app:startDestination="@id/navigation_signin">
+    app:startDestination="@id/navigation_add_friend">
 
     <fragment
         android:id="@+id/navigation_signin"
@@ -65,13 +65,13 @@
     <!--휴대폰 번호로 친구 추가-->
     <fragment
         android:id="@+id/navigation_add_friend"
-        android:name="com.sgs.devcamp2.flametalk_android.ui.signup.SignupFragment"
-        android:label="Signup"
-        tools:layout="@layout/fragment_signup">
+        android:name="com.sgs.devcamp2.flametalk_android.ui.friend.add.AddFriendFragment"
+        android:label="AddFriendFragment"
+        tools:layout="@layout/fragment_add_friend">
         <action
-            android:id="@+id/action_signup_to_signin"
-            app:destination="@id/navigation_signin"
-            app:popUpTo="@id/navigation_signin"
+            android:id="@+id/action_add_to_friend"
+            app:destination="@id/navigation_friend"
+            app:popUpTo="@id/navigation_friend"
             app:popUpToInclusive="true" />
     </fragment>
 

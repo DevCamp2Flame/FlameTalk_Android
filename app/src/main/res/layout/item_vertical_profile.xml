@@ -3,13 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:padding="10dp">
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/img_vertical_profile"
         android:layout_width="60dp"
         android:layout_height="60dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginHorizontal="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -19,9 +20,10 @@
         android:id="@+id/img_vertical_profile_none"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:visibility="invisible"
+        android:layout_margin="10dp"
         android:background="@drawable/bg_gray_30"
         android:src="@drawable/ic_plus_white_24"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -35,5 +37,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/img_vertical_profile"
         tools:text="이름" />
+
+    <View
+        android:id="@+id/v_vertical_profile"
+        android:layout_width="80dp"
+        android:layout_height="100dp"
+        android:layout_margin="5dp"
+        android:clickable="true"
+        android:background="@drawable/selector_border_blue_10"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
