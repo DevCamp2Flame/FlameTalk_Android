@@ -21,7 +21,7 @@ version info, skills, library,
 |                  Library             |          Description   |
 | ----------------------------------- | ------------------------------------------- |
 | Navigation          |  Fragment간 화면 전환 관리. 뷰 스택 관리    |
-| Timber          |  앱 추출 시 Logging 코드를 지워줌   |
+| Timber          |  Logging   |
 | KTX          |  Android Life Cycle 관리   |
 | Retrofit2  | Http Rest 통신 라이브러리  |
 | Hilt, Dagger | 파일 의존성 주입 관리 |
