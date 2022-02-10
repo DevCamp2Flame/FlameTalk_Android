@@ -1,6 +1,13 @@
 # FlameTalk_Android
+<div align="center" style="display:flex;">
+	<img src="https://user-images.githubusercontent.com/43838030/153394342-37221ea4-b3cf-4dc4-81b6-4d0b9ed9e46b.png" width="200">
+</div>
+<div align="center">
+ 
 ### SGS DevCamp2 flame팀의 메신저 clone project입니다🔥
-
+앱 서비스의 기본적인 회원 인증, 연락처 동기화를 통한 친구 추가, 채팅 프로필 커스텀, 검색 기능과 채팅 기능을 제공합니다.
+<br/>채팅은 STOMP WebSocket 기반의 실시간 통신으로 이루어지며, FCM을 통해 메세지에 대한 푸시 알림 기능이 있습니다.
+</div>
 
 <br/>
 
@@ -10,13 +17,26 @@
 | [박소연](https://github.com/paksuua) | [김현국](https://github.com/014967) |
 
 ## 4. Project Info
+
 ### 0) Version Info
-- **TargetSDK: API level 31** (R)
-- MinimumSDK : API level 26 (Oreo)  
-- compileSDK: API level 31 (R)
+
+| IDE | Version |
+| :-----------------------------------: | :---------------------------------------: | 
+| Android Studio | 11.0.11 |
+
+| Language | Version |
+| :-----------------------------------: | :---------------------------------------: | 
+| Kotlin | 1.6.10 |
+
+| SDK | API Level |
+| :-----------------------------------: | :---------------------------------------: | 
+| TargetSDK | 31 (R) |
+| MinimumSDK | 26 (Oreo)  |
+| compileSDK | 31 (R)|
+
+
 <br/><br/><br/>
 
-version info, skills, library, 
 ### 📚 1) Library
 |                  Library             |          Description   |
 | ----------------------------------- | ------------------------------------------- |
