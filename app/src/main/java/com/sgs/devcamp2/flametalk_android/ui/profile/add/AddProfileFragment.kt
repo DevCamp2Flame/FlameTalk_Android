@@ -24,7 +24,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentAddProfileBinding
-import com.sgs.devcamp2.flametalk_android.ui.profile.edit.EditProfileViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
@@ -39,7 +38,7 @@ import kotlinx.coroutines.flow.collectLatest
 @ExperimentalCoroutinesApi
 class AddProfileFragment : Fragment() {
     private val binding by lazy { FragmentAddProfileBinding.inflate(layoutInflater) }
-    private val viewModel by activityViewModels<EditProfileViewModel>()
+    private val viewModel by activityViewModels<AddProfileViewModel>()
     private val getProfileImageLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK && result.data?.data != null) {
@@ -70,6 +69,12 @@ class AddProfileFragment : Fragment() {
 
     // ViewModel StateFlow 변수가 갱신되면 UI에 자동 바인딩한다
     private fun updateUI() {
+        // 닉네임
+        lifecycleScope.launchWhenResumed {
+            viewModel.nickname.collectLatest {
+                binding.tvAddProfileNickname.text = it
+            }
+        }
 
         // 상태메세지
         lifecycleScope.launchWhenResumed {
@@ -97,6 +102,15 @@ class AddProfileFragment : Fragment() {
                     .into(binding.imgAddProfileBg)
             }
         }
+
+        // 프로필 생성 성공 여부
+        lifecycleScope.launchWhenResumed {
+            viewModel.isSuccess.collectLatest {
+                if (it != null) {
+                    findNavController().navigate(R.id.navigation_friend)
+                }
+            }
+        }
     }
 
     private fun initClickEvent() {
@@ -106,13 +120,11 @@ class AddProfileFragment : Fragment() {
 
         // 프로필 이미지 변경
         binding.imgAddProfileGallery.setOnClickListener {
-            // TODO: 프로필 이미지 가져오기
             getProfileImage(PROFILE_IMAGE)
         }
 
         // 배경 이미지 변경
         binding.imgAddProfileGalleryBg.setOnClickListener {
-            // TODO: 배경 이미지 가져오기
             getProfileImage(BACKGROUND_IMAGE)
         }
 
@@ -123,14 +135,10 @@ class AddProfileFragment : Fragment() {
             findNavController().navigate(addProfileToDescDirections)
         }
 
-        // 프로필 수정 완료
+        // 프로필 생성 완료
         binding.tvAddProfileConfirm.setOnClickListener {
-            // TODO: 프로필 편집 통신
-            // 파일 통신을 위한 임시 요청
-            // File Create 통신
-//            if (viewModel.profileImage.value != "") {
-//                viewModel.postCreateImage()
-//            }
+            // 파일 생성 통신 요청
+            viewModel.addProfile()
         }
     }
 

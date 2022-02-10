@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentProfileDescBinding
+import com.sgs.devcamp2.flametalk_android.ui.profile.add.AddProfileViewModel
 import com.sgs.devcamp2.flametalk_android.ui.profile.edit.EditProfileViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -26,14 +27,19 @@ import kotlinx.coroutines.flow.collectLatest
 @ExperimentalCoroutinesApi
 class ProfileDescFragment : Fragment() {
     private val binding by lazy { FragmentProfileDescBinding.inflate(layoutInflater) }
-    private val viewModel: EditProfileViewModel by activityViewModels()
+
+    // AddProfileFragment와 ProfileDescFragment가 AㅇㅇProfileViewModel을 공유
+    private val addViewModel: AddProfileViewModel by activityViewModels()
+
+    // EditProfileFragment와 ProfileDescFragment가 EditProfileViewModel를 공유
+    private val editViewModel: EditProfileViewModel by activityViewModels()
     private val args: ProfileDescFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         initUI()
         return binding.root
     }
@@ -51,18 +57,32 @@ class ProfileDescFragment : Fragment() {
 
         // 접근한 View에 상관 없이 이전 View로 데이터를 전달할 수 있다.
         binding.tvEditProfileDescConfirm.setOnClickListener {
-            viewModel.getProfileDesc(binding.edtEditProfileDesc.text.toString())
+            when (args.startView) {
+                "Add" -> addViewModel.setProfileDesc(binding.edtEditProfileDesc.text.toString())
+                "Edit" -> editViewModel.setProfileDesc(binding.edtEditProfileDesc.text.toString())
+            }
             findNavController().navigateUp()
         }
 
-        binding.edtEditProfileDesc.doOnTextChanged { _, _, _, count ->
-            binding.tvEditProfileDescCount.text = "$count/60"
+        binding.edtEditProfileDesc.doOnTextChanged { text, _, _, count ->
+            binding.tvEditProfileDescCount.text = "${text?.length}/60"
         }
 
         // 입력 문자 counter
         lifecycleScope.launchWhenStarted {
-            viewModel.description.collectLatest {
-                binding.tvEditProfileDescCount.text = "${binding.edtEditProfileDesc.text.length}/60"
+            when (args.startView) {
+                "Add" -> {
+                    addViewModel.description.collectLatest {
+                        binding.tvEditProfileDescCount.text =
+                            "${binding.edtEditProfileDesc.text.length}/60"
+                    }
+                }
+                "Edit" -> {
+                    editViewModel.description.collectLatest {
+                        binding.tvEditProfileDescCount.text =
+                            "${binding.edtEditProfileDesc.text.length}/60"
+                    }
+                }
             }
         }
     }

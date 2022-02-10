@@ -157,6 +157,12 @@
         <action
             android:id="@+id/action_add_to_edit_desc"
             app:destination="@id/navigation_profile_desc" />
+
+        <action
+            android:id="@+id/action_add_to_friend"
+            app:destination="@id/navigation_friend"
+            app:popUpTo="@id/navigation_friend"
+            app:popUpToInclusive="true"/>
     </fragment>
 
     <!--상태메세지 수정-->
@@ -175,7 +181,9 @@
             app:destination="@id/navigation_edit_profile" />
         <action
             android:id="@+id/action_edit_desc_to_add"
-            app:destination="@id/navigation_add_profile" />
+            app:destination="@id/navigation_add_profile"
+            app:popUpTo="@id/navigation_add_profile"
+            app:popUpToInclusive="true" />
         <argument
             android:name="startView"
             app:argType="string" />

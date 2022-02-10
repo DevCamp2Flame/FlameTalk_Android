@@ -1,15 +1,12 @@
-package com.sgs.devcamp2.flametalk_android.ui.profile.edit
+package com.sgs.devcamp2.flametalk_android.ui.profile.add
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sgs.devcamp2.flametalk_android.data.model.Profile
-import com.sgs.devcamp2.flametalk_android.data.model.ProfileDummyPreview
-import com.sgs.devcamp2.flametalk_android.data.model.Sticker
 import com.sgs.devcamp2.flametalk_android.network.dao.UserDAO
 import com.sgs.devcamp2.flametalk_android.network.repository.FileRepository
 import com.sgs.devcamp2.flametalk_android.network.repository.ProfileRepository
-import com.sgs.devcamp2.flametalk_android.network.request.sign.ProfileUpdateRequest
+import com.sgs.devcamp2.flametalk_android.network.request.sign.ProfileCreateRequest
 import com.sgs.devcamp2.flametalk_android.util.pathToMultipartImageFile
 import dagger.Lazy
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,26 +19,18 @@ import okhttp3.MultipartBody
 import timber.log.Timber
 
 @HiltViewModel
-class EditProfileViewModel @Inject constructor(
+class AddProfileViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val userDAO: UserDAO,
     private val fileRepository: Lazy<FileRepository>,
     private val profileRepository: Lazy<ProfileRepository>
 ) : ViewModel() {
 
-    // 메인 유저 정보
-    private val _userProfileDummy: MutableStateFlow<ProfileDummyPreview?> = MutableStateFlow(null)
-    val userProfileDummy: MutableStateFlow<ProfileDummyPreview?> = _userProfileDummy
-
-    // 유저 id
+    // 유저 Id
     private val _userId = MutableStateFlow("")
     val userId = _userId.asStateFlow()
 
-    // 프로필 id
-    private val _profileId = MutableStateFlow(0L)
-    val profileId = _profileId.asStateFlow()
-
-    // 닉네임
+    // 유저 닉네임
     private val _nickname = MutableStateFlow("")
     val nickname = _nickname.asStateFlow()
 
@@ -65,14 +54,6 @@ class EditProfileViewModel @Inject constructor(
     private val _backgroundImageUrl = MutableStateFlow("")
     val backgroundImageUrl = _backgroundImageUrl.asStateFlow()
 
-    // 스티커
-    private val _stickers = MutableStateFlow<List<Sticker>>(emptyList())
-    val stickers = _stickers.asStateFlow()
-
-    // 배경 이미지 url
-    private val _isDefault: MutableStateFlow<Boolean?> = MutableStateFlow(null)
-    val isDefault = _isDefault.asStateFlow()
-
     // 메세지
     private val _message = MutableStateFlow("")
     val message = _message.asStateFlow()
@@ -94,15 +75,7 @@ class EditProfileViewModel @Inject constructor(
 
     fun setProfileDesc(desc: String) {
         _description.value = desc
-    }
-
-    fun setUserProfile(data: Profile) {
-        _profileId.value = data.profileId
-        _description.value = data.description.toString()
-        _profileImageUrl.value = data.imageUrl.toString()
-        _backgroundImageUrl.value = data.bgImageUrl.toString()
-        _isDefault.value = data.isDefault
-        _stickers.value = data.sticker!!
+        Timber.d("Description ${_description.value}")
     }
 
     fun setProfileImage(path: String?) {
@@ -117,7 +90,8 @@ class EditProfileViewModel @Inject constructor(
         }
     }
 
-    fun updateProfile() {
+    // 갤러리에서 가져온 프로필, 배경 이미지를 파일 서버로 보내고 파일서버 url을 받는다.
+    fun addProfile() {
         viewModelScope.launch {
             val deferred = viewModelScope.async {
                 // list 내의 작업을 비동기적으로 요청하고 모든 요청이 완료될 때 까지 기다린다.
@@ -137,7 +111,7 @@ class EditProfileViewModel @Inject constructor(
             }
             // 파일 통신이 모두 끝나면 프로필 생성 요청을 보낸다
             deferred.await()
-            updateProfileData()
+            postProfile()
         }
     }
 
@@ -176,22 +150,29 @@ class EditProfileViewModel @Inject constructor(
         deferred.await()
     }
 
-    //
-    fun updateProfileData() {
-        val request = ProfileUpdateRequest(
-            userId = _userId.value,
-            imageUrl = _profileImageUrl.value,
-            bgImageUrl = _backgroundImageUrl.value,
-            sticker = null, // TODO: 스티커 정보, 프로필 내 positioning 할 수 있는 상대적 위치 정보
-            description = _description.value,
-            isDefault = _isDefault.value!!
-        )
+    private fun postProfile() {
         viewModelScope.launch {
             try {
-                val response = profileRepository.get().updateProfile(_profileId.value, request)
-                Timber.d(response.toString())
-            } catch (ignored: Throwable) {
-                Timber.d("알 수 없는 에러 발생")
+                val request = ProfileCreateRequest(
+                    userId = _userId.value,
+                    imageUrl = _profileImageUrl.value,
+                    bgImageUrl = _backgroundImageUrl.value,
+                    sticker = null, // TODO: Add Sticker Model
+                    description = _description.value,
+                    isDefault = false
+                )
+                val response = profileRepository.get().createProfile(request)
+
+                Timber.d("response")
+                if (response.status == 201) {
+                    _isSuccess.value = true
+                    Timber.d("Response.status is 201")
+                }
+                _message.value = response.message
+                Timber.d("All Image Create Completed $response")
+                Timber.d("Success ${_isSuccess.value}")
+            } catch (ignore: Throwable) {
+                Timber.d("Fail $ignore")
             }
         }
     }
