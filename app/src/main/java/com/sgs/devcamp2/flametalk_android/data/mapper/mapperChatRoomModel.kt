@@ -10,12 +10,13 @@ import com.sgs.devcamp2.flametalk_android.data.model.chatroom.getchatroomlist.Ge
  * @author boris
  * @created 2022/02/08
  */
-fun mapperToChatModel(i: Int, getChatRoomListRes: GetChatRoomListRes): ChatRoom {
+fun mapperToChatModel(isOpen: Boolean, i: Int, getChatRoomListRes: GetChatRoomListRes): ChatRoom {
 
     return ChatRoom(
         getChatRoomListRes.userChatrooms[i].chatroomId,
         getChatRoomListRes.userChatrooms[i].userChatroomId,
         getChatRoomListRes.userChatrooms[i].title,
+        isOpen,
         getChatRoomListRes.userChatrooms[i].lastReadMessageId,
         getChatRoomListRes.userChatrooms[i].inputLock,
         getChatRoomListRes.userChatrooms[i].count,
@@ -27,6 +28,7 @@ fun mapperToChatRoomModel(createChatRoomRes: CreateChatRoomRes): ChatRoom {
         id = createChatRoomRes.chatroomId,
         userChatroomId = createChatRoomRes.userChatroomId,
         title = createChatRoomRes.title,
+        isOpen = createChatRoomRes.isOpen,
         lastReadMessageId = null,
         inputLock = false,
         count = createChatRoomRes.count,

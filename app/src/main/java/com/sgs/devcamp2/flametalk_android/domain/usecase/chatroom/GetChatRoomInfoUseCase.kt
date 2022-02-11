@@ -16,6 +16,6 @@ class GetChatRoomInfoUseCase @Inject constructor(
     private val repository: ChatRoomRepository
 ) {
     suspend fun invoke(userChatRoomId: Long): Flow<Results<GetChatRoomEntity, WrappedResponse<GetChatRoomRes>>> {
-        return repository.getChatRoom(userChatRoomId)
+        return repository.getChatRoomInfo(userChatRoomId)
     }
 }

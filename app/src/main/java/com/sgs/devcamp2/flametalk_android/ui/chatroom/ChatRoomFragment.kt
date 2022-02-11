@@ -58,13 +58,14 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
         binding.rvChatRoom.layoutManager = LinearLayoutManager(context)
         drawer_binding.rvDrawUserList.layoutManager = LinearLayoutManager(context)
 
-        adapter = ChatRoomAdapter()
+        adapter = ChatRoomAdapter(model.userId.value)
         userlistAdapter = ChatRoomDrawUserListAdapter()
 
         binding.rvChatRoom.adapter = adapter
         drawer_binding.rvDrawUserList.adapter = userlistAdapter
 
         binding.ivChatRoomDraw.setOnClickListener(this)
+        binding.layoutChatRoomArrowSpace.setOnClickListener(this)
         binding.ivChatRoomFile.setOnClickListener(this)
         binding.ivChatSend.setOnClickListener(this)
         drawer_binding.ivDrawExit.setOnClickListener(this)
@@ -129,7 +130,7 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
                         Log.d(TAG, "ChatRoomFragment - chatList collect () called")
                         adapter.submitList(state.data)
                         binding.rvChatRoom.smoothScrollToPosition(state.data.size)
-                        model.updateLastReadMessage(state.data[state.data.size - 1].message_id)
+                        // model.updateLastReadMessage(state.data[state.data.size - 1].message_id)
                     }
                 }
             }
@@ -164,6 +165,10 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
                     }
                 }
             }
+            binding.layoutChatRoomArrowSpace ->
+                {
+                    findNavController().popBackStack()
+                }
             binding.ivChatRoomFile -> {
                 findNavController().navigate(R.id.action_navigation_chat_room_to_navigation_chat_Room_Bottom_Sheet)
             }

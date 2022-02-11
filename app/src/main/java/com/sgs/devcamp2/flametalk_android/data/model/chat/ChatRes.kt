@@ -10,6 +10,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ChatRes(
     val message_id: String,
+    val message_type: String,
     val room_id: String,
     val sender_id: String,
     val nickname: String,

@@ -18,7 +18,7 @@ data class UserChatRoom(
     val chatroomId: String,
     val userChatroomId: Long,
     val title: String,
-    val thumbnail: List<String>,
+    val thumbnail: List<String>?,
     val lastReadMessageId: String,
     val inputLock: Boolean,
     val count: Int

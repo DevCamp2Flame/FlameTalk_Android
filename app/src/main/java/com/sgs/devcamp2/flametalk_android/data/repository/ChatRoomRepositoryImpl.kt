@@ -3,6 +3,7 @@ package com.sgs.devcamp2.flametalk_android.data.repository
 import com.sgs.devcamp2.flametalk_android.data.common.WrappedResponse
 import com.sgs.devcamp2.flametalk_android.data.mapper.*
 import com.sgs.devcamp2.flametalk_android.data.model.chat.ChatWithRoomId
+import com.sgs.devcamp2.flametalk_android.data.model.chatroom.Thumbnail
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.ThumbnailWithRoomId
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.closechatroom.CloseChatRoomReq
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.createchatroom.CreateChatRoomReq
@@ -63,7 +64,7 @@ class ChatRoomRepositoryImpl @Inject constructor(
         }.flowOn(ioDispatcher)
     }
 
-    override suspend fun getChatRoom(userChatroomId: Long): Flow<Results<GetChatRoomEntity, WrappedResponse<GetChatRoomRes>>> {
+    override suspend fun getChatRoomInfo(userChatroomId: Long): Flow<Results<GetChatRoomEntity, WrappedResponse<GetChatRoomRes>>> {
         return flow {
             val response = remote.getChatRoom(userChatroomId)
             if (response.isSuccessful) {
@@ -85,15 +86,31 @@ class ChatRoomRepositoryImpl @Inject constructor(
                     val body = response.body()!!
                     val data = body.data!!
                     for (i in 0 until data.userChatrooms.size) {
-                        val chatRoom = mapperToChatModel(i, data)
+                        val chatRoom = mapperToChatModel(isOpen, i, data)
                         local.chatRoomDao().insert(chatRoom)
-                        for (j in 0 until data.userChatrooms[i].thumbnail.size) {
-                            val thumbnail = mapperToThumbnail(data.userChatrooms[i].chatroomId, data.userChatrooms[i].thumbnail[j])
-                            local.chatRoomDao().insertThumbnail(thumbnail)
+                        if (data.userChatrooms[i].thumbnail?.size == 0) {
+                        } else {
+                            local.chatRoomDao().deleteThumbnailwithRoomId(chatRoom.id)
+                            for (j in 0 until data.userChatrooms[i].thumbnail!!.size) {
+                                lateinit var thumbnail: Thumbnail
+                                if (data.userChatrooms[i].thumbnail?.get(j).isNullOrEmpty()) {
+                                    thumbnail = mapperToThumbnail(data.userChatrooms[i].chatroomId, "https://cdn.pixabay.com/photo/2017/02/15/12/12/cat-2068462__480.jpg")
+                                } else {
+                                    thumbnail = mapperToThumbnail(data.userChatrooms[i].chatroomId, data.userChatrooms[i].thumbnail?.get(j)!!)
+                                }
+                                local.chatRoomDao().insertThumbnail(thumbnail)
+                            }
                         }
                     }
                     emit(Results.Success(data))
                 }
+            }
+        }.flowOn(ioDispatcher)
+    }
+    override suspend fun getLocalChatRoomList(isOpen: Boolean): Flow<LocalResults<List<ThumbnailWithRoomId>>> {
+        return flow {
+            local.chatRoomDao().getChatRoom(isOpen).collect {
+                emit(LocalResults.Success(it))
             }
         }.flowOn(ioDispatcher)
     }

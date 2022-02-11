@@ -60,6 +60,7 @@ class MainActivity : AppCompatActivity() {
                 when (state) {
                     is UiState.Success -> {
                         Log.d(TAG, "MainActivity - CONNECT WEBSOCKET")
+
                     }
                     is UiState.Loading -> {
                         Log.d(TAG, "MainActivity - initReceiveMessage() called")
@@ -70,6 +71,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+
 
     override fun onDestroy() {
         super.onDestroy()

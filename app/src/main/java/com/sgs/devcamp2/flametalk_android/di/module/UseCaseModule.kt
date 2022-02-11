@@ -3,6 +3,7 @@ package com.sgs.devcamp2.flametalk_android.di.module
 import com.sgs.devcamp2.flametalk_android.domain.repository.*
 import com.sgs.devcamp2.flametalk_android.domain.usecase.chatroom.*
 import com.sgs.devcamp2.flametalk_android.domain.usecase.chatroomlist.GetChatRoomListUseCase
+import com.sgs.devcamp2.flametalk_android.domain.usecase.chatroomlist.GetLocalChatRoomListUseCase
 import com.sgs.devcamp2.flametalk_android.domain.usecase.createopenchatprofile.CreateOpenProfileUseCase
 import com.sgs.devcamp2.flametalk_android.domain.usecase.inviteroom.CreateChatRoomUseCase
 import com.sgs.devcamp2.flametalk_android.domain.usecase.mainactivity.SaveReceivedMessageUseCase
@@ -76,5 +77,10 @@ object UseCaseModule {
     @Provides
     fun provideGetThumbnailListUseCase(repository: ChatRoomRepository): GetThumbnailListUseCase {
         return GetThumbnailListUseCase(repository = repository)
+    }
+
+    @Provides
+    fun provideGetLocalChatRoomListUseCase(repository: ChatRoomRepository): GetLocalChatRoomListUseCase {
+        return GetLocalChatRoomListUseCase(repository = repository)
     }
 }

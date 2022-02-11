@@ -22,7 +22,8 @@ import java.util.*
     ]
 )
 data class Thumbnail(
-    @PrimaryKey val id: String,
+    @PrimaryKey(autoGenerate = true) val id: Int,
     @ColumnInfo(name = "room_id") val room_id: String,
     @ColumnInfo(name = "image") val image: String
+
 )

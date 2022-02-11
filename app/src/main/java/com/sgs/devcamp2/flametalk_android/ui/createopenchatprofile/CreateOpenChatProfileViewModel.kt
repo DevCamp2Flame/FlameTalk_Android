@@ -6,6 +6,7 @@ import com.sgs.devcamp2.flametalk_android.data.model.openprofile.createopenprofi
 import com.sgs.devcamp2.flametalk_android.domain.entity.Results
 import com.sgs.devcamp2.flametalk_android.domain.entity.UiState
 import com.sgs.devcamp2.flametalk_android.domain.usecase.createopenchatprofile.CreateOpenProfileUseCase
+import com.sgs.devcamp2.flametalk_android.network.dao.UserDAO
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,7 +19,8 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class CreateOpenChatProfileViewModel @Inject constructor(
-    private val createOpenProfileUseCase: CreateOpenProfileUseCase
+    private val createOpenProfileUseCase: CreateOpenProfileUseCase,
+    private val userDAO: UserDAO
 ) : ViewModel() {
     private var _profile_name = MutableStateFlow("")
     val profile_name = _profile_name.asStateFlow()
@@ -28,6 +30,21 @@ class CreateOpenChatProfileViewModel @Inject constructor(
     val profile_image = _profile_image.asStateFlow()
     private var _uiState = MutableStateFlow<UiState<Boolean>>(UiState.Init)
     val uiState = _uiState.asStateFlow()
+    private var _userId = MutableStateFlow("")
+    val userId = _userId.asStateFlow()
+    private var _nickname = MutableStateFlow("")
+    val nickname = _nickname.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            userDAO.user.collect {
+                if (it != null) {
+                    _userId.value = it.userId
+                    _nickname.value = it.nickname
+                }
+            }
+        }
+    }
     fun updateName(input: String) {
         _profile_name.value = input
     }
@@ -45,7 +62,7 @@ class CreateOpenChatProfileViewModel @Inject constructor(
     fun createOpenProfile() {
         // userid shared preferences
         var createOpenChatProfileReq = CreateOpenProfileReq(
-            "1643986912282658350",
+            _userId.value,
             _profile_name.value,
             _profile_image.value,
             _profile_description.value

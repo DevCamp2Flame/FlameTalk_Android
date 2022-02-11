@@ -27,6 +27,7 @@ import javax.annotation.Nonnull
 @Serializable
 data class Chat(
     @PrimaryKey val message_id: String,
+    @Nonnull @ColumnInfo(name = "message_type") val message_type: String,
     @Nonnull @ColumnInfo(name = "room_id") val room_id: String,
     @Nonnull @ColumnInfo(name = "sender_id") val sender_id: String,
     @Nonnull @ColumnInfo(name = "nickname") val nickname: String,

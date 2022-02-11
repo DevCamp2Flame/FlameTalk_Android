@@ -14,7 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.sgs.devcamp2.flametalk_android.data.model.chatroom.getchatroomlist.UserChatRoom
+import com.sgs.devcamp2.flametalk_android.data.model.chatroom.ThumbnailWithRoomId
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentChatRoomListBinding
 import com.sgs.devcamp2.flametalk_android.domain.entity.UiState
 import com.sgs.devcamp2.flametalk_android.ui.chattingviewpager.ChattingViewPagerFragmentDirections
@@ -47,7 +47,7 @@ class ChatRoomListFragment : Fragment(), ChatRoomListAdapter.ClickCallBack {
         binding.rvChatListChattingRoom.layoutManager = LinearLayoutManager(context)
         adapterRoom = ChatRoomListAdapter(callback = this)
         binding.rvChatListChattingRoom.adapter = adapterRoom
-        model.getChatRoomList()
+        model.getChatRoomList(false)
     }
 
     fun initObserve() {
@@ -57,8 +57,26 @@ class ChatRoomListFragment : Fragment(), ChatRoomListAdapter.ClickCallBack {
                     model.uiState.collect { state ->
                         when (state) {
                             is UiState.Success -> {
-                                adapterRoom.submitList(state.data.userChatrooms)
+
+                                model.getLocalChatRoomList(false)
                             }
+                        }
+                    }
+                }
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    model.localUiState.collect {
+                        state ->
+                        when (state) {
+                            is UiState.Success ->
+                                {
+                                    if (state.data.isNotEmpty()) {
+                                        adapterRoom.submitList(state.data)
+                                    }
+                                }
                         }
                     }
                 }
@@ -66,7 +84,7 @@ class ChatRoomListFragment : Fragment(), ChatRoomListAdapter.ClickCallBack {
         }
     }
 
-    override fun onItemLongClicked(position: Int, userChatRoom: UserChatRoom) {
+    override fun onItemLongClicked(position: Int, chatroom: ThumbnailWithRoomId) {
         /**
          * itemClickCallback
          * item long Click 시 dialog 생성
@@ -84,7 +102,7 @@ class ChatRoomListFragment : Fragment(), ChatRoomListAdapter.ClickCallBack {
             }
         }
 
-        dialog.setTitle(userChatRoom.title)
+        dialog.setTitle(chatroom.room.title)
         dialog.setItems(
             items, dialogListener
         )
@@ -92,10 +110,10 @@ class ChatRoomListFragment : Fragment(), ChatRoomListAdapter.ClickCallBack {
         true
     }
 
-    override fun onItemShortClicked(position: Int, userChatRoom: UserChatRoom) {
+    override fun onItemShortClicked(position: Int, chatroom: ThumbnailWithRoomId) {
         var action =
             ChattingViewPagerFragmentDirections.actionNavigationChattingViewPagerFragmentToNavigationChatRoom(
-                userChatRoom.chatroomId,
+                chatroom.room.id,
             )
         findNavController().navigate(action)
     }

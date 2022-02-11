@@ -18,8 +18,8 @@ interface ChatRoomDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(chatroom: ChatRoom): Long
 
-    @Query("SELECT * FROM chatroom")
-    fun getChatRoom(): Flow<List<ChatRoom>>
+    @Query("SELECT * FROM chatroom WHERE chatroom.isOpen LIKE :isOpen")
+    fun getChatRoom(isOpen: Boolean): Flow<List<ThumbnailWithRoomId>>
 
     @Transaction
     @Query("SELECT * FROM chatroom Where chatroom.id LIKE :chatroomId")
@@ -34,4 +34,8 @@ interface ChatRoomDao {
 
     @Update(entity = ChatRoom::class)
     fun updateLastReadMessageId(chatroomUpdate: ChatRoomUpdate)
+
+    @Transaction
+    @Query("DELETE  FROM thumbnail where room_id LIKE :chatroomId")
+    fun deleteThumbnailwithRoomId(chatroomId: String)
 }

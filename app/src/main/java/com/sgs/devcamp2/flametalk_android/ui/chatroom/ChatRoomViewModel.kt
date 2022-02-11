@@ -13,6 +13,7 @@ import com.sgs.devcamp2.flametalk_android.domain.entity.UiState
 import com.sgs.devcamp2.flametalk_android.domain.entity.chatroom.GetChatRoomEntity
 import com.sgs.devcamp2.flametalk_android.domain.usecase.chatroom.*
 import com.sgs.devcamp2.flametalk_android.domain.usecase.mainactivity.SaveReceivedMessageUseCase
+import com.sgs.devcamp2.flametalk_android.network.dao.UserDAO
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
@@ -30,6 +31,7 @@ class ChatRoomViewModel @Inject constructor(
     private val deleteChatRoomUseCase: DeleteChatRoomUseCase,
     private val closeChatRoomUseCase: CloseChatRoomUseCase,
     private val getChatListUseCase: GetChatListUseCase,
+    private val userDAO: UserDAO
 ) : ViewModel() {
     val TAG: String = "로그"
     private var _chat = MutableStateFlow<String>("")
@@ -49,7 +51,21 @@ class ChatRoomViewModel @Inject constructor(
     private var _userChatRoom = MutableStateFlow<UiState<ChatRoom>>(UiState.Loading)
     var userChatRoom = _userChatRoom.asStateFlow()
 
+    private var _userId = MutableStateFlow("")
+    val userId = _userId.asStateFlow()
+    private var _nickname = MutableStateFlow("")
+    val nickname = _nickname.asStateFlow()
 
+    init {
+        viewModelScope.launch {
+            userDAO.user.collect {
+                if (it != null) {
+                    _userId.value = it.userId
+                    _nickname.value = it.nickname
+                }
+            }
+        }
+    }
 
     fun getChatList(chatroomId: String) {
         viewModelScope.launch {
@@ -58,7 +74,6 @@ class ChatRoomViewModel @Inject constructor(
                     is LocalResults.Success -> {
                         _chatList.value = UiState.Success(result.data.chatList)
                         _userChatRoom.value = UiState.Success(result.data.room)
-
                     }
                 }
             }
@@ -129,7 +144,7 @@ class ChatRoomViewModel @Inject constructor(
             // nickname도 변경
             _jsonStompSessions = session.withJsonConversions()
             // 만약 message type이 INVITE일 경우 한번 더 메세지를 보내자.
-            val chatReq = ChatReq(messageType, roomId, "1643986912282658350", "닉네임", contents, null)
+            val chatReq = ChatReq(messageType, roomId, _userId.value, _nickname.value, contents, null)
             _jsonStompSessions.convertAndSend("/pub/chat/message", chatReq, ChatReq.serializer())
         }
     }

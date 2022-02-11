@@ -26,10 +26,22 @@ fun mapperToChatRoomEntity(createChatRoomRes: CreateChatRoomRes): ChatRoomEntity
 
 
 fun mapperToGetChatRoomEntity(getChatRoomRes: GetChatRoomRes): GetChatRoomEntity {
-    return GetChatRoomEntity(
-        profileNickname = getChatRoomRes.profileNickname,
-        profileImage = getChatRoomRes.profileImage,
-        profiles = getChatRoomRes.profiles,
-        files = getChatRoomRes.files
-    )
+    if(getChatRoomRes.profileImage.isNullOrEmpty())
+    {
+        return GetChatRoomEntity(
+            profileNickname = getChatRoomRes.profileNickname,
+            profileImage = "",
+            profiles = getChatRoomRes.profiles,
+            files = getChatRoomRes.files
+        )
+    }
+    else {
+        return GetChatRoomEntity(
+            profileNickname = getChatRoomRes.profileNickname,
+            profileImage = getChatRoomRes.profileImage,
+            profiles = getChatRoomRes.profiles,
+            files = getChatRoomRes.files
+        )
+    }
+
 }

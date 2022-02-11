@@ -2,7 +2,6 @@ package com.sgs.devcamp2.flametalk_android.ui.inviteroom
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -128,7 +127,6 @@ class InviteRoomFragment :
     override fun onClick(view: View?) {
         when (view) {
             binding.tvInviteRoomSubmit -> {
-                // model.createRooms()
                 var users: MutableList<String> = emptyList<String>().toMutableList()
                 for (i in 0 until model.selectedFriendList.value.size) {
                     users.add(model.selectedFriendList.value[i].nickname)
@@ -146,15 +144,5 @@ class InviteRoomFragment :
     override fun onStart() {
         super.onStart()
         model.replaceUiState()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Log.d(TAG, "InviteRoomFragment - onResume() called")
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Log.d(TAG, "InviteRoomFragment - onPause() called")
     }
 }

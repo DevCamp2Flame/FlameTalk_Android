@@ -26,6 +26,6 @@ class MainActivityRepositoryImpl @Inject constructor(
     }
 
     companion object {
-        val WEB_SOCKET_URL = "ws://192.168.0.100:8085/stomp/chat/websocket"
+        val WEB_SOCKET_URL = "ws://10.99.30.180:8085/stomp/chat/websocket"
     }
 }

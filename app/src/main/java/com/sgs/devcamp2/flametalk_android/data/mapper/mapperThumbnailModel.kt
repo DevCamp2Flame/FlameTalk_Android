@@ -10,5 +10,5 @@ import java.util.*
 
 fun mapperToThumbnail(roomId: String, thumbnail: String): Thumbnail {
 
-    return Thumbnail(thumbnail, roomId, thumbnail)
+    return Thumbnail(0,roomId, thumbnail)
 }
