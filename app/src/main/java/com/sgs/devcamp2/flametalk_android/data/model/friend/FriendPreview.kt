@@ -1,6 +1,8 @@
-package com.sgs.devcamp2.flametalk_android.data.model
+package com.sgs.devcamp2.flametalk_android.data.model.friend
 
 import androidx.annotation.Keep
+import androidx.room.ColumnInfo
+import androidx.room.Entity
 import com.google.gson.annotations.SerializedName
 
 /**
@@ -16,11 +18,15 @@ import com.google.gson.annotations.SerializedName
  */
 
 @Keep
+@Entity(tableName = "friends_preview")
 data class FriendPreview(
     @SerializedName("profileId")
+    @ColumnInfo(name = "profile_id")
     val profileId: Long,
     @SerializedName("imageUrl")
+    @ColumnInfo(name = "image_url")
     val imageUrl: String,
     @SerializedName("description")
+    @ColumnInfo(name = "description")
     val description: String
 )

@@ -1,4 +1,4 @@
-package com.sgs.devcamp2.flametalk_android.data.model
+package com.sgs.devcamp2.flametalk_android.data.model.profile
 
 import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
