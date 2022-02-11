@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_navigation"
-    app:startDestination="@id/navigation_add_friend">
+    app:startDestination="@id/navigation_signin">
 
     <fragment
         android:id="@+id/navigation_signin"
@@ -80,7 +80,7 @@
         android:name="com.sgs.devcamp2.flametalk_android.ui.friend.phonebook.PhoneBookFragment"
         android:label="PhoneBook"
         tools:layout="@layout/fragment_phone_book">
-        
+
     </fragment>
 
     <!--프로필 상세보기-->
