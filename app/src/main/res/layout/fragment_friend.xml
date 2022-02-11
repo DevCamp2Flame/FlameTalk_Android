@@ -135,6 +135,20 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/item_friend_more_birthday" />
 
+            <TextView
+                android:id="@+id/tv_friend_load_contact"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@drawable/bg_open_room_blue_border_3"
+                android:gravity="center"
+                android:visibility="gone"
+                android:paddingVertical="20sp"
+                android:text="연락처 동기화로 친구 추가하기"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                app:layout_constraintTop_toBottomOf="@id/tv_friend_count" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_friend"
                 android:layout_width="match_parent"

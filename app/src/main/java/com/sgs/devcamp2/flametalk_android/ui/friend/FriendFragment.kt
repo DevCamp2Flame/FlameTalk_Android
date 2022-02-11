@@ -75,6 +75,9 @@ class FriendFragment : Fragment() {
         binding.abFriend.imgAppbarSetting.setOnClickListener {
             // TODO: Friend > Setting
         }
+        binding.tvFriendLoadContact.setOnClickListener {
+            // TODO: 연락처 동기화 -> 서버로 요청 -> Friend 페이지로 다시 랜딩
+        }
     }
 
     // 프로필 초기화
@@ -90,7 +93,7 @@ class FriendFragment : Fragment() {
     // 유저프로필 초기화
     // 유저 닉네임은 list 데이터로 넘어오지 않기 때문에 따로 observe
     private fun initMainProfile() {
-
+        // preference에서 가져온 사용자 닉네임
         lifecycleScope.launch {
             viewModel.nickname.collectLatest {
                 if (it.isNotEmpty()) {
@@ -100,6 +103,7 @@ class FriendFragment : Fragment() {
             }
         }
 
+        // 사용자 프로필
         lifecycleScope.launchWhenResumed {
             viewModel.userProfile.collectLatest {
                 Glide.with(binding.lFriendMainUser.imgFriendPreview)
@@ -157,15 +161,16 @@ class FriendFragment : Fragment() {
         binding.rvFriendBirthday.layoutManager = LinearLayoutManager(requireContext())
         binding.rvFriendBirthday.adapter = birthdayAdapter
 
-        viewModel.birthProfileDummy.observe(
-            viewLifecycleOwner
-        ) { it ->
-//            it?.let {
-//                if (it.size > 0) {
-//                    birthdayAdapter.data = it
-//                    birthdayAdapter.notifyDataSetChanged()
-//                }
-//            }
+        lifecycleScope.launch {
+            viewModel.birthProfile.collectLatest {
+                if (it.isNullOrEmpty()) {
+                    birthdayVisibility(GONE)
+                } else {
+                    birthdayAdapter.data = it
+                    birthdayAdapter.notifyDataSetChanged()
+                    birthdayVisibility(VISIBLE)
+                }
+            }
         }
         // 마지막 아이템: 친구의 생일을 확인해보세요
         binding.itemFriendMoreBirthday.imgFriendPreviewNone.toVisible()
@@ -178,20 +183,43 @@ class FriendFragment : Fragment() {
     private fun initFriendProfile() {
         binding.rvFriend.layoutManager = LinearLayoutManager(requireContext())
         binding.rvFriend.adapter = friendAdapter
-
-        viewModel.friendProfileDummy.observe(
-            viewLifecycleOwner
-        ) { it ->
-            it?.let {
-//                if (it.size > 0) {
-//                    friendAdapter.data = it
-//                    friendAdapter.notifyDataSetChanged()
-//                }
+        lifecycleScope.launch {
+            viewModel.friendProfile.collectLatest {
+                if (it.isNullOrEmpty()) {
+                    friendVisibility(GONE)
+                } else {
+                    friendAdapter.data = it
+                    friendAdapter.notifyDataSetChanged()
+                    friendVisibility(VISIBLE)
+                }
             }
+        }
+    }
+
+    // 생일 친구 리스트 노출 여부
+    private fun birthdayVisibility(visibleType: Int) {
+        binding.rvFriendBirthday.visibility = visibleType
+        binding.itemFriendMoreBirthday.root.visibility = visibleType
+        binding.tvFriendBirthday.visibility = visibleType
+    }
+
+    // 친구 리스트 노출 여부
+    private fun friendVisibility(visibleType: Int) {
+        binding.rvFriend.visibility = visibleType
+        binding.tvFriendCount.visibility = visibleType
+
+        when (visibleType) {
+            GONE -> binding.tvFriendLoadContact.toVisible()
+            VISIBLE -> binding.tvFriendLoadContact.toVisibleGone()
         }
     }
 
     companion object {
         const val USER_DEFAULT_PROFILE = 1
+        const val BIRTHDAY_FRIEND = 100
+        const val FRIEND = 200
+
+        const val GONE = 8
+        const val VISIBLE = 0
     }
 }

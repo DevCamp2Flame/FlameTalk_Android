@@ -7,7 +7,7 @@ import com.sgs.devcamp2.flametalk_android.data.model.chatroom.createchatroom.Cre
 import com.sgs.devcamp2.flametalk_android.domain.entity.Results
 import com.sgs.devcamp2.flametalk_android.domain.entity.UiState
 import com.sgs.devcamp2.flametalk_android.domain.usecase.inviteroom.CreateChatRoomUseCase
-import com.sgs.devcamp2.flametalk_android.network.response.friend.Friend
+import com.sgs.devcamp2.flametalk_android.network.response.friend.TempFriend
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -23,9 +23,9 @@ class InviteRoomViewModel @Inject constructor(
     private val createChatRoomUseCase: CreateChatRoomUseCase
 ) : ViewModel() {
     val TAG: String = "로그"
-    private var _friendList = MutableStateFlow<List<Friend>>(emptyList())
-    private var _markFriendList = MutableStateFlow<List<Friend>>(emptyList())
-    private var _selectedFriendList = MutableStateFlow<List<Friend>>(emptyList())
+    private var _friendList = MutableStateFlow<List<TempFriend>>(emptyList())
+    private var _markFriendList = MutableStateFlow<List<TempFriend>>(emptyList())
+    private var _selectedFriendList = MutableStateFlow<List<TempFriend>>(emptyList())
 
     private var friendAdapter: InviteRoomAdapter? = null
     private var markAdapter: InviteRoomMarkAdapter? = null
@@ -62,76 +62,76 @@ class InviteRoomViewModel @Inject constructor(
         }
     }
 
-    fun initFriendList(): Flow<List<Friend>> = flow {
-        var List: MutableList<Friend> = arrayListOf()
+    fun initFriendList(): Flow<List<TempFriend>> = flow {
+        var List: MutableList<TempFriend> = arrayListOf()
 
-        var friend: Friend
+        var tempFriend: TempFriend
         for (i in 0 until 20) {
             if (i < 2) {
             } else {
-                friend = Friend("$i", "$i", "더미$i", 0)
-                List.add(friend)
+                tempFriend = TempFriend("$i", "$i", "더미$i", 0)
+                List.add(tempFriend)
             }
 
             emit(List)
         }
     }
 
-    fun initMarkList(): Flow<List<Friend>> = flow {
+    fun initMarkList(): Flow<List<TempFriend>> = flow {
 
-        var markList: MutableList<Friend> = arrayListOf()
-        var friend: Friend
+        var markList: MutableList<TempFriend> = arrayListOf()
+        var tempFriend: TempFriend
 
         for (i in 0 until 2) {
-            friend = Friend("$i", "$i", "더미$i", 1)
-            markList.add(friend)
+            tempFriend = TempFriend("$i", "$i", "더미$i", 1)
+            markList.add(tempFriend)
         }
         emit(markList)
     }
 
-    fun addFriendList(friend: Friend, position: Int, adapter: InviteRoomAdapter) {
-        var list: List<Friend>
-        if (!selectedMap.containsKey(friend.id)) {
+    fun addFriendList(tempFriend: TempFriend, position: Int, adapter: InviteRoomAdapter) {
+        var list: List<TempFriend>
+        if (!selectedMap.containsKey(tempFriend.id)) {
 
-            var selectedTable = SelectedTable(friend.id, position, 0)
-            selectedMap.put(friend.id, selectedTable)
+            var selectedTable = SelectedTable(tempFriend.id, position, 0)
+            selectedMap.put(tempFriend.id, selectedTable)
             adapter.putActivate(position)
             list = _selectedFriendList.value.map { it.copy() }
             var newList = list.toMutableList()
-            newList.add(friend)
+            newList.add(tempFriend)
             this.friendAdapter = adapter
             _selectedFriendList.value = newList
         } else {
-            var newList: MutableList<Friend> = _selectedFriendList.value.toMutableList()
+            var newList: MutableList<TempFriend> = _selectedFriendList.value.toMutableList()
             newList.removeIf {
-                it.id == friend.id
+                it.id == tempFriend.id
             }
-            selectedMap.remove(friend.id)
+            selectedMap.remove(tempFriend.id)
             this.friendAdapter = adapter
             adapter.removeActivate(position)
             _selectedFriendList.value = newList
         }
     }
 
-    fun addMarkList(friend: Friend, position: Int, adapter: InviteRoomMarkAdapter) {
-        var list: List<Friend>
-        if (!selectedMap.containsKey(friend.id)) {
+    fun addMarkList(tempFriend: TempFriend, position: Int, adapter: InviteRoomMarkAdapter) {
+        var list: List<TempFriend>
+        if (!selectedMap.containsKey(tempFriend.id)) {
 
-            var selectedTable = SelectedTable(friend.id, position, 1)
-            selectedMap.put(friend.id, selectedTable)
+            var selectedTable = SelectedTable(tempFriend.id, position, 1)
+            selectedMap.put(tempFriend.id, selectedTable)
             adapter.putActivate(position)
             list = _selectedFriendList.value.map { it.copy() }
             var newList = list.toMutableList()
-            newList.add(friend)
+            newList.add(tempFriend)
             this.markAdapter = adapter
             _selectedFriendList.value = newList
         } else {
 
-            var newList: MutableList<Friend> = _selectedFriendList.value.toMutableList()
+            var newList: MutableList<TempFriend> = _selectedFriendList.value.toMutableList()
             newList.removeIf {
-                it.id == friend.id
+                it.id == tempFriend.id
             }
-            selectedMap.remove(friend.id)
+            selectedMap.remove(tempFriend.id)
             Log.d(TAG, "$adapter")
             this.markAdapter = adapter
             adapter.removeActivate(position)
@@ -139,14 +139,14 @@ class InviteRoomViewModel @Inject constructor(
         }
     }
 
-    fun removeSelectedItem(friend: Friend) {
-        var newTable: SelectedTable = selectedMap.get(friend.id)!!
+    fun removeSelectedItem(tempFriend: TempFriend) {
+        var newTable: SelectedTable = selectedMap.get(tempFriend.id)!!
         var newPosition = newTable.position
-        var newList: MutableList<Friend> = _selectedFriendList.value.toMutableList()
+        var newList: MutableList<TempFriend> = _selectedFriendList.value.toMutableList()
         newList.removeIf {
-            it.id == friend.id
+            it.id == tempFriend.id
         }
-        selectedMap.remove(friend.id)
+        selectedMap.remove(tempFriend.id)
         _selectedFriendList.value = newList
         if (newTable.adapterFlag == 0) {
             this.friendAdapter?.removeActivate(newPosition)

@@ -4,9 +4,9 @@ import com.google.gson.GsonBuilder
 import com.sgs.devcamp2.flametalk_android.data.source.remote.api.*
 import com.sgs.devcamp2.flametalk_android.network.NetworkInterceptor
 import com.sgs.devcamp2.flametalk_android.network.dao.UserDAO
-import com.sgs.devcamp2.flametalk_android.network.service.FileService
-import com.sgs.devcamp2.flametalk_android.network.service.ProfileService
-import com.sgs.devcamp2.flametalk_android.network.service.UserService
+
+import com.sgs.devcamp2.flametalk_android.network.service.*
+
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -82,7 +82,13 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideChatRoomApi(retrofit: Retrofit): ChatRoomApi {
+    fun provideFriendService(retrofit: Retrofit): FriendService {
+        return retrofit.create(FriendService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideChatRoomsService(retrofit: Retrofit): ChatRoomApi {
         return retrofit.create(ChatRoomApi::class.java)
     }
     @Provides

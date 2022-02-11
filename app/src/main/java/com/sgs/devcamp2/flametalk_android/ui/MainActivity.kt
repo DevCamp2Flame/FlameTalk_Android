@@ -41,8 +41,9 @@ class MainActivity : AppCompatActivity() {
                 destination.id == R.id.navigation_profile_desc || destination.id == R.id.navigation_edit_profile ||
                 destination.id == R.id.navigation_invite_open_chat_room || destination.id == R.id.navigation_create_chat_room ||
                 destination.id == R.id.navigation_chat_Room_Bottom_Sheet || destination.id == R.id.navigation_add_profile ||
-                destination.id == R.id.navigation_single_feed || destination.id == R.id.navigation_total_feed
-
+                destination.id == R.id.navigation_single_feed || destination.id == R.id.navigation_total_feed ||
+                destination.id == R.id.navigation_blocked_friend || destination.id == R.id.navigation_hidden_friend ||
+                destination.id == R.id.navigation_add_friend
             ) {
                 binding.btnvView.visibility = View.GONE
             } else {
@@ -60,7 +61,6 @@ class MainActivity : AppCompatActivity() {
                 when (state) {
                     is UiState.Success -> {
                         Log.d(TAG, "MainActivity - CONNECT WEBSOCKET")
-
                     }
                     is UiState.Loading -> {
                         Log.d(TAG, "MainActivity - initReceiveMessage() called")
@@ -71,8 +71,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
-
 
     override fun onDestroy() {
         super.onDestroy()
