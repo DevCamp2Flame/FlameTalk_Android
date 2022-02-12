@@ -25,10 +25,14 @@ class ChatRoomTopSheetFragment : DialogFragment(), View.OnClickListener {
 
         binding = FragmentChatRoomListTopSheetBinding.inflate(inflater, container, false)
 
-        binding.ivDialogTopSheetNormalChat.setOnClickListener(this)
+        initUI()
         return binding.root
     }
 
+    fun initUI() {
+        binding.ivDialogTopSheetNormalChat.setOnClickListener(this)
+        binding.ivDialogTopSheetOpenChat.setOnClickListener(this)
+    }
     override fun onStart() {
         super.onStart() // 레이아웃 크기 및 위치 조정
         if (Build.VERSION.SDK_INT >= 30) {
@@ -57,6 +61,11 @@ class ChatRoomTopSheetFragment : DialogFragment(), View.OnClickListener {
             binding.ivDialogTopSheetNormalChat ->
                 {
                     findNavController().navigate(R.id.navigation_invite_room)
+                    this.dismiss()
+                }
+            binding.ivDialogTopSheetOpenChat ->
+                {
+                    findNavController().navigate(R.id.navigation_invite_open_chat_room)
                     this.dismiss()
                 }
         }

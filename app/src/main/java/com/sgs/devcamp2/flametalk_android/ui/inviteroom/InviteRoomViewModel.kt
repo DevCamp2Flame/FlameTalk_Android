@@ -3,7 +3,7 @@ package com.sgs.devcamp2.flametalk_android.ui.inviteroom
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sgs.devcamp2.flametalk_android.data.model.inviteRoom.InviteRoomReq
+import com.sgs.devcamp2.flametalk_android.data.model.chatroom.createchatroom.CreateChatRoomReq
 import com.sgs.devcamp2.flametalk_android.domain.entity.Results
 import com.sgs.devcamp2.flametalk_android.domain.entity.UiState
 import com.sgs.devcamp2.flametalk_android.domain.usecase.inviteroom.CreateChatRoomUseCase
@@ -156,30 +156,39 @@ class InviteRoomViewModel @Inject constructor(
     }
 
     fun createRooms() {
+        _uiState.value = UiState.Loading
+        val createChatRoomReq = CreateChatRoomReq(
+            hostId = "1643986912282658350",
+            hostOpenProfileId = null,
+            isOpen = false,
+            users = listOf("1643986912282658350", "1644196296080985280"),
+            title = "채팅방 생성 두명",
+            thumbnail = null
 
-        val inviteRoomReq = InviteRoomReq(
-            hostId = "1643163512893324414", isOpen = false,
-            users = listOf("1643163512893324414", "1643163512893324415")
         )
         viewModelScope.launch {
-            createChatRoomUseCase.invoke(inviteRoomReq = inviteRoomReq)
+            createChatRoomUseCase.invoke(createChatRoomReq)
                 .collect {
                     result ->
                     when (result) {
                         is Results.Success ->
                             {
-                                // UiState.Success(result.data)
-                               // _uiEvent.value = UiState.Success(result.data)
                                 _uiState.value = UiState.Success(true)
                             }
                         is Results.Error ->
                             {
-                                //_uiEvent.value = UiState.Success(false)
+                                // _uiEvent.value = UiState.Success(false)
                                 _uiState.value = UiState.Error("에러 발생")
                                 null
                             }
                     }
                 }
         }
+    }
+
+    fun replaceUiState() {
+        _uiState.value = UiState.Loading
+        _selectedFriendList.value = emptyList()
+        selectedMap.clear()
     }
 }

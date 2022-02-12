@@ -6,13 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentOpenChatRoomBinding
+import com.sgs.devcamp2.flametalk_android.domain.entity.UiState
 import com.sgs.devcamp2.flametalk_android.ui.openchatroom.myopenchatroom.MyOpenChatRoomFragment
 import com.sgs.devcamp2.flametalk_android.ui.openchatroom.myopenprofile.MyOpenChatProfileFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,7 +28,7 @@ class OpenChatRoomFragment : Fragment() {
     lateinit var viewpagerAdapter: FragmentStateAdapter
     lateinit var openChatroomAdapter: OpenChatRoomAdapter
 
-    private val viewModel: OpenChatRoomViewModel by viewModels()
+    private val model: OpenChatRoomViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,22 +37,33 @@ class OpenChatRoomFragment : Fragment() {
     ): View? {
         binding = FragmentOpenChatRoomBinding.inflate(inflater, container, false)
 
+        initObserve()
         initUI()
 
+        return binding.root
+    }
+
+    fun initObserve() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.openChatRoom.observe(
-                viewLifecycleOwner
-            ) {
-                openChatroomAdapter.data = it
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    model.uiState.collect {
+                        state ->
+                        when (state) {
+                            is UiState.Success ->
+                                {
+                                    openChatroomAdapter.submitList(state.data.userChatrooms)
+                                }
+                        }
+                    }
+                }
             }
         }
-        return binding.root
     }
 
     fun initUI() {
         viewPager = binding.vpOpenChatRoomInner
         tabLayout = binding.tblOpenChatRoom
-        binding.rvOpenChatRoom.layoutManager = LinearLayoutManager(context)
 
         openChatroomAdapter = OpenChatRoomAdapter(this.requireContext())
 
@@ -71,7 +84,5 @@ class OpenChatRoomFragment : Fragment() {
                     }
             }
         }.attach()
-
-        binding.rvOpenChatRoom.adapter = openChatroomAdapter
     }
 }

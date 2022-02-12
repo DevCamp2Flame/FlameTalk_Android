@@ -1,7 +1,14 @@
 package com.sgs.devcamp2.flametalk_android.util
 
+import android.graphics.*
 import android.view.View
+import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.target.BitmapImageViewTarget
 import com.google.android.material.tabs.TabLayout
 
 // 뷰의 visible 변경
@@ -36,3 +43,5 @@ fun TabLayout.setTabWidthAsWrapContent(tabPosition: Int) {
     layoutParams.width = LinearLayout.LayoutParams.WRAP_CONTENT
     layout.layoutParams = layoutParams
 }
+
+

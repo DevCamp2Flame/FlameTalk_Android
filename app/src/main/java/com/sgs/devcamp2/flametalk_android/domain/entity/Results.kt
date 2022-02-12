@@ -8,4 +8,5 @@ package com.sgs.devcamp2.flametalk_android.domain.entity
 sealed class Results<out T : Any, out U : Any> {
     data class Success<T : Any>(val data: T) : Results<T, Nothing>()
     data class Error<U : Any>(val message: String) : Results<Nothing, U>()
+    object Loading : Results<Nothing, Nothing>()
 }

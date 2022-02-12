@@ -1,26 +1,39 @@
 package com.sgs.devcamp2.flametalk_android.ui.openchatroom
 
-import android.content.Context
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.sgs.devcamp2.flametalk_android.data.dummy.*
-import com.sgs.devcamp2.flametalk_android.data.model.openchat.OpenChatRoomPreview
+import com.sgs.devcamp2.flametalk_android.data.model.chatroom.getchatroomlist.GetChatRoomListRes
+import com.sgs.devcamp2.flametalk_android.domain.entity.Results
+import com.sgs.devcamp2.flametalk_android.domain.entity.UiState
+import com.sgs.devcamp2.flametalk_android.domain.usecase.chatroomlist.GetChatRoomListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class OpenChatRoomViewModel @Inject constructor(
-    @ApplicationContext private val context: Context
+    private val getChatRoomListUseCase: GetChatRoomListUseCase
 ) : ViewModel() {
-    // 네트워크 통신 데이터 전 더미데이터
-    private var dummyOpenChatRoomData: ArrayList<OpenChatRoomPreview> = getOpenChatRoom()
-
-    // 친구 리스트
-    private val _openChatRoom: MutableLiveData<ArrayList<OpenChatRoomPreview>> = MutableLiveData()
-    val openChatRoom: MutableLiveData<ArrayList<OpenChatRoomPreview>> = _openChatRoom
+    private val _uiState = MutableStateFlow<UiState<GetChatRoomListRes>>(UiState.Loading)
+    val uiState = _uiState.asStateFlow()
 
     init {
-        _openChatRoom.value = dummyOpenChatRoomData
+        getOpenChatRoomList()
+    }
+
+    private fun getOpenChatRoomList() {
+        viewModelScope.launch {
+            getChatRoomListUseCase.invoke(true)
+                .collect { result ->
+                    when (result) {
+                        is Results.Success -> {
+                            _uiState.value = UiState.Success(result.data)
+                        }
+                    }
+                }
+        }
     }
 }

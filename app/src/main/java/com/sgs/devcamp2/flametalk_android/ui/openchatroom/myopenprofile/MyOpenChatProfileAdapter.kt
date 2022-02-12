@@ -1,18 +1,16 @@
 package com.sgs.devcamp2.flametalk_android.ui.openchatroom.myopenprofile
 
-import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.sgs.devcamp2.flametalk_android.R
-import com.sgs.devcamp2.flametalk_android.data.model.openchat.MyOpenChatProfilePreview
+import com.sgs.devcamp2.flametalk_android.data.model.openprofile.getopenprofilelist.OpenProfile
 import com.sgs.devcamp2.flametalk_android.databinding.ItemMyOpenChatProfileBinding
-import com.sgs.devcamp2.flametalk_android.util.SimpleDiffUtilCallback
 
 /**
  * @author 박소연
@@ -21,55 +19,56 @@ import com.sgs.devcamp2.flametalk_android.util.SimpleDiffUtilCallback
  * @desc 오픈채팅 메인화면의 나의 오픈 프로필 리스트 adapter
  *       오픈프로필을 클릭하면 특정 채팅방에 참여할 수 있음
  */
-
-class MyOpenChatProfileAdapter(
-    private val context: Context
-) : ListAdapter<MyOpenChatProfilePreview, MyOpenChatProfileAdapter.OpenChatProfileHolder>(SimpleDiffUtilCallback()) {
-    var data = arrayListOf<MyOpenChatProfilePreview>()
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OpenChatProfileHolder {
-        return OpenChatProfileHolder(
-            ItemMyOpenChatProfileBinding.inflate(
-                LayoutInflater.from(context),
-                parent,
-                false
-            )
-        )
+class MyOpenChatProfileAdapter(callback: MyOpenChatProfileFragment) : ListAdapter<OpenProfile, RecyclerView.ViewHolder>(diffUtil) {
+    interface ItemClickCallBack {
+        fun onItemClicked(openProfile: OpenProfile)
     }
 
-    override fun getItemCount(): Int {
-        return data.size
-    }
-
-    override fun onBindViewHolder(holder: OpenChatProfileHolder, position: Int) {
-        holder.bind(data[position])
-    }
-
-    inner class OpenChatProfileHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        lateinit var binding: ItemMyOpenChatProfileBinding
-
-        constructor(binding: ItemMyOpenChatProfileBinding) : this(binding.root) {
-            Log.d("ViewHolder", " create")
-            this.binding = binding
-        }
-
-        fun bind(data: MyOpenChatProfilePreview) {
-            // TODO: 오픈 채팅방으로 이동
-            itemView.setOnClickListener {
+    val itemClickCallBack = callback
+    companion object {
+        val TAG: String = "로그"
+        val diffUtil = object : DiffUtil.ItemCallback<OpenProfile>() {
+            override fun areItemsTheSame(oldItem: OpenProfile, newItem: OpenProfile): Boolean {
+                return oldItem.openProfileId == newItem.openProfileId
             }
 
-            initFriendList(data)
-        }
-
-        private fun initFriendList(data: MyOpenChatProfilePreview) {
-            Glide.with(itemView).load(data.profile).apply(RequestOptions.circleCropTransform())
-                .apply(RequestOptions.placeholderOf(R.drawable.ic_person_white_24))
-                .into(binding.imgMyOpenChatProfile)
-            binding.tvMyOpenChatProfileNickname.text = data.nickname
+            override fun areContentsTheSame(oldItem: OpenProfile, newItem: OpenProfile): Boolean {
+                return oldItem == newItem
+            }
         }
     }
 
-    companion object {
-        final const val TAG = "MyOpenChatProfileAdapter"
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OpenChatProfileHolder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_my_open_chat_profile, parent, false)
+        return OpenChatProfileHolder(ItemMyOpenChatProfileBinding.bind(view))
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        (holder as OpenChatProfileHolder).bind(getItem(position))
+    }
+
+    inner class OpenChatProfileHolder(val binding: ItemMyOpenChatProfileBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(openProfile: OpenProfile) {
+            binding.itemChatRoomList.setOnClickListener(ItemClickListener(openProfile))
+            binding.tvMyOpenChatProfileNickname.text = openProfile.nickname
+            Glide.with(this.itemView).load(openProfile.imageUrl)
+                .apply(RequestOptions.placeholderOf(R.drawable.ic_person_white_24))
+                .into(binding.imgMyOpenChatProfile)
+        }
+    }
+
+    inner class ItemClickListener(
+        val openProfile: OpenProfile,
+    ) : View.OnClickListener {
+        override fun onClick(view: View?) {
+            when (view?.id) {
+                R.id.item_chat_room_list ->
+                    {
+                        itemClickCallBack?.onItemClicked(openProfile)
+                    }
+            }
+        }
     }
 }
