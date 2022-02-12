@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_navigation"
-    app:startDestination="@id/navigation_add_friend">
+    app:startDestination="@id/navigation_signin">
 
     <fragment
         android:id="@+id/navigation_signin"
@@ -79,7 +79,7 @@
         android:id="@+id/navigation_phonebook"
         android:name="com.sgs.devcamp2.flametalk_android.ui.friend.phonebook.PhoneBookFragment"
         android:label="PhoneBook"
-        tools:layout="@layout/fragment_phone_book"></fragment>
+        tools:layout="@layout/fragment_signin"></fragment>
 
     <!--프로필 상세보기-->
     <fragment
@@ -94,6 +94,10 @@
         <argument
             android:name="profileId"
             app:argType="long" />
+        <argument
+            android:name="friendId"
+            app:argType="long"
+            android:defaultValue="0L"/>
         <action
             android:id="@+id/action_profile_to_edit"
             app:destination="@id/navigation_edit_profile" />
