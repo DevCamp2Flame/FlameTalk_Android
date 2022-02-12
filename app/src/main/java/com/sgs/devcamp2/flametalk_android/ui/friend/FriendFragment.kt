@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -77,7 +78,30 @@ class FriendFragment : Fragment() {
             findNavController().navigate(R.id.navigation_add_friend)
         }
         binding.abFriend.imgAppbarSetting.setOnClickListener {
-            // TODO: Friend > Setting
+            var popupMenu = PopupMenu(context, binding.abFriend.imgAppbarSetting)
+            popupMenu.inflate(R.menu.friend_menu)
+            popupMenu.setOnMenuItemClickListener {
+                when (it.itemId) {
+                    // 숨김 친구 리스트로 이동
+                    R.id.menu_hide -> {
+                        findNavController().navigate(R.id.navigation_hidden_friend)
+                    }
+                    // 차단 친구 리스트로 이동
+                    R.id.menu_block -> {
+                        findNavController().navigate(R.id.navigation_blocked_friend)
+                    }
+                    else -> {
+                        // 실행되지 않음
+                        Snackbar.make(
+                            binding.abFriend.imgAppbarSetting,
+                            "else...",
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+                return@setOnMenuItemClickListener false
+            }
+            popupMenu.show()
         }
 
         // 연락처 동기화하여 친구 추가
@@ -226,7 +250,7 @@ class FriendFragment : Fragment() {
         if (checkPermission()) {
             // 권한이 있으면 연락처 리스트를 불러온다
             // viewModel.getContactList()
-            viewModel.getContacts()
+            viewModel.getContactsList()
         } else {
             Snackbar.make(
                 requireView(), "권한이 없으면 연락처 동기화로 친구추가할 수 없습니다.", Snackbar.LENGTH_SHORT
