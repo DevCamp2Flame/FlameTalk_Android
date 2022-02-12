@@ -1,9 +1,9 @@
 package com.sgs.devcamp2.flametalk_android.di.module
 
+import com.sgs.devcamp2.flametalk_android.data.source.local.UserPreferences
 import com.sgs.devcamp2.flametalk_android.data.source.remote.api.ChatRoomsApi
 import com.sgs.devcamp2.flametalk_android.data.source.remote.api.InviteRoomApi
 import com.sgs.devcamp2.flametalk_android.network.NetworkInterceptor
-import com.sgs.devcamp2.flametalk_android.network.dao.UserDAO
 import com.sgs.devcamp2.flametalk_android.network.service.*
 import dagger.Module
 import dagger.Provides
@@ -31,10 +31,10 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideNetworkInterceptor(userDAO: UserDAO): NetworkInterceptor {
-        return NetworkInterceptor(userDAO) {
+    fun provideNetworkInterceptor(userPreferences: UserPreferences): NetworkInterceptor {
+        return NetworkInterceptor(userPreferences) {
             runBlocking(Dispatchers.IO) {
-                userDAO.user.first()?.accessToken
+                userPreferences.user.first()?.accessToken
             }
         }
     }

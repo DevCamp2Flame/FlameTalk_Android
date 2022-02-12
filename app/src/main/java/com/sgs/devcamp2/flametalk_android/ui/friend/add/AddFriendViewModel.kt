@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sgs.devcamp2.flametalk_android.data.dummy.getDummyProfiles
-import com.sgs.devcamp2.flametalk_android.data.model.ProfilePreview
-import com.sgs.devcamp2.flametalk_android.network.dao.UserDAO
+import com.sgs.devcamp2.flametalk_android.data.model.profile.ProfilePreview
+import com.sgs.devcamp2.flametalk_android.data.source.local.UserPreferences
 import com.sgs.devcamp2.flametalk_android.network.repository.FriendRepository
 import com.sgs.devcamp2.flametalk_android.network.repository.ProfileRepository
 import com.sgs.devcamp2.flametalk_android.network.request.friend.AddFriendRequest
@@ -22,7 +22,7 @@ import timber.log.Timber
 @HiltViewModel
 class AddFriendViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val userDAO: UserDAO,
+    private val userPreferences: UserPreferences,
     private val friendRepository: Lazy<FriendRepository>,
     private val profileRepository: Lazy<ProfileRepository>
 ) : ViewModel() {

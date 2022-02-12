@@ -1,6 +1,6 @@
 package com.sgs.devcamp2.flametalk_android.network.repository
 
-import com.sgs.devcamp2.flametalk_android.network.dao.UserDAO
+import com.sgs.devcamp2.flametalk_android.data.source.local.UserPreferences
 import com.sgs.devcamp2.flametalk_android.network.request.sign.ProfileCreateRequest
 import com.sgs.devcamp2.flametalk_android.network.request.sign.ProfileUpdateRequest
 import com.sgs.devcamp2.flametalk_android.network.service.FileService
@@ -22,7 +22,7 @@ import kotlinx.coroutines.withContext
 class ProfileRepository @Inject constructor(
     private val profileService: Lazy<ProfileService>,
     private val fileService: Lazy<FileService>,
-    private val userDAO: Lazy<UserDAO>,
+    private val userPreferences: Lazy<UserPreferences>,
     private val ioDispatcher: CoroutineDispatcher
 ) {
     /**
