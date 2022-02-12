@@ -1,4 +1,4 @@
-package com.sgs.devcamp2.flametalk_android.di
+package com.sgs.devcamp2.flametalk_android.di.module
 
 import android.content.Context
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
