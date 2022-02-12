@@ -20,7 +20,7 @@ data class FriendPreview(
     @SerializedName("profileId")
     val profileId: Long,
     @SerializedName("imageUrl")
-    val imageUrl: String,
+    val imageUrl: String?,
     @SerializedName("description")
-    val description: String
+    val description: String?
 )
