@@ -53,7 +53,7 @@ class AddFriendViewModel @Inject constructor(
 
     init {
         // 유저 프로필 리스트 불러오기
-        // getProfileList()
+        getProfileList()
 
         _profiles.value = dummyProfileData
         _nickname.value = "소연"

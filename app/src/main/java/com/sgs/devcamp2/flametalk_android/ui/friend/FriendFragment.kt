@@ -1,9 +1,12 @@
 package com.sgs.devcamp2.flametalk_android.ui.friend
 
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -13,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.material.snackbar.Snackbar
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentFriendBinding
 import com.sgs.devcamp2.flametalk_android.ui.friend.birthday.BirthdayAdapter
@@ -70,13 +74,15 @@ class FriendFragment : Fragment() {
             // TODO: Friend > Search
         }
         binding.abFriend.imgAppbarAddFriend.setOnClickListener {
-            // TODO: 친구 추가 top sheet
+            findNavController().navigate(R.id.navigation_add_friend)
         }
         binding.abFriend.imgAppbarSetting.setOnClickListener {
             // TODO: Friend > Setting
         }
+
+        // 연락처 동기화하여 친구 추가
         binding.tvFriendLoadContact.setOnClickListener {
-            // TODO: 연락처 동기화 -> 서버로 요청 -> Friend 페이지로 다시 랜딩
+            loadFriends()
         }
     }
 
@@ -152,6 +158,8 @@ class FriendFragment : Fragment() {
 
         // 친구리스트 > 멀티프로필 생성: 멀티 프로필 만들기
         binding.itemFriendAddProfile.root.setOnClickListener {
+            Snackbar.make(requireView(), "멀티프로필 생성 클릭", Snackbar.LENGTH_SHORT).show()
+            Timber.d("멀티프로필 생성 클릭")
             findNavController().navigate(R.id.navigation_add_profile)
         }
     }
@@ -211,6 +219,53 @@ class FriendFragment : Fragment() {
         when (visibleType) {
             GONE -> binding.tvFriendLoadContact.toVisible()
             VISIBLE -> binding.tvFriendLoadContact.toVisibleGone()
+        }
+    }
+
+    private fun loadFriends() {
+        if (checkPermission()) {
+            // 권한이 있으면 연락처 리스트를 불러온다
+            // viewModel.getContactList()
+            viewModel.getContacts()
+        } else {
+            Snackbar.make(
+                requireView(), "권한이 없으면 연락처 동기화로 친구추가할 수 없습니다.", Snackbar.LENGTH_SHORT
+            ).show()
+        }
+        // TODO: 연락처에서 친구 리스트 load
+        // TODO: 친구 추가 통신 요청하는 뷰모델 함수 호출
+    }
+
+    // 주소록 접근 권한 확인
+    private fun checkPermission(): Boolean {
+        val status = ContextCompat.checkSelfPermission(
+            requireContext(),
+            "android.permission.READ_CONTACTS"
+        )
+        // 권한 확인
+        if (status == PackageManager.PERMISSION_GRANTED) {
+            return true
+        } else { // 권한 요청 다이얼로그
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf("android.permission.READ_CONTACTS"),
+                100
+            )
+            Timber.d("Contacts Permission Denied")
+            return false
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            Timber.d("Contacts Permission Grants")
+        } else {
+            Timber.d("Contacts Permission Denied")
         }
     }
 

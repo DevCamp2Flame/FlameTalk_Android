@@ -75,9 +75,9 @@ class FriendAdapter(
                 .apply(RequestOptions.circleCropTransform())
                 .apply(RequestOptions.placeholderOf(R.drawable.ic_person_white_24))
                 .into(binding.imgFriendPreview)
-            binding.tvFriendPreviewNickname.text = "친구 이름"
+            binding.tvFriendPreviewNickname.text = data.nickname
 
-            if (data.preview.description.isNotEmpty()) {
+            if (data.preview.description != null && data.preview.description.isNotEmpty()) {
                 binding.tvFriendPreviewDesc.toVisible()
                 binding.tvFriendPreviewDesc.text = data.preview.description
             } else {
