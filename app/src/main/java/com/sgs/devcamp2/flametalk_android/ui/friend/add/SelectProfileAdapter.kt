@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.sgs.devcamp2.flametalk_android.data.model.ProfilePreview
+import com.sgs.devcamp2.flametalk_android.data.model.profile.ProfilePreview
 import com.sgs.devcamp2.flametalk_android.databinding.ItemVerticalProfileBinding
 import com.sgs.devcamp2.flametalk_android.util.SimpleDiffUtilCallback
 

@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sgs.devcamp2.flametalk_android.data.dummy.getDummyUser
-import com.sgs.devcamp2.flametalk_android.data.model.Profile
-import com.sgs.devcamp2.flametalk_android.data.model.ProfileDummyPreview
+import com.sgs.devcamp2.flametalk_android.data.model.profile.Profile
+import com.sgs.devcamp2.flametalk_android.data.model.profile.ProfileDummyPreview
 import com.sgs.devcamp2.flametalk_android.network.repository.ProfileRepository
 import dagger.Lazy
 import dagger.hilt.android.lifecycle.HiltViewModel

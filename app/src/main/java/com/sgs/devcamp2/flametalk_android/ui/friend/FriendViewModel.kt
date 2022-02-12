@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sgs.devcamp2.flametalk_android.data.dummy.getBirthdayFriend
 import com.sgs.devcamp2.flametalk_android.data.dummy.getDummyFriend
-import com.sgs.devcamp2.flametalk_android.data.model.Friend
-import com.sgs.devcamp2.flametalk_android.data.model.ProfilePreview
+import com.sgs.devcamp2.flametalk_android.data.model.friend.Friend
+import com.sgs.devcamp2.flametalk_android.data.model.profile.ProfilePreview
 import com.sgs.devcamp2.flametalk_android.network.repository.FriendRepository
 import com.sgs.devcamp2.flametalk_android.network.repository.ProfileRepository
 import dagger.Lazy

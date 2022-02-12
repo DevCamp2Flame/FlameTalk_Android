@@ -1,9 +1,9 @@
 package com.sgs.devcamp2.flametalk_android.data.dummy
 
-import com.sgs.devcamp2.flametalk_android.data.model.Friend
-import com.sgs.devcamp2.flametalk_android.data.model.FriendPreview
-import com.sgs.devcamp2.flametalk_android.data.model.ProfileDummyPreview
-import com.sgs.devcamp2.flametalk_android.data.model.ProfilePreview
+import com.sgs.devcamp2.flametalk_android.data.model.friend.Friend
+import com.sgs.devcamp2.flametalk_android.data.model.friend.FriendPreview
+import com.sgs.devcamp2.flametalk_android.data.model.profile.ProfileDummyPreview
+import com.sgs.devcamp2.flametalk_android.data.model.profile.ProfilePreview
 
 /**
  * @author 박소연
