@@ -80,9 +80,7 @@
         android:name="com.sgs.devcamp2.flametalk_android.ui.friend.phonebook.PhoneBookFragment"
         android:label="PhoneBook"
         tools:layout="@layout/fragment_phone_book">
-
-    </fragment>
-
+      
     <!--프로필 상세보기-->
     <fragment
         android:id="@+id/navigation_profile"
@@ -96,6 +94,10 @@
         <argument
             android:name="profileId"
             app:argType="long" />
+        <argument
+            android:name="friendId"
+            app:argType="long"
+            android:defaultValue="0L"/>
         <action
             android:id="@+id/action_profile_to_edit"
             app:destination="@id/navigation_edit_profile" />

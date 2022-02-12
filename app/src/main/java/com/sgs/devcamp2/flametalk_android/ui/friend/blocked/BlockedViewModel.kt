@@ -56,7 +56,6 @@ class BlockedViewModel @Inject constructor(
 
     init {
         getBlockedFriendList()
-        _blockedFriend.value = dummyBirthdayData
     }
 
     // 차단된 친구 리스트 요청

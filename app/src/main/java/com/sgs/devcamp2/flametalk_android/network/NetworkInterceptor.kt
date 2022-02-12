@@ -64,14 +64,15 @@ class NetworkInterceptor(
                 when (responseBody.status) {
                     // access-token 만료, refresh-token 유효 => token 모두 갱신
                     302 -> {
-                        // TODO: request를 보내는 retrofit 객체를 새로 생성해야 함
                         tokenSupplier()?.let {
                             val request = chain.request()
                                 .addHeader("ACCESS-TOKEN", userDAO.getAccessToken().toString())
                                 .addHeader("REFRESH-TOKEN", userDAO.getRefreshToken().toString())
                             response = chain.proceed(request.newBuilder().build())
 
-                            // TODO: response를 받으면 pickBody를 codeGen 방식으로 다시 해야 함
+                            /** TODO: response를 받으면 request를 보내는 retrofit 객체를 새로 생성하여
+                             * TODO: pickBody를 codeGen 방식으로 다시 해야 함
+                             */
                             Timber.d("RenewToken Response: $response")
                         }
                     }

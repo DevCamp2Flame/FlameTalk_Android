@@ -136,14 +136,8 @@ class FriendViewModel @Inject constructor(
         }
     }
 
-    fun getContacts() {
-        getContactList()
-        // Timber.d("contact %s", data)
-        _contact.value = _contact.value.toList()
-    }
-
     // 연락처 가져오기
-    private fun getContactList() {
+    fun getContactsList() {
         viewModelScope.launch {
             val result = viewModelScope.async {
                 var arrayList = ArrayList<String>()
@@ -194,7 +188,7 @@ class FriendViewModel @Inject constructor(
     }
 
     // 연락처 기반 친구 추가
-    fun addContactFriend() {
+    private fun addContactFriend() {
         viewModelScope.launch {
             try {
                 val request = AddContactFriendRequest(_contact.value)

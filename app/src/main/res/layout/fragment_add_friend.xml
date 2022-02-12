@@ -33,7 +33,7 @@
         android:id="@+id/v_add_friend_select"
         android:layout_width="match_parent"
         android:layout_height="190dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:background="@color/flame_sky_blue3"
         app:layout_constraintStart_toEndOf="@id/img_signup_back"
         app:layout_constraintTop_toBottomOf="@id/img_signup_back" />
@@ -79,7 +79,7 @@
         app:layout_constraintTop_toBottomOf="@+id/rv_add_friend_select" />
 
     <ImageView
-        android:id="@+id/edt_add_friend_clear"
+        android:id="@+id/img_add_friend_clear"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:src="@drawable/ic_cancle"

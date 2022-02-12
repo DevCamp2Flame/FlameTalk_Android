@@ -98,11 +98,17 @@ class EditProfileViewModel @Inject constructor(
 
     fun setUserProfile(data: Profile) {
         _profileId.value = data.profileId
-        _description.value = data.description.toString()
+        if (_description.value == null) {
+            _description.value = ""
+        }
         _profileImageUrl.value = data.imageUrl.toString()
         _backgroundImageUrl.value = data.bgImageUrl.toString()
         _isDefault.value = data.isDefault
-        _stickers.value = data.sticker!!
+        if (data.sticker == null) {
+            _stickers.value = emptyList()
+        } else {
+            _stickers.value = data.sticker!!
+        }
     }
 
     fun setProfileImage(path: String?) {
@@ -182,7 +188,7 @@ class EditProfileViewModel @Inject constructor(
             userId = _userId.value,
             imageUrl = _profileImageUrl.value,
             bgImageUrl = _backgroundImageUrl.value,
-            sticker = null, // TODO: 스티커 정보, 프로필 내 positioning 할 수 있는 상대적 위치 정보
+            sticker = emptyList(), // TODO: 스티커 정보, 프로필 내 positioning 할 수 있는 상대적 위치 정보
             description = _description.value,
             isDefault = _isDefault.value!!
         )

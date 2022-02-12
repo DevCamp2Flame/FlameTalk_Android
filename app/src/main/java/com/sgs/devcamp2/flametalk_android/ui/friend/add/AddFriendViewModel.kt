@@ -55,13 +55,7 @@ class AddFriendViewModel @Inject constructor(
         // 유저 프로필 리스트 불러오기
         getProfileList()
 
-        _profiles.value = dummyProfileData
         _nickname.value = "소연"
-//        viewModelScope.launch {
-//            userDAO.user.collect {
-//                _nickname.value = it!!.nickname
-//            }
-//        }
     }
 
     fun clickedProfile(profileId: Long) {
@@ -74,11 +68,11 @@ class AddFriendViewModel @Inject constructor(
                 val request = AddFriendRequest(_profileId.value, phoneNumber)
                 val response = friendRepository.get().postFriendAdd(request)
 
-                if (response.status == 201) {
+                if (response.status == 200) {
                     _friendData.value = response.data
                     _isSuccess.value = true
                 } else {
-                    _isSuccess.value = true
+                    _isSuccess.value = false
                     _message.value = response.message
                 }
                 _message.value = null

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -55,7 +56,11 @@ class AddFriendFragment : Fragment() {
     }
 
     private fun initUI() {
-        initAllProfile()
+        initProfileList()
+
+        binding.imgSignupBack.setOnClickListener {
+            findNavController().popBackStack()
+        }
 
         lifecycleScope.launch {
             viewModel.isSuccess.collectLatest {
@@ -77,7 +82,12 @@ class AddFriendFragment : Fragment() {
                         .apply(RequestOptions.circleCropTransform())
                         .apply(RequestOptions.placeholderOf(R.drawable.ic_person_white_24))
                         .into(binding.itemAddFriend.imgFriendPreview)
-                    binding.itemAddFriend.tvFriendPreviewDesc.text = it.description
+                    if (it.description == null) {
+                        binding.itemAddFriend.tvFriendPreviewDesc.toVisibleGone()
+                    } else {
+                        binding.itemAddFriend.tvFriendPreviewDesc.toVisible()
+                        binding.itemAddFriend.tvFriendPreviewDesc.text = it.description
+                    }
                     binding.itemAddFriend.tvFriendPreviewNickname.text = it.nickname
                     binding.itemAddFriend.tvFriendPreviewCount.toVisibleGone()
                 } else {
@@ -97,7 +107,7 @@ class AddFriendFragment : Fragment() {
         initEventListener()
     }
 
-    private fun initAllProfile() {
+    private fun initProfileList() {
         binding.rvAddFriendSelect.layoutManager = LinearLayoutManager(
             requireContext(), RecyclerView.HORIZONTAL, false
         )
@@ -120,6 +130,11 @@ class AddFriendFragment : Fragment() {
 
             // 현재의 Id가
             viewModel.addFriend(binding.edtAddFriendTel.text.toString())
+        }
+
+        // 입력창 clear
+        binding.imgAddFriendClear.setOnClickListener {
+            binding.edtAddFriendTel.setText("")
         }
     }
 }
