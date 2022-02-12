@@ -6,7 +6,7 @@ plugins {
     id 'dagger.hilt.android.plugin'
     id 'kotlin-parcelize'
     id 'androidx.navigation.safeargs.kotlin'
-
+    id 'kotlinx-serialization'
 }
 
 android {
@@ -20,6 +20,13 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation": "$projectDir/databases".toString()]
+            }
+        }
     }
 
     buildTypes {
@@ -148,7 +155,10 @@ dependencies {
     //stomp krossbow
     implementation("org.hildan.krossbow:krossbow-websocket-okhttp:3.1.1")
     implementation("org.hildan.krossbow:krossbow-stomp-core:3.1.1")
+
     implementation("org.hildan.krossbow:krossbow-stomp-kxserialization:3.1.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
+
 
     //viewPager2
     implementation "androidx.viewpager2:viewpager2:1.0.0"
@@ -156,12 +166,7 @@ dependencies {
     //room
     def room_version = '2.4.1'
     implementation "androidx.room:room-runtime:$room_version"
-    kapt "androidx.room:room-compiler:$room_version"
-    // optional - Kotlin Extensions and Coroutines support for Room
-    implementation "androidx.room:room-ktx:$room_version"
-
-
-
-
+    annotationProcessor "androidx.room:room-compiler:$room_version"
+    kapt("androidx.room:room-compiler:$room_version")
+    implementation("androidx.room:room-ktx:$room_version")
 }
-

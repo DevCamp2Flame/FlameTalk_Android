@@ -3,7 +3,7 @@
     <item android:id="@+id/navigation_friend"
         android:icon="@drawable/main_navi_friend"
         android:title="Friend"/>
-    <item android:id="@+id/navigation_chatting_ViewPager_Fragment"
+    <item android:id="@+id/navigation_chatting_viewPager_fragment"
         android:icon="@drawable/main_navi_chat_room"
         android:title="Room"/>
     <item android:id="@+id/navigation_setting"

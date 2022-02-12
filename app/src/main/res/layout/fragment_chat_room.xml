@@ -33,9 +33,10 @@
                     android:id="@+id/iv_chat_room_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_arrow"
+                    android:src="@drawable/ic_back_arrow_blue_34"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
@@ -65,7 +66,7 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginEnd="10dp"
-                android:src="@drawable/ic_search_gray"
+                android:src="@drawable/ic_search"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/iv_chat_room_draw"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -75,7 +76,7 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginEnd="10dp"
-                android:src="@drawable/ic_drawer"
+                android:src="@drawable/ic_menu"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

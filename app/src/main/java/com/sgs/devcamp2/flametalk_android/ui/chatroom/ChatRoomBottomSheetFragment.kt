@@ -19,8 +19,8 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import com.sgs.devcamp2.flametalk_android.data.model.chat.Chat
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentChatRoomBottomSheetBinding
-import com.sgs.devcamp2.flametalk_android.data.model.Chat
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -43,11 +43,7 @@ class ChatRoomBottomSheetFragment : DialogFragment(), View.OnClickListener {
                 val imageBitMap = result.data!!.extras!!.get("data") as Bitmap
                 val bundle = bundleOf("image" to imageBitMap)
 
-                lifecycleScope.launch {
-
-                    // findNavController().previousBackStackEntry?.savedStateHandle?.set("chat", Chat(4, "4", "4", "$imageBitMap"))
-                    model.addChatting(Chat(4, "4", "0", "그라하하하하하하하하"))
-                }
+                // 사진 보내기
             }
         }
 

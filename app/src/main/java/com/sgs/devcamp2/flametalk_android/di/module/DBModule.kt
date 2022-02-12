@@ -18,7 +18,7 @@ import javax.inject.Singleton
  */
 @Module
 @InstallIn(SingletonComponent::class)
-class DBModule {
+object DBModule {
 
     @Singleton
     @Provides
@@ -26,5 +26,6 @@ class DBModule {
         @ApplicationContext context: Context
     ): AppDatabase = Room
         .databaseBuilder(context, AppDatabaseImpl::class.java, AppDatabaseImpl.DB_NAME)
+        .allowMainThreadQueries()
         .build()
 }
