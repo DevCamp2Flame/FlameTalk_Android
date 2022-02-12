@@ -3,7 +3,6 @@ package com.sgs.devcamp2.flametalk_android.data.model
 import android.os.Parcelable
 import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
-import com.sgs.devcamp2.flametalk_android.data.model.Sticker
 import kotlinx.parcelize.Parcelize
 
 /**

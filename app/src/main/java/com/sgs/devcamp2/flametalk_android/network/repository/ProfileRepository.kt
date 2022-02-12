@@ -3,6 +3,7 @@ package com.sgs.devcamp2.flametalk_android.network.repository
 import com.sgs.devcamp2.flametalk_android.network.dao.UserDAO
 import com.sgs.devcamp2.flametalk_android.network.request.sign.ProfileCreateRequest
 import com.sgs.devcamp2.flametalk_android.network.request.sign.ProfileUpdateRequest
+import com.sgs.devcamp2.flametalk_android.network.service.FileService
 import com.sgs.devcamp2.flametalk_android.network.service.ProfileService
 import dagger.Lazy
 import javax.inject.Inject
@@ -20,6 +21,7 @@ import kotlinx.coroutines.withContext
 @Singleton
 class ProfileRepository @Inject constructor(
     private val profileService: Lazy<ProfileService>,
+    private val fileService: Lazy<FileService>,
     private val userDAO: Lazy<UserDAO>,
     private val ioDispatcher: CoroutineDispatcher
 ) {
@@ -50,10 +52,11 @@ class ProfileRepository @Inject constructor(
     /**
      *   Feed
      */
-    // 피드 리스트 조회 (프로필 or 배경)
-    suspend fun getSingleFeedList(profileId: Long, isBackground: Boolean) = withContext(ioDispatcher) {
-        profileService.get().getSingleFeedList(profileId, isBackground)
-    }
+// 피드 리스트 조회 (프로필 or 배경)
+    suspend fun getSingleFeedList(profileId: Long, isBackground: Boolean) =
+        withContext(ioDispatcher) {
+            profileService.get().getSingleFeedList(profileId, isBackground)
+        }
 
     // 피드 리스트 조회 (프로필 + 배경)
     suspend fun getTotalFeedList(profileId: Long) = withContext(ioDispatcher) {
