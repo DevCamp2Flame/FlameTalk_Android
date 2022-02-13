@@ -1,4 +1,4 @@
-package com.sgs.devcamp2.flametalk_android.network.repository
+package com.sgs.devcamp2.flametalk_android.domain.repository
 
 import com.sgs.devcamp2.flametalk_android.data.model.User
 import com.sgs.devcamp2.flametalk_android.data.source.local.UserPreferences

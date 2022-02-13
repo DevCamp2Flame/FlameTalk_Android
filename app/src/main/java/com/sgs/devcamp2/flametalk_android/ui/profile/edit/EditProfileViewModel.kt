@@ -7,8 +7,8 @@ import com.sgs.devcamp2.flametalk_android.data.model.Sticker
 import com.sgs.devcamp2.flametalk_android.data.model.profile.Profile
 import com.sgs.devcamp2.flametalk_android.data.model.profile.ProfileDummyPreview
 import com.sgs.devcamp2.flametalk_android.data.source.local.UserPreferences
-import com.sgs.devcamp2.flametalk_android.network.repository.FileRepository
-import com.sgs.devcamp2.flametalk_android.network.repository.ProfileRepository
+import com.sgs.devcamp2.flametalk_android.domain.repository.FileRepository
+import com.sgs.devcamp2.flametalk_android.domain.repository.ProfileRepository
 import com.sgs.devcamp2.flametalk_android.network.request.sign.ProfileUpdateRequest
 import com.sgs.devcamp2.flametalk_android.util.pathToMultipartImageFile
 import dagger.Lazy
