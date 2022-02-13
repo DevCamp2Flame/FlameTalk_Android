@@ -3,9 +3,9 @@ package com.sgs.devcamp2.flametalk_android.ui.profile.add
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sgs.devcamp2.flametalk_android.network.dao.UserDAO
-import com.sgs.devcamp2.flametalk_android.network.repository.FileRepository
-import com.sgs.devcamp2.flametalk_android.network.repository.ProfileRepository
+import com.sgs.devcamp2.flametalk_android.data.source.local.UserPreferences
+import com.sgs.devcamp2.flametalk_android.domain.repository.FileRepository
+import com.sgs.devcamp2.flametalk_android.domain.repository.ProfileRepository
 import com.sgs.devcamp2.flametalk_android.network.request.sign.ProfileCreateRequest
 import com.sgs.devcamp2.flametalk_android.util.pathToMultipartImageFile
 import dagger.Lazy
@@ -21,7 +21,7 @@ import timber.log.Timber
 @HiltViewModel
 class AddProfileViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val userDAO: UserDAO,
+    private val userPreferences: UserPreferences,
     private val fileRepository: Lazy<FileRepository>,
     private val profileRepository: Lazy<ProfileRepository>
 ) : ViewModel() {
@@ -64,7 +64,7 @@ class AddProfileViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            userDAO.user.collect {
+            userPreferences.user.collect {
                 if (it != null) {
                     _userId.value = it.userId
                     _nickname.value = it.nickname

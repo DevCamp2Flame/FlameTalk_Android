@@ -3,10 +3,10 @@ package com.sgs.devcamp2.flametalk_android.ui.profile
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sgs.devcamp2.flametalk_android.data.dummy.getDummyUser
-import com.sgs.devcamp2.flametalk_android.data.model.Profile
-import com.sgs.devcamp2.flametalk_android.data.model.ProfileDummyPreview
-import com.sgs.devcamp2.flametalk_android.network.repository.ProfileRepository
+import com.sgs.devcamp2.flametalk_android.data.model.profile.Profile
+import com.sgs.devcamp2.flametalk_android.domain.repository.FriendRepository
+import com.sgs.devcamp2.flametalk_android.domain.repository.ProfileRepository
+import com.sgs.devcamp2.flametalk_android.network.request.friend.FriendStatusRequest
 import dagger.Lazy
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -18,14 +18,13 @@ import timber.log.Timber
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val profileRepository: Lazy<ProfileRepository>
+    private val profileRepository: Lazy<ProfileRepository>,
+    private val friendRepository: Lazy<FriendRepository>
 ) : ViewModel() {
-    // 네트워크 통신 데이터 전 더미데이터
-    private var dummyUserData: ProfileDummyPreview = getDummyUser()
 
-    // 메인 유저 정보
+    // 프로필 유저 정보
     private val _userProfile: MutableStateFlow<Profile?> = MutableStateFlow(null)
-    val userProfile = _userProfile?.asStateFlow()
+    val userProfile = _userProfile.asStateFlow()
 
     // 프로필 아이디
     private val _profileId = MutableStateFlow<Long>(0)
@@ -51,6 +50,7 @@ class ProfileViewModel @Inject constructor(
     private val _error = MutableStateFlow("")
     val error = _error.asStateFlow()
 
+    // 유저 한명의 프로필 데이터를 받는다
     fun getProfileData(profileId: Long) {
         viewModelScope.launch {
             try {
@@ -67,5 +67,43 @@ class ProfileViewModel @Inject constructor(
                 Timber.d("Fail Response: $_error")
             }
         }
+    }
+
+    fun changeFriendStatue(friendId: Long, type: Int) {
+        viewModelScope.launch {
+            try {
+                var mark = false
+                var hide = false
+                var block = false
+
+                when (type) {
+                    TO_HIDE -> hide = true
+                    TO_BLOCK -> block = true
+                }
+                val request = FriendStatusRequest(
+                    // TODO: ISSUE 친구 리스트 조회 시, assigned profile Id를 서버로부터 추가로 받아야 함
+                    assignedProfileId = _userProfile.value!!.profileId,
+                    isMarked = mark,
+                    isHidden = hide,
+                    isBlocked = block,
+                )
+                val response = friendRepository.get().putFriendStatus(friendId, request)
+
+                if (response.status == 200) {
+                    // Result
+                    Timber.d("Response ${response.data}")
+                    Timber.d("Type ${response.data.type}")
+                } else {
+                    _message.value = response.message
+                }
+            } catch (error: Throwable) {
+                Timber.d("Fail Response: $error")
+            }
+        }
+    }
+
+    companion object {
+        const val TO_BLOCK = 40
+        const val TO_HIDE = 50
     }
 }

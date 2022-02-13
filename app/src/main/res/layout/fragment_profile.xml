@@ -29,6 +29,16 @@
         android:layout_height="35dp"
         android:layout_margin="10dp"
         android:src="@drawable/selector_bookmark"
+        app:layout_constraintEnd_toStartOf="@+id/img_profile_menu"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/img_profile_menu"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_margin="10dp"
+        android:src="@drawable/ic_more_black_24"
+        app:tint="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
     

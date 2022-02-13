@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_gray">
+
+    <View
+        android:id="@+id/v_search_top"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/edt_search"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginHorizontal="10dp"
+        android:background="@drawable/bg_gray_10"
+        android:hint="친구를 검색해보세요"
+        android:paddingStart="60dp"
+        app:layout_constraintBottom_toBottomOf="@+id/v_search_top"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/v_search_top" />
+
+    <ImageView
+        android:id="@+id/img_search_back"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="20dp"
+        android:src="@drawable/backspace_black"
+        app:layout_constraintBottom_toBottomOf="@+id/edt_search"
+        app:layout_constraintStart_toStartOf="@+id/edt_search"
+        app:layout_constraintTop_toTopOf="@+id/edt_search" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cst_search_friend"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginVertical="20dp"
+        android:background="@drawable/bg_white_10"
+        android:paddingVertical="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/edt_search">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:text="친구"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/cst_search_friend"
+            app:layout_constraintTop_toTopOf="@+id/cst_search_friend" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_search_friend"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="40dp"
+            android:overScrollMode="never"
+            app:layout_constraintBottom_toBottomOf="@+id/cst_search_friend"
+            app:layout_constraintTop_toTopOf="@+id/cst_search_friend"
+            tools:listitem="@layout/item_friend_preview" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

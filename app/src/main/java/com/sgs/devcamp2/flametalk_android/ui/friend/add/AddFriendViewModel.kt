@@ -4,10 +4,10 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sgs.devcamp2.flametalk_android.data.dummy.getDummyProfiles
-import com.sgs.devcamp2.flametalk_android.data.model.ProfilePreview
-import com.sgs.devcamp2.flametalk_android.network.dao.UserDAO
-import com.sgs.devcamp2.flametalk_android.network.repository.FriendRepository
-import com.sgs.devcamp2.flametalk_android.network.repository.ProfileRepository
+import com.sgs.devcamp2.flametalk_android.data.model.profile.ProfilePreview
+import com.sgs.devcamp2.flametalk_android.data.source.local.UserPreferences
+import com.sgs.devcamp2.flametalk_android.domain.repository.FriendRepository
+import com.sgs.devcamp2.flametalk_android.domain.repository.ProfileRepository
 import com.sgs.devcamp2.flametalk_android.network.request.friend.AddFriendRequest
 import com.sgs.devcamp2.flametalk_android.network.response.friend.AddFriendResponse
 import dagger.Lazy
@@ -22,7 +22,7 @@ import timber.log.Timber
 @HiltViewModel
 class AddFriendViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val userDAO: UserDAO,
+    private val userPreferences: UserPreferences,
     private val friendRepository: Lazy<FriendRepository>,
     private val profileRepository: Lazy<ProfileRepository>
 ) : ViewModel() {
@@ -53,15 +53,9 @@ class AddFriendViewModel @Inject constructor(
 
     init {
         // 유저 프로필 리스트 불러오기
-        // getProfileList()
+        getProfileList()
 
-        _profiles.value = dummyProfileData
         _nickname.value = "소연"
-//        viewModelScope.launch {
-//            userDAO.user.collect {
-//                _nickname.value = it!!.nickname
-//            }
-//        }
     }
 
     fun clickedProfile(profileId: Long) {
@@ -74,11 +68,11 @@ class AddFriendViewModel @Inject constructor(
                 val request = AddFriendRequest(_profileId.value, phoneNumber)
                 val response = friendRepository.get().postFriendAdd(request)
 
-                if (response.status == 201) {
+                if (response.status == 200) {
                     _friendData.value = response.data
                     _isSuccess.value = true
                 } else {
-                    _isSuccess.value = true
+                    _isSuccess.value = false
                     _message.value = response.message
                 }
                 _message.value = null

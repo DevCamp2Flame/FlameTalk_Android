@@ -5,8 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sgs.devcamp2.flametalk_android.network.repository.ProfileRepository
-import com.sgs.devcamp2.flametalk_android.network.repository.SignRepository
+import com.sgs.devcamp2.flametalk_android.domain.repository.ProfileRepository
+import com.sgs.devcamp2.flametalk_android.domain.repository.SignRepository
 import com.sgs.devcamp2.flametalk_android.network.response.feed.Feed
 import dagger.Lazy
 import dagger.hilt.android.lifecycle.HiltViewModel

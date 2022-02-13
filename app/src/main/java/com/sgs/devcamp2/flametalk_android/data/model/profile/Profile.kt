@@ -1,8 +1,9 @@
-package com.sgs.devcamp2.flametalk_android.data.model
+package com.sgs.devcamp2.flametalk_android.data.model.profile
 
 import android.os.Parcelable
 import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
+import com.sgs.devcamp2.flametalk_android.data.model.Sticker
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -34,7 +35,7 @@ data class Profile(
     @SerializedName("bgImageUrl")
     val bgImageUrl: String?,
     @SerializedName("sticker")
-    val sticker: List<Sticker>?,
+    val sticker: List<Sticker> = emptyList(),
     @SerializedName("description")
     val description: String?,
     @SerializedName("isDefault")

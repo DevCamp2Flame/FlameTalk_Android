@@ -1,7 +1,7 @@
-package com.sgs.devcamp2.flametalk_android.network.repository
+package com.sgs.devcamp2.flametalk_android.domain.repository
 
 import com.sgs.devcamp2.flametalk_android.data.model.User
-import com.sgs.devcamp2.flametalk_android.network.dao.UserDAO
+import com.sgs.devcamp2.flametalk_android.data.source.local.UserPreferences
 import com.sgs.devcamp2.flametalk_android.network.request.sign.SigninRequest
 import com.sgs.devcamp2.flametalk_android.network.request.sign.SignupRequest
 import com.sgs.devcamp2.flametalk_android.network.response.sign.SigninResponse
@@ -21,7 +21,7 @@ import kotlinx.coroutines.withContext
 @Singleton
 class SignRepository @Inject constructor(
     private val userService: Lazy<UserService>,
-    private val userDAO: Lazy<UserDAO>,
+    private val userPreferences: Lazy<UserPreferences>,
     private val ioDispatcher: CoroutineDispatcher
 ) {
     // 회원가입
@@ -31,7 +31,7 @@ class SignRepository @Inject constructor(
 
     // 로그인
     suspend fun signin(request: SigninRequest) = withContext(ioDispatcher) {
-        userDAO.get().removeToken()
+        userPreferences.get().removeToken()
         userService.get().postSignin(request).also { saveUser(it) }
     }
 
@@ -44,7 +44,7 @@ class SignRepository @Inject constructor(
         if (result.status == null) return@withContext
         if (result.accessToken == null) return@withContext
         if (result.refreshToken == null) return@withContext
-        userDAO.get().setUser(
+        userPreferences.get().setUser(
             User(
                 result.userId,
                 result.nickname,
@@ -57,7 +57,7 @@ class SignRepository @Inject constructor(
 
     // 이메일 중복체크
     suspend fun emailCheck(email: String) = withContext(ioDispatcher) {
-        userDAO.get().removeToken()
+        userPreferences.get().removeToken()
         userService.get().getEmailCheck(email)
     }
 
@@ -66,7 +66,7 @@ class SignRepository @Inject constructor(
         userService.get().deleteLeaveUser()
             .also {
                 if (it.status == 200)
-                    userDAO.get().setUser(null)
+                    userPreferences.get().setUser(null)
             }
     }
 }

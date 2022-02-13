@@ -3,12 +3,12 @@ package com.sgs.devcamp2.flametalk_android.ui.profile.edit
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sgs.devcamp2.flametalk_android.data.model.Profile
-import com.sgs.devcamp2.flametalk_android.data.model.ProfileDummyPreview
 import com.sgs.devcamp2.flametalk_android.data.model.Sticker
-import com.sgs.devcamp2.flametalk_android.network.dao.UserDAO
-import com.sgs.devcamp2.flametalk_android.network.repository.FileRepository
-import com.sgs.devcamp2.flametalk_android.network.repository.ProfileRepository
+import com.sgs.devcamp2.flametalk_android.data.model.profile.Profile
+import com.sgs.devcamp2.flametalk_android.data.model.profile.ProfileDummyPreview
+import com.sgs.devcamp2.flametalk_android.data.source.local.UserPreferences
+import com.sgs.devcamp2.flametalk_android.domain.repository.FileRepository
+import com.sgs.devcamp2.flametalk_android.domain.repository.ProfileRepository
 import com.sgs.devcamp2.flametalk_android.network.request.sign.ProfileUpdateRequest
 import com.sgs.devcamp2.flametalk_android.util.pathToMultipartImageFile
 import dagger.Lazy
@@ -24,7 +24,7 @@ import timber.log.Timber
 @HiltViewModel
 class EditProfileViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val userDAO: UserDAO,
+    private val userPreferences: UserPreferences,
     private val fileRepository: Lazy<FileRepository>,
     private val profileRepository: Lazy<ProfileRepository>
 ) : ViewModel() {
@@ -83,7 +83,7 @@ class EditProfileViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            userDAO.user.collect {
+            userPreferences.user.collect {
                 if (it != null) {
                     _userId.value = it.userId
                     _nickname.value = it.nickname
@@ -98,11 +98,17 @@ class EditProfileViewModel @Inject constructor(
 
     fun setUserProfile(data: Profile) {
         _profileId.value = data.profileId
-        _description.value = data.description.toString()
+        if (_description.value == null) {
+            _description.value = ""
+        }
         _profileImageUrl.value = data.imageUrl.toString()
         _backgroundImageUrl.value = data.bgImageUrl.toString()
         _isDefault.value = data.isDefault
-        _stickers.value = data.sticker!!
+        if (data.sticker == null) {
+            _stickers.value = emptyList()
+        } else {
+            _stickers.value = data.sticker!!
+        }
     }
 
     fun setProfileImage(path: String?) {
@@ -182,7 +188,7 @@ class EditProfileViewModel @Inject constructor(
             userId = _userId.value,
             imageUrl = _profileImageUrl.value,
             bgImageUrl = _backgroundImageUrl.value,
-            sticker = null, // TODO: 스티커 정보, 프로필 내 positioning 할 수 있는 상대적 위치 정보
+            sticker = emptyList(), // TODO: 스티커 정보, 프로필 내 positioning 할 수 있는 상대적 위치 정보
             description = _description.value,
             isDefault = _isDefault.value!!
         )

@@ -2,7 +2,7 @@ package com.sgs.devcamp2.flametalk_android.network.response.profile
 
 import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
-import com.sgs.devcamp2.flametalk_android.data.model.ProfilePreview
+import com.sgs.devcamp2.flametalk_android.data.model.profile.ProfilePreview
 
 /**
  * @author 박소연

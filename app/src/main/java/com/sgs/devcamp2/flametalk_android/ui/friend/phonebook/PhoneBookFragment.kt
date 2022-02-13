@@ -12,6 +12,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.google.android.material.snackbar.Snackbar
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentPhoneBookBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -41,7 +42,15 @@ class PhoneBookFragment : Fragment() {
 
     private fun initUI() {
         binding.btnPhoneBook.setOnClickListener {
-            checkPermission()
+            if (checkPermission()) {
+                // 권한이 있으면 연락처 리스트를 불러온다
+                val contacts = getContactList()
+                viewModel.getContacts(contacts)
+            } else {
+                Snackbar.make(
+                    requireView(), "권한이 없으면 연락처 동기화로 친구추가할 수 없습니다.", Snackbar.LENGTH_SHORT
+                ).show()
+            }
         }
     }
 
@@ -89,16 +98,14 @@ class PhoneBookFragment : Fragment() {
     }
 
     // 주소록 접근 권한 확인
-    private fun checkPermission() {
+    private fun checkPermission(): Boolean {
         val status = ContextCompat.checkSelfPermission(
             requireContext(),
             "android.permission.READ_CONTACTS"
         )
         // 권한 확인
-        if (status == PackageManager.PERMISSION_GRANTED) {
-            // 권한이 있으면 연락처 리스트를 불러온다
-            val contacts = getContactList()
-            viewModel.getContacts(contacts)
+        return if (status == PackageManager.PERMISSION_GRANTED) {
+            true
         } else { // 권한 요청 다이얼로그
             ActivityCompat.requestPermissions(
                 requireActivity(),
@@ -106,6 +113,7 @@ class PhoneBookFragment : Fragment() {
                 100
             )
             Timber.d("Contacts Permission Denied")
+            false
         }
     }
 

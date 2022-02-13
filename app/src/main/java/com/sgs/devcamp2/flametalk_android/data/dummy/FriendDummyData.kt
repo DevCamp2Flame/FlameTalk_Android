@@ -1,9 +1,10 @@
 package com.sgs.devcamp2.flametalk_android.data.dummy
 
-import com.sgs.devcamp2.flametalk_android.data.model.Friend
-import com.sgs.devcamp2.flametalk_android.data.model.FriendPreview
-import com.sgs.devcamp2.flametalk_android.data.model.ProfileDummyPreview
-import com.sgs.devcamp2.flametalk_android.data.model.ProfilePreview
+import com.sgs.devcamp2.flametalk_android.data.model.friend.Friend
+import com.sgs.devcamp2.flametalk_android.data.model.friend.FriendModel
+import com.sgs.devcamp2.flametalk_android.data.model.friend.FriendPreview
+import com.sgs.devcamp2.flametalk_android.data.model.profile.ProfileDummyPreview
+import com.sgs.devcamp2.flametalk_android.data.model.profile.ProfilePreview
 
 /**
  * @author 박소연
@@ -139,5 +140,32 @@ fun getDummyHiddenFriend() = listOf(
             "https://cdn.pixabay.com/photo/2017/11/14/13/06/kitty-2948404__480.jpg",
             "안녕..."
         )
+    )
+)
+
+fun getDummyFriendModel() = listOf(
+    FriendModel(
+        12,
+        "박소연",
+        "https://cdn.pixabay.com/photo/2018/03/26/02/05/cat-3261420__480.jpg",
+        "끝까지 열심히!!"
+    ),
+    FriendModel(
+        13,
+        "최수연",
+        "https://cdn.pixabay.com/photo/2017/11/14/13/06/kitty-2948404__480.jpg",
+        "안녕~"
+    ),
+    FriendModel(
+        14,
+        "김현국",
+        "https://cdn.pixabay.com/photo/2018/03/26/02/05/cat-3261420__480.jpg",
+        "화아팅!!"
+    ),
+    FriendModel(
+        15,
+        "김다롬",
+        "https://cdn.pixabay.com/photo/2017/11/14/13/06/kitty-2948404__480.jpg",
+        "아자아자~"
     )
 )

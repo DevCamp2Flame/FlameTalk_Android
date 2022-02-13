@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.sgs.devcamp2.flametalk_android.data.model.ProfilePreview
+import com.bumptech.glide.request.RequestOptions
+import com.sgs.devcamp2.flametalk_android.R
+import com.sgs.devcamp2.flametalk_android.data.model.profile.ProfilePreview
 import com.sgs.devcamp2.flametalk_android.databinding.ItemVerticalProfileBinding
 import com.sgs.devcamp2.flametalk_android.util.SimpleDiffUtilCallback
 
@@ -53,7 +55,10 @@ class SelectProfileAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(data: ProfilePreview) {
-            Glide.with(itemView).load(data.imageUrl).into(binding.imgVerticalProfile)
+            binding.imgVerticalProfile.setBackgroundResource(R.color.flame_sky_blue)
+            Glide.with(itemView).load(data.imageUrl)
+                .apply(RequestOptions.placeholderOf(R.drawable.ic_person_white_24))
+                .into(binding.imgVerticalProfile)
             binding.tvVerticalProfileNickname.text = nickname
 
             if (data.id != clickedItem) { // 클릭되지 않았고 선택되지 않은 아이템

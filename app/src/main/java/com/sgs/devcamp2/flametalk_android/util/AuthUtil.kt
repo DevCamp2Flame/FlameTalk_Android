@@ -2,7 +2,7 @@ package com.sgs.devcamp2.flametalk_android.util
 
 import android.app.Activity
 import com.google.android.material.snackbar.Snackbar
-import com.sgs.devcamp2.flametalk_android.network.dao.UserDAO
+import com.sgs.devcamp2.flametalk_android.data.source.local.UserPreferences
 import com.sgs.devcamp2.flametalk_android.network.service.AuthService
 import kotlinx.coroutines.runBlocking
 
@@ -14,17 +14,17 @@ import kotlinx.coroutines.runBlocking
  */
 class AuthUtil {
     // 로그아웃 시 기기에 저장된 사용자 정보를 삭제한다.
-    fun logout(activity: Activity, userDAO: UserDAO) {
+    fun logout(activity: Activity, userPreferences: UserPreferences) {
         runBlocking {
-            userDAO.logoutUser()
+            userPreferences.logoutUser()
         }
         Snackbar.make(activity.currentFocus!!, "로그아웃 되었습니다.", Snackbar.LENGTH_SHORT).show()
     }
 
-    fun postRefreshToken(userService: AuthService, userDAO: UserDAO) {
+    fun postRefreshToken(userService: AuthService, userPreferences: UserPreferences) {
         runBlocking {
             val response = userService.getRenewToken()
-            userDAO.renewUserToken(response.data.accessToken, response.data.refreshToken)
+            userPreferences.renewUserToken(response.data.accessToken, response.data.refreshToken)
         }
     }
 }

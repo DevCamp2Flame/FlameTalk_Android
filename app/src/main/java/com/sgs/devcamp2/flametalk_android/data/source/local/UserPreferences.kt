@@ -1,4 +1,4 @@
-package com.sgs.devcamp2.flametalk_android.network.dao
+package com.sgs.devcamp2.flametalk_android.data.source.local
 
 import android.content.Context
 import androidx.datastore.core.DataStore
@@ -27,7 +27,7 @@ import timber.log.Timber
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "user")
 
 @Singleton
-class UserDAO @Inject constructor(
+class UserPreferences @Inject constructor(
     @ApplicationContext val context: Context,
     private val ioDispatcher: CoroutineDispatcher,
 ) {
