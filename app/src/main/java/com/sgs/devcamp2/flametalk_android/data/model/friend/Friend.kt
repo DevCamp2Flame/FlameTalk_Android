@@ -1,10 +1,6 @@
 package com.sgs.devcamp2.flametalk_android.data.model.friend
 
 import androidx.annotation.Keep
-import androidx.annotation.NonNull
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
 /**
@@ -21,22 +17,13 @@ import com.google.gson.annotations.SerializedName
  */
 
 @Keep
-@Entity(tableName = "friends")
 data class Friend(
-    @PrimaryKey
     @SerializedName("friendId")
-    @ColumnInfo(name = "friendId")
     val friendId: Long,
-    @NonNull
     @SerializedName("userId")
-    @ColumnInfo(name = "userId")
     val userId: String,
-    @NonNull
     @SerializedName("nickname")
-    @ColumnInfo(name = "nickname")
     val nickname: String,
-    @NonNull
     @SerializedName("preview")
-    @ColumnInfo(name = "preview")
     val preview: FriendPreview,
 )
