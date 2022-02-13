@@ -12,12 +12,10 @@
         tools:layout="@layout/fragment_signin">
         <action
             android:id="@+id/action_signin_to_friend"
-            app:destination="@id/navigation_friend"
-            app:popUpTo="@id/navigation_friend" />
+            app:destination="@id/navigation_friend" />
         <action
             android:id="@+id/action_signin_to_signup"
-            app:destination="@id/navigation_signup"
-            app:popUpTo="@id/navigation_signup" />
+            app:destination="@id/navigation_signup" />
         <argument
             android:name="id"
             android:defaultValue=""

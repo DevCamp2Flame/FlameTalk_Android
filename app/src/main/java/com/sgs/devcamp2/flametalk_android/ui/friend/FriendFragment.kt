@@ -69,6 +69,7 @@ class FriendFragment : Fragment() {
         initUserProfiles()
     }
 
+    // 앱 상단바 초기화
     private fun initAppbar() {
         binding.abFriend.tvAppbar.text = "친구"
         binding.abFriend.imgAppbarSearch.setOnClickListener {
@@ -90,13 +91,7 @@ class FriendFragment : Fragment() {
                     R.id.menu_block -> {
                         findNavController().navigate(R.id.navigation_blocked_friend)
                     }
-                    else -> {
-                        // 실행되지 않음
-                        Snackbar.make(
-                            binding.abFriend.imgAppbarSetting,
-                            "else...",
-                            Snackbar.LENGTH_SHORT
-                        ).show()
+                    else -> { // 실행되지 않음
                     }
                 }
                 return@setOnMenuItemClickListener false
@@ -146,13 +141,13 @@ class FriendFragment : Fragment() {
                 } else {
                     binding.lFriendMainUser.tvFriendPreviewDesc.toVisible()
                     binding.lFriendMainUser.tvFriendPreviewDesc.text = it?.description
-                    Timber.d("description ${it?.description}")
                 }
             }
         }
 
         // 내 프로필 미리보기 > 프로필 상세 보기 이동
         binding.lFriendMainUser.root.setOnClickListener {
+            /**파라미터를 넣어 뷰 전환*/
             val friendToProfileDirections: NavDirections =
                 FriendFragmentDirections.actionFriendToProfile(
                     viewType = USER_DEFAULT_PROFILE, profileId = viewModel.userProfile.value!!.id
@@ -182,8 +177,7 @@ class FriendFragment : Fragment() {
 
         // 친구리스트 > 멀티프로필 생성: 멀티 프로필 만들기
         binding.itemFriendAddProfile.root.setOnClickListener {
-            Snackbar.make(requireView(), "멀티프로필 생성 클릭", Snackbar.LENGTH_SHORT).show()
-            Timber.d("멀티프로필 생성 클릭")
+            /**파라미터를 없이 뷰 전환*/
             findNavController().navigate(R.id.navigation_add_profile)
         }
     }
