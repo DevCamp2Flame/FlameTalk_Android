@@ -34,12 +34,14 @@ class UserPreferences @Inject constructor(
 
     private val dataStore = context.dataStore
 
+    // Flow를 이용하여 key-value로 값을 가져옴
     private val userId: Flow<String?> = dataStore.data.map { it[USER_ID_KEY] }
     private val nickname: Flow<String?> = dataStore.data.map { it[NICKNAME_KEY] }
     private val status: Flow<String?> = dataStore.data.map { it[STATUS_KEY] }
     private val accessToken: Flow<String?> = dataStore.data.map { it[ACCESS_TOKEN_KEY] }
     private val refreshToken: Flow<String?> = dataStore.data.map { it[REFRESH_TOKEN_KEY] }
 
+    // 넘겨받은 데이터를 User 객체로 저장
     val user = combine(
         userId,
         nickname,
@@ -116,6 +118,7 @@ class UserPreferences @Inject constructor(
             setRefreshToken(refreshToken)
         }
 
+    // 로그아웃 시 유저 정보 null로 저장
     suspend fun logoutUser() = withContext(ioDispatcher) {
         setUserId(null)
         setNickname(null)
@@ -136,7 +139,7 @@ class UserPreferences @Inject constructor(
         return this.refreshToken
     }
 
-    // TODO: 시리얼라이저 구현해야함.
+    // key 값 정의
     companion object {
         private val USER_ID_KEY = stringPreferencesKey("user.userId")
         private val NICKNAME_KEY = stringPreferencesKey("user.nickname")
