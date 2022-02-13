@@ -1,7 +1,6 @@
 package com.sgs.devcamp2.flametalk_android.ui.createchatroom
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,20 +14,24 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentCreateChatRoomBinding
 import com.sgs.devcamp2.flametalk_android.domain.entity.UiState
-import com.sgs.devcamp2.flametalk_android.ui.MainActivityViewModel
+import com.sgs.devcamp2.flametalk_android.ui.MainViewModel
 import com.sgs.devcamp2.flametalk_android.ui.chatroom.ChatRoomViewModel
 import com.sgs.devcamp2.flametalk_android.util.onTextChanged
 import com.sgs.devcamp2.flametalk_android.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+/**
+ * @author 김현국
+ * @created 2022/02/08
+ */
 @AndroidEntryPoint
 class CreateChatRoomFragment : Fragment(), View.OnClickListener {
 
     lateinit var binding: FragmentCreateChatRoomBinding
     private val model by viewModels<CreateChatRoomViewModel>()
     private val args by navArgs<CreateChatRoomFragmentArgs>()
-    private val webSocketModel by activityViewModels<MainActivityViewModel>()
+    private val webSocketModel by activityViewModels<MainViewModel>()
     private val chatRoomModel by activityViewModels<ChatRoomViewModel>()
     val TAG: String = "로그"
     override fun onCreateView(

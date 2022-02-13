@@ -5,7 +5,7 @@ import androidx.room.Relation
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.ChatRoom
 
 /**
- * @author boris
+ * @author 김현국
  * @created 2022/02/01
  */
 

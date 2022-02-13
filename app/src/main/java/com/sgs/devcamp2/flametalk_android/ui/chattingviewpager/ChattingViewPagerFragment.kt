@@ -16,7 +16,10 @@ import com.sgs.devcamp2.flametalk_android.databinding.FragmentChattingViewPagerB
 import com.sgs.devcamp2.flametalk_android.ui.chatroomlist.ChatRoomListFragment
 import com.sgs.devcamp2.flametalk_android.ui.openchatroom.OpenChatRoomFragment
 import dagger.hilt.android.AndroidEntryPoint
-
+/**
+ * @author 김현국
+ * @created 2022/02/05
+ */
 @AndroidEntryPoint
 class ChattingViewPagerFragment : Fragment(), View.OnClickListener {
     lateinit var binding: FragmentChattingViewPagerBinding

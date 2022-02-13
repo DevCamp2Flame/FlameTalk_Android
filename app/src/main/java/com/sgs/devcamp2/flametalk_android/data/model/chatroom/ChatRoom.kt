@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 /**
- * @author boris
+ * @author 김현국
  * @created 2022/01/27
  * 수정요망
  */

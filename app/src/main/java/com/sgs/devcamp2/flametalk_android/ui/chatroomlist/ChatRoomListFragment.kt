@@ -22,8 +22,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 /**
- * 채팅방 리스트 display fragment
- *
+ * @author 김현국
+ * @created 2022/01/26
  */
 @AndroidEntryPoint
 class ChatRoomListFragment : Fragment(), ChatRoomListAdapter.ClickCallBack {

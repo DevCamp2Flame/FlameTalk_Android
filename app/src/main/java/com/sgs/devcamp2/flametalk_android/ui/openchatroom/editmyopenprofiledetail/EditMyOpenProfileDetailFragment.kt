@@ -29,6 +29,10 @@ import com.sgs.devcamp2.flametalk_android.util.onTextChanged
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+/**
+ * @author 김현국
+ * @created 2022/02/06
+ */
 @AndroidEntryPoint
 class EditMyOpenProfileDetailFragment : Fragment(), View.OnClickListener {
 

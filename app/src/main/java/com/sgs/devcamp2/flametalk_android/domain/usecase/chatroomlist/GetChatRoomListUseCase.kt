@@ -8,10 +8,8 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 /**
- * @author boris
+ * @author 김현국
  * @created 2022/01/27
- * use case는 entity 즉 view에서만 보일 정보만 필요하다
- * 따라서 return 을 entity로 받고서 mapper를 통해서 data -> entity로 바꿔준다.
  */
 class GetChatRoomListUseCase @Inject constructor(
     private val repository: ChatRoomRepository

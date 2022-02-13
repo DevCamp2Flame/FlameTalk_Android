@@ -12,7 +12,7 @@ import com.sgs.devcamp2.flametalk_android.databinding.ItemPersonInviteRoomBindin
 import com.sgs.devcamp2.flametalk_android.network.response.friend.TempFriend
 
 /**
- * @author boris
+ * @author 김현국
  * @created 2022/01/12
  */
 class InviteRoomAdapter(callback: InviteRoomFragment) :
@@ -22,7 +22,9 @@ class InviteRoomAdapter(callback: InviteRoomFragment) :
     }
 
     val itemClickCallBack = callback
-
+    /**
+     * diffutil을 통해서 id를 우선적으로 비교하고, item의 변경점을 비교한다.
+     */
     companion object {
         val TAG: String = "로그"
         val diffUtil = object : DiffUtil.ItemCallback<TempFriend>() {
@@ -78,6 +80,9 @@ class InviteRoomAdapter(callback: InviteRoomFragment) :
             }
         }
     }
+    /**
+     * 유저가 선택을 했다면, selected의 값을 1로 바꿔준다.
+     */
     fun putActivate(position: Int) {
         var list: MutableList<TempFriend> = currentList.toMutableList()
         var tempFriend: TempFriend = currentList[position].copy()
@@ -85,6 +90,9 @@ class InviteRoomAdapter(callback: InviteRoomFragment) :
         list[position] = tempFriend
         submitList(list)
     }
+    /**
+     * 유저가 취소를 하기 위해 재선택을 했다면 , selected 0으로 바꿔준다.
+     */
     fun removeActivate(position: Int) {
         var list: MutableList<TempFriend> = currentList.toMutableList()
         var tempFriend: TempFriend = currentList[position].copy()

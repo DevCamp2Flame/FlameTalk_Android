@@ -1,6 +1,7 @@
 package com.sgs.devcamp2.flametalk_android.data.model.friend
 
 import androidx.annotation.Keep
+import androidx.room.Entity
 import com.google.gson.annotations.SerializedName
 
 /**

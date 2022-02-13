@@ -1,7 +1,7 @@
 package com.sgs.devcamp2.flametalk_android.domain.entity
 
 /**
- * @author boris
+ * @author 김현국
  * @created 2022/01/29
  * local db의 결과를 wrapping 함
  */

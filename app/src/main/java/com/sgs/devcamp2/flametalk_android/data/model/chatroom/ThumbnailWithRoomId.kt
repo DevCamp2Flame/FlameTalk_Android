@@ -4,7 +4,7 @@ import androidx.room.Embedded
 import androidx.room.Relation
 
 /**
- * @author boris
+ * @author 김현국
  * @created 2022/02/08
  */
 data class ThumbnailWithRoomId(

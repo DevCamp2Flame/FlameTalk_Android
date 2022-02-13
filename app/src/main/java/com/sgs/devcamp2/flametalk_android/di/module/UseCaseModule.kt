@@ -6,18 +6,20 @@ import com.sgs.devcamp2.flametalk_android.domain.usecase.chatroomlist.GetChatRoo
 import com.sgs.devcamp2.flametalk_android.domain.usecase.chatroomlist.GetLocalChatRoomListUseCase
 import com.sgs.devcamp2.flametalk_android.domain.usecase.createopenchatprofile.CreateOpenProfileUseCase
 import com.sgs.devcamp2.flametalk_android.domain.usecase.inviteroom.CreateChatRoomUseCase
+import com.sgs.devcamp2.flametalk_android.domain.usecase.mainactivity.SaveDeviceTokenUseCase
 import com.sgs.devcamp2.flametalk_android.domain.usecase.mainactivity.SaveReceivedMessageUseCase
 import com.sgs.devcamp2.flametalk_android.domain.usecase.myopenchatprofile.GetOpenProfileListUseCase
 import com.sgs.devcamp2.flametalk_android.domain.usecase.myopenprofiledetail.DeleteOpenProfileUseCase
 import com.sgs.devcamp2.flametalk_android.domain.usecase.myopenprofiledetail.GetOpenProfileUseCase
 import com.sgs.devcamp2.flametalk_android.domain.usecase.myopenprofiledetail.UpdateOpenProfileUseCase
+import com.sgs.devcamp2.flametalk_android.ui.friend.FriendViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 
 /**
- * @author boris
+ * @author 김현국
  * @created 2022/01/27
  * domain layer usecase에 domain layer repository 주입
  */
@@ -68,19 +70,24 @@ object UseCaseModule {
     fun provideCloseChatRoomUseCase(repository: ChatRoomRepository): CloseChatRoomUseCase {
         return CloseChatRoomUseCase(repository = repository)
     }
-
     @Provides
     fun provideGetChatListUseCase(repository: ChatRoomRepository): GetChatListUseCase {
         return GetChatListUseCase(repository = repository)
     }
-
     @Provides
     fun provideGetThumbnailListUseCase(repository: ChatRoomRepository): GetThumbnailListUseCase {
         return GetThumbnailListUseCase(repository = repository)
     }
-
     @Provides
     fun provideGetLocalChatRoomListUseCase(repository: ChatRoomRepository): GetLocalChatRoomListUseCase {
         return GetLocalChatRoomListUseCase(repository = repository)
+    }
+    @Provides
+    fun provideGetChatListHistoryUseCase(repository: ChatRepository): GetChatListHistoryUseCase {
+        return GetChatListHistoryUseCase(repository = repository)
+    }
+    @Provides
+    fun provideSaveDeviceTokenUseCase(repository: DeviceRepository): SaveDeviceTokenUseCase {
+        return SaveDeviceTokenUseCase(repository = repository)
     }
 }

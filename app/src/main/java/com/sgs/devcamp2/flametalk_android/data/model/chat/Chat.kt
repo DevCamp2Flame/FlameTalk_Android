@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
 import javax.annotation.Nonnull
 
 /**
- * @author boris
+ * @author 김현국
  * @created 2022/02/01
  */
 @Entity(

@@ -12,7 +12,7 @@ import kotlin.math.absoluteValue
 import kotlin.math.sign
 
 /**
- * @author boris
+ * @author 김현국
  * @created 2022/02/05
  */
 class NestedScrollableHost : FrameLayout {

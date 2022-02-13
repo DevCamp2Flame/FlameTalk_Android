@@ -6,7 +6,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 
 /**
- * @author boris
+ * @author 김현국
  * @created 2022/01/26
  */
 class OpenChatRoomViewPagerAdapter(fa: FragmentManager, lifecycle: Lifecycle) : FragmentStateAdapter(fa, lifecycle) {

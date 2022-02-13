@@ -3,14 +3,13 @@ package com.sgs.devcamp2.flametalk_android.ui.createchatroom
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sgs.devcamp2.flametalk_android.data.mapper.mappeToUserChatRoomModel
+import com.sgs.devcamp2.flametalk_android.data.mapper.mapperToUserChatRoomModel
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.createchatroom.CreateChatRoomReq
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.getchatroomlist.UserChatRoom
 import com.sgs.devcamp2.flametalk_android.domain.entity.Results
 import com.sgs.devcamp2.flametalk_android.domain.entity.UiState
 import com.sgs.devcamp2.flametalk_android.domain.entity.chatroom.ChatRoomEntity
 import com.sgs.devcamp2.flametalk_android.domain.usecase.inviteroom.CreateChatRoomUseCase
-import com.sgs.devcamp2.flametalk_android.network.dao.UserDAO
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,13 +18,12 @@ import org.hildan.krossbow.stomp.StompSession
 import javax.inject.Inject
 
 /**
- * @author boris
+ * @author 김현국
  * @created 2022/02/08
  */
 @HiltViewModel
 class CreateChatRoomViewModel @Inject constructor(
     val createChatRoomUseCase: CreateChatRoomUseCase,
-    val userDAO: UserDAO
 ) : ViewModel() {
     var firstMessage = ""
     lateinit var session: StompSession
@@ -40,18 +38,21 @@ class CreateChatRoomViewModel @Inject constructor(
     val nickname = _nickname.asStateFlow()
 
     init {
-        viewModelScope.launch {
-            userDAO.user.collect {
-                if (it != null) {
-                    _userId.value = it.userId
-                    _nickname.value = it.nickname
-                }
-            }
-        }
+//        viewModelScope.launch {
+//            userDAO.user.collect {
+//                if (it != null) {
+//                    _userId.value = it.userId
+//                    _nickname.value = it.nickname
+//                }
+//            }
+//        }
     }
     fun updateFirstMessage(input: String) {
         firstMessage = input
     }
+    /**
+     * 선택한 친구들로 채팅방을 생성하는 function입니다.
+     */
     fun createChatRoom(users: List<String>) {
         val createChatRoomReq = CreateChatRoomReq(
             hostId = _userId.value,
@@ -79,6 +80,6 @@ class CreateChatRoomViewModel @Inject constructor(
         }
     }
     fun updateRoomInfo(chatRoomEntity: ChatRoomEntity) {
-        this.createdRoomInfo = mappeToUserChatRoomModel(chatRoomEntity)
+        this.createdRoomInfo = mapperToUserChatRoomModel(chatRoomEntity)
     }
 }

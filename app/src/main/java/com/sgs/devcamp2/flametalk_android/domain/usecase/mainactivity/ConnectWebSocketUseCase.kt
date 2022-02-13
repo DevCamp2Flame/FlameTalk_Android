@@ -6,7 +6,7 @@ import org.hildan.krossbow.stomp.StompSession
 import javax.inject.Inject
 
 /**
- * @author boris
+ * @author 김현국
  * @created 2022/01/31
  */
 class ConnectWebSocketUseCase @Inject constructor(

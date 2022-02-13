@@ -20,7 +20,7 @@ import com.sgs.devcamp2.flametalk_android.domain.entity.chatroom.GetChatRoomEnti
 import kotlinx.coroutines.flow.Flow
 
 /**
- * @author boris
+ * @author 김현국
  * @created 2022/01/27
  * usecase에서 사용될 respository 실제 구현체는 data layer에 존재
  */

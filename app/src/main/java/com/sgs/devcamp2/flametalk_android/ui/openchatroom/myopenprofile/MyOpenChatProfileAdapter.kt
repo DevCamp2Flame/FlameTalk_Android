@@ -13,11 +13,8 @@ import com.sgs.devcamp2.flametalk_android.data.model.openprofile.getopenprofilel
 import com.sgs.devcamp2.flametalk_android.databinding.ItemMyOpenChatProfileBinding
 
 /**
- * @author 박소연
- * @created 2022/01/23
- * @updated 2022/01/16
- * @desc 오픈채팅 메인화면의 나의 오픈 프로필 리스트 adapter
- *       오픈프로필을 클릭하면 특정 채팅방에 참여할 수 있음
+ * @author 김현국
+ * @created 2022/01/26
  */
 class MyOpenChatProfileAdapter(callback: MyOpenChatProfileFragment) : ListAdapter<OpenProfile, RecyclerView.ViewHolder>(diffUtil) {
     interface ItemClickCallBack {
