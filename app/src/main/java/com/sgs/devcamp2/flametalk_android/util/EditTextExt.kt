@@ -5,7 +5,7 @@ import android.text.TextWatcher
 import android.widget.EditText
 
 /**
- * @author boris
+ * @author 김현국
  * @created 2022/01/18
  */
 fun EditText.onTextChanged(completion: (Editable?) -> Unit) {

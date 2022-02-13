@@ -4,9 +4,7 @@ import com.google.gson.GsonBuilder
 import com.sgs.devcamp2.flametalk_android.data.source.remote.api.*
 import com.sgs.devcamp2.flametalk_android.network.NetworkInterceptor
 import com.sgs.devcamp2.flametalk_android.network.dao.UserDAO
-
 import com.sgs.devcamp2.flametalk_android.network.service.*
-
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -95,6 +93,12 @@ class NetworkModule {
     @Singleton
     fun provideOpenProfileApi(retrofit: Retrofit): OpenProfileApi {
         return retrofit.create(OpenProfileApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDeviceApi(retrofit: Retrofit): DeviceApi {
+        return retrofit.create(DeviceApi::class.java)
     }
     companion object {
         const val BASE_URL = "http://10.99.30.180:8080" // 테스트 전 PC IP 확인

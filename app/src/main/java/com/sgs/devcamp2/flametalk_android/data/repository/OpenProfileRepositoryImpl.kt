@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 /**
- * @author boris
+ * @author 김현국
  * @created 2022/02/05
  */
 class OpenProfileRepositoryImpl @Inject constructor(
@@ -26,6 +26,10 @@ class OpenProfileRepositoryImpl @Inject constructor(
     private val local: AppDatabase,
     private val remote: OpenProfileApi
 ) : OpenProfileRepository {
+    /**
+     * 오픈프로필을 생성하는 function입니다
+     * @param createOpenProfileReq 오픈프로필 생성 request model
+     */
     override suspend fun createOpenProfile(createOpenProfileReq: CreateOpenProfileReq): Flow<Results<CreateOpenProfileRes, WrappedResponse<CreateOpenProfileRes>>> {
         return flow {
             val response = remote.createOpenProfile(createOpenProfileReq)
@@ -38,6 +42,9 @@ class OpenProfileRepositoryImpl @Inject constructor(
             }
         }.flowOn(ioDispatcher)
     }
+    /**
+     * 오픈 프로필 상세보기 function입니다.
+     */
     override suspend fun getOpenProfile(openProfileId: Long): Flow<Results<GetOpenProfileRes, WrappedResponse<GetOpenProfileRes>>> {
         return flow {
             val response = remote.getOpenProfile(openProfileId)
@@ -50,6 +57,9 @@ class OpenProfileRepositoryImpl @Inject constructor(
             }
         }.flowOn(ioDispatcher)
     }
+    /**
+     * 오픈 프로필 리스트 조회 function입니다.
+     */
     override suspend fun getOpenProfileList(): Flow<Results<GetOpenProfileListRes, WrappedResponse<GetOpenProfileListRes>>> {
         return flow {
             val response = remote.getOpenProfileList()
@@ -62,6 +72,9 @@ class OpenProfileRepositoryImpl @Inject constructor(
             }
         }.flowOn(ioDispatcher)
     }
+    /**
+     * 오픈 프로필 업데이트 function입니다.
+     */
     override suspend fun updateOpenProfile(openProfileId: Long, updateOpenProfileReq: UpdateOpenProfileReq): Flow<Results<UpdateOpenProfileRes, WrappedResponse<UpdateOpenProfileRes>>> {
         return flow {
             val response = remote.updateOpenProfile(openProfileId, updateOpenProfileReq)
@@ -74,6 +87,9 @@ class OpenProfileRepositoryImpl @Inject constructor(
             }
         }.flowOn(ioDispatcher)
     }
+    /**
+     * 오픈 프로필 삭제 function입니다.
+     */
     override suspend fun deleteOpenProfile(openProfileId: Long): Flow<Results<Boolean, WrappedResponse<Nothing>>> {
         return flow {
             val response = remote.deleteOpenProfile(openProfileId)

@@ -13,6 +13,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+
+/**
+ * @author 김현국
+ * @created 2022/01/26
+ */
+
 @HiltViewModel
 class OpenChatRoomViewModel @Inject constructor(
     private val getChatRoomListUseCase: GetChatRoomListUseCase

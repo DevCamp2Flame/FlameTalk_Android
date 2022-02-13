@@ -17,10 +17,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 /**
- * 채팅방 리스트 recyclerview Adapter
- * @constructor callback 은 아이템 클릭 콜백입니다
- *
- *
+ * @author 김현국
+ * @created 2022/01/26
  */
 class ChatRoomListAdapter constructor(
     callback: ClickCallBack

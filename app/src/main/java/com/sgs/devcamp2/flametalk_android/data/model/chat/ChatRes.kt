@@ -3,7 +3,7 @@ package com.sgs.devcamp2.flametalk_android.data.model.chat
 import kotlinx.serialization.Serializable
 
 /**
- * @author boris
+ * @author 김현국
  * @created 2022/01/27
  */
 

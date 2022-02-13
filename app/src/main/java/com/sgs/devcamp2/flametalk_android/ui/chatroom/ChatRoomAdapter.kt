@@ -12,6 +12,10 @@ import com.sgs.devcamp2.flametalk_android.databinding.*
 import java.text.SimpleDateFormat
 import java.util.*
 
+/**
+ * @author 김현국
+ * @created 2022/01/26
+ */
 class ChatRoomAdapter constructor(
     private val host_id: String
 ) : ListAdapter<Chat, RecyclerView.ViewHolder>(diffUtil) {
@@ -63,6 +67,7 @@ class ChatRoomAdapter constructor(
         val talk = "TALK"
         when (getItem(position).message_type) {
             invite -> {
+                (holder as InviteMessageViewHolder).bind(getItem(position))
             }
             talk -> {
                 when (getItem(position).sender_id) {

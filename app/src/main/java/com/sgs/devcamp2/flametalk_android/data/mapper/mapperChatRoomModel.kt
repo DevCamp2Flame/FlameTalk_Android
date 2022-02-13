@@ -7,10 +7,11 @@ import com.sgs.devcamp2.flametalk_android.data.model.chatroom.createchatroom.Cre
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.getchatroomlist.GetChatRoomListRes
 
 /**
- * @author boris
+ * @author 김현국
  * @created 2022/02/08
+ * ChatRoom data model로 resposne 를 변환해주는 Mapper입니다.
  */
-fun mapperToChatModel(isOpen: Boolean, i: Int, getChatRoomListRes: GetChatRoomListRes): ChatRoom {
+fun mapperToChatRoomModel(isOpen: Boolean, i: Int, getChatRoomListRes: GetChatRoomListRes): ChatRoom {
 
     return ChatRoom(
         getChatRoomListRes.userChatrooms[i].chatroomId,

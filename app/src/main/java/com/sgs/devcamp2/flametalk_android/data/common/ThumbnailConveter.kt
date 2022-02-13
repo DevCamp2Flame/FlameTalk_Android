@@ -5,7 +5,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 /**
- * @author boris
+ * @author 김현국
  * @created 2022/02/11
  */
 @TypeConverter

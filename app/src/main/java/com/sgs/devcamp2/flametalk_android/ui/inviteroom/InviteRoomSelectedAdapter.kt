@@ -12,7 +12,7 @@ import com.sgs.devcamp2.flametalk_android.network.response.friend.TempFriend
 import com.sgs.devcamp2.flametalk_android.util.disableClickTemporarily
 
 /**
- * @author boris
+ * @author 김현국
  * @created 2022/01/13
  */
 class InviteRoomSelectedAdapter constructor(

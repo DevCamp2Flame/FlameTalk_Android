@@ -1,7 +1,7 @@
 package com.sgs.devcamp2.flametalk_android.domain.entity.chat
 
 /**
- * @author boris
+ * @author 김현국
  * @created 2022/02/09
  */
 data class ChatEntity(

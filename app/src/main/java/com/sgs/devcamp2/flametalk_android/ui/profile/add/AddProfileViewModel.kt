@@ -126,7 +126,7 @@ class AddProfileViewModel @Inject constructor(
                 BACKGROUND_IMAGE -> {
                     pathToMultipartImageFile(_backgroundImage.value, "image/*".toMediaTypeOrNull())
                 }
-                else -> { // 실행되지 않음
+                else -> {
                     null
                 }
             }

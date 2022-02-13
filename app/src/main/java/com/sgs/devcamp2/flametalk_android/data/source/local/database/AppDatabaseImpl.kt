@@ -8,7 +8,7 @@ import com.sgs.devcamp2.flametalk_android.data.model.chatroom.ChatRoomUpdate
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.Thumbnail
 
 /**
- * @author boris
+ * @author 김현국
  * @created 2022/01/27
  * AppDatabase interface를 의존성 주입을 받아서 AppDatabase 생성
  */

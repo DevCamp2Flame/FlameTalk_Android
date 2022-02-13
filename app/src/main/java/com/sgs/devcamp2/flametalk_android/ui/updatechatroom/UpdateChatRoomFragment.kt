@@ -33,6 +33,12 @@ import com.sgs.devcamp2.flametalk_android.util.onTextChanged
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+
+/**
+ * @author 김현국
+ * @created 2022/02/07
+ */
+
 @AndroidEntryPoint
 class UpdateChatRoomFragment :
     Fragment(),

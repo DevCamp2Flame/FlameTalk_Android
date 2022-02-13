@@ -12,7 +12,7 @@ import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 /**
- * @author boris
+ * @author 김현국
  * @created 2022/01/27
  * AppDatabaseImpl에 AppDatabase 의존성 주입
  */

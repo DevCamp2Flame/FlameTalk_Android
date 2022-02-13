@@ -24,6 +24,10 @@ import com.sgs.devcamp2.flametalk_android.databinding.FragmentChatRoomBottomShee
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+/**
+ * @author 김현국
+ * @created 2022/01/26
+ */
 @AndroidEntryPoint
 class ChatRoomBottomSheetFragment : DialogFragment(), View.OnClickListener {
     val TAG: String = "로그"

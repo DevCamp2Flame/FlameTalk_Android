@@ -2,6 +2,7 @@ package com.sgs.devcamp2.flametalk_android.ui.chatroom
 
 import android.util.Log
 import androidx.lifecycle.*
+import com.google.gson.Gson
 import com.sgs.devcamp2.flametalk_android.data.model.chat.Chat
 import com.sgs.devcamp2.flametalk_android.data.model.chat.ChatReq
 import com.sgs.devcamp2.flametalk_android.data.model.chat.ChatRes
@@ -14,16 +15,23 @@ import com.sgs.devcamp2.flametalk_android.domain.entity.chatroom.GetChatRoomEnti
 import com.sgs.devcamp2.flametalk_android.domain.usecase.chatroom.*
 import com.sgs.devcamp2.flametalk_android.domain.usecase.mainactivity.SaveReceivedMessageUseCase
 import com.sgs.devcamp2.flametalk_android.network.dao.UserDAO
+import com.sgs.devcamp2.flametalk_android.services.WebSocketListener
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.WebSocket
 import org.hildan.krossbow.stomp.StompSession
 import org.hildan.krossbow.stomp.conversions.kxserialization.StompSessionWithKxSerialization
 import org.hildan.krossbow.stomp.conversions.kxserialization.convertAndSend
 import org.hildan.krossbow.stomp.conversions.kxserialization.subscribe
 import org.hildan.krossbow.stomp.conversions.kxserialization.withJsonConversions
 import javax.inject.Inject
-
+/**
+ * @author 김현국
+ * @created 2022/01/26
+ */
 @HiltViewModel
 class ChatRoomViewModel @Inject constructor(
     private val saveReceivedMessageUseCase: SaveReceivedMessageUseCase,
@@ -31,20 +39,31 @@ class ChatRoomViewModel @Inject constructor(
     private val deleteChatRoomUseCase: DeleteChatRoomUseCase,
     private val closeChatRoomUseCase: CloseChatRoomUseCase,
     private val getChatListUseCase: GetChatListUseCase,
-    private val userDAO: UserDAO
+    private val userDAO: UserDAO,
+    private val client: OkHttpClient,
+    private val request: Request,
+    private val webSocketListener: WebSocketListener
 ) : ViewModel() {
     val TAG: String = "로그"
     private var _chat = MutableStateFlow<String>("")
     var chat = _chat.asStateFlow()
     lateinit var _jsonStompSessions: StompSessionWithKxSerialization
+
     private var _drawUserState = MutableStateFlow<UiState<GetChatRoomEntity>>(UiState.Loading)
     var drawUserState = _drawUserState.asStateFlow()
+
     private var _deleteUiState = MutableStateFlow<UiState<Boolean>>(UiState.Loading)
     var deleteUiState = _deleteUiState.asStateFlow()
+
+    private var _closeUiState = MutableStateFlow<UiState<Boolean>>(UiState.Loading)
+    var closeUiState = _closeUiState.asStateFlow()
+
     private var _chatList = MutableStateFlow<UiState<List<Chat>>>(UiState.Loading)
     var chatList = _chatList.asStateFlow()
+
     private var _lastReadMessageId = MutableStateFlow("")
     var lastReadMessageId = _lastReadMessageId.asStateFlow()
+
     private var _uiState = MutableStateFlow<UiState<Long>>(UiState.Loading)
     var uiState = _uiState.asStateFlow()
 
@@ -53,8 +72,11 @@ class ChatRoomViewModel @Inject constructor(
 
     private var _userId = MutableStateFlow("")
     val userId = _userId.asStateFlow()
+
     private var _nickname = MutableStateFlow("")
     val nickname = _nickname.asStateFlow()
+
+    private var webSocket: WebSocket? = null
 
     init {
         viewModelScope.launch {
@@ -66,12 +88,33 @@ class ChatRoomViewModel @Inject constructor(
             }
         }
     }
-
+    /**
+     * 현재 사용자가 채팅방을 보고 있는지 상태 update하는 function입니다.
+     */
+    fun connectWebsocket(chatroomId: String, deviceId: String) {
+        viewModelScope.launch {
+            val gson = Gson()
+            val map = HashMap<String, String>()
+            map["type"] = "ENTER"
+            map["userId"] = userId.value
+            map["roomId"] = chatroomId
+            map["deviceId"] = deviceId
+            webSocket = client.newWebSocket(
+                request,
+                webSocketListener
+            )
+            webSocket?.send(gson.toJson(map))
+        }
+    }
+    /**
+     * 휴대폰 내부 DB에서 채팅 텍스트 리스트를 불러오는 fucntion입니다.
+     */
     fun getChatList(chatroomId: String) {
         viewModelScope.launch {
             getChatListUseCase.invoke(chatroomId).collect { result ->
                 when (result) {
                     is LocalResults.Success -> {
+                        Log.d(TAG, "ChatRoomViewModel - ${result.data.chatList}() called")
                         _chatList.value = UiState.Success(result.data.chatList)
                         _userChatRoom.value = UiState.Success(result.data.room)
                     }
@@ -79,7 +122,9 @@ class ChatRoomViewModel @Inject constructor(
             }
         }
     }
-
+    /**
+     * 채팅방 서랍을 열었을 때 유저들의 정보를 가져오는 function입니다.
+     */
     fun getChatRoomDetail(userChatroomId: Long) {
         viewModelScope.launch {
             getChatRoomInfoUseCase.invoke(userChatroomId).collect { result ->
@@ -97,11 +142,9 @@ class ChatRoomViewModel @Inject constructor(
     fun updateTextValue(text: String) {
         _chat.value = text
     }
-
-    fun updateLastReadMessage(input: String) {
-        _lastReadMessageId.value = input
-    }
-
+    /**
+     * 유저가 채팅방을 나가는 function 입니다.
+     */
     fun deleteChatRoom(userChatroomId: Long) {
         viewModelScope.launch {
             deleteChatRoomUseCase.invoke(userChatroomId).collect { result ->
@@ -113,7 +156,14 @@ class ChatRoomViewModel @Inject constructor(
             }
         }
     }
-
+    /**
+     * 유저가 채팅을 수신하는 function입니다.
+     *
+     * @param session mainViewModel에서 가져오는 stompSession
+     * @param roomId 현재 보고 있는 채팅방 id
+     * roomId에 해당하는 경로를 구독하며 수신받은 채팅 텍스트를 ChatRes data class 로 변환한다.
+     * 채팅을 수신한 경우 사용자가 채팅을 읽었음을 처리하고 내부 데이터 베이스에 저장한다.
+     */
     fun receivedMessage(session: StompSession, roomId: String) {
         viewModelScope.launch {
             _jsonStompSessions = session.withJsonConversions()
@@ -122,39 +172,71 @@ class ChatRoomViewModel @Inject constructor(
             val collectorJob = launch {
                 subscription.collect { msg ->
                     _lastReadMessageId.value = msg.sender_id // 내가 읽은 메세지 초기화
-                    Log.d(TAG, "msg - $msg() called")
                     saveReceivedMessageUseCase.invoke(msg).collect {
-                        // state 변경  pushstate겠다
-                        Log.d(TAG, "msg - $it() called")
-                        _uiState.value = UiState.Success(it)
+                        if (msg.message_type == "TALK") {
+                            _uiState.value = UiState.Success(it)
+                        }
                     }
                 }
             }
         }
     }
 
-    fun disconnectStomp() {
-        viewModelScope.launch {
-        }
-    }
+/**
+     * 유저가 채팅을 송신하는 function입니다.
+     * @param messageType 사용자가 보내는 채팅 메시지의 type ( TALK, INVITE , ENTER , FILE )
+     * 연결된 websocket session에 메세지를 전송한다.
+     */
 
     fun pushMessage(messageType: String, roomId: String, session: StompSession, contents: String) {
         viewModelScope.launch {
-            // sender id -> user_id 로 변경하고
-            // nickname도 변경
             _jsonStompSessions = session.withJsonConversions()
             // 만약 message type이 INVITE일 경우 한번 더 메세지를 보내자.
-            val chatReq = ChatReq(messageType, roomId, _userId.value, _nickname.value, contents, null)
-            _jsonStompSessions.convertAndSend("/pub/chat/message", chatReq, ChatReq.serializer())
+            if (messageType == "INVITE") {
+                val chatReq1 = ChatReq(messageType, roomId, _userId.value, _nickname.value, contents, null)
+                val chatReq2 = ChatReq("TALK", roomId, _userId.value, _nickname.value, contents, null)
+                _jsonStompSessions.convertAndSend("/pub/chat/message", chatReq1, ChatReq.serializer())
+                delay(500L)
+                _jsonStompSessions.convertAndSend("/pub/chat/message", chatReq2, ChatReq.serializer())
+            } else {
+                val chatReq = ChatReq(messageType, roomId, _userId.value, _nickname.value, contents, null)
+                _jsonStompSessions.convertAndSend("/pub/chat/message", chatReq, ChatReq.serializer())
+            }
         }
     }
+    /**
+     * 유저가 채팅방을 벗어났을 때, 사용자가 마지막으로 읽은 messageId를 초기화하는 function입니다.
+     */
 
     fun closeChatRoom(userChatroomId: Long, lastReadMessageId: String) {
         viewModelScope.launch {
             val closeChatRoomReq = CloseChatRoomReq(userChatroomId, lastReadMessageId)
             closeChatRoomUseCase.invoke(closeChatRoomReq).collect {
-                Log.d(TAG, "WrappedResponse - $it() called")
+                result ->
+                when (result) {
+                    is Results.Success ->
+                        {
+                            _closeUiState.value = UiState.Success(true)
+                        }
+                }
             }
+        }
+    }
+    fun updateState() {
+        _deleteUiState.value = UiState.Loading
+    }
+    fun saveExitStatus(chatroomId: String, deviceId: String) {
+        viewModelScope.launch {
+            val gson = Gson()
+            val map = HashMap<String, String>()
+            map["type"] = "EXIT"
+            map["userId"] = userId.value
+            map["roomId"] = chatroomId
+            map["deviceId"] = deviceId
+
+            webSocket?.send(gson.toJson(map))
+            delay(500L)
+            webSocket?.cancel()
         }
     }
 }

@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -20,13 +21,14 @@ import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.DrawerLayoutChatRoomBinding
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentChatRoomBinding
 import com.sgs.devcamp2.flametalk_android.domain.entity.UiState
-import com.sgs.devcamp2.flametalk_android.ui.MainActivityViewModel
+import com.sgs.devcamp2.flametalk_android.ui.MainViewModel
 import com.sgs.devcamp2.flametalk_android.util.onTextChanged
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 /**
- * 채팅방 리스트에서 한 채팅 클릭 시 이동하게 될 채팅방 내부 fragment
+ * @author 김현국
+ * @created 2022/01/26
  */
 @AndroidEntryPoint
 class ChatRoomFragment : Fragment(), View.OnClickListener {
@@ -36,8 +38,15 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
     lateinit var adapter: ChatRoomAdapter
     lateinit var userlistAdapter: ChatRoomDrawUserListAdapter
     private val model by activityViewModels<ChatRoomViewModel>()
-    private val webSocketModel by activityViewModels<MainActivityViewModel>()
+    private val webSocketModel by activityViewModels<MainViewModel>()
     private val args by navArgs<ChatRoomFragmentArgs>()
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        subscribeRoom()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -71,10 +80,28 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
         drawer_binding.ivDrawExit.setOnClickListener(this)
         drawer_binding.ivDrawSetting.setOnClickListener(this)
         initObserve()
+        model.connectWebsocket(
+            args.chatroomId,
+            Settings.Secure.getString(
+                requireContext().contentResolver,
+                Settings.Secure.ANDROID_ID
+            )
+        )
 
-        model.getChatList(args.chatroomId)
+        getChatList(args.chatroomId)
+    }
+    /**
+     * 채팅 내역 불러오기
+     */
+    fun getChatList(chatroomId: String) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            model.getChatList(chatroomId)
+        }
     }
 
+    /**
+     * 채팅방 입장시, 채팅방 구독
+     */
     fun subscribeRoom() {
         // session이 연결되어 있는 상태라면, 메세지를 받을 준비를 한다.
         lifecycleScope.launchWhenCreated {
@@ -110,9 +137,15 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
             model.drawUserState.collect { state ->
                 when (state) {
                     is UiState.Success -> {
-                        Glide.with(drawer_binding.ivChatRoomDrawUserImage)
-                            .load(state.data.profileImage)
-                            .into(drawer_binding.ivChatRoomDrawUserImage)
+                        if (state.data.profileImage == "") {
+                            Glide.with(drawer_binding.ivChatRoomDrawUserImage)
+                                .load(R.drawable.ic_add_person_blue_24)
+                                .into(drawer_binding.ivChatRoomDrawUserImage)
+                        } else {
+                            Glide.with(drawer_binding.ivChatRoomDrawUserImage)
+                                .load(state.data.profileImage)
+                                .into(drawer_binding.ivChatRoomDrawUserImage)
+                        }
                         drawer_binding.tvChatRoomDrawUser.text = state.data.profileNickname
                         userlistAdapter.submitList(state.data.profiles)
                     }
@@ -214,7 +247,9 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
             }
         }
     }
-
+    /**
+     * 채팅방 나가기 Dialog 출력
+     */
     fun exitDialog() {
         val dialog = AlertDialog.Builder(this.requireContext())
         var dialogListener = DialogInterface.OnClickListener { _, which ->
@@ -245,26 +280,49 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
         dialog.show()
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        subscribeRoom()
-    }
 
+
+    override fun onStop() {
+        super.onStop()
+//        lifecycleScope.launch {
+//            model.userChatRoom.collect {
+//                state ->
+//                when (state) {
+//                    is UiState.Success ->
+//                        {
+//                            try {
+//                                model.closeChatRoom(
+//                                    userChatroomId = state.data.userChatroomId,
+//                                    lastReadMessageId = state.data.lastReadMessageId!!
+//                                )
+//                            } catch (e: Exception) {
+//                                Log.d(TAG, "error - $e() called")
+//                            }
+//                        }
+//                }
+//            }
+//        }
+    }
     override fun onPause() {
         super.onPause()
-        lifecycleScope.launch {
-            model.userChatRoom.collect {
-                state ->
-                when (state) {
-                    is UiState.Success ->
-                        {
-                            model.closeChatRoom(
-                                userChatroomId = state.data.userChatroomId,
-                                lastReadMessageId = state.data.lastReadMessageId!!
-                            )
-                        }
-                }
-            }
-        }
+        Log.d(TAG, "ChatRoomFragment - onPause() called")
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d(TAG, "ChatRoomFragment - onStart() called")
+        model.updateState()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        model.saveExitStatus(
+            args.chatroomId,
+            Settings.Secure.getString(
+                requireContext().contentResolver,
+                Settings.Secure.ANDROID_ID
+            )
+        )
     }
 }

@@ -1,6 +1,7 @@
 package com.sgs.devcamp2.flametalk_android.data.source.remote.api
 
 import com.sgs.devcamp2.flametalk_android.data.common.WrappedResponse
+import com.sgs.devcamp2.flametalk_android.data.model.chat.ChatRes
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.closechatroom.CloseChatRoomReq
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.createchatroom.CreateChatRoomReq
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.createchatroom.CreateChatRoomRes
@@ -8,6 +9,8 @@ import com.sgs.devcamp2.flametalk_android.data.model.chatroom.enterchatroom.Ente
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.getchatroom.GetChatRoomRes
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.getchatroomfiles.GetChatRoomFilesRes
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.getchatroomlist.GetChatRoomListRes
+import com.sgs.devcamp2.flametalk_android.data.model.chatroom.joinchatrom.JoinChatRoomReq
+import com.sgs.devcamp2.flametalk_android.data.model.chatroom.joinchatrom.JoinChatRoomRes
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.updatechatroom.UpdateChatRoomReq
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.updatechatroom.UpdateChatRoomRes
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.updateopenchatroomprofile.UpdateOpenChatRoomProfileReq
@@ -15,7 +18,7 @@ import retrofit2.Response
 import retrofit2.http.*
 
 /**
- * @author boris
+ * @author 김현국
  * @created 2022/02/05
  */
 interface ChatRoomApi {
@@ -36,7 +39,7 @@ interface ChatRoomApi {
     suspend fun getChatRoomList(@Query("isOpen") isOpen: Boolean): Response<WrappedResponse<GetChatRoomListRes>>
 
     // 채팅방 파일 리스트 조회
-    @GET("/api/chatroom/files/{chatroomId}")
+    @GET("/api/chatroom/file/{chatroomId}")
     suspend fun getChatRoomFileList(@Path("chatroomId") chatroomId: String): Response<WrappedResponse<List<GetChatRoomFilesRes>>>
 
     // 채팅방 수정
@@ -54,4 +57,9 @@ interface ChatRoomApi {
     // 채팅방 나가기
     @DELETE("/api/chatroom/{userChatroomId}")
     suspend fun leaveChatRoom(@Path("userChatroomId") userChatroomId: Long): Response<WrappedResponse<Nothing>>
+
+    // 채팅방 대화상대 초대
+    @POST("/api/chatroom/join")
+    suspend fun joinChatRoom(@Body joinChatRoomReq: JoinChatRoomReq): Response<WrappedResponse<JoinChatRoomRes>>
+
 }

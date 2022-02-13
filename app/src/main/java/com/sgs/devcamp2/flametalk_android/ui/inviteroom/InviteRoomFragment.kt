@@ -20,6 +20,10 @@ import com.sgs.devcamp2.flametalk_android.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+/**
+ * @author 김현국
+ * @created 2022/01/12
+ */
 @AndroidEntryPoint
 class InviteRoomFragment :
     Fragment(),

@@ -1,7 +1,7 @@
 package com.sgs.devcamp2.flametalk_android.data.model.chatroom.getchatroom
 
 /**
- * @author boris
+ * @author 김현국
  * @created 2022/02/05
  * 채팅방에 입장하여 오른쪽 drawer를 눌렀을 때의 상세 조회
  */

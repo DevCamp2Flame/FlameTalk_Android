@@ -1,4 +1,4 @@
-package com.sgs.devcamp2.flametalk_android.di
+package com.sgs.devcamp2.flametalk_android.di.module
 
 import android.content.Context
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -10,6 +10,10 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
+/**
+ * @author boris
+ * @created 2022/01/27
+ */
 @InstallIn(SingletonComponent::class)
 @Module
 object GoogleSignInModule {

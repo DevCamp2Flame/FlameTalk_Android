@@ -319,10 +319,9 @@
             android:id="@+id/action_chatRoomTopSheetFragment_to_inviteRoomFragment"
             app:destination="@id/navigation_invite_room" />
         <action
-            android:id="@+id/action_navigation_chat_Room_Top_Sheet_to_inviteOpenChatRoom"
-            app:destination="@id/navigation_invite_open_chat_room"
-            app:enterAnim="@anim/slide_in_up_long"
-            app:exitAnim="@anim/slide_out_up_long" />
+            android:id="@+id/action_navigation_chat_Room_Top_Sheet_to_createOpenChatRoomFragment"
+            app:destination="@id/navigation_create_open_chat_room" />
+
     </dialog>
 
     <dialog
@@ -368,11 +367,7 @@
             android:id="@+id/action_navigation_chatting_viewPager_fragment_to_navigation_my_open_profile_detail"
             app:destination="@id/navigation_my_open_profile_detail" />
     </fragment>
-    <fragment
-        android:id="@+id/navigation_invite_open_chat_room"
-        android:name="com.sgs.devcamp2.flametalk_android.ui.createopenchatroom.CreateOpenChatRoom"
-        android:label="fragment_invite_open_chat_room"
-        tools:layout="@layout/fragment_create_open_chat_room" />
+
     <fragment
         android:id="@+id/navigation_create_open_chat_profile"
         android:name="com.sgs.devcamp2.flametalk_android.ui.createopenchatprofile.CreateOpenChatProfile"
@@ -422,6 +417,11 @@
             android:name="users"
             app:argType="string[]" />
     </fragment>
+    <fragment
+        android:id="@+id/navigation_create_open_chat_room"
+        android:name="com.sgs.devcamp2.flametalk_android.ui.createopenchatroom.CreateOpenChatRoomFragment"
+        android:label="fragment_create_open_chat_room"
+        tools:layout="@layout/fragment_create_open_chat_room" />
 
 
 </navigation>
