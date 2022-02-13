@@ -74,7 +74,7 @@ class FriendAdapter(
         private fun initFriendList(data: Friend) {
             Glide.with(itemView).load(data.preview.imageUrl)
                 .apply(RequestOptions.circleCropTransform())
-                .apply(RequestOptions.placeholderOf(R.drawable.ic_person_white_18))
+                .apply(RequestOptions.placeholderOf(R.drawable.ic_person_white_24))
                 .into(binding.imgFriendPreview)
             binding.tvFriendPreviewNickname.text = data.nickname
 

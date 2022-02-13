@@ -162,9 +162,9 @@
 
         <argument
             android:name="userInfo"
-            android:defaultValue="@null"
-            app:argType="com.sgs.devcamp2.flametalk_android.data.model.Profile"
-            app:nullable="true" />
+            app:argType="com.sgs.devcamp2.flametalk_android.data.model.profile.Profile"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
 
     <!--프로필 생성-->
@@ -281,26 +281,19 @@
 
 
     <fragment
-        android:id="@+id/navigation_oauth"
-        android:name="com.sgs.devcamp2.flametalk_android.ui.oauth.OAuthFragment"
-        android:label="OAuth"
-        tools:layout="@layout/fragment_o_auth">
-        <action
-            android:id="@+id/action_chat_to_post"
-            app:destination="@id/navigation_chat_room_list"
-            app:popUpTo="@id/navigation_chat_room_list" />
-    </fragment>
-    <fragment
         android:id="@+id/navigation_chat_room"
         android:name="com.sgs.devcamp2.flametalk_android.ui.chatroom.ChatRoomFragment"
         android:label="fragment_chat_room"
         tools:layout="@layout/fragment_chat_room">
         <action
-            android:id="@+id/action_chatRoomFragment_to_navigation_oauth"
-            app:destination="@id/navigation_oauth" />
-        <action
             android:id="@+id/action_navigation_chat_room_to_navigation_chat_Room_Bottom_Sheet"
             app:destination="@id/navigation_chat_Room_Bottom_Sheet" />
+        <argument
+            android:name="chatroomId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_navigation_chat_room_to_navigation_update_chat_room"
+            app:destination="@id/navigation_update_chat_room" />
     </fragment>
     <fragment
         android:id="@+id/navigation_invite_room"

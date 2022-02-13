@@ -12,6 +12,7 @@ import com.sgs.devcamp2.flametalk_android.domain.usecase.myopenchatprofile.GetOp
 import com.sgs.devcamp2.flametalk_android.domain.usecase.myopenprofiledetail.DeleteOpenProfileUseCase
 import com.sgs.devcamp2.flametalk_android.domain.usecase.myopenprofiledetail.GetOpenProfileUseCase
 import com.sgs.devcamp2.flametalk_android.domain.usecase.myopenprofiledetail.UpdateOpenProfileUseCase
+import com.sgs.devcamp2.flametalk_android.ui.friend.FriendViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

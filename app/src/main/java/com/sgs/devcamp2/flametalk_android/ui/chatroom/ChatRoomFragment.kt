@@ -236,7 +236,7 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
                             is UiState.Success ->
                                 {
                                     val action =
-                                        ChatRoomFragmentDirections.actionNavigationChatRoomToUpdateChatRoomFragment(
+                                        ChatRoomFragmentDirections.actionNavigationChatRoomToNavigationUpdateChatRoom(
                                             chatroomId = state.data.id
                                         )
                                     findNavController().navigate(action)

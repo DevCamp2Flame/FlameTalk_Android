@@ -14,7 +14,6 @@ import com.sgs.devcamp2.flametalk_android.domain.entity.UiState
 import com.sgs.devcamp2.flametalk_android.domain.entity.chatroom.GetChatRoomEntity
 import com.sgs.devcamp2.flametalk_android.domain.usecase.chatroom.*
 import com.sgs.devcamp2.flametalk_android.domain.usecase.mainactivity.SaveReceivedMessageUseCase
-import com.sgs.devcamp2.flametalk_android.network.dao.UserDAO
 import com.sgs.devcamp2.flametalk_android.services.WebSocketListener
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
@@ -39,7 +38,6 @@ class ChatRoomViewModel @Inject constructor(
     private val deleteChatRoomUseCase: DeleteChatRoomUseCase,
     private val closeChatRoomUseCase: CloseChatRoomUseCase,
     private val getChatListUseCase: GetChatListUseCase,
-    private val userDAO: UserDAO,
     private val client: OkHttpClient,
     private val request: Request,
     private val webSocketListener: WebSocketListener
@@ -79,14 +77,14 @@ class ChatRoomViewModel @Inject constructor(
     private var webSocket: WebSocket? = null
 
     init {
-        viewModelScope.launch {
-            userDAO.user.collect {
-                if (it != null) {
-                    _userId.value = it.userId
-                    _nickname.value = it.nickname
-                }
-            }
-        }
+//        viewModelScope.launch {
+//            userDAO.user.collect {
+//                if (it != null) {
+//                    _userId.value = it.userId
+//                    _nickname.value = it.nickname
+//                }
+//            }
+//        }
     }
     /**
      * 현재 사용자가 채팅방을 보고 있는지 상태 update하는 function입니다.

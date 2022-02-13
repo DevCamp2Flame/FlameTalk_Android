@@ -2,6 +2,7 @@ package com.sgs.devcamp2.flametalk_android.data.source.local.database
 
 import com.sgs.devcamp2.flametalk_android.data.source.local.dao.ChatDao
 import com.sgs.devcamp2.flametalk_android.data.source.local.dao.ChatRoomDao
+import com.sgs.devcamp2.flametalk_android.data.source.local.dao.FriendDAO
 
 /**
  * @author 김현국
@@ -12,4 +13,5 @@ import com.sgs.devcamp2.flametalk_android.data.source.local.dao.ChatRoomDao
 interface AppDatabase {
     fun chatRoomDao(): ChatRoomDao
     fun chatDao(): ChatDao
+    fun friendDao(): FriendDAO
 }

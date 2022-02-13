@@ -10,7 +10,6 @@ import com.sgs.devcamp2.flametalk_android.domain.entity.Results
 import com.sgs.devcamp2.flametalk_android.domain.entity.UiState
 import com.sgs.devcamp2.flametalk_android.domain.entity.chatroom.ChatRoomEntity
 import com.sgs.devcamp2.flametalk_android.domain.usecase.inviteroom.CreateChatRoomUseCase
-import com.sgs.devcamp2.flametalk_android.network.dao.UserDAO
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,7 +24,6 @@ import javax.inject.Inject
 @HiltViewModel
 class CreateChatRoomViewModel @Inject constructor(
     val createChatRoomUseCase: CreateChatRoomUseCase,
-    val userDAO: UserDAO
 ) : ViewModel() {
     var firstMessage = ""
     lateinit var session: StompSession
@@ -40,14 +38,14 @@ class CreateChatRoomViewModel @Inject constructor(
     val nickname = _nickname.asStateFlow()
 
     init {
-        viewModelScope.launch {
-            userDAO.user.collect {
-                if (it != null) {
-                    _userId.value = it.userId
-                    _nickname.value = it.nickname
-                }
-            }
-        }
+//        viewModelScope.launch {
+//            userDAO.user.collect {
+//                if (it != null) {
+//                    _userId.value = it.userId
+//                    _nickname.value = it.nickname
+//                }
+//            }
+//        }
     }
     fun updateFirstMessage(input: String) {
         firstMessage = input
