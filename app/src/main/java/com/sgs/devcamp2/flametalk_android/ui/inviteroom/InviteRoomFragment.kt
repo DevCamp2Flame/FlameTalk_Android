@@ -2,7 +2,6 @@ package com.sgs.devcamp2.flametalk_android.ui.inviteroom
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -46,7 +45,7 @@ class InviteRoomFragment :
         binding = FragmentInviteRoomBinding.inflate(inflater, container, false)
 
         initUI(this.requireContext())
-        initObserve2()
+        initObserve()
 
         viewLifecycleOwner.lifecycleScope.launch {
             model.friendList.collect {
@@ -72,28 +71,8 @@ class InviteRoomFragment :
 
         return binding.root
     }
-    fun initObserve() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch {
-                    model.uiEvent.collect {
-                        state ->
-                        when (state) {
-                            is UiState.Success ->
-                                {
-                                    // state가 계속 유지되는듯. 따라서 뒤로가기를 눌러도 안돌아감.
-                                    // 이슈
-                                    Log.d(TAG, "UiState - $state() called")
-                                    findNavController().navigate(R.id.navigation_chat_room)
-                                }
-                        }
-                    }
-                }
-            }
-        }
-    }
 
-    fun initObserve2() {
+    fun initObserve() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
@@ -102,12 +81,14 @@ class InviteRoomFragment :
                         when (state) {
                             is UiState.Success ->
                                 {
-                                    findNavController().navigate(R.id.navigation_chat_room)
+                                    findNavController().navigate(R.id.action_inviteRoomFragment_to_navigation_chat_room_Fragment)
                                 }
                             is UiState.Error ->
                                 {
-                                    //Toast.makeText(,state.error,Toast.LENGTH_SHORT).show
                                     requireActivity().showToast(state.error)
+                                }
+                            is UiState.Loading ->
+                                {
                                 }
                         }
                     }
@@ -130,6 +111,7 @@ class InviteRoomFragment :
         binding.rvInviteRoomSelected.adapter = inviteRoomSelectedAdapter
 
         binding.tvInviteRoomSubmit.setOnClickListener(this)
+        binding.layoutInviteRoomBack.setOnClickListener(this)
     }
 
     override fun onItemClicked(tempFriend: TempFriend, position: Int, adapter: InviteRoomAdapter) {
@@ -144,18 +126,22 @@ class InviteRoomFragment :
     override fun onClick(view: View?) {
         when (view) {
             binding.tvInviteRoomSubmit -> {
-                model.createRooms()
+                var users: MutableList<String> = emptyList<String>().toMutableList()
+                for (i in 0 until model.selectedFriendList.value.size) {
+                    users.add(model.selectedFriendList.value[i].nickname)
+                }
+                val action = InviteRoomFragmentDirections.actionNavigationInviteRoomToCreateChatRoomFragment2(users.toTypedArray())
+                findNavController().navigate(action)
             }
+            binding.layoutInviteRoomBack ->
+                {
+                    findNavController().popBackStack()
+                }
         }
     }
 
     override fun onStart() {
         super.onStart()
-        Log.d(TAG,"InviteRoomFragment - onStart() called")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Log.d(TAG,"InviteRoomFragment - onStop() called")
+        model.replaceUiState()
     }
 }

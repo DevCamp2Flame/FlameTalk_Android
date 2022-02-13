@@ -56,7 +56,6 @@ class HiddenViewModel @Inject constructor(
 
     init {
         getHiddenFriendList()
-        _hiddenFriend.value = dummyBirthdayData
     }
 
     // 차단된 친구 리스트 요청

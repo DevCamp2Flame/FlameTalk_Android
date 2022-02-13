@@ -1,118 +1,160 @@
 package com.sgs.devcamp2.flametalk_android.ui.chatroom
 
-import android.content.Context
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.sgs.devcamp2.flametalk_android.data.model.Chat
+import android.util.Log
+import androidx.lifecycle.*
+import com.sgs.devcamp2.flametalk_android.data.model.chat.Chat
+import com.sgs.devcamp2.flametalk_android.data.model.chat.ChatReq
+import com.sgs.devcamp2.flametalk_android.data.model.chat.ChatRes
+import com.sgs.devcamp2.flametalk_android.data.model.chatroom.ChatRoom
+import com.sgs.devcamp2.flametalk_android.data.model.chatroom.closechatroom.CloseChatRoomReq
+import com.sgs.devcamp2.flametalk_android.domain.entity.LocalResults
+import com.sgs.devcamp2.flametalk_android.domain.entity.Results
+import com.sgs.devcamp2.flametalk_android.domain.entity.UiState
+import com.sgs.devcamp2.flametalk_android.domain.entity.chatroom.GetChatRoomEntity
+import com.sgs.devcamp2.flametalk_android.domain.usecase.chatroom.*
+import com.sgs.devcamp2.flametalk_android.domain.usecase.mainactivity.SaveReceivedMessageUseCase
+import com.sgs.devcamp2.flametalk_android.network.dao.UserDAO
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
-import okhttp3.OkHttpClient
-import org.hildan.krossbow.stomp.StompClient
 import org.hildan.krossbow.stomp.StompSession
-import org.hildan.krossbow.websocket.okhttp.OkHttpWebSocketClient
-import java.time.Duration
-import java.util.*
+import org.hildan.krossbow.stomp.conversions.kxserialization.StompSessionWithKxSerialization
+import org.hildan.krossbow.stomp.conversions.kxserialization.convertAndSend
+import org.hildan.krossbow.stomp.conversions.kxserialization.subscribe
+import org.hildan.krossbow.stomp.conversions.kxserialization.withJsonConversions
 import javax.inject.Inject
 
 @HiltViewModel
 class ChatRoomViewModel @Inject constructor(
-    @ApplicationContext private val context: Context
+    private val saveReceivedMessageUseCase: SaveReceivedMessageUseCase,
+    private val getChatRoomInfoUseCase: GetChatRoomInfoUseCase,
+    private val deleteChatRoomUseCase: DeleteChatRoomUseCase,
+    private val closeChatRoomUseCase: CloseChatRoomUseCase,
+    private val getChatListUseCase: GetChatListUseCase,
+    private val userDAO: UserDAO
 ) : ViewModel() {
     val TAG: String = "로그"
-
-    private var _chatRoom = MutableStateFlow<List<Chat>>(emptyList())
-
-    private var list = mutableListOf<Chat>()
-
     private var _chat = MutableStateFlow<String>("")
+    var chat = _chat.asStateFlow()
+    lateinit var _jsonStompSessions: StompSessionWithKxSerialization
+    private var _drawUserState = MutableStateFlow<UiState<GetChatRoomEntity>>(UiState.Loading)
+    var drawUserState = _drawUserState.asStateFlow()
+    private var _deleteUiState = MutableStateFlow<UiState<Boolean>>(UiState.Loading)
+    var deleteUiState = _deleteUiState.asStateFlow()
+    private var _chatList = MutableStateFlow<UiState<List<Chat>>>(UiState.Loading)
+    var chatList = _chatList.asStateFlow()
+    private var _lastReadMessageId = MutableStateFlow("")
+    var lastReadMessageId = _lastReadMessageId.asStateFlow()
+    private var _uiState = MutableStateFlow<UiState<Long>>(UiState.Loading)
+    var uiState = _uiState.asStateFlow()
 
-    val okHttpClient = OkHttpClient.Builder()
-        .callTimeout(Duration.ofMinutes(1))
-        .pingInterval(Duration.ofSeconds(10))
-        .build()
-//    val wsClient = OkHttpWebSocketClient(okHttpClient)
-//    val stompClient = StompClient(wsClient)
-//    var url = "ws://10.99.30.180:8080/stomp/chat"
+    private var _userChatRoom = MutableStateFlow<UiState<ChatRoom>>(UiState.Loading)
+    var userChatRoom = _userChatRoom.asStateFlow()
 
-    /**
-     * _chatUserList는 채팅방에 속해 있는 user의 정보를 의미한다. image url, 이름 등이 포함 될 수 있다.
-     * Object 대신 String 으로 테스트한다.
-     */
-    private var _chatUserList = MutableLiveData<MutableList<String>>()
-    private var userlist = mutableListOf<String>()
-
-    val chatRoom = _chatRoom.asStateFlow()
-
-    val userRoom: LiveData<MutableList<String>>
-        get() = _chatUserList
-
-    val chat: StateFlow<String>
-        get() = _chat
+    private var _userId = MutableStateFlow("")
+    val userId = _userId.asStateFlow()
+    private var _nickname = MutableStateFlow("")
+    val nickname = _nickname.asStateFlow()
 
     init {
         viewModelScope.launch {
-            initChattingText().collect {
-                list.add(it)
-                _chatRoom.value = list
-            }
-            initChattingUser().collect {
-                userlist.add(it)
-                _chatUserList.value = userlist
+            userDAO.user.collect {
+                if (it != null) {
+                    _userId.value = it.userId
+                    _nickname.value = it.nickname
+                }
             }
         }
-
-//        viewModelScope.launch {
-//            connection().collect {
-//
-//                // var Req: ChatMessageDto = ChatMessageDto("a9024424-e88f-4e6b-b5d6-bd3db709ba87", "김현국", "안녕하세요 ")
-//                //val jsonStompSession = it.withJsonConversions()
-//                // jsonStompSession.convertAndSend("/pub/chat/enter", Json.encodeToString(Req))
-//            }
-//        }
     }
 
-//    fun connection(): Flow<StompSession> = flow {
-//        emit(stompClient.connect(url))
-//    }
-
-    fun initChattingText(): Flow<Chat> = flow {
-
-        val randomNumber = Random()
-        val textList = arrayListOf<String>(
-            "orem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.", "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.",
-            "Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. "
-        )
-        for (i in 0 until 4) {
-            val j = randomNumber.nextInt(3)
-            val k = randomNumber.nextInt(2)
-            val chatText = Chat(i, "1", "$k", "${textList[j]}")
-            emit(chatText)
+    fun getChatList(chatroomId: String) {
+        viewModelScope.launch {
+            getChatListUseCase.invoke(chatroomId).collect { result ->
+                when (result) {
+                    is LocalResults.Success -> {
+                        _chatList.value = UiState.Success(result.data.chatList)
+                        _userChatRoom.value = UiState.Success(result.data.room)
+                    }
+                }
+            }
         }
     }
 
-    /**
-     * 채팅방 유저 생성
-     */
-
-    fun initChattingUser(): Flow<String> = flow {
-        for (i in 0 until 20) {
-            emit("김현국 $i")
+    fun getChatRoomDetail(userChatroomId: Long) {
+        viewModelScope.launch {
+            getChatRoomInfoUseCase.invoke(userChatroomId).collect { result ->
+                when (result) {
+                    is Results.Success -> {
+                        _drawUserState.value = UiState.Success(result.data)
+                    }
+                    is Results.Error -> {
+                    }
+                }
+            }
         }
     }
 
-    fun addChatting(chat: Chat) {
-        var newList = _chatRoom.value.toMutableList()
-        newList.add(chat)
-        _chatRoom.value = newList
-    }
     fun updateTextValue(text: String) {
         _chat.value = text
     }
 
-    fun sendMessage() {
+    fun updateLastReadMessage(input: String) {
+        _lastReadMessageId.value = input
+    }
+
+    fun deleteChatRoom(userChatroomId: Long) {
+        viewModelScope.launch {
+            deleteChatRoomUseCase.invoke(userChatroomId).collect { result ->
+                when (result) {
+                    is Results.Success -> {
+                        _deleteUiState.value = UiState.Success(true)
+                    }
+                }
+            }
+        }
+    }
+
+    fun receivedMessage(session: StompSession, roomId: String) {
+        viewModelScope.launch {
+            _jsonStompSessions = session.withJsonConversions()
+            val subscription: Flow<ChatRes> =
+                _jsonStompSessions.subscribe("/sub/chat/room/$roomId", ChatRes.serializer())
+            val collectorJob = launch {
+                subscription.collect { msg ->
+                    _lastReadMessageId.value = msg.sender_id // 내가 읽은 메세지 초기화
+                    Log.d(TAG, "msg - $msg() called")
+                    saveReceivedMessageUseCase.invoke(msg).collect {
+                        // state 변경  pushstate겠다
+                        Log.d(TAG, "msg - $it() called")
+                        _uiState.value = UiState.Success(it)
+                    }
+                }
+            }
+        }
+    }
+
+    fun disconnectStomp() {
+        viewModelScope.launch {
+        }
+    }
+
+    fun pushMessage(messageType: String, roomId: String, session: StompSession, contents: String) {
+        viewModelScope.launch {
+            // sender id -> user_id 로 변경하고
+            // nickname도 변경
+            _jsonStompSessions = session.withJsonConversions()
+            // 만약 message type이 INVITE일 경우 한번 더 메세지를 보내자.
+            val chatReq = ChatReq(messageType, roomId, _userId.value, _nickname.value, contents, null)
+            _jsonStompSessions.convertAndSend("/pub/chat/message", chatReq, ChatReq.serializer())
+        }
+    }
+
+    fun closeChatRoom(userChatroomId: Long, lastReadMessageId: String) {
+        viewModelScope.launch {
+            val closeChatRoomReq = CloseChatRoomReq(userChatroomId, lastReadMessageId)
+            closeChatRoomUseCase.invoke(closeChatRoomReq).collect {
+                Log.d(TAG, "WrappedResponse - $it() called")
+            }
+        }
     }
 }

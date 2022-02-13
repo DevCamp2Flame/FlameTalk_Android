@@ -62,7 +62,8 @@ class FriendAdapter(
                 val friendToFriendProfileDirections: NavDirections =
                     FriendFragmentDirections.actionFriendToProfile(
                         FRIEND_PROFILE,
-                        data.preview.profileId
+                        data.preview.profileId,
+                        data.friendId
                     )
                 it.findNavController().navigate(friendToFriendProfileDirections)
             }
@@ -73,11 +74,11 @@ class FriendAdapter(
         private fun initFriendList(data: Friend) {
             Glide.with(itemView).load(data.preview.imageUrl)
                 .apply(RequestOptions.circleCropTransform())
-                .apply(RequestOptions.placeholderOf(R.drawable.ic_person_white_24))
+                .apply(RequestOptions.placeholderOf(R.drawable.ic_person_white_18))
                 .into(binding.imgFriendPreview)
-            binding.tvFriendPreviewNickname.text = "친구 이름"
+            binding.tvFriendPreviewNickname.text = data.nickname
 
-            if (data.preview.description.isNotEmpty()) {
+            if (data.preview.description != null && data.preview.description.isNotEmpty()) {
                 binding.tvFriendPreviewDesc.toVisible()
                 binding.tvFriendPreviewDesc.text = data.preview.description
             } else {

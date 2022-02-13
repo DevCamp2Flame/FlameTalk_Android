@@ -23,5 +23,5 @@ data class FriendListResponse(
     @SerializedName("message")
     val message: String,
     @SerializedName("data")
-    val data: List<Friend>?
+    val data: List<Friend>
 )

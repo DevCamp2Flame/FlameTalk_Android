@@ -1,9 +1,9 @@
 package com.sgs.devcamp2.flametalk_android.di.module
 
-import com.sgs.devcamp2.flametalk_android.data.source.local.UserPreferences
 import com.sgs.devcamp2.flametalk_android.data.source.remote.api.ChatRoomsApi
 import com.sgs.devcamp2.flametalk_android.data.source.remote.api.InviteRoomApi
 import com.sgs.devcamp2.flametalk_android.network.NetworkInterceptor
+import com.sgs.devcamp2.flametalk_android.network.dao.UserDAO
 import com.sgs.devcamp2.flametalk_android.network.service.*
 import dagger.Module
 import dagger.Provides
@@ -56,7 +56,7 @@ class NetworkModule {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(client)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().setLenient().create()))
             .build()
     }
 
@@ -84,17 +84,17 @@ class NetworkModule {
         return retrofit.create(FriendService::class.java)
     }
 
-    fun provideChatRoomsService(retrofit: Retrofit): ChatRoomsApi {
-        return retrofit.create(ChatRoomsApi::class.java)
-    }
-
     @Provides
     @Singleton
-    fun provideInviteRoomApi(retrofit: Retrofit): InviteRoomApi {
-        return retrofit.create(InviteRoomApi::class.java)
+    fun provideChatRoomsService(retrofit: Retrofit): ChatRoomApi {
+        return retrofit.create(ChatRoomApi::class.java)
     }
-
+    @Provides
+    @Singleton
+    fun provideOpenProfileApi(retrofit: Retrofit): OpenProfileApi {
+        return retrofit.create(OpenProfileApi::class.java)
+    }
     companion object {
-        const val BASE_URL = "http://10.99.13.235:8080" // 테스트 전 PC IP 확인
+        const val BASE_URL = "http://10.99.30.180:8080" // 테스트 전 PC IP 확인
     }
 }

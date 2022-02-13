@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -88,6 +89,34 @@ class ProfileFragment : Fragment() {
                 ProfileFragmentDirections.actionProfileToEdit(viewModel.userProfile.value)
             )
         }
+
+        // 프로필 메뉴: 숨김친구, 차단친구
+        binding.imgProfileMenu.setOnClickListener {
+            var popupMenu = PopupMenu(context, binding.imgProfileMenu)
+            popupMenu.inflate(R.menu.profile_menu)
+            popupMenu.setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.menu_hide -> {
+                        // TODO: 숨김 친구 요청
+                        viewModel.changeFriendStatue(args.friendId, TO_HIDE)
+                    }
+                    R.id.menu_block -> {
+                        // TODO: 차단 친구 요청
+                        viewModel.changeFriendStatue(args.friendId, TO_BLOCK)
+                    }
+                    else -> {
+                        // 실행되지 않음
+                        Snackbar.make(
+                            binding.imgProfileMenu,
+                            "else...",
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+                return@setOnMenuItemClickListener false
+            }
+            popupMenu.show()
+        }
     }
 
     // 메인 유저, 친구 여부에 따라 UI가 다름
@@ -141,5 +170,8 @@ class ProfileFragment : Fragment() {
         const val USER_MULTI_PROFILE = 3
         const val BLOCKED_PROFILE = 4
         const val HIDDEN_PROFILE = 5
+
+        const val TO_BLOCK = 40
+        const val TO_HIDE = 50
     }
 }

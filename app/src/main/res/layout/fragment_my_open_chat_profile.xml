@@ -5,11 +5,76 @@
     android:id="@+id/frameLayout4"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F6F3F3"
     tools:context=".ui.openchatroom.myopenprofile.MyOpenChatProfileFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_my_open_chat_profile"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_my_open_chat_profile_top_menu"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/tv_my_open_chat_profile_count_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="나의 오픈 프로필"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/tv_my_open_chat_profile_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="4"
+            android:layout_marginLeft="5dp"
+            app:layout_constraintStart_toEndOf="@id/tv_my_open_chat_profile_count_title"
+            app:layout_constraintBottom_toBottomOf="@+id/layout_create_open_chat_profile"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_create_open_chat_profile"
+            android:layout_width="70dp"
+            android:layout_height="20dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:background="@drawable/bg_create_open_chat_round">
+            <TextView
+                android:id="@+id/tv_create_open_chat_profile"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text=" + 만들기"
+                android:textStyle="bold"
+                android:textSize="14dp"
+                android:textAlignment="center"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+    <com.sgs.devcamp2.flametalk_android.ui.chattingviewpager.NestedScrollableHost
+        android:id="@+id/host_my_open_chat_profile_nested_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@id/layout_my_open_chat_profile_top_menu"
+        app:layout_constraintBottom_toBottomOf="parent">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_my_open_chat_profile"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            tools:listitem="@layout/item_my_open_chat_profile"
+           />
+
+    </com.sgs.devcamp2.flametalk_android.ui.chattingviewpager.NestedScrollableHost>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,8 +1,8 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     ext{
-
     }
+
 
     repositories {
         google()
@@ -17,7 +17,9 @@ buildscript {
         classpath 'com.google.dagger:hilt-android-gradle-plugin:2.38.1'
         def nav_version = "2.3.5"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"
+        classpath "org.jetbrains.kotlin:kotlin-serialization:1.6.10"
     }
+
 }
 
 task clean(type: Delete) {

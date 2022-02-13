@@ -35,7 +35,7 @@ data class Profile(
     @SerializedName("bgImageUrl")
     val bgImageUrl: String?,
     @SerializedName("sticker")
-    val sticker: List<Sticker>?,
+    val sticker: List<Sticker> = emptyList(),
     @SerializedName("description")
     val description: String?,
     @SerializedName("isDefault")

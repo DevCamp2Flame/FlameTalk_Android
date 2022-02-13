@@ -22,5 +22,5 @@ data class FriendPreview(
     @SerializedName("imageUrl")
     val imageUrl: String?,
     @SerializedName("description")
-    val description: String
+    val description: String?
 )

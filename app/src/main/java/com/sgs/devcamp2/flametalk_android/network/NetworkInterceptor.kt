@@ -1,5 +1,6 @@
 package com.sgs.devcamp2.flametalk_android.network
 
+
 import com.google.gson.Gson
 import com.sgs.devcamp2.flametalk_android.FlameTalkApp
 import com.sgs.devcamp2.flametalk_android.data.source.local.UserPreferences
@@ -9,6 +10,7 @@ import com.sgs.devcamp2.flametalk_android.util.addHeader
 import okhttp3.Interceptor
 import okhttp3.RequestBody
 import okhttp3.Response
+import okhttp3.internal.http.RealResponseBody
 import okio.Buffer
 import okio.IOException
 import org.json.JSONObject
@@ -27,6 +29,8 @@ class NetworkInterceptor(
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
 
+
+
         val request = chain.request()
             .addHeader("Content-Type", "application/json")
             .addHeader(
@@ -34,18 +38,20 @@ class NetworkInterceptor(
                 tokenSupplier().also { Timber.d("ACCESS-TOKEN: $it") }.toString()
             )
 
+
         Timber.d("url -> ${request.url}")
         Timber.d("headers -> ${request.headers}")
         Timber.d("body -> ${request.body?.toBodyInfo()}")
 
         var response = chain.proceed(request)
 
+
         if (!response.isSuccessful) {
             Timber.d("Code ${response.code}")
         }
 
         Timber.d(response.toString())
-        Timber.d(JSONObject(response.peekBody(Long.MAX_VALUE).string()).toString(4))
+        //Timber.d(JSONObject(response.peekBody(Long.MAX_VALUE).string()).toString(4))
 
         try {
             // 성공이 아니고 응답 body 비어있는 경우
@@ -58,14 +64,15 @@ class NetworkInterceptor(
                 when (responseBody.status) {
                     // access-token 만료, refresh-token 유효 => token 모두 갱신
                     302 -> {
-                        // TODO: request를 보내는 retrofit 객체를 새로 생성해야 함
                         tokenSupplier()?.let {
                             val request = chain.request()
                                 .addHeader("ACCESS-TOKEN", userPreferences.getAccessToken().toString())
                                 .addHeader("REFRESH-TOKEN", userPreferences.getRefreshToken().toString())
                             response = chain.proceed(request.newBuilder().build())
 
-                            // TODO: response를 받으면 pickBody를 codeGen 방식으로 다시 해야 함
+                            /** TODO: response를 받으면 request를 보내는 retrofit 객체를 새로 생성하여
+                             * TODO: pickBody를 codeGen 방식으로 다시 해야 함
+                             */
                             Timber.d("RenewToken Response: $response")
                         }
                     }
