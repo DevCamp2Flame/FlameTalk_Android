@@ -4,7 +4,8 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sgs.devcamp2.flametalk_android.data.dummy.getDummyFriend
-import com.sgs.devcamp2.flametalk_android.data.model.friend.Friend
+import com.sgs.devcamp2.flametalk_android.data.dummy.getDummyFriendModel
+import com.sgs.devcamp2.flametalk_android.data.model.friend.FriendModel
 import com.sgs.devcamp2.flametalk_android.data.source.local.UserPreferences
 import com.sgs.devcamp2.flametalk_android.network.repository.FriendRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,20 +21,18 @@ class SearchViewModel @Inject constructor(
     private val userPreferences: UserPreferences,
     private val friendRepository: Lazy<FriendRepository>
 ) : ViewModel() {
-    // 네트워크 통신 데이터 전 더미데이터
-    private var dummyFriendData: List<Friend> = getDummyFriend()
 
     // 유저 id
     private val _userId = MutableStateFlow("")
     val userId = _userId.asStateFlow()
 
     // 전체 친구 리스트
-    private val _allFriends = MutableStateFlow<List<Friend>?>(emptyList())
-    val allFriends: MutableStateFlow<List<Friend>?> = _allFriends
+    private val _allFriends = MutableStateFlow<List<FriendModel>?>(emptyList())
+    val allFriends: MutableStateFlow<List<FriendModel>?> = _allFriends
 
     // 검색된 친구 리스트
-    private val _searchedFriend = MutableStateFlow<List<Friend>?>(emptyList())
-    val searchedFriend: MutableStateFlow<List<Friend>?> = _searchedFriend
+    private val _searchedFriend = MutableStateFlow<List<FriendModel>?>(emptyList())
+    val searchedFriend: MutableStateFlow<List<FriendModel>?> = _searchedFriend
 
     // 유저에게 피드백 해야하는 에러 메세지
     private val _message = MutableStateFlow("")
@@ -55,12 +54,12 @@ class SearchViewModel @Inject constructor(
             // 뷰모델 생성 시 친구 전체 목록 가져옴
             // _allFriends.value = friendRepository.get().getAllFriends(_userId.value)
         }
-        // _allFriends.value = dummyFriendData
+        _allFriends.value = getDummyFriendModel()
     }
 
     // 검색어 입력 후 이벤트 날릴 때 호출
     fun searchFriend(input: String) {
-        val result: ArrayList<Friend> = arrayListOf()
+        val result: ArrayList<FriendModel> = arrayListOf()
 
         if (_allFriends.value.isNullOrEmpty()) {
             _message.value = "친구 데이터가 없습니다."
