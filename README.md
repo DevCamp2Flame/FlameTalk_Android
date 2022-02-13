@@ -2,8 +2,10 @@
 <div align="center" style="display:flex;">
 	<img src="https://user-images.githubusercontent.com/43838030/153394342-37221ea4-b3cf-4dc4-81b6-4d0b9ed9e46b.png" width="200">
 </div>
+
+
 <div align="center">
- 
+
 ### SGS DevCamp2 flame팀의 메신저 clone project입니다🔥
 앱 서비스의 기본적인 회원 인증, 연락처 동기화를 통한 친구 추가, 채팅 프로필 커스텀, 검색 기능과 채팅 기능을 제공합니다.
 <br/>채팅은 STOMP WebSocket 기반의 실시간 통신으로 이루어지며, FCM을 통해 메세지에 대한 푸시 알림 기능이 있습니다.
@@ -12,103 +14,60 @@
 <br/>
 
 ## 1. Team member
-| [<img src="https://avatars.githubusercontent.com/paksuua" width="100">](https://github.com/paksuua)| [<img src="https://avatars.githubusercontent.com/014967" width="100">](https://github.com/014967) |
+| Member | Role |
 | :-----------------------------------: | :---------------------------------------: | 
-| [박소연](https://github.com/paksuua) | [김현국](https://github.com/014967) |
+| [<img src="https://avatars.githubusercontent.com/paksuua" width="100">](https://github.com/paksuua) </br> <h4>[박소연](https://github.com/paksuua)</h4> |<div align="left"> **- 로그인 회원가입 및 유저 인증 기능 개발**</br> - 연락처 동기화하여 친구 추가 및 친구 상태 관리 (숨김, 차단친구) </br> - 유저 프로필 관리 </br> - 프로필, 배경화면 이미지 히스토리 피드 구현 </br> - 파일 서버 통신 </br> - [ 개발중 ] 친구 리스트 검색 기능 (Room을 이용한 내부 DB 기반 검색) </br> - [ 개발중 ] 프로필 스티커 기능 </div>|
+|[<img src="https://avatars.githubusercontent.com/014967" width="100">](https://github.com/014967) </br> <h4> [김현국](https://github.com/014967) </h4> | <div align="left">  - 구글 Auth 회원가입  </br> - Stomp websocket을 통한 채팅 </br> - Room Database를 통한 채팅내역, 채팅방 저장 </br> - 오픈 프로필 생성 및 관리 </br> - [ 개발중 ] Fcm Push Server 구현 </br> </br> </div> |
 
-## 4. Project Info
 
-### 0) Version Info
+## 2. Version Info
 
-| IDE | Version |
-| :-----------------------------------: | :---------------------------------------: | 
-| Android Studio | 11.0.11 |
+| Tools | Name | Version |
+| :-----: | :-----:|:----: | 
+| IDE | Android Studio | 11.0.11 |
+| Language | Kotlin | 1.6.10 |
 
-| Language | Version |
-| :-----------------------------------: | :---------------------------------------: | 
-| Kotlin | 1.6.10 |
 
-| SDK | API Level |
-| :-----------------------------------: | :---------------------------------------: | 
+||API Level ||
+|---|---|---|
 | TargetSDK | 31 (R) |
 | MinimumSDK | 26 (Oreo)  |
 | compileSDK | 31 (R)|
 
+</br>
 
-<br/><br/><br/>
-
-### 📚 1) Library
+## 3. Library
+### Android Jetpack 
 |                  Library             |          Description   |
 | ----------------------------------- | ------------------------------------------- |
-| Navigation          |  Fragment간 화면 전환 관리. 뷰 스택 관리    |
-| Timber          |  Logging   |
-| KTX          |  Android Life Cycle 관리   |
-| Retrofit2  | Http Rest 통신 라이브러리  |
-| Hilt, Dagger | 파일 의존성 주입 관리 |
-| Glide | 이미지 로드 및 캐싱 라이브러리 |
-| OkHttp ||
-| DataStore ||
-| Firebase ||
-| Coroutine | 비동기 처리 |
-| Firebase | FCM push 알림 |
-| stomp krossbow | STOMP 프로토콜을 이용하여 SpringWebSocket 통신을 도와주는 라이브러리 |
-| ViewPager2 | 스와이프 하여 전환할 수 있는 UI 라이브러리 |
-| Room | SQLite를 추상화하여 이용 가능하게 한 Android localDB 관련 라이브러리 |
+| [Navigation](https://developer.android.com/guide/navigation/navigation-getting-started?hl=ko)   |  Fragment간 화면 전환 및 뷰 스택 관리. Single Activity 구조 적용  |
+| [KTX](https://developer.android.com/kotlin/ktx)  | Android 생명주기 관리, 확장함수, Coroutine의 이용을 위한 Kotlin 확장 프로그램   |
+| [Hilt, Dagger](https://developer.android.com/training/dependency-injection/hilt-android?hl=ko) | 클래스에 컨테이너를 제공하고 수명 주기를 자동으로 관리하는 Android DI 라이브러리 |
+| [DataStore](https://developer.android.com/topic/libraries/architecture/datastore?hl=ko#preferences-datastore) |  프로토콜 버퍼를 사용하여 키-값 쌍 또는 유형이 지정된 객체를 저장할 수 있는 데이터 저장소 |
+| [Coroutine](https://developer.android.com/kotlin/coroutines?hl=ko) | Android Jetpack과 호환되는 안드로이드 비동기 프로그래밍 솔루션 |
+| Coroutine - [Flow](https://developer.android.com/kotlin/flow?hl=ko) | Coroutine 기반의 비동기식 데이터 스트림 |
+| Coroutine - [StateFlow](https://developer.android.com/kotlin/flow/stateflow-and-sharedflow?hl=ko) | Flow에서 최적으로 상태 업데이트를 내보내는 관찰 가능한 객체 |
+| [Room](https://developer.android.com/training/data-storage/room?hl=ko) | Jetpack에서 권장하는 Android 내부 저장소 관련 솔루션. SQLite를 추상화한 라이브러리 |
 
-### 📚 2) 핵심 기능 구현
-1. Hilt2+ Dagger2를 이용한 의존성 관리
-2. 
+### ETC
+|                  Library             |          Description   |
+| ----------------------------------- | ------------------------------------------- |
+| [STOMP Krossbow](https://github.com/joffrey-bion/krossbow) | Coroutine 기반으로 Flow를 지원하는 STOMP Websocket 통신 라이브러리 |
+| [Retrofit2](https://square.github.io/retrofit/)  | HTTP REST API 통신 라이브러리  |
+| [OkHttp3](https://square.github.io/okhttp/)  | HTTP 기반으로  효율적으로 request/response를 할 수 있도록 지원하는 HTTP 클라이언트 |
+| Firebase | [Google OAuth](https://firebase.google.com/docs/auth/android/google-signin?hl=ko) </br> [FCM Push 알림](https://firebase.google.com/docs/cloud-messaging?hl=ko) |
+| [Glide](https://github.com/bumptech/glide) | 이미지 로드 및 캐싱 라이브러리 |
+| [ViewPager2](https://developer.android.com/training/animation/screen-slide-2?hl=ko) | 스와이프할 수 있는 형식의 뷰 또는 프래그먼트를 지원  |
+| [Timber](https://github.com/JakeWharton/timber)     |  로그를 출력하는 라이브러리 (배포 파일 생성 시 로그를 삭제시켜 줌)  |
 
+</br>
 
-## 3. Research
+## 4. Architecture
+</br>
+<div align="center">
+<img width="396" alt="image"src="https://user-images.githubusercontent.com/43838030/153743074-eed1c053-23e5-4363-95c6-b8bca5784c24.png"></div>
 
-## 4. Collaboration Rools
-convention, git flow
-
-## 5. Trouble Shooting Log...
-
-<!-- 
-
-<br/><br/>
-## 📑 Commit Convention
-📌[관련된 좋은 글](https://chris.beams.io/posts/git-commit)
-<br/>
-|명령어|내용|
-| :-----------------------------------: | :---------------------------------------: |
-| **Fix** | 올바르지 않은 동작을 고친 경우 |
-| **Add** |   코드나 테스트, 예제, 문서 등의 추가   |
-| **Remove** |   코드의 삭제가 있을 때   |
-| Refactor |   전면 수정시   |
-| **Update** |   문서나 리소스, 라이브러리등의 수정, 추가, 보완   |
-| Make |  기존 동작의 변경을 명시   |
-| Revise |  문서의 개정   |
-| **Correct** | 주로 문법의 오류나 타입의 변경, 이름 변경 등   |
-| Move |  코드의 이동이 있을 때 사용   |
-| Rename | 파일의 이름 변경 |
-| Verify | 검증 코드를 넣을 때 주로 사용   |
-| Set | 변수 값을 변경하는 등의 작은 수정   |
-| Delete | 리소스 등의 파일 삭제가 있을 때 |
-
-<br/><br/><br/>
-### 🔀 Git Flow
-📌[참고 - 우아한 형제들 기술블로그](https://woowabros.github.io/experience/2017/10/30/baemin-mobile-git-branch-strategy.html)
-<br/>
-branch - ```master```  
-working on - ```soyeon``` ```suyeon``` ```jaekyeong```
-|branch|목적|
-| :------: | :-------: |
-|  **master** | **제품으로 출시될 수 있는 브랜치**  |
-|  develop  | 다음 출시 버전을 개발하는 브랜치  |
-|  feature/{feature_name}  | 기능을 개발하는 브랜치  |
-|  release_{version}  | 이번 출시 버전을 준비하는 브랜치  |
-|  hotfix  | 출시 버전에서 발생한 버그를 수정 하는 브랜치  |
-
-## Example
-### jo/feature/signup<br/>
-
-<br/><br/>
-## 🔨 Naming Convention
-
-### 🎨 Resource Convention
-<img width="70%" alt="android resource convention" src="https://user-images.githubusercontent.com/35393459/113091935-f400b900-9227-11eb-9a1e-188ad085387c.png"></img>
- -->
+| <h3>Architecture</h3> | <h3>Description</h3> |
+|---|---|
+| MVVM + AAC | View+ViewModel+Model의 구조로 뷰와 비즈니스 로직을 분리 </br> Android Architecture Components인 Room, Navigation, Fragments 이용 |
+| Repository | 네트워크 API 통신과 내부 DB를 일관적인 인터페이스로 접근할 수 있는 아키텍처 패턴 |
