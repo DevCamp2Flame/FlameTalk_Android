@@ -148,6 +148,7 @@ class FriendFragment : Fragment() {
 
         // 내 프로필 미리보기 > 프로필 상세 보기 이동
         binding.lFriendMainUser.root.setOnClickListener {
+            /**파라미터를 넣어 뷰 전환*/
             val friendToProfileDirections: NavDirections =
                 FriendFragmentDirections.actionFriendToProfile(
                     viewType = USER_DEFAULT_PROFILE, profileId = viewModel.userProfile.value!!.id
@@ -179,6 +180,7 @@ class FriendFragment : Fragment() {
         binding.itemFriendAddProfile.root.setOnClickListener {
             Snackbar.make(requireView(), "멀티프로필 생성 클릭", Snackbar.LENGTH_SHORT).show()
             Timber.d("멀티프로필 생성 클릭")
+            /**파라미터를 없이 뷰 전환*/
             findNavController().navigate(R.id.navigation_add_profile)
         }
     }
