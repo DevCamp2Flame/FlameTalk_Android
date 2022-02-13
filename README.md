@@ -28,8 +28,8 @@
 | Language | Kotlin | 1.6.10 |
 
 
-||API Level ||
-|---|---|---|
+||API Level|
+|---|---|
 | TargetSDK | 31 (R) |
 | MinimumSDK | 26 (Oreo)  |
 | compileSDK | 31 (R)|
