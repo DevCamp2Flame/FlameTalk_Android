@@ -141,7 +141,6 @@ class FriendFragment : Fragment() {
                 } else {
                     binding.lFriendMainUser.tvFriendPreviewDesc.toVisible()
                     binding.lFriendMainUser.tvFriendPreviewDesc.text = it?.description
-                    Timber.d("description ${it?.description}")
                 }
             }
         }
@@ -178,8 +177,6 @@ class FriendFragment : Fragment() {
 
         // 친구리스트 > 멀티프로필 생성: 멀티 프로필 만들기
         binding.itemFriendAddProfile.root.setOnClickListener {
-            Snackbar.make(requireView(), "멀티프로필 생성 클릭", Snackbar.LENGTH_SHORT).show()
-            Timber.d("멀티프로필 생성 클릭")
             /**파라미터를 없이 뷰 전환*/
             findNavController().navigate(R.id.navigation_add_profile)
         }
