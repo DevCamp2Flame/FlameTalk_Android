@@ -25,6 +25,10 @@ class FriendRepository @Inject constructor(
     private val friendDAO: Lazy<FriendDAO>,
     private val ioDispatcher: CoroutineDispatcher
 ) {
+    /**
+     * =withContext(ioDispatcher)를 통해 IO 스레드풀에서 실행되는 작업 블록 생성
+     * */
+
     // 연락처 친구 추가
     suspend fun postContactFriendAdd(request: AddContactFriendRequest) = withContext(ioDispatcher) {
         friendService.get().postContactFriendAdd(request)
