@@ -1,4 +1,4 @@
-package com.sgs.devcamp2.flametalk_android.network.repository
+package com.sgs.devcamp2.flametalk_android.domain.repository
 
 import com.sgs.devcamp2.flametalk_android.network.request.sign.ProfileCreateRequest
 import com.sgs.devcamp2.flametalk_android.network.request.sign.ProfileUpdateRequest

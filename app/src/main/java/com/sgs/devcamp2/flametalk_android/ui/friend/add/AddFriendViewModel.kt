@@ -6,8 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.sgs.devcamp2.flametalk_android.data.dummy.getDummyProfiles
 import com.sgs.devcamp2.flametalk_android.data.model.profile.ProfilePreview
 import com.sgs.devcamp2.flametalk_android.data.source.local.UserPreferences
-import com.sgs.devcamp2.flametalk_android.network.repository.FriendRepository
-import com.sgs.devcamp2.flametalk_android.network.repository.ProfileRepository
+import com.sgs.devcamp2.flametalk_android.domain.repository.FriendRepository
+import com.sgs.devcamp2.flametalk_android.domain.repository.ProfileRepository
 import com.sgs.devcamp2.flametalk_android.network.request.friend.AddFriendRequest
 import com.sgs.devcamp2.flametalk_android.network.response.friend.AddFriendResponse
 import dagger.Lazy

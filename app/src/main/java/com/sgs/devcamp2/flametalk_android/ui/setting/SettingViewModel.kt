@@ -3,7 +3,7 @@ package com.sgs.devcamp2.flametalk_android.ui.setting
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sgs.devcamp2.flametalk_android.network.repository.SignRepository
+import com.sgs.devcamp2.flametalk_android.domain.repository.SignRepository
 import dagger.Lazy
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext

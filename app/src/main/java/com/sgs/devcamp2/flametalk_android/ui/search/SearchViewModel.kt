@@ -3,11 +3,10 @@ package com.sgs.devcamp2.flametalk_android.ui.search
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sgs.devcamp2.flametalk_android.data.dummy.getDummyFriend
 import com.sgs.devcamp2.flametalk_android.data.dummy.getDummyFriendModel
 import com.sgs.devcamp2.flametalk_android.data.model.friend.FriendModel
 import com.sgs.devcamp2.flametalk_android.data.source.local.UserPreferences
-import com.sgs.devcamp2.flametalk_android.network.repository.FriendRepository
+import com.sgs.devcamp2.flametalk_android.domain.repository.FriendRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
