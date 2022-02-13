@@ -12,11 +12,11 @@ Role :) 김현국
 
 ## Info     
 이번 프로젝트를 시작으로 처음 언어를 java에서 kotlin으로 구현을 하게 되었고,
-또한 Hilt를 이용하여 의존성을 주입하고 clean architecture를 도입하게 되었습니다.
+또한 Hilt를 이용하여 의존성을 주입하고 mvvm clean architecture를 도입하게 되었습니다.
 
 ### Clean Architecture
 
-+ [Data Layer]()
++ [Data Layer](https://github.com/DevCamp2Flame/FlameTalk_Android/tree/develop/app/src/main/java/com/sgs/devcamp2/flametalk_android/data)
   - common
     * Wrapper Class
   - mapper
@@ -29,7 +29,12 @@ Role :) 김현국
   - source
     * local
     * remote
-+ [Domain Layer]()
++ DI
+  - [DB Module](https://github.com/DevCamp2Flame/FlameTalk_Android/blob/develop/app/src/main/java/com/sgs/devcamp2/flametalk_android/di/module/DBModule.kt)
+  - [Repository Module](https://github.com/DevCamp2Flame/FlameTalk_Android/blob/develop/app/src/main/java/com/sgs/devcamp2/flametalk_android/di/module/RepositoryModule.kt)
+  - [UseCase Module](https://github.com/DevCamp2Flame/FlameTalk_Android/blob/develop/app/src/main/java/com/sgs/devcamp2/flametalk_android/di/module/UseCaseModule.kt)
+  - [WebSocket Module](https://github.com/DevCamp2Flame/FlameTalk_Android/blob/develop/app/src/main/java/com/sgs/devcamp2/flametalk_android/di/module/WebSocketModule.kt)
++ [Domain Layer](https://github.com/DevCamp2Flame/FlameTalk_Android/tree/develop/app/src/main/java/com/sgs/devcamp2/flametalk_android/domain)
   - entity
   - repository
     * repository interface
