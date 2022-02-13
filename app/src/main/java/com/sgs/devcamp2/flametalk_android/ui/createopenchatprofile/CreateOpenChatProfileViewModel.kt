@@ -3,11 +3,11 @@ package com.sgs.devcamp2.flametalk_android.ui.createopenchatprofile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sgs.devcamp2.flametalk_android.data.model.openprofile.createopenprofile.CreateOpenProfileReq
+import com.sgs.devcamp2.flametalk_android.data.source.local.UserPreferences
 import com.sgs.devcamp2.flametalk_android.domain.entity.Results
 import com.sgs.devcamp2.flametalk_android.domain.entity.UiState
+import com.sgs.devcamp2.flametalk_android.domain.repository.FileRepository
 import com.sgs.devcamp2.flametalk_android.domain.usecase.createopenchatprofile.CreateOpenProfileUseCase
-import com.sgs.devcamp2.flametalk_android.network.dao.UserDAO
-import com.sgs.devcamp2.flametalk_android.network.repository.FileRepository
 import com.sgs.devcamp2.flametalk_android.util.pathToMultipartImageFile
 import dagger.Lazy
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,7 +27,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CreateOpenChatProfileViewModel @Inject constructor(
     private val createOpenProfileUseCase: CreateOpenProfileUseCase,
-    private val userDAO: UserDAO,
+    private val userPreferences: UserPreferences,
     private val fileRepository: Lazy<FileRepository>
 ) : ViewModel() {
     private var _profile_name = MutableStateFlow("")
@@ -52,7 +52,7 @@ class CreateOpenChatProfileViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            userDAO.user.collect {
+            userPreferences.user.collect {
                 if (it != null) {
                     _userId.value = it.userId
                     _nickname.value = it.nickname

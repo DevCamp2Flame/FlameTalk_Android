@@ -7,12 +7,12 @@ import com.sgs.devcamp2.flametalk_android.data.model.chatroom.ChatRoom
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.createchatroom.CreateChatRoomReq
 import com.sgs.devcamp2.flametalk_android.data.model.openprofile.getopenprofilelist.GetOpenProfileListRes
 import com.sgs.devcamp2.flametalk_android.data.model.openprofile.getopenprofilelist.OpenProfile
+import com.sgs.devcamp2.flametalk_android.data.source.local.UserPreferences
 import com.sgs.devcamp2.flametalk_android.domain.entity.Results
 import com.sgs.devcamp2.flametalk_android.domain.entity.UiState
 import com.sgs.devcamp2.flametalk_android.domain.entity.chatroom.ChatRoomEntity
 import com.sgs.devcamp2.flametalk_android.domain.usecase.inviteroom.CreateChatRoomUseCase
 import com.sgs.devcamp2.flametalk_android.domain.usecase.myopenchatprofile.GetOpenProfileListUseCase
-import com.sgs.devcamp2.flametalk_android.network.dao.UserDAO
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -27,7 +27,7 @@ import javax.inject.Inject
 class CreateOpenChatRoomViewModel @Inject constructor(
     private val createChatRoomUseCase: CreateChatRoomUseCase,
     private val getOpenProfileListUseCase: GetOpenProfileListUseCase,
-    private val userDAO: UserDAO
+    private val userPreferences: UserPreferences
     // get open profile usecase
 ) : ViewModel() {
 
@@ -54,7 +54,7 @@ class CreateOpenChatRoomViewModel @Inject constructor(
     lateinit var _openProfile: OpenProfile
     init {
         viewModelScope.launch {
-            userDAO.user.collect {
+            userPreferences.user.collect {
                 if (it != null) {
                     _userId.value = it.userId
                     _nickname.value = it.nickname
