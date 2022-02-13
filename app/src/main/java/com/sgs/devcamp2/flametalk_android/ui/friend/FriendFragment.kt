@@ -69,6 +69,7 @@ class FriendFragment : Fragment() {
         initUserProfiles()
     }
 
+    // 앱 상단바 초기화
     private fun initAppbar() {
         binding.abFriend.tvAppbar.text = "친구"
         binding.abFriend.imgAppbarSearch.setOnClickListener {
@@ -90,13 +91,7 @@ class FriendFragment : Fragment() {
                     R.id.menu_block -> {
                         findNavController().navigate(R.id.navigation_blocked_friend)
                     }
-                    else -> {
-                        // 실행되지 않음
-                        Snackbar.make(
-                            binding.abFriend.imgAppbarSetting,
-                            "else...",
-                            Snackbar.LENGTH_SHORT
-                        ).show()
+                    else -> { // 실행되지 않음
                     }
                 }
                 return@setOnMenuItemClickListener false

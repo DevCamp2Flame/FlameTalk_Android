@@ -141,13 +141,17 @@ class FriendViewModel @Inject constructor(
         viewModelScope.launch {
             val result = viewModelScope.async {
                 var arrayList = ArrayList<String>()
+                // 연락처 고유 url
                 val uri = ContactsContract.Contacts.CONTENT_URI
+                // 오름차순으로 이름 정렬
                 val sort = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC"
+                // 연락처 고유 url을 기반으로 정보를 쿼리
                 val cursor: Cursor? = context.contentResolver.query(
                     uri, null, null, null, sort
                 )
                 if (cursor != null) {
                     if (cursor.count > 0) {
+                        // 데이터가 있으면 id, 이름, content uri를 가져옴
                         while (cursor.moveToNext()) {
                             @SuppressLint("Range") val id = cursor.getString(
                                 cursor.getColumnIndex(
@@ -165,6 +169,7 @@ class FriendViewModel @Inject constructor(
                             val phoneCursor: Cursor? = context.contentResolver.query(
                                 uriPhone, null, selection, arrayOf(id), null
                             )
+                            // content uri를 추가로 쿼리하여 휴대폰 번호를 가져온다
                             if (phoneCursor!!.moveToNext()) {
                                 @SuppressLint("Range") val number = phoneCursor.getString(
                                     phoneCursor.getColumnIndex(
@@ -178,11 +183,13 @@ class FriendViewModel @Inject constructor(
                         cursor.close()
                     }
                 }
-                Timber.d("연락처 %s", arrayList)
+                // 가져온 연락처 리스트를 viewModel의 변수에 저장한다
                 _contact.value = arrayList
             }
+            /**
+             * deferred type의 위 작업이 끝날때까지 기다린 후 연락처 기반 친구 추가 통신 요청을 보낸다
+             * */
             result.await()
-            Timber.d("연락처 통신 요청 전 contact $_contact")
             addContactFriend()
         }
     }
