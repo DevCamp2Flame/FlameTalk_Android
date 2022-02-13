@@ -3,9 +3,9 @@ package com.sgs.devcamp2.flametalk_android.data.common
 import com.google.gson.annotations.SerializedName
 
 /**
- * @author boris
+ * @author 김현국
  * @created 2022/01/28
- * 서버 response를 파싱할 때 사용하는 wrapper
+ * 서버의 resposne를 담을 Wrapper data class 입니다
  */
 data class WrappedListResponse<T> (
     var code: Int,

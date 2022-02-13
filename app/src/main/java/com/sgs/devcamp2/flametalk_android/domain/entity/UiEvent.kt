@@ -4,7 +4,7 @@ import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 
 /**
- * @author boris
+ * @author 김현국
  * @created 2022/01/29
  */
 

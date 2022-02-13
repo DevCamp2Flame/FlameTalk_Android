@@ -2,6 +2,7 @@ package com.sgs.devcamp2.flametalk_android.di.module
 
 import android.content.Context
 import androidx.room.Room
+import com.sgs.devcamp2.flametalk_android.data.source.local.dao.FriendDAO
 import com.sgs.devcamp2.flametalk_android.data.source.local.database.AppDatabase
 import com.sgs.devcamp2.flametalk_android.data.source.local.database.AppDatabaseImpl
 import dagger.Module
@@ -12,7 +13,7 @@ import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 /**
- * @author boris
+ * @author 김현국
  * @created 2022/01/27
  * AppDatabaseImpl에 AppDatabase 의존성 주입
  */
@@ -28,4 +29,11 @@ object DBModule {
         .databaseBuilder(context, AppDatabaseImpl::class.java, AppDatabaseImpl.DB_NAME)
         .allowMainThreadQueries()
         .build()
+
+    @Singleton
+    @Provides
+    fun provideDao(appDatabase: AppDatabase): FriendDAO {
+        return appDatabase.friendDao()
+    }
+
 }

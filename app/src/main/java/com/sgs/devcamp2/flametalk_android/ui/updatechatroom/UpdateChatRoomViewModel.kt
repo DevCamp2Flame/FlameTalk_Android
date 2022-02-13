@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
- * @author boris
+ * @author 김현국
  * @created 2022/02/07
  */
 @HiltViewModel

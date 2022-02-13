@@ -11,7 +11,6 @@ import okhttp3.RequestBody
 import okhttp3.Response
 import okio.Buffer
 import okio.IOException
-import org.json.JSONObject
 import timber.log.Timber
 
 /**
@@ -36,6 +35,8 @@ class NetworkInterceptor(
                 tokenSupplier().also { Timber.d("ACCESS-TOKEN: $it") }.toString()
             )
 
+         //   .addHeader("userId", "1644502326105613328")
+      
         // Request를 로그로 기록
         Timber.d("url -> ${request.url}")
         Timber.d("headers -> ${request.headers}")

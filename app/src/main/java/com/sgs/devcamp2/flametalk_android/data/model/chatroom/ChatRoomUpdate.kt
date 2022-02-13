@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 /**
- * @author boris
+ * @author 김현국
  * @created 2022/02/09
  */
 @Entity(tableName = "chatroom_update")

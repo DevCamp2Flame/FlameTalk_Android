@@ -2,28 +2,21 @@ package com.sgs.devcamp2.flametalk_android.services
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.Context
 import android.media.RingtoneManager
 import android.os.Build
-import android.os.Bundle
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import androidx.navigation.NavDeepLinkBuilder
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.sgs.devcamp2.flametalk_android.R
 
 /**
- * @author boris
+ * @author 김현국
  * @created 2022/01/23
  */
 class FcmService : FirebaseMessagingService() {
     val TAG: String = "로그"
-
-
-    override fun onCreate() {
-    }
 
     override fun onNewToken(token: String) {
         Log.d(TAG, "new Token: $token")
@@ -60,13 +53,13 @@ class FcmService : FirebaseMessagingService() {
         val uniId: Int = (System.currentTimeMillis() / 7).toInt()
 
         // 일회용 PendingIntent
-        var bundle: Bundle = Bundle()
-        bundle.putString("key", "gd")
-        var pendingIntent: PendingIntent = NavDeepLinkBuilder(applicationContext)
-            .setGraph(R.navigation.main_navigation)
-            .setDestination(R.id.navigation_chat_room)
-            .setArguments(bundle)
-            .createPendingIntent()
+//        var bundle: Bundle = Bundle()
+//        bundle.putString("key", "gd")
+//        var pendingIntent: PendingIntent = NavDeepLinkBuilder(applicationContext)
+//            .setGraph(R.navigation.main_navigation)
+//            .setDestination(R.id.navigation_chat_room)
+//            .setArguments(bundle)
+//            .createPendingIntent()
         // 알림 채널 이름
         val channelId = "channel" // getString(R.string.firebase_notification_channel_id)
 
@@ -92,7 +85,7 @@ class FcmService : FirebaseMessagingService() {
             .setGroup(KEY_TALK_GROUP)
             .setAutoCancel(true)
             .setSound(soundUri)
-            .setContentIntent(pendingIntent) // 알림 실행 시 Intent
+        // .setContentIntent(pendingIntent) // 알림 실행 시 Intent
 
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

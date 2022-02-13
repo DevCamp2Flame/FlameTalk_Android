@@ -20,23 +20,35 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.sgs.devcamp2.flametalk_android.data.model.openprofile.getopenprofilelist.OpenProfile
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentCreateOpenChatRoomBinding
+import com.sgs.devcamp2.flametalk_android.domain.entity.UiState
 import com.sgs.devcamp2.flametalk_android.util.onTextChanged
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+/**
+ * @author 김현국
+ * @created 2022/02/02
+ */
 @AndroidEntryPoint
-class CreateOpenChatRoom : Fragment(), View.OnClickListener {
+class CreateOpenChatRoomFragment :
+    Fragment(),
+    View.OnClickListener,
+    CreateOpenChatRoomAdapter.ItemClickCallBack {
 
     lateinit var binding: FragmentCreateOpenChatRoomBinding
-    lateinit var CreateOpenChatRoomAdapter: CreateOpenChatRoomAdapter
+    lateinit var createOpenChatRoomAdapter: CreateOpenChatRoomAdapter
+    lateinit var adapter: CreateOpenChatRoomAdapter
     private val model by viewModels<CreateOpenChatRoomViewModel>()
+
     private val getBackgroundImageLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK && result.data?.data != null) {
@@ -51,19 +63,44 @@ class CreateOpenChatRoom : Fragment(), View.OnClickListener {
     ): View? {
         binding = FragmentCreateOpenChatRoomBinding.inflate(inflater, container, false)
         initUI(this.requireContext())
-
+        initObserve()
         viewLifecycleOwner.lifecycleScope.launch {
             model.backgroundImage.collect {
                 if (it !== "") {
-                    Glide.with(binding.ivInviteOpenChatRoomBackgroundImg)
+                    Glide.with(binding.ivCreateOpenChatRoomBackgroundImg)
                         .load(it)
-                        .into(binding.ivInviteOpenChatRoomBackgroundImg)
+                        .into(binding.ivCreateOpenChatRoomBackgroundImg)
                 }
             }
         }
+
         return binding.root
     }
 
+    fun initObserve() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            model.openProfileList.collect {
+                state ->
+                when (state) {
+                    is UiState.Success ->
+                        {
+                            adapter.submitList(state.data.openProfiles)
+                        }
+                }
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            model.createOpenCHatRoomUiState.collect {
+                state ->
+                when (state) {
+                    is UiState.Success ->
+                        {
+                            findNavController().popBackStack()
+                        }
+                }
+            }
+        }
+    }
     fun initUI(context: Context) {
         Glide.with(context)
             .load("https://picsum.photos/250/250")
@@ -74,8 +111,8 @@ class CreateOpenChatRoom : Fragment(), View.OnClickListener {
                     target: Target<Drawable>?,
                     isFirstResource: Boolean
                 ): Boolean {
-                    binding.ivInviteOpenChatRoomBackgroundImgSelect.visibility = View.GONE
-                    binding.pbInviteOpenChatRoomLoading.visibility = View.VISIBLE
+                    binding.ivCreateOpenChatRoomBackgroundImgSelect.visibility = View.GONE
+                    binding.pbCreateOpenChatRoomLoading.visibility = View.VISIBLE
                     return false
                 }
 
@@ -86,25 +123,29 @@ class CreateOpenChatRoom : Fragment(), View.OnClickListener {
                     dataSource: DataSource?,
                     isFirstResource: Boolean
                 ): Boolean {
-                    binding.ivInviteOpenChatRoomBackgroundImgSelect.visibility = View.VISIBLE
-                    binding.pbInviteOpenChatRoomLoading.visibility = View.GONE
+                    binding.ivCreateOpenChatRoomBackgroundImgSelect.visibility = View.VISIBLE
+                    binding.pbCreateOpenChatRoomLoading.visibility = View.GONE
                     return false
                 }
             })
-            .into(binding.ivInviteOpenChatRoomBackgroundImg)
-        binding.rvInviteOpenChatRoomProfile.layoutManager = GridLayoutManager(context, 2)
-        binding.ivInviteOpenChatRoomBackgroundImgSelect?.setOnClickListener(this)
-        binding.etInviteOpenChatRoomTitle.onTextChanged {
+            .into(binding.ivCreateOpenChatRoomBackgroundImg)
+        adapter = CreateOpenChatRoomAdapter(this)
+        binding.rvCreateOpenChatRoomProfile.layoutManager = GridLayoutManager(context, 2)
+        binding.rvCreateOpenChatRoomProfile.adapter = adapter
+        binding.ivCreateOpenChatRoomBackgroundImgSelect?.setOnClickListener(this)
+        binding.etCreateOpenChatRoomTitle.onTextChanged {
             model.updateTitle(it.toString())
         }
+        model.getOpenProfileList()
+        binding.tvCreateOpenChatRoomSubmit.setOnClickListener(this)
     }
     override fun onClick(view: View?) {
         when (view) {
-            binding.ivInviteOpenChatRoomBackgroundImgSelect ->
+            binding.ivCreateOpenChatRoomBackgroundImgSelect ->
                 {
                     getProfileImage(2)
                 }
-            binding.tvInviteOpenChatRoomSubmit ->
+            binding.tvCreateOpenChatRoomSubmit ->
                 {
                     model.createOpenChatRoom()
                 }
@@ -169,8 +210,12 @@ class CreateOpenChatRoom : Fragment(), View.OnClickListener {
         return path
     }
     companion object {
-
+        val TAG: String = "로그"
         private const val BACKGROUND_IMAGE = 2
         private const val PERMISSION_CALLBACK_CONSTANT = 100
+    }
+
+    override fun onItemClicked(openProfile: OpenProfile) {
+        model.updateSelectedOpenProfile(openProfile)
     }
 }

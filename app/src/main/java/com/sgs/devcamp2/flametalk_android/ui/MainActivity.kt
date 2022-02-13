@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private lateinit var navHostFragment: NavHostFragment
     private lateinit var navController: NavController
-    private val model by viewModels<MainActivityViewModel>()
+    private val model by viewModels<MainViewModel>()
     val TAG: String = "로그"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
             if (destination.id == R.id.navigation_signin || destination.id == R.id.navigation_signup ||
                 destination.id == R.id.navigation_chat_room || destination.id == R.id.navigation_profile ||
                 destination.id == R.id.navigation_profile_desc || destination.id == R.id.navigation_edit_profile ||
-                destination.id == R.id.navigation_invite_open_chat_room || destination.id == R.id.navigation_create_chat_room ||
+                destination.id == R.id.navigation_create_chat_room ||
                 destination.id == R.id.navigation_chat_Room_Bottom_Sheet || destination.id == R.id.navigation_add_profile ||
                 destination.id == R.id.navigation_single_feed || destination.id == R.id.navigation_total_feed ||
                 destination.id == R.id.navigation_blocked_friend || destination.id == R.id.navigation_hidden_friend ||

@@ -10,6 +10,10 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
+/**
+ * @author boris
+ * @created 2022/01/27
+ */
 @InstallIn(SingletonComponent::class)
 @Module
 object GoogleSignInModule {

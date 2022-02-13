@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 import java.util.*
 
 /**
- * @author boris
+ * @author 김현국
  * @created 2022/02/08
  */
 @Entity(

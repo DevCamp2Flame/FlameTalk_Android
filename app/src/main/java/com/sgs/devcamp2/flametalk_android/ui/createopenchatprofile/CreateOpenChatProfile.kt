@@ -29,6 +29,10 @@ import com.sgs.devcamp2.flametalk_android.util.onTextChanged
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+/**
+ * @author 김현국
+ * @created 2022/02/03
+ */
 @AndroidEntryPoint
 class CreateOpenChatProfile : Fragment(), View.OnClickListener {
     val TAG: String = "로그"
@@ -107,7 +111,7 @@ class CreateOpenChatProfile : Fragment(), View.OnClickListener {
         when (view) {
             binding.tvCreateOpenChatProfileSubmit ->
                 {
-                    model.createOpenProfile()
+                    model.addOpenProfile()
                 }
             binding.ivCreateOpenChatProfileBackgroundImgSelect ->
                 {

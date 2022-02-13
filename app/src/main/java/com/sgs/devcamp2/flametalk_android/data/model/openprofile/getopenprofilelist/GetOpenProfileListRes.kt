@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 /**
- * @author boris
+ * @author 김현국
  * @created 2022/02/05
  */
 data class GetOpenProfileListRes(

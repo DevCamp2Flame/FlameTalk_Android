@@ -13,11 +13,8 @@ import com.sgs.devcamp2.flametalk_android.data.model.chatroom.getchatroomlist.Us
 import com.sgs.devcamp2.flametalk_android.databinding.ItemOpenChatRoomBinding
 
 /**
- * @author 박소연
- * @created 2022/01/23
- * @updated 2022/01/16
- * @desc 오픈채팅 메인화면의 추천 채팅 리스트 adapter
- *       오픈채팅방 리스트를 클릭하면 특정 채팅방에 참여할 수 있음
+ * @author 김현국
+ * @created 2022/01/26
  */
 class OpenChatRoomAdapter(
     private val context: Context

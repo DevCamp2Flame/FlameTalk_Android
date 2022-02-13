@@ -11,7 +11,7 @@ import com.sgs.devcamp2.flametalk_android.databinding.ItemPersonInviteRoomBindin
 import com.sgs.devcamp2.flametalk_android.network.response.friend.TempFriend
 
 /**
- * @author boris
+ * @author 김현극
  * @created 2022/01/12
  */
 class InviteRoomMarkAdapter constructor(

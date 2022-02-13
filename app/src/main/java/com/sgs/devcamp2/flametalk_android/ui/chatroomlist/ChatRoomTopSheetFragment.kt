@@ -13,7 +13,10 @@ import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentChatRoomListTopSheetBinding
-
+/**
+ * @author 김현국
+ * @created 2022/01/26
+ */
 class ChatRoomTopSheetFragment : DialogFragment(), View.OnClickListener {
 
     lateinit var binding: FragmentChatRoomListTopSheetBinding
@@ -65,7 +68,7 @@ class ChatRoomTopSheetFragment : DialogFragment(), View.OnClickListener {
                 }
             binding.ivDialogTopSheetOpenChat ->
                 {
-                    findNavController().navigate(R.id.navigation_invite_open_chat_room)
+                    findNavController().navigate(R.id.navigation_create_open_chat_room)
                     this.dismiss()
                 }
         }

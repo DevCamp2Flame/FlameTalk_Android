@@ -21,6 +21,11 @@ import com.sgs.devcamp2.flametalk_android.ui.chattingviewpager.ChattingViewPager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+/**
+ * @author 김현국
+ * @created 2022/01/26
+ */
+
 @AndroidEntryPoint
 class MyOpenChatProfileFragment :
     Fragment(),

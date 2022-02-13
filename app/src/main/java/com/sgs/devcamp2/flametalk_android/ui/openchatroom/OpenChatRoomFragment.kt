@@ -20,6 +20,11 @@ import com.sgs.devcamp2.flametalk_android.ui.openchatroom.myopenprofile.MyOpenCh
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+
+/**
+ * @author 김현국
+ * @created 2022/01/26
+ */
 @AndroidEntryPoint
 class OpenChatRoomFragment : Fragment() {
     lateinit var binding: FragmentOpenChatRoomBinding

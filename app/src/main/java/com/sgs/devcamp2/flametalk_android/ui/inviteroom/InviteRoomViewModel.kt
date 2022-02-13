@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
- * @author boris
+ * @author 김현극
  * @created 2022/01/12
  *
  */
@@ -33,7 +33,6 @@ class InviteRoomViewModel @Inject constructor(
     data class SelectedTable(var id: String, var position: Int, var adapterFlag: Int)
     private var selectedMap = HashMap<String, SelectedTable>()
 
-    // private val uiState : StateFlow<UiState<>>
     private val _uiEvent = MutableStateFlow<UiState<Any>>(UiState.Loading)
     val uiEvent = _uiEvent.asStateFlow()
 
@@ -88,7 +87,9 @@ class InviteRoomViewModel @Inject constructor(
         }
         emit(markList)
     }
-
+    /**
+     * Map을 이용하여, 일반 친구를 선택하면 선택된 친구 리스트를 갱신하는 function입니다.
+     */
     fun addFriendList(tempFriend: TempFriend, position: Int, adapter: InviteRoomAdapter) {
         var list: List<TempFriend>
         if (!selectedMap.containsKey(tempFriend.id)) {
@@ -112,7 +113,9 @@ class InviteRoomViewModel @Inject constructor(
             _selectedFriendList.value = newList
         }
     }
-
+    /**
+     * Map을 이용하여, 일반 친구를 선택하면 선택된 친구 리스트를 갱신하는 function입니다.
+     */
     fun addMarkList(tempFriend: TempFriend, position: Int, adapter: InviteRoomMarkAdapter) {
         var list: List<TempFriend>
         if (!selectedMap.containsKey(tempFriend.id)) {
@@ -138,6 +141,10 @@ class InviteRoomViewModel @Inject constructor(
             _selectedFriendList.value = newList
         }
     }
+    /**
+     * selectedMap에 저장되어 있는 아이템을 클릭시
+     * 해당 아이템이 어떤 recyclerview의 adapter에 있는 아이ㅁ인지
+     */
 
     fun removeSelectedItem(tempFriend: TempFriend) {
         var newTable: SelectedTable = selectedMap.get(tempFriend.id)!!
@@ -155,36 +162,7 @@ class InviteRoomViewModel @Inject constructor(
         }
     }
 
-    fun createRooms() {
-        _uiState.value = UiState.Loading
-        val createChatRoomReq = CreateChatRoomReq(
-            hostId = "1643986912282658350",
-            hostOpenProfileId = null,
-            isOpen = false,
-            users = listOf("1643986912282658350", "1644196296080985280"),
-            title = "채팅방 생성 두명",
-            thumbnail = null
 
-        )
-        viewModelScope.launch {
-            createChatRoomUseCase.invoke(createChatRoomReq)
-                .collect {
-                    result ->
-                    when (result) {
-                        is Results.Success ->
-                            {
-                                _uiState.value = UiState.Success(true)
-                            }
-                        is Results.Error ->
-                            {
-                                // _uiEvent.value = UiState.Success(false)
-                                _uiState.value = UiState.Error("에러 발생")
-                                null
-                            }
-                    }
-                }
-        }
-    }
 
     fun replaceUiState() {
         _uiState.value = UiState.Loading

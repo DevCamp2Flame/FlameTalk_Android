@@ -1,7 +1,7 @@
 package com.sgs.devcamp2.flametalk_android.data.model.chatroom.enterchatroom
 
 /**
- * @author boris
+ * @author 김현국
  * @created 2022/02/05
  */
 data class EnterChatRoomReq(

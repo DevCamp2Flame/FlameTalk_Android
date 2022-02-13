@@ -11,7 +11,7 @@ import com.sgs.devcamp2.flametalk_android.domain.entity.Results
 import kotlinx.coroutines.flow.Flow
 
 /**
- * @author boris
+ * @author 김현국
  * @created 2022/02/05
  */
 interface OpenProfileRepository {

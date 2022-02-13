@@ -19,7 +19,6 @@ import kotlinx.coroutines.withContext
  * @desc 친구 정보와 관련된 통신(네트워크, 로컬) 레파지토리
  */
 
-@Singleton
 class FriendRepository @Inject constructor(
     private val friendService: Lazy<FriendService>,
     private val friendDAO: Lazy<FriendDAO>,

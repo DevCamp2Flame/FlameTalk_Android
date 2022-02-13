@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import org.hildan.krossbow.stomp.StompSession
 
 /**
- * @author boris
+ * @author 김현국
  * @created 2022/01/31
  */
 interface MainActivityRepository {

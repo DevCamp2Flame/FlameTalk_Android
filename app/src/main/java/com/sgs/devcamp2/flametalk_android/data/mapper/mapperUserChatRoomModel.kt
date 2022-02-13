@@ -4,10 +4,10 @@ import com.sgs.devcamp2.flametalk_android.data.model.chatroom.getchatroomlist.Us
 import com.sgs.devcamp2.flametalk_android.domain.entity.chatroom.ChatRoomEntity
 
 /**
- * @author boris
+ * @author 김현국
  * @created 2022/02/09
  */
-fun mappeToUserChatRoomModel(chatRoomEntity: ChatRoomEntity): UserChatRoom {
+fun mapperToUserChatRoomModel(chatRoomEntity: ChatRoomEntity): UserChatRoom {
     return UserChatRoom(
         chatRoomEntity.chatroomId,
         chatRoomEntity.userChatroomId,
