@@ -23,16 +23,19 @@ import retrofit2.converter.gson.GsonConverterFactory
  * @author 박소연
  * @created 2022/01/17
  * @desc Dagger+Hilt를 이용한 Network Module
- * data -> source -> remote api들의 의존성 주입
+ *       data -> source -> remote api들의 의존성 주입
+ *
+ *       NetworkInterceptor -> OkHttp 통신 객체 -> Retrofit 객체 -> 통신 api 객체 순으로 의존성을 주입
  */
 
 @Module
 @InstallIn(SingletonComponent::class)
 class NetworkModule {
-
     @Provides
     @Singleton
     fun provideNetworkInterceptor(userPreferences: UserPreferences): NetworkInterceptor {
+        /**통신 요청과 응답 시 NetworkInterceptor를 거친다
+         userToken이 있는 경우 토큰을 주입한다.*/
         return NetworkInterceptor(userPreferences) {
             runBlocking(Dispatchers.IO) {
                 userPreferences.user.first()?.accessToken
@@ -44,7 +47,7 @@ class NetworkModule {
     @Singleton
     fun provideOkHttp3Client(networkInterceptor: NetworkInterceptor): OkHttpClient {
         return OkHttpClient.Builder()
-            .addInterceptor(networkInterceptor)
+            .addInterceptor(networkInterceptor) // OkHttp 객체에 interceptor를 주입한다.
             .connectTimeout(100, TimeUnit.SECONDS)
             .readTimeout(100, TimeUnit.SECONDS)
             .writeTimeout(100, TimeUnit.SECONDS)
@@ -61,6 +64,7 @@ class NetworkModule {
             .build()
     }
 
+    /*REST API 통신에 사용되는 객체에 의존성 주입*/
     @Provides
     @Singleton
     fun provideUserService(retrofit: Retrofit): UserService {
