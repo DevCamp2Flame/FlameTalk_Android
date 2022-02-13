@@ -1,6 +1,6 @@
 package com.sgs.devcamp2.flametalk_android.network.repository
 
-import com.sgs.devcamp2.flametalk_android.data.model.friend.Friend
+import com.sgs.devcamp2.flametalk_android.data.model.friend.FriendModel
 import com.sgs.devcamp2.flametalk_android.data.source.local.dao.FriendDAO
 import com.sgs.devcamp2.flametalk_android.network.request.friend.AddContactFriendRequest
 import com.sgs.devcamp2.flametalk_android.network.request.friend.AddFriendRequest
@@ -48,12 +48,12 @@ class FriendRepository @Inject constructor(
         }
 
     // 친구 리스트 로컬에 저장
-    suspend fun insertAllFriends(friends: List<Friend>) = withContext(ioDispatcher) {
-        friendDAO.get().insertAllFriends(friends)
+    suspend fun insertAllFriends(vararg friends: FriendModel) = withContext(ioDispatcher) {
+        friendDAO.get().insertAllFriends(*friends)
     }
 
     // 친구 리스트 전체 가져오기
-    suspend fun getAllFriends(userId: String) = withContext(ioDispatcher) {
-        friendDAO.get().getAllFriends(userId)
+    suspend fun getAllFriends() = withContext(ioDispatcher) {
+        friendDAO.get().getAllFriends()
     }
 }
