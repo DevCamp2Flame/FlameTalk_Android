@@ -3,7 +3,7 @@ package com.sgs.devcamp2.flametalk_android.network
 
 import com.google.gson.Gson
 import com.sgs.devcamp2.flametalk_android.FlameTalkApp
-import com.sgs.devcamp2.flametalk_android.network.dao.UserDAO
+import com.sgs.devcamp2.flametalk_android.data.source.local.UserPreferences
 import com.sgs.devcamp2.flametalk_android.network.response.ErrorResponse
 import com.sgs.devcamp2.flametalk_android.util.AuthUtil
 import com.sgs.devcamp2.flametalk_android.util.addHeader
@@ -24,7 +24,7 @@ import timber.log.Timber
  */
 
 class NetworkInterceptor(
-    private val userDAO: UserDAO,
+    private val userPreferences: UserPreferences,
     val tokenSupplier: () -> String?
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
@@ -66,8 +66,8 @@ class NetworkInterceptor(
                     302 -> {
                         tokenSupplier()?.let {
                             val request = chain.request()
-                                .addHeader("ACCESS-TOKEN", userDAO.getAccessToken().toString())
-                                .addHeader("REFRESH-TOKEN", userDAO.getRefreshToken().toString())
+                                .addHeader("ACCESS-TOKEN", userPreferences.getAccessToken().toString())
+                                .addHeader("REFRESH-TOKEN", userPreferences.getRefreshToken().toString())
                             response = chain.proceed(request.newBuilder().build())
 
                             /** TODO: response를 받으면 request를 보내는 retrofit 객체를 새로 생성하여
@@ -79,7 +79,7 @@ class NetworkInterceptor(
                     // access-token 만료, refresh-token 만료 => 로그아웃
                     307 -> {
                         Timber.d("$responseBody")
-                        FlameTalkApp.currentActivity()?.let { AuthUtil().logout(it, userDAO) }
+                        FlameTalkApp.currentActivity()?.let { AuthUtil().logout(it, userPreferences) }
                     }
                 }
             }

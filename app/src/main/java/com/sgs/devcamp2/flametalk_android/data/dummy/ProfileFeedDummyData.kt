@@ -1,7 +1,7 @@
 package com.sgs.devcamp2.flametalk_android.data.dummy
 
-import com.sgs.devcamp2.flametalk_android.data.model.ProfileHorizentalFeed
-import com.sgs.devcamp2.flametalk_android.data.model.ProfileVerticalFeed
+import com.sgs.devcamp2.flametalk_android.data.model.profile.ProfileHorizentalFeed
+import com.sgs.devcamp2.flametalk_android.data.model.profile.ProfileVerticalFeed
 import com.sgs.devcamp2.flametalk_android.network.response.feed.Feed
 import com.sgs.devcamp2.flametalk_android.network.response.feed.ProfileFeedResponse
 

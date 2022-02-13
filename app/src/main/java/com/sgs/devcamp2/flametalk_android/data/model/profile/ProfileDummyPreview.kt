@@ -1,4 +1,4 @@
-package com.sgs.devcamp2.flametalk_android.data.model
+package com.sgs.devcamp2.flametalk_android.data.model.profile
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

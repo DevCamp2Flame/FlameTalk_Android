@@ -60,6 +60,9 @@
         <action
             android:id="@+id/action_friend_to_add_profile"
             app:destination="@+id/navigation_add_profile" />
+        <action
+            android:id="@+id/action_friend_to_search"
+            app:destination="@+id/navigation_search"/>
     </fragment>
 
     <!--휴대폰 번호로 친구 추가-->
@@ -75,12 +78,25 @@
             app:popUpToInclusive="true" />
     </fragment>
 
+    <!--친구 검색-->
+    <fragment
+        android:id="@+id/navigation_search"
+        android:name="com.sgs.devcamp2.flametalk_android.ui.search.SearchFragment"
+        android:label="SearchFragment"
+        tools:layout="@layout/fragment_search">
+        <action
+            android:id="@+id/action_search_to_profile"
+            app:destination="@id/navigation_profile"
+            app:popUpTo="@id/navigation_profile"
+            app:popUpToInclusive="true" />
+    </fragment>
+
     <fragment
         android:id="@+id/navigation_phonebook"
         android:name="com.sgs.devcamp2.flametalk_android.ui.friend.phonebook.PhoneBookFragment"
         android:label="PhoneBook"
-        tools:layout="@layout/fragment_phone_book">
-      
+        tools:layout="@layout/fragment_phone_book"></fragment>
+
     <!--프로필 상세보기-->
     <fragment
         android:id="@+id/navigation_profile"
@@ -245,7 +261,6 @@
         <action
             android:id="@+id/action_navigation_chat_to_chatRoomFragment"
             app:destination="@id/navigation_chat_room" />
-
     </fragment>
 
     <!--   오픈 채팅방 리스트-->
@@ -254,7 +269,6 @@
         android:name="com.sgs.devcamp2.flametalk_android.ui.openchatroom.OpenChatRoomFragment"
         android:label="OpenChatRoom"
         tools:layout="@layout/fragment_open_chat_room">
-
     </fragment>
 
 
@@ -287,12 +301,6 @@
         <action
             android:id="@+id/action_navigation_chat_room_to_navigation_chat_Room_Bottom_Sheet"
             app:destination="@id/navigation_chat_Room_Bottom_Sheet" />
-        <argument
-            android:name="chatroomId"
-            app:argType="string" />
-        <action
-            android:id="@+id/action_navigation_chat_room_to_updateChatRoomFragment"
-            app:destination="@id/navigation_update_chat_room" />
     </fragment>
     <fragment
         android:id="@+id/navigation_invite_room"

@@ -2,7 +2,7 @@ package com.sgs.devcamp2.flametalk_android.network.response.friend
 
 import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
-import com.sgs.devcamp2.flametalk_android.data.model.Friend
+import com.sgs.devcamp2.flametalk_android.data.model.friend.Friend
 
 /**
  * @author 박소연

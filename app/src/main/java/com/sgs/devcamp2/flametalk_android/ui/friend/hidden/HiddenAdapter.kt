@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.sgs.devcamp2.flametalk_android.R
-import com.sgs.devcamp2.flametalk_android.data.model.Friend
+import com.sgs.devcamp2.flametalk_android.data.model.friend.Friend
 import com.sgs.devcamp2.flametalk_android.databinding.ItemFriendHiddenBinding
 import com.sgs.devcamp2.flametalk_android.ui.friend.FriendFragmentDirections
 import com.sgs.devcamp2.flametalk_android.util.SimpleDiffUtilCallback

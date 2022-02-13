@@ -3,7 +3,7 @@ package com.sgs.devcamp2.flametalk_android.ui.profile
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sgs.devcamp2.flametalk_android.data.model.Profile
+import com.sgs.devcamp2.flametalk_android.data.model.profile.Profile
 import com.sgs.devcamp2.flametalk_android.network.repository.FriendRepository
 import com.sgs.devcamp2.flametalk_android.network.repository.ProfileRepository
 import com.sgs.devcamp2.flametalk_android.network.request.friend.FriendStatusRequest
