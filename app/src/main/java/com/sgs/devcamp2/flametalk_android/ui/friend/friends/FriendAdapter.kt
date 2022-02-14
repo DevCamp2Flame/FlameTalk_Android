@@ -9,8 +9,8 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
-import com.sgs.devcamp2.flametalk_android.R
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.sgs.devcamp2.flametalk_android.data.model.friend.Friend
 import com.sgs.devcamp2.flametalk_android.databinding.ItemFriendPreviewBinding
 import com.sgs.devcamp2.flametalk_android.ui.friend.FriendFragmentDirections
@@ -73,8 +73,7 @@ class FriendAdapter(
 
         private fun initFriendList(data: Friend) {
             Glide.with(itemView).load(data.preview.imageUrl)
-                .apply(RequestOptions.circleCropTransform())
-                .apply(RequestOptions.placeholderOf(R.drawable.ic_person_white_24))
+                .transform(CenterCrop(), RoundedCorners(35))
                 .into(binding.imgFriendPreview)
             binding.tvFriendPreviewNickname.text = data.nickname
 

@@ -9,9 +9,10 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
-import com.sgs.devcamp2.flametalk_android.databinding.ItemVerticalProfileBinding
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.sgs.devcamp2.flametalk_android.data.model.profile.ProfilePreview
+import com.sgs.devcamp2.flametalk_android.databinding.ItemVerticalProfileBinding
 import com.sgs.devcamp2.flametalk_android.ui.friend.FriendFragmentDirections
 import com.sgs.devcamp2.flametalk_android.util.SimpleDiffUtilCallback
 import timber.log.Timber
@@ -67,7 +68,7 @@ class MultiProfileAdapter(
         }
 
         private fun initMultiProfileList(data: ProfilePreview) {
-            Glide.with(itemView).load(data.imageUrl).apply(RequestOptions.circleCropTransform())
+            Glide.with(itemView).load(data.imageUrl).transform(CenterCrop(), RoundedCorners(35))
                 .into(binding.imgVerticalProfile)
             binding.tvVerticalProfileNickname.text = nickname
             Timber.d("nickname? $nickname")
