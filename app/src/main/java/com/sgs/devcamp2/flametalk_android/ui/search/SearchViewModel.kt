@@ -3,7 +3,7 @@ package com.sgs.devcamp2.flametalk_android.ui.search
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sgs.devcamp2.flametalk_android.data.model.friend.FriendModel
+import com.sgs.devcamp2.flametalk_android.domain.entity.FriendModel
 import com.sgs.devcamp2.flametalk_android.domain.repository.FriendRepository
 import dagger.Lazy
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -1,7 +1,7 @@
 package com.sgs.devcamp2.flametalk_android.domain.repository
 
-import com.sgs.devcamp2.flametalk_android.data.model.friend.FriendModel
 import com.sgs.devcamp2.flametalk_android.data.source.local.database.AppDatabase
+import com.sgs.devcamp2.flametalk_android.domain.entity.FriendModel
 import com.sgs.devcamp2.flametalk_android.network.request.friend.AddContactFriendRequest
 import com.sgs.devcamp2.flametalk_android.network.request.friend.AddFriendRequest
 import com.sgs.devcamp2.flametalk_android.network.request.friend.FriendStatusRequest

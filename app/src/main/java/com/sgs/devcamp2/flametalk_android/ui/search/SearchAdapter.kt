@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.sgs.devcamp2.flametalk_android.data.model.friend.FriendModel
 import com.sgs.devcamp2.flametalk_android.databinding.ItemFriendPreviewBinding
+import com.sgs.devcamp2.flametalk_android.domain.entity.FriendModel
 import com.sgs.devcamp2.flametalk_android.ui.friend.FriendFragmentDirections
 import com.sgs.devcamp2.flametalk_android.util.SimpleDiffUtilCallback
 import com.sgs.devcamp2.flametalk_android.util.toVisible
