@@ -2,6 +2,7 @@ package com.sgs.devcamp2.flametalk_android.data.source.local.dao
 
 import androidx.room.*
 import com.sgs.devcamp2.flametalk_android.data.model.friend.FriendModel
+import kotlinx.coroutines.flow.Flow
 
 /**
  * @author 박소연
@@ -19,5 +20,5 @@ interface FriendDAO {
 
     // 친구 전체 조회
     @Query("SELECT * FROM friend")
-    fun getAllFriends(): List<FriendModel>
+    fun getAllFriends(): Flow<List<FriendModel>>
 }

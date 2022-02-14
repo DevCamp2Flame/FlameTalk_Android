@@ -73,7 +73,7 @@ class FriendFragment : Fragment() {
     private fun initAppbar() {
         binding.abFriend.tvAppbar.text = "친구"
         binding.abFriend.imgAppbarSearch.setOnClickListener {
-            // TODO: Friend > Search
+            findNavController().navigate(R.id.navigation_search)
         }
         binding.abFriend.imgAppbarAddFriend.setOnClickListener {
             findNavController().navigate(R.id.navigation_add_friend)

@@ -9,6 +9,7 @@ import com.sgs.devcamp2.flametalk_android.network.service.FriendService
 import dagger.Lazy
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 
 /**
@@ -57,6 +58,6 @@ class FriendRepository @Inject constructor(
 
     // 친구 리스트 전체 가져오기
     suspend fun getAllFriends() = withContext(ioDispatcher) {
-        db.friendDao().getAllFriends()
+        db.friendDao().getAllFriends().flowOn(ioDispatcher)
     }
 }
