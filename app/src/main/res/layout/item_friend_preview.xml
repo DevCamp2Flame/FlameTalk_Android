@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/img_friend_preview"
+    <View
+        android:id="@+id/v_friend_preview"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_margin="10dp"
@@ -25,6 +25,15 @@
         app:layout_constraintStart_toStartOf="@+id/img_friend_preview"
         app:layout_constraintTop_toTopOf="@+id/img_friend_preview"
         app:layout_constraintEnd_toEndOf="@+id/img_friend_preview"/>
+
+    <ImageView
+        android:id="@+id/img_friend_preview"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/img_friend_preview_none"
