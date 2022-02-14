@@ -1,7 +1,7 @@
 package com.sgs.devcamp2.flametalk_android.data.source.local.dao
 
 import androidx.room.*
-import com.sgs.devcamp2.flametalk_android.data.model.friend.FriendModel
+import com.sgs.devcamp2.flametalk_android.domain.entity.FriendModel
 import kotlinx.coroutines.flow.Flow
 
 /**
