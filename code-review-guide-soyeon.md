@@ -46,7 +46,7 @@
     │   ├── response          //  API response body
     │   └── service           // 네트워크 통신 요청 인터페이스
     ├── ui                    // 화면 별 Fragment, ViewModel, Adapter
-    └── util                  // 기타 확장함수와 유틸 클래스
+    └── util                  // 확장함수와 util클래스
 ```
 
 ======
