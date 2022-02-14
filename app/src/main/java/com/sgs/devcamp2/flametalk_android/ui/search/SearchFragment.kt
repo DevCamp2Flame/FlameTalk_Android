@@ -17,6 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 /**
  * @author 박소연
@@ -56,6 +57,7 @@ class SearchFragment : Fragment() {
 
     private fun initSearch() {
         binding.edtSearch.doOnTextChanged { text, start, before, count ->
+            Timber.d("입력된 텍스트 $text")
             viewModel.searchFriend(text.toString())
         }
     }
@@ -69,10 +71,12 @@ class SearchFragment : Fragment() {
             viewModel.searchedFriend.collectLatest {
                 if (it.isNullOrEmpty()) {
                     binding.cstSearchFriend.toVisibleGone()
+                    binding.tvSearchFriendEmpty.toVisible()
                 } else {
                     searchAdapter.data = it
                     searchAdapter.notifyDataSetChanged()
                     binding.cstSearchFriend.toVisible()
+                    binding.tvSearchFriendEmpty.toVisibleGone()
                 }
             }
         }

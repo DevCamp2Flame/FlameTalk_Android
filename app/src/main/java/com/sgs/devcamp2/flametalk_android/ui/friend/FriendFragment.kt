@@ -73,7 +73,7 @@ class FriendFragment : Fragment() {
     private fun initAppbar() {
         binding.abFriend.tvAppbar.text = "친구"
         binding.abFriend.imgAppbarSearch.setOnClickListener {
-            // TODO: Friend > Search
+            findNavController().navigate(R.id.navigation_search)
         }
         binding.abFriend.imgAppbarAddFriend.setOnClickListener {
             findNavController().navigate(R.id.navigation_add_friend)
@@ -133,7 +133,6 @@ class FriendFragment : Fragment() {
             viewModel.userProfile.collectLatest {
                 Glide.with(binding.lFriendMainUser.imgFriendPreview)
                     .load(it?.imageUrl).apply(RequestOptions.circleCropTransform())
-                    .apply(RequestOptions.placeholderOf(R.drawable.ic_person_white_24))
                     .into(binding.lFriendMainUser.imgFriendPreview)
 
                 if (it?.description.isNullOrEmpty()) {
@@ -165,7 +164,7 @@ class FriendFragment : Fragment() {
 
         lifecycleScope.launchWhenResumed {
             viewModel.multiProfile.collectLatest {
-                if (it.isNotEmpty()) {
+                if (it?.isNotEmpty() == true) {
                     multiProfileAdapter.data = it
                     multiProfileAdapter.notifyDataSetChanged()
                 }
@@ -173,6 +172,7 @@ class FriendFragment : Fragment() {
         }
         // 마지막 아이템: 만들기
         binding.itemFriendAddProfile.imgVerticalProfileNone.toVisible()
+        binding.itemFriendAddProfile.imgVerticalProfileIcon.toVisible()
         binding.itemFriendAddProfile.tvVerticalProfileNickname.text = "만들기"
 
         // 친구리스트 > 멀티프로필 생성: 멀티 프로필 만들기
@@ -214,8 +214,10 @@ class FriendFragment : Fragment() {
                 if (it.isNullOrEmpty()) {
                     friendVisibility(GONE)
                 } else {
+
                     friendAdapter.data = it
-                    friendAdapter.notifyDataSetChanged()
+                    friendAdapter.submitList(it)
+                    // friendAdapter.notifyDataSetChanged()
                     friendVisibility(VISIBLE)
                 }
             }

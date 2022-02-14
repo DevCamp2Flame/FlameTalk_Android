@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.sgs.devcamp2.flametalk_android.data.dummy.getBirthdayFriend
 import com.sgs.devcamp2.flametalk_android.data.dummy.getDummyFriend
 import com.sgs.devcamp2.flametalk_android.data.model.friend.Friend
+import com.sgs.devcamp2.flametalk_android.data.model.friend.FriendModel
 import com.sgs.devcamp2.flametalk_android.data.model.profile.ProfilePreview
 import com.sgs.devcamp2.flametalk_android.domain.repository.FriendRepository
 import com.sgs.devcamp2.flametalk_android.domain.repository.ProfileRepository
@@ -45,8 +46,8 @@ class FriendViewModel @Inject constructor(
     val userProfile = _userProfile?.asStateFlow()
 
     // 유저 멀티프로필
-    private val _multiProfile = MutableStateFlow<List<ProfilePreview>>(emptyList())
-    val multiProfile: MutableStateFlow<List<ProfilePreview>> = _multiProfile
+    private val _multiProfile = MutableStateFlow<List<ProfilePreview>?>(null) // (emptyList())
+    val multiProfile: MutableStateFlow<List<ProfilePreview>?> = _multiProfile
 
     // 생일인 친구 리스트
     private val _birthProfile = MutableStateFlow<List<Friend>>(emptyList())
@@ -80,7 +81,7 @@ class FriendViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val response = profileRepository.get().getProfileList()
-                val multiProfile = ArrayList<ProfilePreview>()
+                val multiProfile = arrayListOf<ProfilePreview>() // = ArrayList<ProfilePreview>()
 
                 if (response.status == 200) {
                     _nickname.value = response.data.nickname
@@ -88,15 +89,21 @@ class FriendViewModel @Inject constructor(
                     response.data.profiles.map {
                         when (it.isDefault) {
                             // 기본 프로필
-                            true -> _userProfile?.value = it
+                            true -> _userProfile.value = it
                             // 추가로 생성한 멀티 프로필
                             false -> multiProfile.add(it)
                         }
                     }
-                    _multiProfile.value = multiProfile.toList()
+
+                    if (multiProfile.isEmpty()) {
+                        _multiProfile.value = null
+                    } else {
+                        _multiProfile.value = multiProfile
+                    }
+                    // _multiProfile.value = multiProfile.toList()
 
                     // Result
-                    Timber.d("User Profile ${_userProfile?.value}")
+                    Timber.d("User Profile ${_userProfile.value}")
                     Timber.d("Multi Profile ${_multiProfile.value}")
                 } else {
                     _message.value = response.message
@@ -120,7 +127,10 @@ class FriendViewModel @Inject constructor(
                 if (response?.status == 200) {
                     when (type) {
                         BIRTHDAY_FRIEND -> _birthProfile.value = response.data
-                        FRIEND -> _friendProfile.value = response.data
+                        FRIEND -> {
+                            _friendProfile.value = response.data
+                            saveFriendProfiles()
+                        }
                     }
 
                     // Result
@@ -212,6 +222,21 @@ class FriendViewModel @Inject constructor(
                 _error.value = error.toString()
                 Timber.d("Fail Response: $_error")
             }
+        }
+    }
+
+    // 친구 프로필 리스트 로컬에 저장
+    private fun saveFriendProfiles() {
+        viewModelScope.launch {
+            val friendsData: List<FriendModel> = _friendProfile.value.map {
+                FriendModel(
+                    profileId = it.preview.profileId,
+                    nickname = it.nickname,
+                    imageUrl = it.preview.imageUrl,
+                    description = it.preview.description
+                )
+            }
+            friendRepository.get().insertAllFriends(friendsData)
         }
     }
 

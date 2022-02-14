@@ -35,8 +35,8 @@ class NetworkInterceptor(
                 tokenSupplier().also { Timber.d("ACCESS-TOKEN: $it") }.toString()
             )
 
-         //   .addHeader("userId", "1644502326105613328")
-      
+        //   .addHeader("userId", "1644502326105613328")
+
         // Request를 로그로 기록
         Timber.d("url -> ${request.url}")
         Timber.d("headers -> ${request.headers}")
@@ -50,7 +50,7 @@ class NetworkInterceptor(
 
         // Body로 넘어온 Resonse를 indent 처리하여 로그로 기록
         Timber.d(response.toString())
-        Timber.d(JSONObject(response.peekBody(Long.MAX_VALUE).string()).toString(4))
+        // Timber.d(JSONObject(response.peekBody(Long.MAX_VALUE).string()).toString(4))
 
         try {
             // 실패는 아니지만 응답 body 비어있는 경우

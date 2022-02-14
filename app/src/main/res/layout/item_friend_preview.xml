@@ -5,12 +5,32 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <View
+        android:id="@+id/v_friend_preview"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/bg_skyblue_30"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/img_friend_preview_icon"
+        android:layout_width="33dp"
+        android:layout_height="33dp"
+        app:tint="@color/white"
+        android:src="@drawable/ic_person_18"
+        app:layout_constraintBottom_toBottomOf="@+id/img_friend_preview"
+        app:layout_constraintStart_toStartOf="@+id/img_friend_preview"
+        app:layout_constraintTop_toTopOf="@+id/img_friend_preview"
+        app:layout_constraintEnd_toEndOf="@+id/img_friend_preview"/>
+
     <ImageView
         android:id="@+id/img_friend_preview"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_margin="10dp"
-        android:background="@drawable/bg_skyblue_30"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
