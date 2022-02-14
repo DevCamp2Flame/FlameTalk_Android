@@ -8,7 +8,7 @@
 - 유저 프로필 관리
 - 프로필, 배경화면 이미지 히스토리 피드 구현
 - 파일 서버 통신
-- [ 개발중 ] 친구 리스트 검색 기능 (Room을 이용한 내부 DB 기반 검색)
+- 친구 리스트 검색 기능 (Room을 이용한 내부 DB 기반 검색)
 - [ 개발중 ] 프로필 스티커 기능
 
 # Code Review Index 
@@ -28,6 +28,7 @@
    - 확장함수 적옹
    - AppBar의 layout의 include
 10.  [주소록 전화번호 가져온 후 통신 요청 보내기](#index_10)
+11.  [로컬 검색 기능](#index_11)
 
 ## 📚 파일 디렉터리 구조
 ```
@@ -39,7 +40,8 @@
     │          └── local      
     │                └── dao  // 로컬 RoomDB 데이터 접근 인터페이스 
     ├── di 
-    ├── domain 
+    ├── domain
+    │   ├── entity            // DB에 저장할 데이터 모델
     │   └── repository        //  데이터 엑세스 레파지토리
     ├── network
     │   ├── request           //  API request body
@@ -280,3 +282,71 @@ fragment_friend.xml
 [코드 바로가기](https://github.com/DevCamp2Flame/FlameTalk_Android/blob/develop/app/src/main/java/com/sgs/devcamp2/flametalk_android/ui/friend/FriendViewModel.kt)
 
 [주소록 내 전화번호 가져오기 글](https://abrasive-ziconium-edb.notion.site/Contacts-4c9864307a3f4c6e902e707121256e11)
+
+
+</br>
+<h2 id="index_11">11. 로컬 검색 기능</h2>
+
+
+<div align="center">
+<img src="https://user-images.githubusercontent.com/43838030/153855126-a9537873-a680-418c-a453-28d9cc32d507.gif" width="250">
+</div>
+
+
+FlameTalk에서 친구 목록 검색은 한정된 친구 리스트 데이터를 기반으로한 검색이기 때문에 서버의 부담을 줄여주고자 클라이언트에서 로컬 검색으로 구현했습니다. 
+로그인 후 첫 화면인 친구 목록 뷰의 초기화를 위해 서버로부터 친구 목록 데이터를 가져올 때 이를 RoomDB에 friend 테이블에 저장하고 있습니다.
+
+[Entity - FriendModel](https://github.com/DevCamp2Flame/FlameTalk_Android/blob/develop/app/src/main/java/com/sgs/devcamp2/flametalk_android/domain/entity/FriendModel.kt) friend 테이블에 저장될 Entity
+
+[DAO(Data Access Object) - FriendDAO](https://github.com/DevCamp2Flame/FlameTalk_Android/blob/develop/app/src/main/java/com/sgs/devcamp2/flametalk_android/data/source/local/dao/FriendDAO.kt) friend 테이블의 데이터에 접근할 수 있는 인터페이스
+
+[Repository - FriendRepository](https://github.com/DevCamp2Flame/FlameTalk_Android/blob/develop/app/src/main/java/com/sgs/devcamp2/flametalk_android/domain/repository/FriendRepository.kt) 친구 데이터를 네트워크와, 로컬에서 가져오는 repository
+
+로컬의 데이터를 가져오는 작업 또한 오래걸리는 무거운 작업이므로 Coroutine을 이용하여 백그라운드 스레드를 이용한 비동기 작업으로 진행하도록 했습니다.
+아래와 같이 Coroutine Flow
+```
+ // 친구 리스트 로컬에 저장
+    suspend fun insertAllFriends(friends: List<FriendModel>) = withContext(ioDispatcher) {
+        db.friendDao().insertAllFriends(friends)
+    }
+
+    // 친구 리스트 전체 가져오기
+    suspend fun getAllFriends() = withContext(ioDispatcher) {
+        db.friendDao().getAllFriends().flowOn(ioDispatcher)
+    }
+```
+[ViewModel - SearchViewModel](https://github.com/DevCamp2Flame/FlameTalk_Android/blob/develop/app/src/main/java/com/sgs/devcamp2/flametalk_android/ui/search/SearchViewModel.kt) 실질적인 검색 비즈니스 로직을 수행
+
+UI의 초기화와 뷰모델 생성 시 로컬 저장소로부터 검색에 쓰일 데이터를 가져오고 이를 map함수를 통해 검색어를 포함하는지 확인하여 검색을 구현했습니다. 문자열 알고리즘에서 가장 성능이 좋은 KMP 알고리즘은 O(n)의 시간복잡도를 가지고 있습니다. Android Framework의 contains를 설명하는 코드를 보면 contains는 내부적으로 indexOf를 이용하고 있으며 indexOf의 시간복잡도 또한 O(n)을 가지고 있어 결과적으로 contains를 이용하여 O(n) 성능을 가진 검색을 구현했습니다. KMP 알고리즘을 직접 구현하려 했으나 검색 UI에 이후에 채팅방 검색이 추가될 가능성이 있어 팀원과 협업을 위해 보다 가독성이 좋은 contains를 선택하게 되었습니다.
+
+
+```
+ init {
+        // 뷰모델 생성 시 친구 전체 목록 가져옴
+        viewModelScope.launch {
+            friendRepository.get().getAllFriends().collectLatest {
+                _allFriends.value = it
+            }
+        }
+    }
+
+    // 검색어 입력 후 이벤트 날릴 때 호출
+    fun searchFriend(input: String) {
+        var result: ArrayList<FriendModel> = arrayListOf()
+
+        if (_allFriends.value.isNullOrEmpty()) {
+            _message.value = "친구 데이터가 없습니다."
+        } else {
+            if (!input.isNullOrEmpty()) {
+                _allFriends.value!!.map {
+                    if (it.nickname.contains(input)) {
+                        result.add(it)
+                    }
+                }
+            } else {
+            }
+        }
+        _searchedFriend.value = result
+    }
+```
+
