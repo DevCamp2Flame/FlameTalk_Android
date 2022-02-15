@@ -26,9 +26,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         initNavigationBar()
-        model.connectChatServer()
-        initReceiveMessage()
-        model.getDeviceToken(this)
+//        model.connectChatServer()
+//        initReceiveMessage()
+//        model.getDeviceToken(this)
     }
 
     private fun initNavigationBar() {
@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.findFragmentById(R.id.fcv_main) as NavHostFragment
         navController = navHostFragment.navController
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            if (destination.id == R.id.navigation_signin || destination.id == R.id.navigation_signup ||
+            if (destination.id == R.id.navigation_splash || destination.id == R.id.navigation_signin || destination.id == R.id.navigation_signup ||
                 destination.id == R.id.navigation_chat_room || destination.id == R.id.navigation_profile ||
                 destination.id == R.id.navigation_profile_desc || destination.id == R.id.navigation_edit_profile ||
                 destination.id == R.id.navigation_create_chat_room ||
