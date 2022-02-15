@@ -173,6 +173,7 @@ class FriendFragment : Fragment() {
         // 마지막 아이템: 만들기
         binding.itemFriendAddProfile.imgVerticalProfileNone.toVisible()
         binding.itemFriendAddProfile.imgVerticalProfileIcon.toVisible()
+        binding.itemFriendAddProfile.vVerticalProfile.toVisibleGone()
         binding.itemFriendAddProfile.tvVerticalProfileNickname.text = "만들기"
 
         // 친구리스트 > 멀티프로필 생성: 멀티 프로필 만들기
