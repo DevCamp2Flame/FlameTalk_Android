@@ -1,13 +1,12 @@
 package com.sgs.devcamp2.flametalk_android.data.model.friend
 
 import androidx.annotation.Keep
-import androidx.room.Entity
 import com.google.gson.annotations.SerializedName
 
 /**
  * @author 박소연
  * @created 2022/01/31
- * @created 2022/02/06
+ * @created 2022/02/16
  * @desc 프로필 정보
  *
  * [Friend]
@@ -21,6 +20,8 @@ import com.google.gson.annotations.SerializedName
 data class Friend(
     @SerializedName("friendId")
     val friendId: Long,
+    @SerializedName("assignedProfileId")
+    val assignedProfileId: Long,
     @SerializedName("userId")
     val userId: String,
     @SerializedName("nickname")
