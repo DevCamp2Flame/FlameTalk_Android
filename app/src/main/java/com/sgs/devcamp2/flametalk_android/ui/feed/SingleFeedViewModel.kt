@@ -26,7 +26,7 @@ class SingleFeedViewModel @Inject constructor(
 
     // 프로필 이미지
     private val _profileImage = MutableStateFlow("")
-    val profileImage = _profileImage?.asStateFlow()
+    val profileImage = _profileImage.asStateFlow()
 
     // 프로필 아이디
     private val _profileId: MutableLiveData<Long> = MutableLiveData(0L)
@@ -62,20 +62,6 @@ class SingleFeedViewModel @Inject constructor(
                 _feeds.value = response.data.feeds
 
                 Timber.d("$response")
-            } catch (ignored: Throwable) {
-                _error?.value = "알 수 없는 에러 발생"
-                Timber.d("Error:  $ignored")
-            }
-        }
-    }
-
-    // TODO: Single, Total Feed가 메뉴 통신이 겹치기 때문에 ViewModel을 공유할 수 있다.
-    // TODO: file 다운로드 요청
-    fun downloadItem() {
-        viewModelScope.launch {
-            try {
-                // val response = fileRepository.get().downloadItem(fileId)
-                // Timber.d("$response")
             } catch (ignored: Throwable) {
                 _error?.value = "알 수 없는 에러 발생"
                 Timber.d("Error:  $ignored")

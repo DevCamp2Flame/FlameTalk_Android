@@ -55,22 +55,20 @@ class ProfileFragment : Fragment() {
         binding.imgProfile.setOnClickListener {
             findNavController().navigate(
                 ProfileFragmentDirections.actionProfileToFeedSingle(
-                    1,
+                    args.profileId,
                     false
                 )
             )
-            // TODO: viewModel.profileId.value로 변경
         }
 
         // 배경화면 히스토리 피드로 이동
         binding.imgProfileBg.setOnClickListener {
             findNavController().navigate(
                 ProfileFragmentDirections.actionProfileToFeedSingle(
-                    1,
+                    args.profileId,
                     true
                 )
             )
-            // TODO: viewModel.profileId.value로 변경
         }
 
         // 프로필 상세 닫기
@@ -86,7 +84,6 @@ class ProfileFragment : Fragment() {
         }
         // 프로필 수정하기로 이동
         binding.cstProfileEdit.setOnClickListener {
-            // TODO: 통신 응답으로 넘어온 유저 데이터를 넘겨야 한다
             findNavController().navigate(
                 ProfileFragmentDirections.actionProfileToEdit(viewModel.userProfile.value)
             )
@@ -94,7 +91,7 @@ class ProfileFragment : Fragment() {
 
         // 프로필 메뉴: 숨김친구, 차단친구
         binding.imgProfileMenu.setOnClickListener {
-            var popupMenu = PopupMenu(context, binding.imgProfileMenu)
+            val popupMenu = PopupMenu(context, binding.imgProfileMenu)
             popupMenu.inflate(R.menu.profile_menu)
             popupMenu.setOnMenuItemClickListener {
                 when (it.itemId) {
@@ -104,15 +101,14 @@ class ProfileFragment : Fragment() {
                     }
                     R.id.menu_block -> {
                         // 차단 친구 요청
-                        viewModel.changeFriendStatue(TO_BLOCK, args.friendId, args.assignedProfileId)
+                        viewModel.changeFriendStatue(
+                            TO_BLOCK,
+                            args.friendId,
+                            args.assignedProfileId
+                        )
                     }
                     else -> {
                         // 실행되지 않음
-                        Snackbar.make(
-                            binding.imgProfileMenu,
-                            "else...",
-                            Snackbar.LENGTH_SHORT
-                        ).show()
                     }
                 }
                 return@setOnMenuItemClickListener false

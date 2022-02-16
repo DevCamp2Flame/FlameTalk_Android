@@ -112,7 +112,8 @@
             app:argType="integer" />
         <argument
             android:name="profileId"
-            app:argType="long" />
+            app:argType="long"
+            android:defaultValue="0L"/>
         <argument
             android:name="friendId"
             app:argType="long"

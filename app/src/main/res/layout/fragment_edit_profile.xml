@@ -68,15 +68,23 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <ImageView
-        android:id="@+id/img_edit_profile_gallery"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+    <View
+        android:id="@+id/v_edit_profile_gallery"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
         android:background="@drawable/bg_white_15"
-        android:foreground="@drawable/ic_camera_24"
-        android:padding="15dp"
         app:layout_constraintBottom_toBottomOf="@+id/img_edit_profile"
         app:layout_constraintEnd_toEndOf="@+id/img_edit_profile" />
+
+    <ImageView
+        android:id="@+id/img_edit_profile_gallery"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:src="@drawable/ic_camera_24"
+        app:layout_constraintTop_toTopOf="@+id/v_edit_profile_gallery"
+        app:layout_constraintStart_toStartOf="@+id/v_edit_profile_gallery"
+        app:layout_constraintBottom_toBottomOf="@+id/v_edit_profile_gallery"
+        app:layout_constraintEnd_toEndOf="@+id/v_edit_profile_gallery" />
 
     <TextView
         android:id="@+id/tv_edit_profile_nickname"
@@ -124,15 +132,24 @@
         app:layout_constraintStart_toStartOf="@id/tv_edit_profile_desc"
         app:layout_constraintTop_toBottomOf="@id/tv_edit_profile_desc" />
 
-    <ImageView
-        android:id="@+id/img_edit_profile_gallery_bg"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+    <View
+        android:id="@+id/v_edit_profile_gallery_bg"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
         android:layout_margin="20dp"
         android:padding="10dp"
         android:background="@drawable/bg_white_15"
-        android:foreground="@drawable/ic_camera_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/img_edit_profile_gallery_bg"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:src="@drawable/ic_camera_24"
+        app:layout_constraintTop_toTopOf="@+id/v_edit_profile_gallery_bg"
+        app:layout_constraintEnd_toEndOf="@+id/v_edit_profile_gallery_bg"
+        app:layout_constraintBottom_toBottomOf="@+id/v_edit_profile_gallery_bg"
+        app:layout_constraintStart_toStartOf="@+id/v_edit_profile_gallery_bg" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
