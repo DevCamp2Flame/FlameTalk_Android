@@ -54,6 +54,10 @@ class AddProfileViewModel @Inject constructor(
     private val _backgroundImageUrl = MutableStateFlow("")
     val backgroundImageUrl = _backgroundImageUrl.asStateFlow()
 
+    // 파일 통신 결과
+    private val _isFileSuccess: MutableStateFlow<Boolean?> = MutableStateFlow(null)
+    val isFileSuccess = _isFileSuccess.asStateFlow()
+
     // 메세지
     private val _message = MutableStateFlow("")
     val message = _message.asStateFlow()
@@ -111,7 +115,10 @@ class AddProfileViewModel @Inject constructor(
             }
             // 파일 통신이 모두 끝나면 프로필 생성 요청을 보낸다
             deferred.await()
-            postProfile()
+            Timber.d("_isFileSuccess.value: ${_isFileSuccess.value}")
+            if (_isFileSuccess.value == true) {
+                postProfile()
+            }
         }
     }
 
@@ -140,6 +147,10 @@ class AddProfileViewModel @Inject constructor(
                     } else if (type == BACKGROUND_IMAGE) {
                         _backgroundImageUrl.value = response.data.url
                     }
+                    _isFileSuccess.value = true
+                } else if (response.status == 400) {
+                    _message.value = "10MB가 넘는 파일은 업로드할 수 없습니다."
+                    _isFileSuccess.value = false
                 } else {
                     _message.value = response.message
                 }
@@ -157,7 +168,7 @@ class AddProfileViewModel @Inject constructor(
                     userId = _userId.value,
                     imageUrl = _profileImageUrl.value,
                     bgImageUrl = _backgroundImageUrl.value,
-                    sticker = null, // TODO: Add Sticker Model
+                    sticker = emptyList(), // TODO: Add Sticker Model
                     description = _description.value,
                     isDefault = false
                 )
