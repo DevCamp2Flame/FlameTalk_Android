@@ -11,9 +11,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
-import com.google.android.material.snackbar.Snackbar
-import com.sgs.devcamp2.flametalk_android.R
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentAddFriendBinding
 import com.sgs.devcamp2.flametalk_android.util.toVisible
 import com.sgs.devcamp2.flametalk_android.util.toVisibleGone
@@ -40,7 +39,6 @@ class AddFriendFragment : Fragment() {
             viewModel.nickname.value,
             onClicked = {
                 viewModel.clickedProfile(it.id)
-                Snackbar.make(requireView(), "클릭한 아이템 ${it.id}", Snackbar.LENGTH_SHORT).show()
             }
         )
     }
@@ -63,11 +61,13 @@ class AddFriendFragment : Fragment() {
         }
 
         lifecycleScope.launch {
-            viewModel.isSuccess.collectLatest {
+            viewModel.isSuccess.collect {
                 if (it != null) {
                     if (it) {
+                        binding.tvAddFriendResult.toVisible()
                         binding.itemAddFriend.root.toVisible()
                     } else {
+                        binding.tvAddFriendResult.toVisibleGone()
                         binding.itemAddFriend.root.toVisibleGone()
                     }
                 }
@@ -79,9 +79,9 @@ class AddFriendFragment : Fragment() {
                 if (it != null) {
                     // 프로필 이미지, 닉네임, 상태메세지
                     Glide.with(binding.itemAddFriend.imgFriendPreview).load(it.imageUrl)
-                        .apply(RequestOptions.circleCropTransform())
-                        .apply(RequestOptions.placeholderOf(R.drawable.ic_person_white_24))
+                        .transform(CenterCrop(), RoundedCorners(35))
                         .into(binding.itemAddFriend.imgFriendPreview)
+                    binding.itemAddFriend.tvFriendPreviewNickname.text = it.nickname
                     if (it.description == null) {
                         binding.itemAddFriend.tvFriendPreviewDesc.toVisibleGone()
                     } else {
