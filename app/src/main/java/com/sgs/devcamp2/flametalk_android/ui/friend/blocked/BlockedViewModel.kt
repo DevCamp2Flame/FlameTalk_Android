@@ -3,8 +3,6 @@ package com.sgs.devcamp2.flametalk_android.ui.friend.blocked
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sgs.devcamp2.flametalk_android.data.dummy.getBirthdayFriend
-import com.sgs.devcamp2.flametalk_android.data.dummy.getDummyFriend
 import com.sgs.devcamp2.flametalk_android.data.model.friend.Friend
 import com.sgs.devcamp2.flametalk_android.data.model.friend.FriendStatus
 import com.sgs.devcamp2.flametalk_android.domain.repository.FriendRepository
@@ -23,8 +21,8 @@ class BlockedViewModel @Inject constructor(
     private val friendRepository: Lazy<FriendRepository>
 ) : ViewModel() {
     // 네트워크 통신 데이터 전 더미데이터
-    private var dummyBirthdayData: List<Friend> = getBirthdayFriend()
-    private var dummyFriendData: List<Friend> = getDummyFriend()
+//    private var dummyBirthdayData: List<Friend> = getBirthdayFriend()
+//    private var dummyFriendData: List<Friend> = getDummyFriend()
 
     // 유저 닉네임
     private val _nickname = MutableStateFlow("")
