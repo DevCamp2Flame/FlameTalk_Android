@@ -232,7 +232,7 @@ class CoroutineModule {
 
 </br>
 
-<h2 id="index_7">7. (진행중) RoomDB를 이용한 local data 기반 검색</h2>
+<h2 id="index_7">7. RoomDB를 이용한 local data 기반 검색</h2>
 
 
 <div align="center">
