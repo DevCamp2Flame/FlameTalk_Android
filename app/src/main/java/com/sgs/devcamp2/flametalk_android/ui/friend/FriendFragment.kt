@@ -16,7 +16,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.snackbar.Snackbar
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentFriendBinding
@@ -132,7 +133,7 @@ class FriendFragment : Fragment() {
         lifecycleScope.launchWhenResumed {
             viewModel.userProfile.collectLatest {
                 Glide.with(binding.lFriendMainUser.imgFriendPreview)
-                    .load(it?.imageUrl).apply(RequestOptions.circleCropTransform())
+                    .load(it?.imageUrl).transform(CenterCrop(), RoundedCorners(35))
                     .into(binding.lFriendMainUser.imgFriendPreview)
 
                 if (it?.description.isNullOrEmpty()) {

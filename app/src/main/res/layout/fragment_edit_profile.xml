@@ -38,12 +38,32 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <View
+        android:id="@+id/v_img_profile"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/bg_skyblue2_50"
+        app:layout_constraintBottom_toBottomOf="@+id/img_edit_profile"
+        app:layout_constraintEnd_toEndOf="@+id/img_edit_profile"
+        app:layout_constraintStart_toStartOf="@+id/img_edit_profile"
+        app:layout_constraintTop_toTopOf="@+id/img_edit_profile" />
+
+    <ImageView
+        android:id="@+id/img_friend_hidden_icon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/ic_person_18"
+        app:layout_constraintBottom_toBottomOf="@+id/img_edit_profile"
+        app:layout_constraintEnd_toEndOf="@+id/img_edit_profile"
+        app:layout_constraintStart_toStartOf="@+id/img_edit_profile"
+        app:layout_constraintTop_toTopOf="@+id/img_edit_profile"
+        app:tint="@color/white" />
+
     <ImageView
         android:id="@+id/img_edit_profile"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginBottom="200dp"
-        android:background="@drawable/bg_skyblue2_50"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -109,10 +129,10 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_margin="20dp"
+        android:padding="10dp"
         android:background="@drawable/bg_white_15"
         android:foreground="@drawable/ic_camera_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

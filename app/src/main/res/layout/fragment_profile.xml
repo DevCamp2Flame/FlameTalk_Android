@@ -41,17 +41,39 @@
         app:tint="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+
+    <View
+        android:id="@+id/v_img_profile"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/bg_skyblue2_50"
+        app:layout_constraintBottom_toBottomOf="@+id/img_profile"
+        app:layout_constraintStart_toStartOf="@+id/img_profile"
+        app:layout_constraintTop_toTopOf="@+id/img_profile"
+        app:layout_constraintEnd_toEndOf="@+id/img_profile"/>
+
+    <ImageView
+        android:id="@+id/img_friend_hidden_icon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:tint="@color/white"
+        android:src="@drawable/ic_person_18"
+        app:layout_constraintBottom_toBottomOf="@+id/img_profile"
+        app:layout_constraintStart_toStartOf="@+id/img_profile"
+        app:layout_constraintTop_toTopOf="@+id/img_profile"
+        app:layout_constraintEnd_toEndOf="@+id/img_profile"/>
+
     
     <ImageView
         android:id="@+id/img_profile"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginBottom="95dp"
-        android:background="@drawable/bg_skyblue2_50"
         app:layout_constraintBottom_toTopOf="@id/cst_profile_edit"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
+        app:layout_constraintStart_toStartOf="parent" />
+
 
     <TextView
         android:id="@+id/tv_profile_nickname"
