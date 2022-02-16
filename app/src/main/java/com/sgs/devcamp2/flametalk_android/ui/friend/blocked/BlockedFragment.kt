@@ -45,7 +45,7 @@ class BlockedFragment : Fragment() {
                 findNavController().navigate(blockedToFriendProfileDirections)
             },
             onChangeBlock = {
-                viewModel.changeBlockStatue(it.friendId)
+                viewModel.changeBlockStatue(it.friendId, it.assignedProfileId)
             }
         )
     }
@@ -70,6 +70,10 @@ class BlockedFragment : Fragment() {
         binding.abBlockedFriend.imgAppbarSearch.toVisibleGone()
         binding.abBlockedFriend.imgAppbarAddFriend.toVisibleGone()
         binding.abBlockedFriend.imgAppbarSetting.toVisibleGone()
+
+        binding.abBlockedFriend.imgAppbarBack.setOnClickListener {
+            findNavController().popBackStack()
+        }
     }
 
     // 프로필 초기화

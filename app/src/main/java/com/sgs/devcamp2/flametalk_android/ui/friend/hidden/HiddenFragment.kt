@@ -45,7 +45,7 @@ class HiddenFragment : Fragment() {
                 findNavController().navigate(blockedToFriendProfileDirections)
             },
             onChangeHidden = {
-                viewModel.changeHiddenStatue(it.friendId)
+                viewModel.changeHiddenStatue(it.friendId, it.assignedProfileId)
             }
         )
     }
@@ -70,6 +70,10 @@ class HiddenFragment : Fragment() {
         binding.abHiddenFriend.imgAppbarSearch.toVisibleGone()
         binding.abHiddenFriend.imgAppbarAddFriend.toVisibleGone()
         binding.abHiddenFriend.imgAppbarSetting.toVisibleGone()
+
+        binding.abHiddenFriend.imgAppbarBack.setOnClickListener {
+            findNavController().popBackStack()
+        }
     }
 
     // 프로필 초기화
@@ -78,27 +82,34 @@ class HiddenFragment : Fragment() {
         initBirthdayProfile()
     }
 
-    // 생일인 친구 리스트 초기화
+    //  숨김 친구 리스트 초기화
     private fun initBirthdayProfile() {
         binding.rvHiddenFriend.layoutManager = LinearLayoutManager(requireContext())
         binding.rvHiddenFriend.adapter = hiddenAdapter
 
         lifecycleScope.launch {
             viewModel.hiddenFriend.collectLatest {
-                if (it.isNullOrEmpty()) { // empty view
-                    showEmptyView(GONE)
-                } else {
-                    hiddenAdapter.data = it
-                    hiddenAdapter.notifyDataSetChanged()
-                    showEmptyView(VISIBLE)
+                when {
+                    it == null -> {
+                        binding.rvHiddenFriend.toVisible()
+                        binding.tvBlockedFriendEmpty.toVisibleGone()
+                    }
+                    it.isEmpty() -> { // is empty
+                        showEmptyView(VISIBLE)
+                    }
+                    else -> {
+                        hiddenAdapter.data = it
+                        hiddenAdapter.submitList(it)
+                        showEmptyView(GONE)
+                    }
                 }
             }
         }
     }
 
     private fun showEmptyView(type: Int) {
-        binding.rvHiddenFriend.visibility = type
-        binding.tvBlockedFriendEmpty.visibility = 8 - type
+        binding.rvHiddenFriend.visibility = 8 - type
+        binding.tvBlockedFriendEmpty.visibility = type
     }
 
     companion object {

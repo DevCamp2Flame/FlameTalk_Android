@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_navigation"
-    app:startDestination="@id/navigation_splash">
+    app:startDestination="@id/navigation_signin">
 
     <fragment
         android:id="@+id/navigation_splash"
@@ -79,11 +79,6 @@
         android:name="com.sgs.devcamp2.flametalk_android.ui.friend.add.AddFriendFragment"
         android:label="AddFriendFragment"
         tools:layout="@layout/fragment_add_friend">
-        <action
-            android:id="@+id/action_add_to_friend"
-            app:destination="@id/navigation_friend"
-            app:popUpTo="@id/navigation_friend"
-            app:popUpToInclusive="true" />
     </fragment>
 
     <!--친구 검색-->
@@ -137,6 +132,11 @@
         <action
             android:id="@+id/action_profile_to_create_chat_room"
             app:destination="@id/navigation_create_chat_room" />
+        <action
+            android:id="@+id/action_profile_to_friend"
+            app:destination="@id/navigation_friend"
+            app:popUpTo="@id/navigation_friend"
+            app:popUpToInclusive="true"/>
     </fragment>
 
     <!--숨김 친구-->
@@ -195,10 +195,11 @@
             app:destination="@id/navigation_profile_desc" />
 
         <action
-            android:id="@+id/action_add_to_friend"
+            android:id="@+id/action_add_profile_to_friend"
             app:destination="@id/navigation_friend"
             app:popUpTo="@id/navigation_friend"
             app:popUpToInclusive="true"/>
+
     </fragment>
 
     <!--상태메세지 수정-->

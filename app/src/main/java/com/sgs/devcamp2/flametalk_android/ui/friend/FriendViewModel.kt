@@ -49,8 +49,9 @@ class FriendViewModel @Inject constructor(
     val birthProfile: MutableStateFlow<List<Friend>> = _birthProfile
 
     // 친구 리스트
-    private val _friendProfile = MutableStateFlow<List<Friend>>(emptyList())
-    val friendProfile: MutableStateFlow<List<Friend>> = _friendProfile
+    private val _friendProfile: MutableStateFlow<List<Friend>?> =
+        MutableStateFlow(null) // (emptyList())
+    val friendProfile: MutableStateFlow<List<Friend>?> = _friendProfile
 
     // 주소록 전화번호
     private val _contact = MutableStateFlow<List<String>>(emptyList())
@@ -223,13 +224,18 @@ class FriendViewModel @Inject constructor(
     // 친구 프로필 리스트 로컬에 저장
     private fun saveFriendProfiles() {
         viewModelScope.launch {
-            val friendsData: List<FriendModel> = _friendProfile.value.map {
-                FriendModel(
-                    profileId = it.preview.profileId,
-                    nickname = it.nickname,
-                    imageUrl = it.preview.imageUrl,
-                    description = it.preview.description
-                )
+            var friendsData: List<FriendModel>
+            if (_friendProfile.value != null) {
+                friendsData = _friendProfile.value!!.map {
+                    FriendModel(
+                        profileId = it.preview.profileId,
+                        nickname = it.nickname,
+                        imageUrl = it.preview.imageUrl,
+                        description = it.preview.description
+                    )
+                }
+            } else {
+                friendsData = emptyList()
             }
             friendRepository.get().insertAllFriends(friendsData)
         }

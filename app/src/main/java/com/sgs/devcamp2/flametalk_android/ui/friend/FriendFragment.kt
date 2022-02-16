@@ -16,7 +16,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.snackbar.Snackbar
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentFriendBinding
@@ -62,6 +63,12 @@ class FriendFragment : Fragment() {
     ): View {
         initUI()
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        initFriendProfile()
     }
 
     private fun initUI() {
@@ -132,7 +139,7 @@ class FriendFragment : Fragment() {
         lifecycleScope.launchWhenResumed {
             viewModel.userProfile.collectLatest {
                 Glide.with(binding.lFriendMainUser.imgFriendPreview)
-                    .load(it?.imageUrl).apply(RequestOptions.circleCropTransform())
+                    .load(it?.imageUrl).transform(CenterCrop(), RoundedCorners(35))
                     .into(binding.lFriendMainUser.imgFriendPreview)
 
                 if (it?.description.isNullOrEmpty()) {
@@ -166,7 +173,7 @@ class FriendFragment : Fragment() {
             viewModel.multiProfile.collectLatest {
                 if (it?.isNotEmpty() == true) {
                     multiProfileAdapter.data = it
-                    multiProfileAdapter.notifyDataSetChanged()
+                    multiProfileAdapter.submitList(it)
                 }
             }
         }
@@ -212,13 +219,13 @@ class FriendFragment : Fragment() {
         binding.rvFriend.adapter = friendAdapter
         lifecycleScope.launch {
             viewModel.friendProfile.collectLatest {
-                if (it.isNullOrEmpty()) {
+                if (it == null) {
+                    friendVisibility(VISIBLE)
+                } else if (it.isEmpty()) {
                     friendVisibility(GONE)
                 } else {
-
                     friendAdapter.data = it
                     friendAdapter.submitList(it)
-                    // friendAdapter.notifyDataSetChanged()
                     friendVisibility(VISIBLE)
                 }
             }

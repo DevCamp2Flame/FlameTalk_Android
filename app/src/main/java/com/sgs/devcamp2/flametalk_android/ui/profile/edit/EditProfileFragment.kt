@@ -121,6 +121,14 @@ class EditProfileFragment : Fragment() {
                 }
             }
         }
+
+        lifecycleScope.launchWhenResumed {
+            viewModel.isSuccess.collectLatest {
+                if (it == true) {
+                    findNavController().popBackStack()
+                }
+            }
+        }
     }
 
     private fun initClickEvent() {
