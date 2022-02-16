@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
+
+    <ImageView
+        android:id="@+id/v_gallery_bg"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/bg_white_15" />
+
+    <ImageView
+        android:id="@+id/img_gallery_bg"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:foreground="@drawable/ic_camera_24"
+        app:layout_constraintBottom_toBottomOf="@+id/v_gallery_bg"
+        app:layout_constraintEnd_toEndOf="@+id/v_gallery_bg"
+        app:layout_constraintStart_toStartOf="@+id/v_gallery_bg"
+        app:layout_constraintTop_toTopOf="@+id/v_gallery_bg" />
+</merge>

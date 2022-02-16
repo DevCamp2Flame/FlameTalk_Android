@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <View
-        android:id="@+id/v_friend_preview"
+        android:id="@+id/v_friend_hidden"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_margin="10dp"
@@ -16,18 +16,18 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/img_friend_preview_icon"
+        android:id="@+id/img_friend_hidden_icon"
         android:layout_width="33dp"
         android:layout_height="33dp"
         app:tint="@color/white"
         android:src="@drawable/ic_person_18"
-        app:layout_constraintBottom_toBottomOf="@+id/img_friend_preview"
-        app:layout_constraintStart_toStartOf="@+id/img_friend_preview"
-        app:layout_constraintTop_toTopOf="@+id/img_friend_preview"
-        app:layout_constraintEnd_toEndOf="@+id/img_friend_preview"/>
+        app:layout_constraintBottom_toBottomOf="@+id/img_friend_hidden"
+        app:layout_constraintStart_toStartOf="@+id/img_friend_hidden"
+        app:layout_constraintTop_toTopOf="@+id/img_friend_hidden"
+        app:layout_constraintEnd_toEndOf="@+id/img_friend_hidden"/>
 
     <ImageView
-        android:id="@+id/img_friend_preview"
+        android:id="@+id/img_friend_hidden"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_margin="10dp"
@@ -56,7 +56,7 @@
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/tv_friend_preview_desc"
-        app:layout_constraintStart_toEndOf="@+id/img_friend_preview"
+        app:layout_constraintStart_toEndOf="@+id/img_friend_hidden"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView

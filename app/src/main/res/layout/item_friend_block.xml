@@ -5,8 +5,29 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <View
+        android:id="@+id/v_friend_block"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/bg_skyblue_30"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageView
-        android:id="@+id/img_friend_status"
+        android:id="@+id/img_friend_block_icon"
+        android:layout_width="33dp"
+        android:layout_height="33dp"
+        android:src="@drawable/ic_person_18"
+        app:layout_constraintBottom_toBottomOf="@+id/img_friend_block"
+        app:layout_constraintEnd_toEndOf="@+id/img_friend_block"
+        app:layout_constraintStart_toStartOf="@+id/img_friend_block"
+        app:layout_constraintTop_toTopOf="@+id/img_friend_block"
+        app:tint="@color/white" />
+
+    <ImageView
+        android:id="@+id/img_friend_block"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_margin="15dp"
@@ -16,27 +37,27 @@
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
-        android:id="@+id/tv_friend_status_nickname"
+        android:id="@+id/tv_friend_block_nickname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/img_friend_status"
+        app:layout_constraintStart_toEndOf="@+id/img_friend_block"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="닉네임" />
 
     <ToggleButton
-        android:id="@+id/tv_friend_status"
+        android:id="@+id/tv_friend_block"
         android:layout_width="80dp"
         android:layout_height="35dp"
         android:layout_marginEnd="20dp"
         android:background="@drawable/selector_friend_check"
         android:gravity="center"
-        android:textOn="차단취소"
-        android:textOff="차단하기"
         android:textAlignment="gravity"
         android:textColor="@color/white"
+        android:textOff="차단취소"
+        android:textOn="차단하기"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
