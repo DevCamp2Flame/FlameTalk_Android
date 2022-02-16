@@ -195,6 +195,12 @@ class EditProfileViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val response = profileRepository.get().updateProfile(_profileId.value, request)
+
+                if (response.status == 200) {
+                    _isSuccess.value = true
+                } else {
+                    _message.value = response.message
+                }
                 Timber.d(response.toString())
             } catch (ignored: Throwable) {
                 Timber.d("알 수 없는 에러 발생")

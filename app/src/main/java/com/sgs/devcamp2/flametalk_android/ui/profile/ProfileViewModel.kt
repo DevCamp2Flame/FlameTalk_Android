@@ -69,7 +69,7 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    fun changeFriendStatue(friendId: Long, type: Int) {
+    fun changeFriendStatue(type: Int, friendId: Long, assignedProfileId: Long) {
         viewModelScope.launch {
             try {
                 var mark = false
@@ -82,7 +82,7 @@ class ProfileViewModel @Inject constructor(
                 }
                 val request = FriendStatusRequest(
                     // TODO: ISSUE 친구 리스트 조회 시, assigned profile Id를 서버로부터 추가로 받아야 함
-                    assignedProfileId = _userProfile.value!!.profileId,
+                    assignedProfileId = assignedProfileId,
                     isMarked = mark,
                     isHidden = hide,
                     isBlocked = block,
@@ -90,8 +90,17 @@ class ProfileViewModel @Inject constructor(
                 val response = friendRepository.get().putFriendStatus(friendId, request)
 
                 if (response.status == 200) {
-                    // Result
-                    Timber.d("Response ${response.data}")
+                    when (response.data.type) {
+                        "DEFAULT" ->
+                            _message.value = "${response.data.nickname}님의 상태를 해제했습니다."
+                        "MARKED" ->
+                            _message.value = "${response.data.nickname}님을 즐겨찾기로 등록했습니다."
+                        "HIDDEN" ->
+                            _message.value = "${response.data.nickname}님의 숨김친구로 설정했습니다."
+                        "BLOCKED" ->
+                            _message.value = "${response.data.nickname}님의 차단친구로 설정했습니다."
+                    }
+                    Timber.d("Profile Response ${response.data}")
                     Timber.d("Type ${response.data.type}")
                 } else {
                     _message.value = response.message
