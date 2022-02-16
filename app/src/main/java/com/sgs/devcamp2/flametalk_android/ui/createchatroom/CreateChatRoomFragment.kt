@@ -112,7 +112,10 @@ class CreateChatRoomFragment : Fragment(), View.OnClickListener {
                     if (binding.etChatRoomInputText.text.isEmpty()) {
                         this.context?.showToast("메세지를 입력해주세요")
                     } else {
-                        model.createChatRoom(args.users.toList())
+                        // [소연] Profile에서 올 경우 userList가 없어 null처리 함
+                        if (args.users != null) {
+                            model.createChatRoom(args.users!!.toList())
+                        }
                     }
                 }
         }

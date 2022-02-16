@@ -6,8 +6,6 @@ import android.database.Cursor
 import android.provider.ContactsContract
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sgs.devcamp2.flametalk_android.data.dummy.getBirthdayFriend
-import com.sgs.devcamp2.flametalk_android.data.dummy.getDummyFriend
 import com.sgs.devcamp2.flametalk_android.data.model.friend.Friend
 import com.sgs.devcamp2.flametalk_android.data.model.profile.ProfilePreview
 import com.sgs.devcamp2.flametalk_android.domain.entity.FriendModel
@@ -29,9 +27,6 @@ class FriendViewModel @Inject constructor(
     private val profileRepository: Lazy<ProfileRepository>,
     private val friendRepository: Lazy<FriendRepository>
 ) : ViewModel() {
-    // 네트워크 통신 데이터 전 더미데이터
-    private var dummyBirthdayData: List<Friend> = getBirthdayFriend()
-    private var dummyFriendData: List<Friend> = getDummyFriend()
 
     // 유저 닉네임
     private val _nickname = MutableStateFlow("")
@@ -103,8 +98,8 @@ class FriendViewModel @Inject constructor(
                     // _multiProfile.value = multiProfile.toList()
 
                     // Result
-                    Timber.d("User Profile ${_userProfile.value}")
-                    Timber.d("Multi Profile ${_multiProfile.value}")
+//                    Timber.d("User Profile ${_userProfile.value}")
+//                    Timber.d("Multi Profile ${_multiProfile.value}")
                 } else {
                     _message.value = response.message
                 }
@@ -135,7 +130,7 @@ class FriendViewModel @Inject constructor(
 
                     // Result
 //                    Timber.d("Birthday Response ${response.data}")
-//                    Timber.d("Birthday Friend ${_birthProfile.value}")
+                    Timber.d("Get Friend ${_friendProfile.value}")
                 } else {
                     _message.value = response!!.message
                 }
