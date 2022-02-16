@@ -182,6 +182,15 @@ class ProfileFragment : Fragment() {
                 }
             }
         }
+
+        // 통신 성공하면 친구 리스트 화면으로 이동
+        lifecycleScope.launchWhenResumed {
+            viewModel.isSuccess.collectLatest {
+                if (it == true) {
+                    findNavController().navigate(R.id.navigation_friend)
+                }
+            }
+        }
     }
 
     companion object {
