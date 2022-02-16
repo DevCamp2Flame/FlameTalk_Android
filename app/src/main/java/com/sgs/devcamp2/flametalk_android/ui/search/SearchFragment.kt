@@ -74,7 +74,7 @@ class SearchFragment : Fragment() {
                     binding.tvSearchFriendEmpty.toVisible()
                 } else {
                     searchAdapter.data = it
-                    searchAdapter.notifyDataSetChanged()
+                    searchAdapter.submitList(it)
                     binding.cstSearchFriend.toVisible()
                     binding.tvSearchFriendEmpty.toVisibleGone()
                 }

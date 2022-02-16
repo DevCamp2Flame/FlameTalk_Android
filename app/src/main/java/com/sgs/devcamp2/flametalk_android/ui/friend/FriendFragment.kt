@@ -201,7 +201,7 @@ class FriendFragment : Fragment() {
                     birthdayVisibility(GONE)
                 } else {
                     birthdayAdapter.data = it
-                    birthdayAdapter.notifyDataSetChanged()
+                    birthdayAdapter.submitList(it)
                     birthdayVisibility(VISIBLE)
                 }
             }
