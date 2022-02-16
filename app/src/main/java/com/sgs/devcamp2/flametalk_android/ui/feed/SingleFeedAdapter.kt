@@ -14,7 +14,7 @@ import com.sgs.devcamp2.flametalk_android.util.SimpleDiffUtilCallback
 /**
  * @author 박소연
  * @created 2022/02/03
- * @updated
+ * @updated 2022/02/16
  * @desc 1번째 탭 친구 리스트 adapter
  *       친구 프로필을 선택하면 상세프로필을 볼 수 있음
  */
@@ -56,9 +56,5 @@ class SingleFeedAdapter(
         private fun initFriendList(data: Feed) {
             Glide.with(itemView).load(data.imageUrl).into(binding.imgInnerSingleFeed)
         }
-    }
-
-    companion object {
-        final const val TAG = "FeedHorizentalAdapter"
     }
 }

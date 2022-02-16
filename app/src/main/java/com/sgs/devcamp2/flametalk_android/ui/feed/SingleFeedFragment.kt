@@ -1,5 +1,6 @@
 package com.sgs.devcamp2.flametalk_android.ui.feed
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
 import android.widget.PopupMenu
@@ -23,6 +24,7 @@ import kotlinx.coroutines.flow.collectLatest
 /**
  * @author 박소연
  * @created 2022/02/03
+ * @created 2022/02/16
  * @desc 프로필 or 배경사진의 변경 이력을 수평 스와이프하여 볼 수 있다.
  */
 
@@ -33,10 +35,6 @@ class SingleFeedFragment : Fragment() {
     private val viewModel by viewModels<SingleFeedViewModel>()
     private val args: SingleFeedFragmentArgs by navArgs()
 
-    // TODO: 뷰 연결 후 삭제할 변수
-    val profileId = 4L
-    val isBackground = false // args.isBackground
-
     private val singleFeedAdapter: SingleFeedAdapter by lazy {
         SingleFeedAdapter(requireContext())
     }
@@ -45,7 +43,7 @@ class SingleFeedFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         initUI()
         return binding.root
     }
@@ -55,9 +53,9 @@ class SingleFeedFragment : Fragment() {
 
         // 서버로부터 피드 리스트 데이터 요청
         viewModel.getSingleFeedList(
-            profileId,
-            isBackground
-        ) // TODO change: viewModel.getTotalFeedList(args.args.profileId)
+            args.profileId,
+            args.isBackground
+        )
 
         viewModel.feeds.observe(
             viewLifecycleOwner
@@ -73,7 +71,7 @@ class SingleFeedFragment : Fragment() {
         }
 
         lifecycleScope.launchWhenStarted {
-            viewModel.profileImage?.collectLatest {
+            viewModel.profileImage.collectLatest {
                 if (it != "")
                     Glide.with(binding.imgSingleFeedToTotal)
                         .load(it).into(binding.imgSingleFeedToTotal)
@@ -90,19 +88,11 @@ class SingleFeedFragment : Fragment() {
             }
         }
 
-        // 에러메세지
-        lifecycleScope.launchWhenStarted {
-            viewModel.error?.collectLatest {
-                if (it != null)
-                    Snackbar.make(requireView(), "알 수 없는 에러 발생", Snackbar.LENGTH_SHORT).show()
-            }
-        }
-
         // 리스트 재요청
         lifecycleScope.launchWhenResumed {
             viewModel.reload.collectLatest {
-                if (it) { // TODO change: viewModel.getTotalFeedList(args.args.profileId)
-                    viewModel.getSingleFeedList(profileId, isBackground)
+                if (it) {
+                    viewModel.getSingleFeedList(args.profileId, args.isBackground)
                 }
             }
         }
@@ -115,6 +105,7 @@ class SingleFeedFragment : Fragment() {
     private fun initEventListener() {
         // 이미지를 슬라이드하며 index, 공개 여부를 변경
         binding.vpSingleFeed.registerOnPageChangeCallback(object : OnPageChangeCallback() {
+            @SuppressLint("SetTextI18n")
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 // 현재 보고있는 피드 position을 ViewModel에 알려준다
@@ -123,7 +114,7 @@ class SingleFeedFragment : Fragment() {
                 binding.tvSingleFeedIndex.text =
                     "${position + 1}/${viewModel.feeds.value!!.size}"
 
-                var feeds = viewModel.feeds.value
+                val feeds = viewModel.feeds.value
                 if (feeds?.get(position)!!.isLock) {
                     binding.tvSingleFeedPrivate.toVisible()
                 } else {
@@ -134,20 +125,16 @@ class SingleFeedFragment : Fragment() {
 
         // 옵션 메뉴: 다운로드, 피드 삭제
         binding.imgSingleFeedMenu.setOnClickListener {
-            var popupMenu = PopupMenu(this.activity, binding.vpSingleFeed)
+            val popupMenu = PopupMenu(this.activity, binding.vpSingleFeed)
             popupMenu.inflate(R.menu.feed_menu)
             popupMenu.setOnMenuItemClickListener {
                 when (it.itemId) {
-                    R.id.menu_download -> {
-                        viewModel.downloadItem()
-                    }
                     R.id.menu_delete -> {
                         viewModel.deleteFeed()
-                        // Snackbar.make(requireView(), "피드를 삭제했습니다", Snackbar.LENGTH_SHORT).show()
+                        Snackbar.make(requireView(), "피드를 삭제했습니다", Snackbar.LENGTH_SHORT).show()
                     }
-                    else -> {
+                    R.id.menu_lock -> {
                         viewModel.updateFeedImageLock()
-                        // Snackbar.make(requireView(), "else...", Snackbar.LENGTH_SHORT).show()
                     }
                 }
                 return@setOnMenuItemClickListener false
@@ -159,7 +146,7 @@ class SingleFeedFragment : Fragment() {
         binding.imgSingleFeedToTotal.setOnClickListener {
             findNavController().navigate(
                 SingleFeedFragmentDirections.actionFeedSingleToTotal(
-                    profileId,
+                    args.profileId,
                     viewModel.profileImage.value
                 )
             )

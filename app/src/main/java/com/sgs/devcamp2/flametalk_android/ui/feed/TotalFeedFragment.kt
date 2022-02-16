@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.collectLatest
 /**
  * @author 박소연
  * @created 2022/02/03
- * @updated 2022/02/04
+ * @updated 2022/02/16
  * @desc 프로필과 배경화면의 변경 이력을 보여주는 수직 스크롤 형태의 피드
  */
 
@@ -31,17 +31,11 @@ class TotalFeedFragment : Fragment() {
     private val viewModel: TotalFeedViewModel by viewModels()
     private val args: TotalFeedFragmentArgs by navArgs()
 
-    // TODO: 뷰 연결 후 삭제할 변수
-    val profileId = 9L
-
     // 뷰 생성 시점에 adapter 초기화
     private val totalFeedAdapter: TotalFeedAdapter by lazy {
         TotalFeedAdapter(
             requireContext(),
             args.profileImage,
-            onClickDownloadItem = {
-                // viewModel.downloadItem(it.feedId)
-            },
             onClickDeleteItem = {
                 viewModel.deleteFeed(it.feedId)
             },
@@ -55,7 +49,7 @@ class TotalFeedFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         initUI()
         return binding.root
     }
@@ -82,8 +76,7 @@ class TotalFeedFragment : Fragment() {
 
     // 프로필+배경 피드 데이터 초기화
     private fun initFeed() {
-        // TODO change: viewModel.getTotalFeedList(args.args.profileId)
-        viewModel.getTotalFeedList(profileId)
+        viewModel.getTotalFeedList(args.profileId)
         binding.rvTotalFeed.layoutManager = LinearLayoutManager(requireContext())
         binding.rvTotalFeed.adapter = totalFeedAdapter
 
@@ -100,17 +93,10 @@ class TotalFeedFragment : Fragment() {
             }
         }
 
-        // 에러메세지
-        lifecycleScope.launchWhenStarted {
-            viewModel.error?.collectLatest {
-                if (it != null)
-                    Snackbar.make(requireView(), "알 수 없는 에러 발생", Snackbar.LENGTH_SHORT).show()
-            }
-        }
         // 성공메세지
         lifecycleScope.launchWhenResumed {
-            viewModel.message?.collectLatest {
-                if (it != null)
+            viewModel.message.collectLatest {
+                if (it.isNotEmpty())
                     Snackbar.make(requireView(), it, Snackbar.LENGTH_SHORT).show()
             }
         }
@@ -118,8 +104,8 @@ class TotalFeedFragment : Fragment() {
         // 리스트 재요청
         lifecycleScope.launchWhenResumed {
             viewModel.reload.collectLatest {
-                if (it) { // TODO change: viewModel.getTotalFeedList(args.args.profileId)
-                    viewModel.getTotalFeedList(profileId)
+                if (it) {
+                    viewModel.getTotalFeedList(args.profileId)
                 }
             }
         }
