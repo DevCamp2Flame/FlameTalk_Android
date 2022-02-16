@@ -42,6 +42,10 @@ class ProfileViewModel @Inject constructor(
     private val _backgroundImage = MutableStateFlow("")
     val backgroundImage = _backgroundImage.asStateFlow()
 
+    // 성공 여부
+    private val _isSuccess: MutableStateFlow<Boolean?> = MutableStateFlow(null)
+    val isSuccess = _isSuccess.asStateFlow()
+
     // 사용자에게 피드백 할 에러메세지
     private val _message = MutableStateFlow("")
     val message = _message.asStateFlow()
@@ -100,9 +104,11 @@ class ProfileViewModel @Inject constructor(
                         "BLOCKED" ->
                             _message.value = "${response.data.nickname}님의 차단친구로 설정했습니다."
                     }
+                    _isSuccess.value = true
                     Timber.d("Profile Response ${response.data}")
                     Timber.d("Type ${response.data.type}")
                 } else {
+                    _isSuccess.value = false
                     _message.value = response.message
                 }
             } catch (error: Throwable) {

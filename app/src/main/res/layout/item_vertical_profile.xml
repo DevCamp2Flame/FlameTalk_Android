@@ -10,9 +10,9 @@
         android:id="@+id/img_vertical_profile"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginTop="10dp"
-        android:scaleType="centerCrop"
         android:layout_marginHorizontal="5dp"
+        android:layout_marginTop="13dp"
+        android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -35,10 +35,10 @@
         android:layout_height="33dp"
         android:src="@drawable/ic_plus_white_24"
         android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/img_vertical_profile_none"
         app:layout_constraintEnd_toEndOf="@+id/img_vertical_profile_none"
         app:layout_constraintStart_toStartOf="@+id/img_vertical_profile_none"
-        app:layout_constraintTop_toTopOf="@+id/img_vertical_profile_none"
-        app:layout_constraintBottom_toBottomOf="@+id/img_vertical_profile_none"/>
+        app:layout_constraintTop_toTopOf="@+id/img_vertical_profile_none" />
 
     <TextView
         android:id="@+id/tv_vertical_profile_nickname"
