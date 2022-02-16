@@ -10,6 +10,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -34,6 +35,7 @@ import com.sgs.devcamp2.flametalk_android.databinding.FragmentAddProfileBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
+import timber.log.Timber
 
 /**
  * @author 박소연
@@ -46,6 +48,9 @@ import kotlinx.coroutines.flow.collectLatest
 class AddProfileFragment : Fragment() {
     private val binding by lazy { FragmentAddProfileBinding.inflate(layoutInflater) }
     private val viewModel by activityViewModels<AddProfileViewModel>()
+    private lateinit var focusedItem: ImageView
+    var xPoint: Int = 0
+    var yPoint: Int = 0
 
     private val getProfileImageLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -118,6 +123,15 @@ class AddProfileFragment : Fragment() {
             viewModel.isSuccess.collectLatest {
                 if (it != null) {
                     findNavController().navigate(R.id.navigation_friend)
+                }
+            }
+        }
+
+        // 프로필 생성 성공 여부
+        lifecycleScope.launchWhenResumed {
+            viewModel.message.collectLatest {
+                if (it != "") {
+                    Snackbar.make(requireView(), it, Snackbar.LENGTH_SHORT).show()
                 }
             }
         }
@@ -227,7 +241,7 @@ class AddProfileFragment : Fragment() {
             binding.cstAddProfile.addView(createImageView(EMOJI_AWW))
         }
         binding.imgAddProfileEmoji2.setOnClickListener {
-            // binding.cstAddProfile.addView(createImageView(EMOJI_CLAP))
+            binding.cstAddProfile.addView(createImageView(EMOJI_CLAP))
         }
         binding.imgAddProfileEmoji3.setOnClickListener {
             binding.cstAddProfile.addView(createImageView(EMOJI_DANCE))
@@ -241,6 +255,10 @@ class AddProfileFragment : Fragment() {
         binding.imgAddProfileEmoji6.setOnClickListener {
             binding.cstAddProfile.addView(createImageView(EMOJI_SAD))
         }
+
+//        focusedItem.setOnTouchListener { v, event ->
+//
+//        }
     }
 
     private fun createTextView(): View {
@@ -270,7 +288,6 @@ class AddProfileFragment : Fragment() {
         param.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
         param.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
         param.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
-
         img.layoutParams = param
 
         when (emoji) {
@@ -282,30 +299,68 @@ class AddProfileFragment : Fragment() {
             EMOJI_SAD -> Glide.with(requireContext()).load(R.drawable.emoji_sad).into(img)
         }
         img.id = ViewCompat.generateViewId()
-        img.setOnLongClickListener {
-            emojiDelete(it)
-//            var popupMenu = PopupMenu(context, it)
-//            popupMenu.inflate(R.menu.delete_menu)
-//            popupMenu.setOnMenuItemClickListener {
-//                when (it.itemId) {
-//                    // 숨김 친구 리스트로 이동
-//                    R.id.menu_delete -> {
-//                        // TODO: ViewModel 함수로 삭제할 아이템의 아이디를 전달
-//                        Snackbar.make(requireView(), "삭제하겠습니다", Snackbar.LENGTH_SHORT).show()
-//                    }
-//                    else -> { // 실행되지 않음
-//                    }
-//                }
-//                return@setOnMenuItemClickListener false
-//            }
-//            popupMenu.show()
-//            return@setOnLongClickListener true
-        }
+        focusedItem = img
+//        img.setOnLongClickListener {
+//             popupDeleteMenu(it)
+//        }
 
         return img
     }
 
-    private fun emojiDelete(item: View): Boolean {
+    var x: Float = 0F
+    var y: Float = 0F
+    var dx: Float = 0F
+    var dy: Float = 0F
+
+//    fun onTouchEvent(event: MotionEvent): Boolean {
+//        when (event.action) {
+//            MotionEvent.ACTION_DOWN -> {}
+//            MotionEvent.ACTION_MOVE -> {}
+//            MotionEvent.ACTION_UP -> {}
+//            MotionEvent.ACTION_CANCEL -> {}
+//            else -> {}
+//        }
+//        return true
+//    }
+
+    fun onTouchEvent(event: MotionEvent): Boolean {
+        return when (event.action) {
+            MotionEvent.ACTION_DOWN -> {
+                x = event.x
+                y = event.y
+                Timber.d("터치 Action was DOWN")
+                true
+            }
+            MotionEvent.ACTION_MOVE -> {
+                dx = event.x - x
+                dy = event.y - y
+
+                focusedItem!!.x = focusedItem!!.x + dx
+                focusedItem!!.y = focusedItem!!.y + dy
+
+                x = event.x
+                y = event.y
+
+                Timber.d("터치 Action was MOVE")
+                true
+            }
+            MotionEvent.ACTION_UP -> {
+                Timber.d("터치 Action was UP")
+                true
+            }
+            MotionEvent.ACTION_CANCEL -> {
+                Timber.d("터치 Action was CANCEL")
+                true
+            }
+            MotionEvent.ACTION_OUTSIDE -> {
+                Timber.d("터치 Movement occurred outside bounds of current screen element")
+                true
+            }
+            else -> false // super.onTouchEvent(event)
+        }
+    }
+
+    private fun popupDeleteMenu(item: View): Boolean {
         var popupMenu = PopupMenu(context, item)
         popupMenu.inflate(R.menu.delete_menu)
         popupMenu.setOnMenuItemClickListener {
@@ -324,6 +379,9 @@ class AddProfileFragment : Fragment() {
         popupMenu.show()
         return true
     }
+
+//    private fun dragListener(view: View, event: DragEvent): Boolean {
+//    }
 
     private fun createStickerView(): View {
         val cst = ConstraintLayout(requireContext())
