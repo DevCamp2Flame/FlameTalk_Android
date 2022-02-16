@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_navigation"
-    app:startDestination="@id/navigation_add_profile">
+    app:startDestination="@id/navigation_splash">
 
     <fragment
         android:id="@+id/navigation_splash"
@@ -122,6 +122,10 @@
             android:name="friendId"
             app:argType="long"
             android:defaultValue="0L"/>
+        <argument
+            android:name="assignedProfileId"
+            app:argType="long"
+            android:defaultValue="0L"/>
         <action
             android:id="@+id/action_profile_to_edit"
             app:destination="@id/navigation_edit_profile" />
@@ -129,6 +133,10 @@
         <action
             android:id="@+id/action_profile_to_feed_single"
             app:destination="@id/navigation_single_feed" />
+
+        <action
+            android:id="@+id/action_profile_to_create_chat_room"
+            app:destination="@id/navigation_create_chat_room" />
     </fragment>
 
     <!--숨김 친구-->
@@ -426,7 +434,15 @@
             app:popUpToInclusive="true"/>
         <argument
             android:name="users"
-            app:argType="string[]" />
+            app:argType="string[]"
+            app:nullable="true"
+            android:defaultValue="@null" />
+
+        <!--프로필에서 1:1 채팅 생성 시 friendId 전달-->
+        <argument
+            android:name="singleFriendId"
+            app:argType="long"
+            android:defaultValue="0L"/>
     </fragment>
     <fragment
         android:id="@+id/navigation_create_open_chat_room"

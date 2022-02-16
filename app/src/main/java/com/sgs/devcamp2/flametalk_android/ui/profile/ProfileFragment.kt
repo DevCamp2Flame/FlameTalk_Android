@@ -8,6 +8,7 @@ import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
@@ -98,11 +99,11 @@ class ProfileFragment : Fragment() {
                 when (it.itemId) {
                     R.id.menu_hide -> {
                         // TODO: 숨김 친구 요청
-                        viewModel.changeFriendStatue(args.friendId, TO_HIDE)
+                        viewModel.changeFriendStatue(args.assignedProfileId, TO_HIDE)
                     }
                     R.id.menu_block -> {
                         // TODO: 차단 친구 요청
-                        viewModel.changeFriendStatue(args.friendId, TO_BLOCK)
+                        viewModel.changeFriendStatue(args.assignedProfileId, TO_BLOCK)
                     }
                     else -> {
                         // 실행되지 않음
@@ -131,6 +132,18 @@ class ProfileFragment : Fragment() {
             FRIEND_PROFILE -> { // 친구 프로필
                 binding.imgProfileBookmark.toVisible()
                 swapViewVisibility(binding.cstProfileEdit, binding.cstProfileChat)
+
+                // 클릭한 프로필의 유저와 1:1 채팅방 생성 페이지로 이동
+                binding.cstProfileChat.setOnClickListener {
+                    // TODO: users를 null로 설정할 경우 CreateChatRoomFragment의 115줄 null 문제
+                    // TODO: null처리 후 아래 주석 풀면 동작할 것
+                    val profileToCreateChatRoomDirections: NavDirections =
+                        ProfileFragmentDirections.actionProfileToCreateChatRoom(
+                            // users의 default value를 null로 설정하여 생략
+                            singleFriendId = args.friendId,
+                        )
+                    findNavController().navigate(profileToCreateChatRoomDirections)
+                }
             }
             USER_MULTI_PROFILE -> { // 내 멀티 프로필
                 binding.imgProfileBookmark.toInvisible()

@@ -61,9 +61,10 @@ class FriendAdapter(
             itemView.setOnClickListener {
                 val friendToFriendProfileDirections: NavDirections =
                     FriendFragmentDirections.actionFriendToProfile(
-                        FRIEND_PROFILE,
-                        data.preview.profileId,
-                        data.friendId
+                        viewType = FRIEND_PROFILE,
+                        profileId = data.preview.profileId,
+                        friendId = data.friendId,
+                        assignedProfileId = data.assignedProfileId
                     )
                 it.findNavController().navigate(friendToFriendProfileDirections)
             }
