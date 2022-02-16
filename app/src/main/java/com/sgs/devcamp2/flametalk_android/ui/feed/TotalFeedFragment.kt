@@ -92,7 +92,7 @@ class TotalFeedFragment : Fragment() {
         ) { it ->
             it?.let {
                 totalFeedAdapter.data = it
-                totalFeedAdapter.notifyDataSetChanged()
+                totalFeedAdapter.submitList(it)
 
                 if (it.isEmpty()) {
                     binding.tvSingleFeedEmpty.toVisible()

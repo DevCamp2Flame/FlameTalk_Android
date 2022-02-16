@@ -64,7 +64,7 @@ class SingleFeedFragment : Fragment() {
         ) { it ->
             it?.let {
                 singleFeedAdapter.data = it
-                singleFeedAdapter.notifyDataSetChanged()
+                singleFeedAdapter.submitList(it)
 
                 if (it.isEmpty()) {
                     binding.tvSingleFeedEmpty.toVisible()

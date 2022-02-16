@@ -116,7 +116,7 @@ class AddFriendFragment : Fragment() {
             viewModel.profiles.collectLatest {
                 if (it.isNotEmpty()) {
                     profileAdapter.data = it
-                    profileAdapter.notifyDataSetChanged()
+                    profileAdapter.submitList(it)
                 }
             }
         }

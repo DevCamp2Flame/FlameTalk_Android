@@ -92,7 +92,7 @@ class BlockedFragment : Fragment() {
                     showEmptyView(GONE)
                 } else {
                     blockedAdapter.data = it
-                    blockedAdapter.notifyDataSetChanged()
+                    blockedAdapter.submitList(it)
                     showEmptyView(VISIBLE)
                 }
             }
