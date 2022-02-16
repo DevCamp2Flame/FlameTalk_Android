@@ -38,7 +38,8 @@ class HiddenViewModel @Inject constructor(
     val userId = _userId.asStateFlow()
 
     // 숨김 친구 리스트
-    private val _hiddenFriend = MutableStateFlow<List<Friend>?>(emptyList())
+    private val _hiddenFriend: MutableStateFlow<List<Friend>?> =
+        MutableStateFlow(null) // (emptyList())
     val hiddenFriend: MutableStateFlow<List<Friend>?> = _hiddenFriend
 
     // 선택된 친구
@@ -66,6 +67,7 @@ class HiddenViewModel @Inject constructor(
             try {
                 val response = friendRepository.get().getFriendList(null, true, null)
 
+                // 숨김 친구가 있는 경우
                 if (response.status == 200 && response.data.isNotEmpty()) {
                     _hiddenFriend.value = response.data
 

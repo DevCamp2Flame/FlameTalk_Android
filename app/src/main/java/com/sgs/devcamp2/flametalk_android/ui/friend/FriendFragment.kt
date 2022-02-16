@@ -65,6 +65,12 @@ class FriendFragment : Fragment() {
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        initFriendProfile()
+    }
+
     private fun initUI() {
         initAppbar()
         initUserProfiles()
@@ -167,7 +173,7 @@ class FriendFragment : Fragment() {
             viewModel.multiProfile.collectLatest {
                 if (it?.isNotEmpty() == true) {
                     multiProfileAdapter.data = it
-                    multiProfileAdapter.notifyDataSetChanged()
+                    multiProfileAdapter.submitList(it)
                 }
             }
         }
@@ -213,13 +219,13 @@ class FriendFragment : Fragment() {
         binding.rvFriend.adapter = friendAdapter
         lifecycleScope.launch {
             viewModel.friendProfile.collectLatest {
-                if (it.isNullOrEmpty()) {
+                if (it == null) {
+                    friendVisibility(VISIBLE)
+                } else if (it.isEmpty()) {
                     friendVisibility(GONE)
                 } else {
-
                     friendAdapter.data = it
                     friendAdapter.submitList(it)
-                    // friendAdapter.notifyDataSetChanged()
                     friendVisibility(VISIBLE)
                 }
             }
