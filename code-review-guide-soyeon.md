@@ -20,15 +20,14 @@
 4. [NetworkInterceptor](#index_4)
    - Hilt 구조에서의 token 자동 주입
    - request, response 요청 시 Debug Log 기록
-1. [Android Navigation 적용](#index_5)
-2. [Repository 패턴을 적용하여 NetworkModule과 RoomModule의 접근](#index_6)
-3. [(진행중) RoomDB를 이용한 local data 기반 검색](#index_7)
-4. [LiveData 대신 StateFlow를 이용](#index_8)
-5. [코드의 재사용성에 대한 고민](#index_9)
+5. [Android Navigation 적용](#index_5)
+6. [Repository 패턴을 적용하여 NetworkModule과 RoomModule의 접근](#index_6)
+7. [ RoomDB를 이용한 local data 기반 검색](#index_7)
+8. [LiveData 대신 StateFlow를 이용](#index_8)
+9. [코드의 재사용성에 대한 고민](#index_9)
    - 확장함수 적옹
    - AppBar의 layout의 include
 10.  [주소록 전화번호 가져온 후 통신 요청 보내기](#index_10)
-11.  [로컬 검색 기능](#index_11)
 
 ## 📚 파일 디렉터리 구조
 ```
@@ -231,61 +230,9 @@ class CoroutineModule {
     }
 ```
 
-<h2 id="index_7">7. (진행중) RoomDB를 이용한 local data 기반 검색</h2>
-<h2 id="index_8">8. LiveData 대신 StateFlow를 이용</h2>
-LiveData는 Android에서 권장하는 AAC로 UI에서 ViewModel의 LiveData 객체를 관찰하여 데이터의 변경사항이 UI로 자동적으로 반영됩니다.
-이전에 프로젝트에서 LivaData를 사용해봤지만 LivaData는 뷰를 반드시 거쳐야 데이터가 관찰되기 때문에 View 로직에 적용할때 유리한 것으로 알고있습니다. Flow는 Coroutine의 범위에 상관없이 Model 계층의 데이터의 수집하는 특성으로 Data 로직에 사용하기 좋습니다. StateFlow는 이 두 특성을 포함된 개념으로 UI 상태를 지켜보고 변경된 상태가 화면에 지속되도록 ViewModel에서 상태 지속할 수 있으며 flow의 데이터를 StateFlow 객체 저장할 수 있습니다.
-
-- UI Controller에서 관찰하는 방법
-```
-// 로그인된 유저의 닉네임 띄움
-        lifecycleScope.launch {
-            viewModel.nickname.collectLatest {
-                if (it.isNotEmpty()) {
-                    Snackbar.make(requireView(), "${it}님 로그인 되었습니다.", Snackbar.LENGTH_SHORT).show()
-                    findNavController().navigate(R.id.navigation_friend)
-                }
-            }
-        }
-
-```
-- [ViewModel](https://github.com/DevCamp2Flame/FlameTalk_Android/blob/develop/app/src/main/java/com/sgs/devcamp2/flametalk_android/ui/signin/SigninViewModel.kt)
-
-[LivaData 대신 StateFlow 적용기](https://abrasive-ziconium-edb.notion.site/Flow-LiveData-StateFlow-14b57895d8f34f6ab2eb73a84d180578)
-
-<h2 id="index_9">9. 코드의 재사용성에 대한 고민</h2>
-1. 재사용을 위해 확장함수 적용
-반복되는 기능의 구현으로 인한 보일러플레이트를 줄이고 코드의 가독성을 높이고자 util 디렉터리에 확장함수를 만들어 사용하고 있습니다. 확장함수의 일부 구현 사례입니다.
-
-[ViewExt](https://github.com/DevCamp2Flame/FlameTalk_Android/blob/develop/app/src/main/java/com/sgs/devcamp2/flametalk_android/util/ViewExt.kt)
-
-2. AppBar layout의 재사용
-
-앱 상단바의 경우 유사한 모양이 반복됩니다. 똑같은 파일을 여러개 만들지 않고 item으로 하나의 레이아웃을 만들고 이를 include하여 각각의 UI에 맞춰 이용하며 레이아웃의 재사용성을 높였습니다. 다만 include 또한 뷰 레이어를 한층 더 깊게 한다는 한계점이 있기 때문에 이후에 merge로 전환해볼 예정입니다.
-
-[FriendFragment.kt](https://github.com/DevCamp2Flame/FlameTalk_Android/blob/develop/app/src/main/java/com/sgs/devcamp2/flametalk_android/ui/friend/FriendFragment.kt)
-
-fragment_friend.xml
-```
-<include
-        android:id="@+id/ab_friend"
-        layout="@layout/ab_main"
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        app:layout_constraintTop_toTopOf="parent" />
-``` 
-
-<h2 id="index_10">10. 주소록 전화번호 가져온 후 통신 요청 보내기</h2>
-이번 프로젝트에서 연락처 데이터를 가져와 서버로 '연락처 리스트 기반 친구 추가 API' 통신 요청을 보내는 기능을 구현했습니다. 처음엔 연락처 가져오는 작업을 Fragment에서 수행했으나 연락처 데이터가 많은 실기기에서 테스트 시 메인스레드의 부담이 생겨 백그라운드 스레드에서 동작하도록 변경했습니다(네트워크와 IO 작업과 같이 시간이 오래 걸리는 작업은 Background 동작해야 합니다. 오래 걸리는 작업으로 인해 UI 컴포넌트를 그리는 작업을 5초 이상 방해받으면 ANR이 발생하며 앱이 비정상종료됩니다.)
-연락처를 가져오는 작업이 끝난 후 통신 요청을 보내야하기 때문에 Coroutine의 deferred를 이용하여 비동기 동작이 끝난 시점 이후에 친구 추가 통신 요청을 보내도록 구현했습니다.
-
-[코드 바로가기](https://github.com/DevCamp2Flame/FlameTalk_Android/blob/develop/app/src/main/java/com/sgs/devcamp2/flametalk_android/ui/friend/FriendViewModel.kt)
-
-[주소록 내 전화번호 가져오기 글](https://abrasive-ziconium-edb.notion.site/Contacts-4c9864307a3f4c6e902e707121256e11)
-
-
 </br>
-<h2 id="index_11">11. 로컬 검색 기능</h2>
+
+<h2 id="index_7">7. (진행중) RoomDB를 이용한 local data 기반 검색</h2>
 
 
 <div align="center">
@@ -349,4 +296,58 @@ UI의 초기화와 뷰모델 생성 시 로컬 저장소로부터 검색에 쓰�
         _searchedFriend.value = result
     }
 ```
+
+</br>
+
+<h2 id="index_8">8. LiveData 대신 StateFlow를 이용</h2>
+LiveData는 Android에서 권장하는 AAC로 UI에서 ViewModel의 LiveData 객체를 관찰하여 데이터의 변경사항이 UI로 자동적으로 반영됩니다.
+이전에 프로젝트에서 LivaData를 사용해봤지만 LivaData는 뷰를 반드시 거쳐야 데이터가 관찰되기 때문에 View 로직에 적용할때 유리한 것으로 알고있습니다. Flow는 Coroutine의 범위에 상관없이 Model 계층의 데이터의 수집하는 특성으로 Data 로직에 사용하기 좋습니다. StateFlow는 이 두 특성을 포함된 개념으로 UI 상태를 지켜보고 변경된 상태가 화면에 지속되도록 ViewModel에서 상태 지속할 수 있으며 flow의 데이터를 StateFlow 객체 저장할 수 있습니다.
+
+- UI Controller에서 관찰하는 방법
+```
+// 로그인된 유저의 닉네임 띄움
+        lifecycleScope.launch {
+            viewModel.nickname.collectLatest {
+                if (it.isNotEmpty()) {
+                    Snackbar.make(requireView(), "${it}님 로그인 되었습니다.", Snackbar.LENGTH_SHORT).show()
+                    findNavController().navigate(R.id.navigation_friend)
+                }
+            }
+        }
+
+```
+- [ViewModel](https://github.com/DevCamp2Flame/FlameTalk_Android/blob/develop/app/src/main/java/com/sgs/devcamp2/flametalk_android/ui/signin/SigninViewModel.kt)
+
+[LivaData 대신 StateFlow 적용기](https://abrasive-ziconium-edb.notion.site/Flow-LiveData-StateFlow-14b57895d8f34f6ab2eb73a84d180578)
+
+<h2 id="index_9">9. 코드의 재사용성에 대한 고민</h2>
+1. 재사용을 위해 확장함수 적용
+반복되는 기능의 구현으로 인한 보일러플레이트를 줄이고 코드의 가독성을 높이고자 util 디렉터리에 확장함수를 만들어 사용하고 있습니다. 확장함수의 일부 구현 사례입니다.
+
+[ViewExt](https://github.com/DevCamp2Flame/FlameTalk_Android/blob/develop/app/src/main/java/com/sgs/devcamp2/flametalk_android/util/ViewExt.kt)
+
+2. AppBar layout의 재사용
+
+앱 상단바의 경우 유사한 모양이 반복됩니다. 똑같은 파일을 여러개 만들지 않고 item으로 하나의 레이아웃을 만들고 이를 include하여 각각의 UI에 맞춰 이용하며 레이아웃의 재사용성을 높였습니다. 다만 include 또한 뷰 레이어를 한층 더 깊게 한다는 한계점이 있기 때문에 이후에 merge로 전환해볼 예정입니다.
+
+[FriendFragment.kt](https://github.com/DevCamp2Flame/FlameTalk_Android/blob/develop/app/src/main/java/com/sgs/devcamp2/flametalk_android/ui/friend/FriendFragment.kt)
+
+fragment_friend.xml
+```
+<include
+        android:id="@+id/ab_friend"
+        layout="@layout/ab_main"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        app:layout_constraintTop_toTopOf="parent" />
+``` 
+
+<h2 id="index_10">10. 주소록 전화번호 가져온 후 통신 요청 보내기</h2>
+이번 프로젝트에서 연락처 데이터를 가져와 서버로 '연락처 리스트 기반 친구 추가 API' 통신 요청을 보내는 기능을 구현했습니다. 처음엔 연락처 가져오는 작업을 Fragment에서 수행했으나 연락처 데이터가 많은 실기기에서 테스트 시 메인스레드의 부담이 생겨 백그라운드 스레드에서 동작하도록 변경했습니다(네트워크와 IO 작업과 같이 시간이 오래 걸리는 작업은 Background 동작해야 합니다. 오래 걸리는 작업으로 인해 UI 컴포넌트를 그리는 작업을 5초 이상 방해받으면 ANR이 발생하며 앱이 비정상종료됩니다.)
+연락처를 가져오는 작업이 끝난 후 통신 요청을 보내야하기 때문에 Coroutine의 deferred를 이용하여 비동기 동작이 끝난 시점 이후에 친구 추가 통신 요청을 보내도록 구현했습니다.
+
+[코드 바로가기](https://github.com/DevCamp2Flame/FlameTalk_Android/blob/develop/app/src/main/java/com/sgs/devcamp2/flametalk_android/ui/friend/FriendViewModel.kt)
+
+[주소록 내 전화번호 가져오기 글](https://abrasive-ziconium-edb.notion.site/Contacts-4c9864307a3f4c6e902e707121256e11)
+
 
