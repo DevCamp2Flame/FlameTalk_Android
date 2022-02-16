@@ -45,7 +45,7 @@ class HiddenFragment : Fragment() {
                 findNavController().navigate(blockedToFriendProfileDirections)
             },
             onChangeHidden = {
-                viewModel.changeHiddenStatue(it.friendId)
+                viewModel.changeHiddenStatue(it.friendId, it.assignedProfileId)
             }
         )
     }
@@ -70,6 +70,10 @@ class HiddenFragment : Fragment() {
         binding.abHiddenFriend.imgAppbarSearch.toVisibleGone()
         binding.abHiddenFriend.imgAppbarAddFriend.toVisibleGone()
         binding.abHiddenFriend.imgAppbarSetting.toVisibleGone()
+
+        binding.abHiddenFriend.imgAppbarBack.setOnClickListener {
+            findNavController().popBackStack()
+        }
     }
 
     // 프로필 초기화
@@ -89,7 +93,7 @@ class HiddenFragment : Fragment() {
                     showEmptyView(GONE)
                 } else {
                     hiddenAdapter.data = it
-                    hiddenAdapter.notifyDataSetChanged()
+                    hiddenAdapter.submitList(it)
                     showEmptyView(VISIBLE)
                 }
             }

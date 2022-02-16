@@ -30,11 +30,10 @@
         android:id="@+id/img_friend_block"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_margin="15dp"
+        android:layout_margin="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_friend_block_nickname"

@@ -21,7 +21,7 @@ import com.google.gson.annotations.SerializedName
 @Keep
 data class FriendStatus(
     @SerializedName("friendId")
-    val friendId: String,
+    val friendId: Long,
     @SerializedName("userId")
     val userId: String,
     @SerializedName("nickname")
