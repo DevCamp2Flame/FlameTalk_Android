@@ -5,7 +5,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -13,11 +12,10 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.PopupMenu
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -35,12 +33,12 @@ import com.sgs.devcamp2.flametalk_android.databinding.FragmentAddProfileBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
-import timber.log.Timber
 
 /**
  * @author 박소연
  * @created 2022/01/25
  * @desc 프로필 생성 페이지 (배경 이미지, 프로필 이미지, 상태메세지)
+ *       스티커 붙이기
  */
 
 @AndroidEntryPoint
@@ -48,9 +46,9 @@ import timber.log.Timber
 class AddProfileFragment : Fragment() {
     private val binding by lazy { FragmentAddProfileBinding.inflate(layoutInflater) }
     private val viewModel by activityViewModels<AddProfileViewModel>()
-    private lateinit var focusedItem: ImageView
-    var xPoint: Int = 0
-    var yPoint: Int = 0
+    private var rootLayout: ViewGroup? = null
+    private var xPoint = 0
+    private var yPoint = 0
 
     private val getProfileImageLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -69,7 +67,7 @@ class AddProfileFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         updateUI()
         initUI()
         initClickEvent()
@@ -229,6 +227,8 @@ class AddProfileFragment : Fragment() {
     }
 
     private fun initSticker() {
+        rootLayout = binding.cstAddProfile
+
         // 하단의 이모티콘 메뉴 버튼 // TODO: 확장성을 고려하여 RecyclerView로 변경
         Glide.with(requireContext()).load(R.drawable.emoji_aww).into(binding.imgAddProfileEmoji1)
         Glide.with(requireContext()).load(R.drawable.emoji_clap).into(binding.imgAddProfileEmoji2)
@@ -255,35 +255,14 @@ class AddProfileFragment : Fragment() {
         binding.imgAddProfileEmoji6.setOnClickListener {
             binding.cstAddProfile.addView(createImageView(EMOJI_SAD))
         }
-
-//        focusedItem.setOnTouchListener { v, event ->
-//
-//        }
-    }
-
-    private fun createTextView(): View {
-        val tv = TextView(requireContext())
-        val param = ConstraintLayout.LayoutParams(
-            ConstraintLayout.LayoutParams.WRAP_CONTENT,
-            ConstraintLayout.LayoutParams.WRAP_CONTENT
-        )
-        param.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
-        param.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
-        param.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
-        param.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
-
-        tv.layoutParams = param
-        tv.setBackgroundColor(Color.rgb(184, 236, 188))
-        tv.id = ViewCompat.generateViewId()
-
-        tv.text = tv.id.toString()
-        tv.textSize = 30F
-        return tv
     }
 
     private fun createImageView(emoji: Int): View {
-        val img = ImageView(requireContext())
-        val param = ConstraintLayout.LayoutParams(70, 70)
+        // 스티커를 위한 ImageView 동적 생성
+        val img = AppCompatImageView(requireContext())
+        // 생성할 스티커의 사이즈
+        val param = ConstraintLayout.LayoutParams(100, 100)
+        // 스티커 생성하고 중앙에 배치하기 위한 layout 제약
         param.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
         param.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
         param.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
@@ -298,65 +277,51 @@ class AddProfileFragment : Fragment() {
             EMOJI_PARTY -> Glide.with(requireContext()).load(R.drawable.emoji_party).into(img)
             EMOJI_SAD -> Glide.with(requireContext()).load(R.drawable.emoji_sad).into(img)
         }
+        // 각 스티커 객체 별 아이디 생성
         img.id = ViewCompat.generateViewId()
-        focusedItem = img
-//        img.setOnLongClickListener {
-//             popupDeleteMenu(it)
-//        }
+        img.layoutParams = param
+
+        img.setOnLongClickListener {
+            popupDeleteMenu(it)
+        }
+        // 스티커 위치 드래그
+        img.setOnTouchListener(StickerListener())
 
         return img
     }
 
-    var x: Float = 0F
-    var y: Float = 0F
-    var dx: Float = 0F
-    var dy: Float = 0F
+    private inner class StickerListener : View.OnTouchListener {
+        override fun onTouch(view: View, event: MotionEvent): Boolean {
+            val x = event.rawX.toInt()
+            val y = event.rawY.toInt()
 
-//    fun onTouchEvent(event: MotionEvent): Boolean {
-//        when (event.action) {
-//            MotionEvent.ACTION_DOWN -> {}
-//            MotionEvent.ACTION_MOVE -> {}
-//            MotionEvent.ACTION_UP -> {}
-//            MotionEvent.ACTION_CANCEL -> {}
-//            else -> {}
-//        }
-//        return true
-//    }
-
-    fun onTouchEvent(event: MotionEvent): Boolean {
-        return when (event.action) {
-            MotionEvent.ACTION_DOWN -> {
-                x = event.x
-                y = event.y
-                Timber.d("터치 Action was DOWN")
-                true
+            when (event.action and MotionEvent.ACTION_MASK) {
+                MotionEvent.ACTION_DOWN -> {
+                    val lParams = view.layoutParams as ConstraintLayout.LayoutParams
+                    /**스티커의 정상 이동 속도를 위해 margin이 모두 2배로 설정되어 있으므로
+                     *  사용자가 터치한 정상 위치로 스티커를 위치시키기 위해서는 margin을 2로 나눈 값을 설정해야 함*/
+                    xPoint = x - (lParams.leftMargin / 2)
+                    yPoint = y - (lParams.topMargin / 2)
+                }
+                MotionEvent.ACTION_UP -> {
+                    val itemParams = view.layoutParams as ConstraintLayout.LayoutParams
+                }
+                MotionEvent.ACTION_POINTER_DOWN -> {}
+                MotionEvent.ACTION_POINTER_UP -> {}
+                MotionEvent.ACTION_MOVE -> {
+                    val layoutParams = view.layoutParams as ConstraintLayout.LayoutParams
+                    layoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
+                    layoutParams.leftToLeft = ConstraintLayout.LayoutParams.PARENT_ID
+                    /**스티커의 초기 위치를 위해 ConstraintLayout을 parent로 부터 top, bottom, start, end 제약을 걸음
+                     이동 방향의 반대로 제약조건이 작용하기 때문에, lParams의 margin에 저장된 값 보다 반의 속도로 이동하므로
+                     정상적으로 이동되도록 보이려면 2배로 margin을 설정해야 함*/
+                    layoutParams.leftMargin = 2 * (x - xPoint)
+                    layoutParams.topMargin = 2 * (y - yPoint)
+                    view.layoutParams = layoutParams
+                }
             }
-            MotionEvent.ACTION_MOVE -> {
-                dx = event.x - x
-                dy = event.y - y
-
-                focusedItem!!.x = focusedItem!!.x + dx
-                focusedItem!!.y = focusedItem!!.y + dy
-
-                x = event.x
-                y = event.y
-
-                Timber.d("터치 Action was MOVE")
-                true
-            }
-            MotionEvent.ACTION_UP -> {
-                Timber.d("터치 Action was UP")
-                true
-            }
-            MotionEvent.ACTION_CANCEL -> {
-                Timber.d("터치 Action was CANCEL")
-                true
-            }
-            MotionEvent.ACTION_OUTSIDE -> {
-                Timber.d("터치 Movement occurred outside bounds of current screen element")
-                true
-            }
-            else -> false // super.onTouchEvent(event)
+            rootLayout!!.invalidate()
+            return true
         }
     }
 
@@ -365,10 +330,8 @@ class AddProfileFragment : Fragment() {
         popupMenu.inflate(R.menu.delete_menu)
         popupMenu.setOnMenuItemClickListener {
             when (it.itemId) {
-                // 숨김 친구 리스트로 이동
                 R.id.menu_delete -> {
                     // TODO: ViewModel 함수로 삭제할 아이템의 아이디를 전달
-                    Snackbar.make(requireView(), "삭제하겠습니다", Snackbar.LENGTH_SHORT).show()
                     binding.cstAddProfile.removeView(item)
                 }
                 else -> { // 실행되지 않음
@@ -378,30 +341,6 @@ class AddProfileFragment : Fragment() {
         }
         popupMenu.show()
         return true
-    }
-
-//    private fun dragListener(view: View, event: DragEvent): Boolean {
-//    }
-
-    private fun createStickerView(): View {
-        val cst = ConstraintLayout(requireContext())
-        val img = ConstraintLayout(requireContext())
-        val param = ConstraintLayout.LayoutParams(70, 70)
-        param.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
-        param.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
-        param.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
-        param.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
-
-        cst.layoutParams = param
-        Glide.with(requireContext()).load(R.drawable.emoji_aww)
-            .into(img.findViewById(R.id.img_sticker_preview))
-
-//        cst.findViewById<ConstraintLayout>(R.id.img_sticker_delete_preview).setOnClickListener {
-//            cst.dispatchStartTemporaryDetach()
-//        }
-        cst.id = ViewCompat.generateViewId()
-
-        return cst
     }
 
     companion object {
