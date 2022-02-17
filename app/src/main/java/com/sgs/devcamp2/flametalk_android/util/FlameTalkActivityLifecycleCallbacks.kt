@@ -4,6 +4,12 @@ import android.app.Activity
 import android.app.Application
 import android.os.Bundle
 
+/**
+ * @author 박소연
+ * @created 2022/02/11
+ * @desc LifeCycle 관련 확장함수
+ */
+
 class FlameTalkActivityLifecycleCallbacks : Application.ActivityLifecycleCallbacks {
     var currentActivity: Activity? = null
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {

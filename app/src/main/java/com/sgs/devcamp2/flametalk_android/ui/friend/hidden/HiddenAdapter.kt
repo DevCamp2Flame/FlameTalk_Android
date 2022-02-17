@@ -9,8 +9,8 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
-import com.sgs.devcamp2.flametalk_android.R
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.sgs.devcamp2.flametalk_android.data.model.friend.Friend
 import com.sgs.devcamp2.flametalk_android.databinding.ItemFriendHiddenBinding
 import com.sgs.devcamp2.flametalk_android.ui.friend.FriendFragmentDirections
@@ -58,7 +58,7 @@ class HiddenAdapter(
 
         fun bind(data: Friend) {
             // 이미지를 누르면 친구 프로필로 이동 // 프로필 타입이 몇개더라..
-            binding.imgFriendStatus.setOnClickListener {
+            binding.imgFriendHidden.setOnClickListener {
                 val hiddenToFriendProfileDirections: NavDirections =
                     FriendFragmentDirections.actionFriendToProfile(
                         FRIEND_PROFILE,
@@ -68,7 +68,7 @@ class HiddenAdapter(
             }
 
             // 숨김 여부를 누르면 숨김 여부 변경 callback을 return
-            binding.tvFriendStatus.setOnClickListener {
+            binding.tvFriendHidden.setOnClickListener {
                 onChangeHidden(data)
                 it.isSelected = !it.isSelected
             }
@@ -78,11 +78,10 @@ class HiddenAdapter(
 
         private fun initFriendList(data: Friend) {
             Glide.with(itemView).load(data.preview.imageUrl)
-                .apply(RequestOptions.circleCropTransform())
-                .apply(RequestOptions.placeholderOf(R.drawable.ic_person_white_24))
-                .into(binding.imgFriendStatus)
-            binding.tvFriendStatusNickname.text = data.nickname
-            binding.tvFriendStatus.isSelected = true
+                .transform(CenterCrop(), RoundedCorners(35))
+                .into(binding.imgFriendHidden)
+            binding.tvFriendHiddenNickname.text = data.nickname
+            binding.tvFriendHidden.isSelected = true
         }
     }
 

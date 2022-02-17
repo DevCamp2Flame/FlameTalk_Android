@@ -6,8 +6,7 @@ import com.sgs.devcamp2.flametalk_android.data.model.chat.Chat
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.ChatRoom
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.ChatRoomUpdate
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.Thumbnail
-import com.sgs.devcamp2.flametalk_android.data.model.friend.FriendModel
-import com.sgs.devcamp2.flametalk_android.data.source.local.dao.FriendDAO
+import com.sgs.devcamp2.flametalk_android.domain.entity.FriendModel
 
 /**
  * @author 김현국
@@ -15,8 +14,11 @@ import com.sgs.devcamp2.flametalk_android.data.source.local.dao.FriendDAO
  * AppDatabase interface를 의존성 주입을 받아서 AppDatabase 생성
  */
 @Database(
-    entities = [ChatRoom::class, Chat::class, Thumbnail::class, ChatRoomUpdate::class, FriendModel::class], version = 1, exportSchema = true,
-)abstract class AppDatabaseImpl : RoomDatabase(), AppDatabase {
+    entities = [ChatRoom::class, Chat::class, Thumbnail::class, ChatRoomUpdate::class, FriendModel::class],
+    version = 1,
+    exportSchema = true,
+)
+abstract class AppDatabaseImpl : RoomDatabase(), AppDatabase {
     companion object {
         const val DB_NAME = "AppDatabase.db"
     }

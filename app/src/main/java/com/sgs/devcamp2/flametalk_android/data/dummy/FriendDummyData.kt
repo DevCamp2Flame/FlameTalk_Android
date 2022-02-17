@@ -1,10 +1,8 @@
 package com.sgs.devcamp2.flametalk_android.data.dummy
 
-import com.sgs.devcamp2.flametalk_android.data.model.friend.Friend
-import com.sgs.devcamp2.flametalk_android.data.model.friend.FriendModel
-import com.sgs.devcamp2.flametalk_android.data.model.friend.FriendPreview
 import com.sgs.devcamp2.flametalk_android.data.model.profile.ProfileDummyPreview
 import com.sgs.devcamp2.flametalk_android.data.model.profile.ProfilePreview
+import com.sgs.devcamp2.flametalk_android.domain.entity.FriendModel
 
 /**
  * @author 박소연
@@ -53,95 +51,95 @@ fun getDummyProfiles() = listOf(
 )
 
 // 생일인 친구
-fun getBirthdayFriend() = listOf(
-    Friend(
-        12,
-        "1643163512893324414",
-        "플레임 소연",
-        FriendPreview(
-            2,
-            "https://cdn.pixabay.com/photo/2018/03/26/02/05/cat-3261420__480.jpg",
-            "끝까지 열심히!!"
-        )
-    ),
-    Friend(
-        15,
-        "1643163512893324415",
-        "플레임 수연",
-        FriendPreview(
-            21,
-            "https://cdn.pixabay.com/photo/2017/07/25/01/22/cat-2536662__480.jpg",
-            "안녕..."
-        )
-    )
-)
-
-// 친구 리스트
-fun getDummyFriend() = listOf(
-    Friend(
-        12,
-        "1643163512893324414",
-        "플레임 소연",
-        FriendPreview(
-            2,
-            "https://cdn.pixabay.com/photo/2017/07/25/01/22/cat-2536662__480.jpg",
-            "끝까지 열심히!!"
-        )
-    ),
-    Friend(
-        15,
-        "1643163512893324415",
-        "플레임 수연",
-        FriendPreview(
-            21,
-            "https://cdn.pixabay.com/photo/2017/11/14/13/06/kitty-2948404__480.jpg",
-            "안녕..."
-        )
-    ),
-    Friend(
-        12,
-        "1643163512893324414",
-        "플레임 소연",
-        FriendPreview(
-            2,
-            "https://cdn.pixabay.com/photo/2017/07/25/01/22/cat-2536662__480.jpg",
-            "끝까지 열심히!!"
-        )
-    ),
-    Friend(
-        15,
-        "1643163512893324415",
-        "플레임 수연",
-        FriendPreview(
-            21,
-            "https://cdn.pixabay.com/photo/2016/01/20/13/05/cat-1151519__480.jpg",
-            "안녕..."
-        )
-    )
-)
-
-fun getDummyHiddenFriend() = listOf(
-    Friend(
-        12,
-        "1643163512893324414",
-        "플레임 소연",
-        FriendPreview(
-            2,
-            "https://cdn.pixabay.com/photo/2018/03/26/02/05/cat-3261420__480.jpg",
-            "끝까지 열심히!!"
-        )
-    ),
-    Friend(
-        15,
-        "1643163512893324415",
-        "플레임 수연",
-        FriendPreview(
-            21,
-            "https://cdn.pixabay.com/photo/2017/11/14/13/06/kitty-2948404__480.jpg",
-            "안녕..."
-        )
-    )
-)
+// fun getBirthdayFriend() = listOf(
+//    Friend(
+//        12,
+//        "1643163512893324414",
+//        "플레임 소연",
+//        FriendPreview(
+//            2,
+//            "https://cdn.pixabay.com/photo/2018/03/26/02/05/cat-3261420__480.jpg",
+//            "끝까지 열심히!!"
+//        )
+//    ),
+//    Friend(
+//        15,
+//        "1643163512893324415",
+//        "플레임 수연",
+//        FriendPreview(
+//            21,
+//            "https://cdn.pixabay.com/photo/2017/07/25/01/22/cat-2536662__480.jpg",
+//            "안녕..."
+//        )
+//    )
+// )
+//
+// // 친구 리스트
+// fun getDummyFriend() = listOf(
+//    Friend(
+//        12,
+//        "1643163512893324414",
+//        "플레임 소연",
+//        FriendPreview(
+//            2,
+//            "https://cdn.pixabay.com/photo/2017/07/25/01/22/cat-2536662__480.jpg",
+//            "끝까지 열심히!!"
+//        )
+//    ),
+//    Friend(
+//        15,
+//        "1643163512893324415",
+//        "플레임 수연",
+//        FriendPreview(
+//            21,
+//            "https://cdn.pixabay.com/photo/2017/11/14/13/06/kitty-2948404__480.jpg",
+//            "안녕..."
+//        )
+//    ),
+//    Friend(
+//        12,
+//        "1643163512893324414",
+//        "플레임 소연",
+//        FriendPreview(
+//            2,
+//            "https://cdn.pixabay.com/photo/2017/07/25/01/22/cat-2536662__480.jpg",
+//            "끝까지 열심히!!"
+//        )
+//    ),
+//    Friend(
+//        15,
+//        "1643163512893324415",
+//        "플레임 수연",
+//        FriendPreview(
+//            21,
+//            "https://cdn.pixabay.com/photo/2016/01/20/13/05/cat-1151519__480.jpg",
+//            "안녕..."
+//        )
+//    )
+// )
+//
+// fun getDummyHiddenFriend() = listOf(
+//    Friend(
+//        12,
+//        "1643163512893324414",
+//        "플레임 소연",
+//        FriendPreview(
+//            2,
+//            "https://cdn.pixabay.com/photo/2018/03/26/02/05/cat-3261420__480.jpg",
+//            "끝까지 열심히!!"
+//        )
+//    ),
+//    Friend(
+//        15,
+//        "1643163512893324415",
+//        "플레임 수연",
+//        FriendPreview(
+//            21,
+//            "https://cdn.pixabay.com/photo/2017/11/14/13/06/kitty-2948404__480.jpg",
+//            "안녕..."
+//        )
+//    )
+// )
 
 fun getDummyFriendModel() = listOf(
     FriendModel(

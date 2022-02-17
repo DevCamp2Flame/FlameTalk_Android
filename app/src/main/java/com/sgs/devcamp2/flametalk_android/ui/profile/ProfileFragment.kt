@@ -8,6 +8,7 @@ import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
@@ -54,22 +55,20 @@ class ProfileFragment : Fragment() {
         binding.imgProfile.setOnClickListener {
             findNavController().navigate(
                 ProfileFragmentDirections.actionProfileToFeedSingle(
-                    1,
+                    args.profileId,
                     false
                 )
             )
-            // TODO: viewModel.profileId.value로 변경
         }
 
         // 배경화면 히스토리 피드로 이동
         binding.imgProfileBg.setOnClickListener {
             findNavController().navigate(
                 ProfileFragmentDirections.actionProfileToFeedSingle(
-                    1,
+                    args.profileId,
                     true
                 )
             )
-            // TODO: viewModel.profileId.value로 변경
         }
 
         // 프로필 상세 닫기
@@ -83,8 +82,8 @@ class ProfileFragment : Fragment() {
             Snackbar.make(requireContext(), it, it.isActivated.toString(), Snackbar.LENGTH_SHORT)
                 .show()
         }
+        // 프로필 수정하기로 이동
         binding.cstProfileEdit.setOnClickListener {
-            // TODO: 통신 응답으로 넘어온 유저 데이터를 넘겨야 한다
             findNavController().navigate(
                 ProfileFragmentDirections.actionProfileToEdit(viewModel.userProfile.value)
             )
@@ -92,25 +91,24 @@ class ProfileFragment : Fragment() {
 
         // 프로필 메뉴: 숨김친구, 차단친구
         binding.imgProfileMenu.setOnClickListener {
-            var popupMenu = PopupMenu(context, binding.imgProfileMenu)
+            val popupMenu = PopupMenu(context, binding.imgProfileMenu)
             popupMenu.inflate(R.menu.profile_menu)
             popupMenu.setOnMenuItemClickListener {
                 when (it.itemId) {
                     R.id.menu_hide -> {
-                        // TODO: 숨김 친구 요청
-                        viewModel.changeFriendStatue(args.friendId, TO_HIDE)
+                        // 숨김 친구 요청
+                        viewModel.changeFriendStatue(TO_HIDE, args.friendId, args.assignedProfileId)
                     }
                     R.id.menu_block -> {
-                        // TODO: 차단 친구 요청
-                        viewModel.changeFriendStatue(args.friendId, TO_BLOCK)
+                        // 차단 친구 요청
+                        viewModel.changeFriendStatue(
+                            TO_BLOCK,
+                            args.friendId,
+                            args.assignedProfileId
+                        )
                     }
                     else -> {
                         // 실행되지 않음
-                        Snackbar.make(
-                            binding.imgProfileMenu,
-                            "else...",
-                            Snackbar.LENGTH_SHORT
-                        ).show()
                     }
                 }
                 return@setOnMenuItemClickListener false
@@ -131,6 +129,16 @@ class ProfileFragment : Fragment() {
             FRIEND_PROFILE -> { // 친구 프로필
                 binding.imgProfileBookmark.toVisible()
                 swapViewVisibility(binding.cstProfileEdit, binding.cstProfileChat)
+
+                // 클릭한 프로필의 유저와 1:1 채팅방 생성 페이지로 이동
+                binding.cstProfileChat.setOnClickListener {
+                    val profileToCreateChatRoomDirections: NavDirections =
+                        ProfileFragmentDirections.actionProfileToCreateChatRoom(
+                            // users의 default value를 null로 설정하여 생략
+                            singleFriendId = args.friendId,
+                        )
+                    findNavController().navigate(profileToCreateChatRoomDirections)
+                }
             }
             USER_MULTI_PROFILE -> { // 내 멀티 프로필
                 binding.imgProfileBookmark.toInvisible()
@@ -160,6 +168,23 @@ class ProfileFragment : Fragment() {
                     .into(binding.imgProfile)
                 Glide.with(binding.imgProfileBg).load(it?.bgImageUrl)
                     .into(binding.imgProfileBg)
+            }
+        }
+
+        lifecycleScope.launchWhenResumed {
+            viewModel.message.collectLatest {
+                if (it != "") {
+                    Snackbar.make(requireView(), it, Snackbar.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+        // 통신 성공하면 친구 리스트 화면으로 이동
+        lifecycleScope.launchWhenResumed {
+            viewModel.isSuccess.collectLatest {
+                if (it == true) {
+                    findNavController().navigate(R.id.navigation_friend)
+                }
             }
         }
     }

@@ -1,15 +1,15 @@
 package com.sgs.devcamp2.flametalk_android.domain.repository
 
-import com.sgs.devcamp2.flametalk_android.data.model.friend.FriendModel
-import com.sgs.devcamp2.flametalk_android.data.source.local.dao.FriendDAO
+import com.sgs.devcamp2.flametalk_android.data.source.local.database.AppDatabase
+import com.sgs.devcamp2.flametalk_android.domain.entity.FriendModel
 import com.sgs.devcamp2.flametalk_android.network.request.friend.AddContactFriendRequest
 import com.sgs.devcamp2.flametalk_android.network.request.friend.AddFriendRequest
 import com.sgs.devcamp2.flametalk_android.network.request.friend.FriendStatusRequest
 import com.sgs.devcamp2.flametalk_android.network.service.FriendService
 import dagger.Lazy
 import javax.inject.Inject
-import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 
 /**
@@ -21,9 +21,14 @@ import kotlinx.coroutines.withContext
 
 class FriendRepository @Inject constructor(
     private val friendService: Lazy<FriendService>,
-    private val friendDAO: Lazy<FriendDAO>,
+    // private val friendDAO: Lazy<FriendDAO>,
+    private val db: AppDatabase,
     private val ioDispatcher: CoroutineDispatcher
 ) {
+    /**
+     * =withContext(ioDispatcher)를 통해 IO 스레드풀에서 실행되는 작업 블록 생성
+     * */
+
     // 연락처 친구 추가
     suspend fun postContactFriendAdd(request: AddContactFriendRequest) = withContext(ioDispatcher) {
         friendService.get().postContactFriendAdd(request)
@@ -47,12 +52,12 @@ class FriendRepository @Inject constructor(
         }
 
     // 친구 리스트 로컬에 저장
-    suspend fun insertAllFriends(vararg friends: FriendModel) = withContext(ioDispatcher) {
-        friendDAO.get().insertAllFriends(*friends)
+    suspend fun insertAllFriends(friends: List<FriendModel>) = withContext(ioDispatcher) {
+        db.friendDao().insertAllFriends(friends)
     }
 
     // 친구 리스트 전체 가져오기
     suspend fun getAllFriends() = withContext(ioDispatcher) {
-        friendDAO.get().getAllFriends()
+        db.friendDao().getAllFriends().flowOn(ioDispatcher)
     }
 }

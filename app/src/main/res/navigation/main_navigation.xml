@@ -6,18 +6,26 @@
     app:startDestination="@id/navigation_signin">
 
     <fragment
+        android:id="@+id/navigation_splash"
+        android:name="com.sgs.devcamp2.flametalk_android.ui.splash.SplashFragment"
+        android:label="Splash"
+        tools:layout="@layout/fragment_splash">
+        <action
+            android:id="@+id/action_splash_to_signin"
+            app:destination="@id/navigation_signin" />
+    </fragment>
+
+    <fragment
         android:id="@+id/navigation_signin"
         android:name="com.sgs.devcamp2.flametalk_android.ui.signin.SigninFragment"
         android:label="Signin"
         tools:layout="@layout/fragment_signin">
         <action
             android:id="@+id/action_signin_to_friend"
-            app:destination="@id/navigation_friend"
-            app:popUpTo="@id/navigation_friend" />
+            app:destination="@id/navigation_friend" />
         <action
             android:id="@+id/action_signin_to_signup"
-            app:destination="@id/navigation_signup"
-            app:popUpTo="@id/navigation_signup" />
+            app:destination="@id/navigation_signup" />
         <argument
             android:name="id"
             android:defaultValue=""
@@ -74,11 +82,6 @@
         android:name="com.sgs.devcamp2.flametalk_android.ui.friend.add.AddFriendFragment"
         android:label="AddFriendFragment"
         tools:layout="@layout/fragment_add_friend">
-        <action
-            android:id="@+id/action_add_to_friend"
-            app:destination="@id/navigation_friend"
-            app:popUpTo="@id/navigation_friend"
-            app:popUpToInclusive="true" />
     </fragment>
 
     <!--친구 검색-->
@@ -112,9 +115,14 @@
             app:argType="integer" />
         <argument
             android:name="profileId"
-            app:argType="long" />
+            app:argType="long"
+            android:defaultValue="0L"/>
         <argument
             android:name="friendId"
+            app:argType="long"
+            android:defaultValue="0L"/>
+        <argument
+            android:name="assignedProfileId"
             app:argType="long"
             android:defaultValue="0L"/>
         <action
@@ -124,6 +132,15 @@
         <action
             android:id="@+id/action_profile_to_feed_single"
             app:destination="@id/navigation_single_feed" />
+
+        <action
+            android:id="@+id/action_profile_to_create_chat_room"
+            app:destination="@id/navigation_create_chat_room" />
+        <action
+            android:id="@+id/action_profile_to_friend"
+            app:destination="@id/navigation_friend"
+            app:popUpTo="@id/navigation_friend"
+            app:popUpToInclusive="true"/>
     </fragment>
 
     <!--숨김 친구-->
@@ -182,10 +199,11 @@
             app:destination="@id/navigation_profile_desc" />
 
         <action
-            android:id="@+id/action_add_to_friend"
+            android:id="@+id/action_add_profile_to_friend"
             app:destination="@id/navigation_friend"
             app:popUpTo="@id/navigation_friend"
             app:popUpToInclusive="true"/>
+
     </fragment>
 
     <!--상태메세지 수정-->
@@ -429,7 +447,15 @@
             app:popUpToInclusive="true"/>
         <argument
             android:name="users"
-            app:argType="string[]" />
+            app:argType="string[]"
+            app:nullable="true"
+            android:defaultValue="@null" />
+
+        <!--프로필에서 1:1 채팅 생성 시 friendId 전달-->
+        <argument
+            android:name="singleFriendId"
+            app:argType="long"
+            android:defaultValue="0L"/>
     </fragment>
     <fragment
         android:id="@+id/navigation_create_open_chat_room"

@@ -6,10 +6,9 @@ import android.database.Cursor
 import android.provider.ContactsContract
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sgs.devcamp2.flametalk_android.data.dummy.getBirthdayFriend
-import com.sgs.devcamp2.flametalk_android.data.dummy.getDummyFriend
 import com.sgs.devcamp2.flametalk_android.data.model.friend.Friend
 import com.sgs.devcamp2.flametalk_android.data.model.profile.ProfilePreview
+import com.sgs.devcamp2.flametalk_android.domain.entity.FriendModel
 import com.sgs.devcamp2.flametalk_android.domain.repository.FriendRepository
 import com.sgs.devcamp2.flametalk_android.domain.repository.ProfileRepository
 import com.sgs.devcamp2.flametalk_android.network.request.friend.AddContactFriendRequest
@@ -28,9 +27,6 @@ class FriendViewModel @Inject constructor(
     private val profileRepository: Lazy<ProfileRepository>,
     private val friendRepository: Lazy<FriendRepository>
 ) : ViewModel() {
-    // 네트워크 통신 데이터 전 더미데이터
-    private var dummyBirthdayData: List<Friend> = getBirthdayFriend()
-    private var dummyFriendData: List<Friend> = getDummyFriend()
 
     // 유저 닉네임
     private val _nickname = MutableStateFlow("")
@@ -45,16 +41,17 @@ class FriendViewModel @Inject constructor(
     val userProfile = _userProfile?.asStateFlow()
 
     // 유저 멀티프로필
-    private val _multiProfile = MutableStateFlow<List<ProfilePreview>>(emptyList())
-    val multiProfile: MutableStateFlow<List<ProfilePreview>> = _multiProfile
+    private val _multiProfile = MutableStateFlow<List<ProfilePreview>?>(null) // (emptyList())
+    val multiProfile: MutableStateFlow<List<ProfilePreview>?> = _multiProfile
 
     // 생일인 친구 리스트
     private val _birthProfile = MutableStateFlow<List<Friend>>(emptyList())
     val birthProfile: MutableStateFlow<List<Friend>> = _birthProfile
 
     // 친구 리스트
-    private val _friendProfile = MutableStateFlow<List<Friend>>(emptyList())
-    val friendProfile: MutableStateFlow<List<Friend>> = _friendProfile
+    private val _friendProfile: MutableStateFlow<List<Friend>?> =
+        MutableStateFlow(null) // (emptyList())
+    val friendProfile: MutableStateFlow<List<Friend>?> = _friendProfile
 
     // 주소록 전화번호
     private val _contact = MutableStateFlow<List<String>>(emptyList())
@@ -80,7 +77,7 @@ class FriendViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val response = profileRepository.get().getProfileList()
-                val multiProfile = ArrayList<ProfilePreview>()
+                val multiProfile = arrayListOf<ProfilePreview>() // = ArrayList<ProfilePreview>()
 
                 if (response.status == 200) {
                     _nickname.value = response.data.nickname
@@ -88,16 +85,22 @@ class FriendViewModel @Inject constructor(
                     response.data.profiles.map {
                         when (it.isDefault) {
                             // 기본 프로필
-                            true -> _userProfile?.value = it
+                            true -> _userProfile.value = it
                             // 추가로 생성한 멀티 프로필
                             false -> multiProfile.add(it)
                         }
                     }
-                    _multiProfile.value = multiProfile.toList()
+
+                    if (multiProfile.isEmpty()) {
+                        _multiProfile.value = null
+                    } else {
+                        _multiProfile.value = multiProfile
+                    }
+                    // _multiProfile.value = multiProfile.toList()
 
                     // Result
-                    Timber.d("User Profile ${_userProfile?.value}")
-                    Timber.d("Multi Profile ${_multiProfile.value}")
+//                    Timber.d("User Profile ${_userProfile.value}")
+//                    Timber.d("Multi Profile ${_multiProfile.value}")
                 } else {
                     _message.value = response.message
                 }
@@ -120,12 +123,15 @@ class FriendViewModel @Inject constructor(
                 if (response?.status == 200) {
                     when (type) {
                         BIRTHDAY_FRIEND -> _birthProfile.value = response.data
-                        FRIEND -> _friendProfile.value = response.data
+                        FRIEND -> {
+                            _friendProfile.value = response.data
+                            saveFriendProfiles()
+                        }
                     }
 
                     // Result
 //                    Timber.d("Birthday Response ${response.data}")
-//                    Timber.d("Birthday Friend ${_birthProfile.value}")
+                    Timber.d("Get Friend ${_friendProfile.value}")
                 } else {
                     _message.value = response!!.message
                 }
@@ -141,13 +147,17 @@ class FriendViewModel @Inject constructor(
         viewModelScope.launch {
             val result = viewModelScope.async {
                 var arrayList = ArrayList<String>()
+                // 연락처 고유 url
                 val uri = ContactsContract.Contacts.CONTENT_URI
+                // 오름차순으로 이름 정렬
                 val sort = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC"
+                // 연락처 고유 url을 기반으로 정보를 쿼리
                 val cursor: Cursor? = context.contentResolver.query(
                     uri, null, null, null, sort
                 )
                 if (cursor != null) {
                     if (cursor.count > 0) {
+                        // 데이터가 있으면 id, 이름, content uri를 가져옴
                         while (cursor.moveToNext()) {
                             @SuppressLint("Range") val id = cursor.getString(
                                 cursor.getColumnIndex(
@@ -165,6 +175,7 @@ class FriendViewModel @Inject constructor(
                             val phoneCursor: Cursor? = context.contentResolver.query(
                                 uriPhone, null, selection, arrayOf(id), null
                             )
+                            // content uri를 추가로 쿼리하여 휴대폰 번호를 가져온다
                             if (phoneCursor!!.moveToNext()) {
                                 @SuppressLint("Range") val number = phoneCursor.getString(
                                     phoneCursor.getColumnIndex(
@@ -178,11 +189,13 @@ class FriendViewModel @Inject constructor(
                         cursor.close()
                     }
                 }
-                Timber.d("연락처 %s", arrayList)
+                // 가져온 연락처 리스트를 viewModel의 변수에 저장한다
                 _contact.value = arrayList
             }
+            /**
+             * deferred type의 위 작업이 끝날때까지 기다린 후 연락처 기반 친구 추가 통신 요청을 보낸다
+             * */
             result.await()
-            Timber.d("연락처 통신 요청 전 contact $_contact")
             addContactFriend()
         }
     }
@@ -205,6 +218,26 @@ class FriendViewModel @Inject constructor(
                 _error.value = error.toString()
                 Timber.d("Fail Response: $_error")
             }
+        }
+    }
+
+    // 친구 프로필 리스트 로컬에 저장
+    private fun saveFriendProfiles() {
+        viewModelScope.launch {
+            var friendsData: List<FriendModel>
+            if (_friendProfile.value != null) {
+                friendsData = _friendProfile.value!!.map {
+                    FriendModel(
+                        profileId = it.preview.profileId,
+                        nickname = it.nickname,
+                        imageUrl = it.preview.imageUrl,
+                        description = it.preview.description
+                    )
+                }
+            } else {
+                friendsData = emptyList()
+            }
+            friendRepository.get().insertAllFriends(friendsData)
         }
     }
 

@@ -28,6 +28,7 @@
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_margin="10dp"
+        android:visibility="gone"
         android:src="@drawable/selector_bookmark"
         app:layout_constraintEnd_toStartOf="@+id/img_profile_menu"
         app:layout_constraintTop_toTopOf="parent" />
@@ -41,17 +42,39 @@
         app:tint="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+
+    <View
+        android:id="@+id/v_img_profile"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/bg_skyblue2_50"
+        app:layout_constraintBottom_toBottomOf="@+id/img_profile"
+        app:layout_constraintStart_toStartOf="@+id/img_profile"
+        app:layout_constraintTop_toTopOf="@+id/img_profile"
+        app:layout_constraintEnd_toEndOf="@+id/img_profile"/>
+
+    <ImageView
+        android:id="@+id/img_friend_hidden_icon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:tint="@color/white"
+        android:src="@drawable/ic_person_18"
+        app:layout_constraintBottom_toBottomOf="@+id/img_profile"
+        app:layout_constraintStart_toStartOf="@+id/img_profile"
+        app:layout_constraintTop_toTopOf="@+id/img_profile"
+        app:layout_constraintEnd_toEndOf="@+id/img_profile"/>
+
     
     <ImageView
         android:id="@+id/img_profile"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginBottom="95dp"
-        android:background="@drawable/bg_skyblue2_50"
         app:layout_constraintBottom_toTopOf="@id/cst_profile_edit"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
+        app:layout_constraintStart_toStartOf="parent" />
+
 
     <TextView
         android:id="@+id/tv_profile_nickname"
@@ -79,6 +102,7 @@
         tools:text="zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz" />
 
     <View
+        android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:background="@color/white"
@@ -96,8 +120,9 @@
 
         <ImageView
             android:id="@+id/img_profile_edit"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="10dp"
             android:layout_marginHorizontal="30dp"
             android:src="@drawable/ic_edit_24"
             app:layout_constraintEnd_toStartOf="@+id/img_profile_friend"
@@ -120,8 +145,9 @@
 
         <ImageView
             android:id="@+id/img_profile_friend"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="10dp"
             android:layout_marginHorizontal="30dp"
             android:src="@drawable/ic_person_add_24"
             app:layout_constraintEnd_toEndOf="parent"
@@ -149,7 +175,7 @@
         android:id="@+id/cst_profile_chat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingVertical="10dp"
+        android:paddingVertical="20dp"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -157,8 +183,8 @@
 
         <ImageView
             android:id="@+id/img_profile_chat"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:src="@drawable/ic_chat_stroke_24"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

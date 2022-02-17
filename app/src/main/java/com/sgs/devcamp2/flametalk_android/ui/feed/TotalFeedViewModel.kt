@@ -4,9 +4,7 @@ import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sgs.devcamp2.flametalk_android.domain.repository.FileRepository
 import com.sgs.devcamp2.flametalk_android.domain.repository.ProfileRepository
-import com.sgs.devcamp2.flametalk_android.domain.repository.SignRepository
 import com.sgs.devcamp2.flametalk_android.network.response.feed.Feed
 import dagger.Lazy
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,8 +18,6 @@ import timber.log.Timber
 @HiltViewModel
 class TotalFeedViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val signRepository: Lazy<SignRepository>,
-    private val fileRepository: Lazy<FileRepository>,
     private val profileRepository: Lazy<ProfileRepository>
 ) : ViewModel() {
 
@@ -37,8 +33,8 @@ class TotalFeedViewModel @Inject constructor(
     private val _reload = MutableStateFlow(false)
     val reload = _reload?.asStateFlow()
 
-    private val _message: MutableStateFlow<String>? = null
-    val message = _message?.asStateFlow()
+    private val _message = MutableStateFlow("")
+    val message = _message.asStateFlow()
 
     private val _error: MutableStateFlow<String>? = null
     val error = _error?.asStateFlow()
@@ -50,19 +46,6 @@ class TotalFeedViewModel @Inject constructor(
                 _totalFeed.value = response.data.feeds
 
                 Timber.d("$response")
-            } catch (ignored: Throwable) {
-                _error?.value = "알 수 없는 에러 발생"
-                Timber.d("Error:  $ignored")
-            }
-        }
-    }
-
-    // TODO: file 다운로드 요청
-    fun downloadItem(fileId: String) {
-        viewModelScope.launch {
-            try {
-                // val response = fileRepository.get().downloadItem(fileId)
-                // Timber.d("$response")
             } catch (ignored: Throwable) {
                 _error?.value = "알 수 없는 에러 발생"
                 Timber.d("Error:  $ignored")

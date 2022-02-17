@@ -1,4 +1,4 @@
-package com.sgs.devcamp2.flametalk_android.data.model.friend
+package com.sgs.devcamp2.flametalk_android.domain.entity
 
 import androidx.annotation.NonNull
 import androidx.room.ColumnInfo

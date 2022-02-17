@@ -16,7 +16,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.snackbar.Snackbar
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentFriendBinding
@@ -64,15 +65,22 @@ class FriendFragment : Fragment() {
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        initFriendProfile()
+    }
+
     private fun initUI() {
         initAppbar()
         initUserProfiles()
     }
 
+    // 앱 상단바 초기화
     private fun initAppbar() {
         binding.abFriend.tvAppbar.text = "친구"
         binding.abFriend.imgAppbarSearch.setOnClickListener {
-            // TODO: Friend > Search
+            findNavController().navigate(R.id.navigation_search)
         }
         binding.abFriend.imgAppbarAddFriend.setOnClickListener {
             findNavController().navigate(R.id.navigation_add_friend)
@@ -90,13 +98,7 @@ class FriendFragment : Fragment() {
                     R.id.menu_block -> {
                         findNavController().navigate(R.id.navigation_blocked_friend)
                     }
-                    else -> {
-                        // 실행되지 않음
-                        Snackbar.make(
-                            binding.abFriend.imgAppbarSetting,
-                            "else...",
-                            Snackbar.LENGTH_SHORT
-                        ).show()
+                    else -> { // 실행되지 않음
                     }
                 }
                 return@setOnMenuItemClickListener false
@@ -137,8 +139,7 @@ class FriendFragment : Fragment() {
         lifecycleScope.launchWhenResumed {
             viewModel.userProfile.collectLatest {
                 Glide.with(binding.lFriendMainUser.imgFriendPreview)
-                    .load(it?.imageUrl).apply(RequestOptions.circleCropTransform())
-                    .apply(RequestOptions.placeholderOf(R.drawable.ic_person_white_24))
+                    .load(it?.imageUrl).transform(CenterCrop(), RoundedCorners(35))
                     .into(binding.lFriendMainUser.imgFriendPreview)
 
                 if (it?.description.isNullOrEmpty()) {
@@ -146,13 +147,13 @@ class FriendFragment : Fragment() {
                 } else {
                     binding.lFriendMainUser.tvFriendPreviewDesc.toVisible()
                     binding.lFriendMainUser.tvFriendPreviewDesc.text = it?.description
-                    Timber.d("description ${it?.description}")
                 }
             }
         }
 
         // 내 프로필 미리보기 > 프로필 상세 보기 이동
         binding.lFriendMainUser.root.setOnClickListener {
+            /**파라미터를 넣어 뷰 전환*/
             val friendToProfileDirections: NavDirections =
                 FriendFragmentDirections.actionFriendToProfile(
                     viewType = USER_DEFAULT_PROFILE, profileId = viewModel.userProfile.value!!.id
@@ -170,20 +171,21 @@ class FriendFragment : Fragment() {
 
         lifecycleScope.launchWhenResumed {
             viewModel.multiProfile.collectLatest {
-                if (it.isNotEmpty()) {
+                if (it?.isNotEmpty() == true) {
                     multiProfileAdapter.data = it
-                    multiProfileAdapter.notifyDataSetChanged()
+                    multiProfileAdapter.submitList(it)
                 }
             }
         }
         // 마지막 아이템: 만들기
         binding.itemFriendAddProfile.imgVerticalProfileNone.toVisible()
+        binding.itemFriendAddProfile.imgVerticalProfileIcon.toVisible()
+        binding.itemFriendAddProfile.vVerticalProfile.toVisibleGone()
         binding.itemFriendAddProfile.tvVerticalProfileNickname.text = "만들기"
 
         // 친구리스트 > 멀티프로필 생성: 멀티 프로필 만들기
         binding.itemFriendAddProfile.root.setOnClickListener {
-            Snackbar.make(requireView(), "멀티프로필 생성 클릭", Snackbar.LENGTH_SHORT).show()
-            Timber.d("멀티프로필 생성 클릭")
+            /**파라미터를 없이 뷰 전환*/
             findNavController().navigate(R.id.navigation_add_profile)
         }
     }
@@ -199,7 +201,7 @@ class FriendFragment : Fragment() {
                     birthdayVisibility(GONE)
                 } else {
                     birthdayAdapter.data = it
-                    birthdayAdapter.notifyDataSetChanged()
+                    birthdayAdapter.submitList(it)
                     birthdayVisibility(VISIBLE)
                 }
             }
@@ -217,11 +219,13 @@ class FriendFragment : Fragment() {
         binding.rvFriend.adapter = friendAdapter
         lifecycleScope.launch {
             viewModel.friendProfile.collectLatest {
-                if (it.isNullOrEmpty()) {
+                if (it == null) {
+                    friendVisibility(VISIBLE)
+                } else if (it.isEmpty()) {
                     friendVisibility(GONE)
                 } else {
                     friendAdapter.data = it
-                    friendAdapter.notifyDataSetChanged()
+                    friendAdapter.submitList(it)
                     friendVisibility(VISIBLE)
                 }
             }

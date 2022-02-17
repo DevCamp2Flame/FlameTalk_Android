@@ -62,27 +62,6 @@ class AddFriendViewModel @Inject constructor(
         _profileId.value = profileId
     }
 
-    fun addFriend(phoneNumber: String) {
-        viewModelScope.launch {
-            try {
-                val request = AddFriendRequest(_profileId.value, phoneNumber)
-                val response = friendRepository.get().postFriendAdd(request)
-
-                if (response.status == 200) {
-                    _friendData.value = response.data
-                    _isSuccess.value = true
-                } else {
-                    _isSuccess.value = false
-                    _message.value = response.message
-                }
-                _message.value = null
-                _isSuccess.value = null
-            } catch (ignored: Throwable) {
-                Timber.d("Fail Response: $ignored")
-            }
-        }
-    }
-
     private fun getProfileList() {
         viewModelScope.launch {
             try {
@@ -96,6 +75,27 @@ class AddFriendViewModel @Inject constructor(
                 } else {
                     _message.value = response.message
                 }
+            } catch (ignored: Throwable) {
+                Timber.d("Fail Response: $ignored")
+            }
+        }
+    }
+
+    fun addFriend(phoneNumber: String) {
+        viewModelScope.launch {
+            try {
+                val request = AddFriendRequest(_profileId.value, phoneNumber)
+                val response = friendRepository.get().postFriendAdd(request)
+
+                if (response.status == 201) {
+                    _friendData.value = response.data
+                    _isSuccess.value = true
+                } else {
+                    _isSuccess.value = false
+                    _message.value = response.message
+                }
+                _message.value = null
+                _isSuccess.value = null
             } catch (ignored: Throwable) {
                 Timber.d("Fail Response: $ignored")
             }

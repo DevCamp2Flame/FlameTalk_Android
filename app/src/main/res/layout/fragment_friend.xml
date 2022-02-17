@@ -50,18 +50,22 @@
                 android:id="@+id/nsv_friend_multi_profile"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:clickable="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_friend_multi_profile">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:paddingBottom="5dp"
+                    android:clickable="true">
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_friend_multi_profile"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:clickable="true"
                         android:orientation="horizontal"
                         android:overScrollMode="never"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -142,11 +146,11 @@
                 android:layout_margin="10dp"
                 android:background="@drawable/bg_open_room_blue_border_3"
                 android:gravity="center"
-                android:visibility="gone"
                 android:paddingVertical="20sp"
                 android:text="연락처 동기화로 친구 추가하기"
                 android:textColor="@color/white"
                 android:textSize="20sp"
+                android:visibility="gone"
                 app:layout_constraintTop_toBottomOf="@id/tv_friend_count" />
 
             <androidx.recyclerview.widget.RecyclerView
