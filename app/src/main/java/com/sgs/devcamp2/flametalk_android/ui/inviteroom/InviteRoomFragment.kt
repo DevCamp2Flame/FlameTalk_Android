@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentInviteRoomBinding
 import com.sgs.devcamp2.flametalk_android.domain.entity.UiState
-import com.sgs.devcamp2.flametalk_android.network.response.friend.TempFriend
+import com.sgs.devcamp2.flametalk_android.network.response.friend.FriendListRes
 import com.sgs.devcamp2.flametalk_android.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -118,13 +118,13 @@ class InviteRoomFragment :
         binding.layoutInviteRoomBack.setOnClickListener(this)
     }
 
-    override fun onItemClicked(tempFriend: TempFriend, position: Int, adapter: InviteRoomAdapter) {
+    override fun onItemClicked(tempFriend: FriendListRes, position: Int, adapter: InviteRoomAdapter) {
         model.addFriendList(tempFriend, position, adapter)
     }
-    override fun onItemMarkClicked(tempFriend: TempFriend, position: Int, adapter: InviteRoomMarkAdapter) {
+    override fun onItemMarkClicked(tempFriend: FriendListRes, position: Int, adapter: InviteRoomMarkAdapter) {
         model.addMarkList(tempFriend, position, adapter)
     }
-    override fun onItemSelectedClick(tempFriend: TempFriend) {
+    override fun onItemSelectedClick(tempFriend: FriendListRes) {
         model.removeSelectedItem(tempFriend)
     }
     override fun onClick(view: View?) {

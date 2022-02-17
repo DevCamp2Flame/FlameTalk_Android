@@ -7,5 +7,6 @@ package com.sgs.devcamp2.flametalk_android.data.model.chatroom.joinchatrom
 data class JoinChatRoomReq(
     val chatroomId: String,
     val userId: String,
-    val openProfileId: Long
+    val lastReadMessageId: String,
+    val openProfileId: Long?
 )

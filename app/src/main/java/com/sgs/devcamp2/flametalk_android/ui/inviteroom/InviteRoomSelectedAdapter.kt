@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.ItemPersonInviteRoomSelectedBinding
-import com.sgs.devcamp2.flametalk_android.network.response.friend.TempFriend
+import com.sgs.devcamp2.flametalk_android.network.response.friend.FriendListRes
 import com.sgs.devcamp2.flametalk_android.util.disableClickTemporarily
 
 /**
@@ -17,21 +17,21 @@ import com.sgs.devcamp2.flametalk_android.util.disableClickTemporarily
  */
 class InviteRoomSelectedAdapter constructor(
     selectedCallBack: ItemSelectedClickCallBack
-) : ListAdapter<TempFriend, RecyclerView.ViewHolder>(diffUtil) {
+) : ListAdapter<FriendListRes, RecyclerView.ViewHolder>(diffUtil) {
     interface ItemSelectedClickCallBack {
-        fun onItemSelectedClick(tempFriend: TempFriend)
+        fun onItemSelectedClick(tempFriend: FriendListRes)
     }
 
     var itemClickCallBack: ItemSelectedClickCallBack? = selectedCallBack
 
     companion object {
         val TAG: String = "로그"
-        val diffUtil = object : DiffUtil.ItemCallback<TempFriend>() {
-            override fun areItemsTheSame(oldItem: TempFriend, newItem: TempFriend): Boolean {
+        val diffUtil = object : DiffUtil.ItemCallback<FriendListRes>() {
+            override fun areItemsTheSame(oldItem: FriendListRes, newItem: FriendListRes): Boolean {
                 return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: TempFriend, newItem: TempFriend): Boolean {
+            override fun areContentsTheSame(oldItem: FriendListRes, newItem: FriendListRes): Boolean {
                 return oldItem.selected == newItem.selected
             }
         }
@@ -49,14 +49,14 @@ class InviteRoomSelectedAdapter constructor(
 
     inner class SelectedPersonViewHolder(val binding: ItemPersonInviteRoomSelectedBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(tempFriend: TempFriend) {
+        fun bind(tempFriend: FriendListRes) {
             binding.tvInviteRoomSelectedUserName.text = tempFriend.nickname
             binding.layoutInviteRoomSelected.setOnClickListener(ItemClickListener(tempFriend))
         }
     }
 
     inner class ItemClickListener(
-        var tempFriend: TempFriend
+        var tempFriend: FriendListRes
     ) : View.OnClickListener {
         override fun onClick(view: View?) {
             view?.disableClickTemporarily()

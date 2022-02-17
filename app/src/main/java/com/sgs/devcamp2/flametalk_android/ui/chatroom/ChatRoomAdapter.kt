@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.data.model.chat.Chat
 import com.sgs.devcamp2.flametalk_android.databinding.*
@@ -50,6 +51,16 @@ class ChatRoomAdapter constructor(
                     .inflate(R.layout.item_right_start_text_chat_room, parent, false)
                 RightStartViewHolder(ItemRightStartTextChatRoomBinding.bind(view))
             }
+            3 -> {
+                view = LayoutInflater.from(parent.context).inflate(R.layout.item_right_start_file_chat_room, parent, false)
+                FileRightMessageViewHolder(ItemRightStartFileChatRoomBinding.bind(view))
+            }
+            4 ->
+                {
+                    view = LayoutInflater.from(parent.context).inflate(R.layout.item_left_start_file_chat_room, parent, false)
+                    FileLeftMessageViewHolder(ItemLeftStartFileChatRoomBinding.bind(view))
+                }
+
             else -> {
                 view = LayoutInflater.from(parent.context)
                     .inflate(R.layout.item_first_invite, parent, false)
@@ -65,6 +76,7 @@ class ChatRoomAdapter constructor(
          */
         val invite = "INVITE"
         val talk = "TALK"
+        val file = "FILE"
         when (getItem(position).message_type) {
             invite -> {
                 (holder as InviteMessageViewHolder).bind(getItem(position))
@@ -79,12 +91,31 @@ class ChatRoomAdapter constructor(
                     }
                 }
             }
+            file ->
+                {
+                    when (getItem(position).sender_id) {
+                        host_id ->
+                            {
+                                (holder as FileRightMessageViewHolder).bind(getItem(position))
+                            }
+                        else ->
+                            {
+                                (holder as FileLeftMessageViewHolder).bind(getItem(position))
+                            }
+                    }
+                }
         }
     }
 
     override fun getItemViewType(position: Int): Int {
         return if (currentList[position].message_type == "INVITE") {
             2 // 초대 메세지
+        } else if (currentList[position].message_type == "FILE") {
+            if (currentList[position].sender_id == host_id) {
+                3 // 내가 보낸 사진
+            } else {
+                4
+            }
         } else {
             if (currentList[position].sender_id == host_id) {
                 0 // 내 메세지
@@ -100,7 +131,20 @@ class ChatRoomAdapter constructor(
             binding.tvItemFirstInviteMessage.text = chat.contents
         }
     }
-    /**
+    inner class FileRightMessageViewHolder(val binding: ItemRightStartFileChatRoomBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(chat: Chat) {
+
+            Glide.with(binding.ivRightStartFileChatRoomMessage).load(chat.file_url).into(binding.ivRightStartFileChatRoomMessage)
+        }
+    }
+    inner class FileLeftMessageViewHolder(val binding: ItemLeftStartFileChatRoomBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(chat: Chat) {
+            binding.tvLeftStartTextChatRoomUserName.text = chat.nickname
+            Glide.with(binding.ivLeftStartFileChatRoomUserImg).load(chat.file_url).into(binding.ivLeftStartFileChatRoomUserImg)
+        }
+    }
+
+/**
      * 내가 아닌 다른 사용자가 보낸 첫번째 메세지 ViewHolder
      */
     inner class LeftStartViewHolder(val binding: ItemLeftStartTextChatRoomBinding) :

@@ -15,7 +15,7 @@ import javax.inject.Inject
 class UpdateChatRoomUseCase @Inject constructor(
     private val repository: ChatRoomRepository
 ) {
-    suspend fun invoke(userChatroomId: Long, updateChatRoomReq: UpdateChatRoomReq): Flow<Results<UpdateChatRoomRes, WrappedResponse<UpdateChatRoomRes>>> {
-        return repository.updateChatRoom(userChatroomId, updateChatRoomReq)
+    fun invoke(chatroomId: String, userChatroomId: Long, updateChatRoomReq: UpdateChatRoomReq): Flow<Results<UpdateChatRoomRes, WrappedResponse<UpdateChatRoomRes>>> {
+        return repository.updateChatRoom(chatroomId, userChatroomId, updateChatRoomReq)
     }
 }

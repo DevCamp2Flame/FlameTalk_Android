@@ -14,7 +14,7 @@ import javax.inject.Inject
 class GetChatListHistoryUseCase @Inject constructor(
     private val repository: ChatRepository
 ) {
-    suspend fun invoke(roomId: String, lastReadMessageId: String): Flow<Results<List<ChatRes>, WrappedResponse<List<ChatRes>>>> {
+    fun invoke(roomId: String, lastReadMessageId: String): Flow<Results<List<ChatRes>, WrappedResponse<List<ChatRes>>>> {
         return repository.getMessageHistory(roomId, lastReadMessageId)
     }
 }

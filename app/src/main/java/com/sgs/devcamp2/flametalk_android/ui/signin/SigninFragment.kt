@@ -26,11 +26,11 @@ import com.google.firebase.ktx.Firebase
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentSigninBinding
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
-import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.util.*
+import javax.inject.Inject
 
 /**
  * @author 박소연
@@ -158,6 +158,8 @@ class SigninFragment : Fragment() {
             .addOnCompleteListener(this.requireActivity()) { task ->
                 if (task.isSuccessful) {
                     // Log.d("googleAuthToken", "OAuthActivity - firebaseAuthWithGoogle() success called :$idToken")
+                    val action = SigninFragmentDirections.actionNavigationSigninToNavigationAdditionalUserInfo(idToken)
+                    findNavController().navigate(action)
                 } else {
                 }
             }

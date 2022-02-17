@@ -1,17 +1,22 @@
 package com.sgs.devcamp2.flametalk_android.data.repository
 
+import android.util.Log
 import com.sgs.devcamp2.flametalk_android.data.common.WrappedResponse
 import com.sgs.devcamp2.flametalk_android.data.mapper.mapperToChat
 import com.sgs.devcamp2.flametalk_android.data.mapper.mapperToChatRoomUpdateModel
 import com.sgs.devcamp2.flametalk_android.data.model.chat.ChatRes
 import com.sgs.devcamp2.flametalk_android.data.source.local.database.AppDatabase
 import com.sgs.devcamp2.flametalk_android.data.source.remote.api.ChatApi
+import com.sgs.devcamp2.flametalk_android.domain.entity.LocalResults
 import com.sgs.devcamp2.flametalk_android.domain.entity.Results
 import com.sgs.devcamp2.flametalk_android.domain.repository.ChatRepository
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import java.lang.Exception
 import java.lang.NullPointerException
 import javax.inject.Inject
 
@@ -51,22 +56,42 @@ class ChatRepositoryImp @Inject constructor(
     ): Flow<Results<List<ChatRes>, WrappedResponse<List<ChatRes>>>> {
         return flow {
             val response = remote.getChatMessageHistory(roomId, lastReadMessage)
+            val TAG: String = "로그"
             if (response.isSuccessful) {
                 if (response.body()!!.status == 200) {
                     val data = response.body()!!.data
-                    try{
-                        for (i in 0 until data!!.size) {
-                            val chat = mapperToChat(data[i])
-                            db.chatDao().insert(chat)
+
+                    var deferred = coroutineScope {
+                        async {
+                            try {
+                                for (i in 0 until data!!.size) {
+                                    val chat = mapperToChat(data[i])
+                                    db.chatDao().insert(chat)
+                                }
+                                Log.d(TAG, "ChatRepositoryImp - getMessageHistory(1) called")
+                            } catch (e: Exception) {
+                            }
                         }
                     }
-                    catch(e : NullPointerException)
-                    {
-                        e.printStackTrace()
-                    }
+                    deferred.await()
+                    Log.d(TAG, "ChatRepositoryImp - getMessageHistory(2) called")
                     emit(Results.Success(data!!))
                 }
+            } else {
+                Log.d(TAG, "response - notSuccessful")
             }
-        }
+        }.flowOn(ioDispatcher)
+    }
+
+    override fun getLastReadMessageId(chatroomId: String): Flow<LocalResults<String>> {
+        return flow {
+            try {
+                db.chatRoomDao().getLastReadMessageId(chatroomId)?.collect {
+                    emit(LocalResults.Success(it))
+                }
+            } catch (e: NullPointerException) {
+                emit(LocalResults.Error("lastReadMessageId가 없습니다."))
+            }
+        }.flowOn(ioDispatcher)
     }
 }

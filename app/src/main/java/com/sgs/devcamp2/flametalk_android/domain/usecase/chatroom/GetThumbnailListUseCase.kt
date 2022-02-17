@@ -13,7 +13,7 @@ import javax.inject.Inject
 class GetThumbnailListUseCase @Inject constructor(
     private val repository: ChatRoomRepository
 ) {
-    suspend fun invoke(chatroomId: String): Flow<LocalResults<ThumbnailWithRoomId>> {
+    fun invoke(chatroomId: String): Flow<LocalResults<ThumbnailWithRoomId>> {
         return repository.getThumbnailList(chatroomId)
     }
 }

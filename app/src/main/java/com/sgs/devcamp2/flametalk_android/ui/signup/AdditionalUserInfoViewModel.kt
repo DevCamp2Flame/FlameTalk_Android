@@ -19,10 +19,12 @@ class AdditionalUserInfoViewModel @Inject constructor() : ViewModel() {
     private var _signUpName = MutableStateFlow<String?>("")
     private var _signUpBirth = MutableStateFlow<String?> ("")
     private var _signUpTel = MutableStateFlow<String?> ("")
+    private var _signUpPassword = MutableStateFlow("")
     val TAG: String = "로그"
     var signUpName = _signUpName.asStateFlow()
     var signUpBirth = _signUpBirth.asStateFlow()
     var signUpTel = _signUpTel.asStateFlow()
+    var signUpPassword = _signUpPassword.asStateFlow()
     init {
     }
     fun updateName(name: String) {
@@ -35,6 +37,10 @@ class AdditionalUserInfoViewModel @Inject constructor() : ViewModel() {
     }
     fun updateTel(tel: String) {
         _signUpTel.value = tel
+        Log.d(TAG, "_signUpTel - ${_signUpTel.value} called")
+    }
+    fun updatePassword(password: String) {
+        _signUpPassword.value = password
         Log.d(TAG, "_signUpTel - ${_signUpTel.value} called")
     }
 

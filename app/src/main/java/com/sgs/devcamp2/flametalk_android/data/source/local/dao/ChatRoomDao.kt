@@ -41,6 +41,12 @@ interface ChatRoomDao {
     @Update(entity = ChatRoom::class)
     fun updateLastReadMessageId(chatroomUpdate: ChatRoomUpdate)
 
+    @Query("SELECT lastReadMessageId FROM chatroom where chatroom.id Like :chatroomId")
+    fun getLastReadMessageId(chatroomId: String): Flow<String>?
+
+    @Query("SELECT * FROM chatroom where chatroom.id Like :chatroomId")
+    fun getChatRoomModel(chatroomId: String): Flow<ChatRoom>
+
     // 채팅방 삭제
     @Query("DELETE FROM chatroom where userChatroomId Like :userchatroomId")
     fun deleteChatRoomWithuserChatroomId(userchatroomId: Long)
@@ -49,4 +55,8 @@ interface ChatRoomDao {
     @Transaction
     @Query("DELETE  FROM thumbnail where room_id LIKE :chatroomId")
     fun deleteThumbnailwithRoomId(chatroomId: String)
+
+    // 채팅방 업데이트
+    @Query("UPDATE chatroom SET title = :title ,inputLock = :inputLock where chatroom.userChatroomId Like :userChatroomId")
+    fun updateChatRoomTitle(title: String, inputLock: Boolean, userChatroomId: Long)
 }

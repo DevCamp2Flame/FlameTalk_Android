@@ -10,9 +10,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentAdditionalUserInfoBinding
 import com.sgs.devcamp2.flametalk_android.util.onTextChanged
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -23,10 +25,12 @@ import java.util.*
  * Use the [AdditionalUserInfoFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
+@AndroidEntryPoint
 class AdditionalUserInfoFragment : Fragment(), View.OnClickListener {
 
     lateinit var binding: FragmentAdditionalUserInfoBinding
     private val model by viewModels<AdditionalUserInfoViewModel>()
+    private val args by navArgs<AdditionalUserInfoFragmentArgs>()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -60,6 +64,9 @@ class AdditionalUserInfoFragment : Fragment(), View.OnClickListener {
             model.updateTel(it.toString())
         }
 
+        binding.edtSignupPassword.onTextChanged {
+            model.updatePassword(it.toString())
+        }
         binding.edtSignupBirth.setOnClickListener(this)
     }
     override fun onClick(view: View?) {

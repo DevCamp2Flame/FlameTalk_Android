@@ -2,14 +2,21 @@ package com.sgs.devcamp2.flametalk_android.services
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_IMMUTABLE
+import android.app.TaskStackBuilder
 import android.content.Context
 import android.media.RingtoneManager
 import android.os.Build
+import android.os.Bundle
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import androidx.navigation.NavDeepLinkBuilder
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.sgs.devcamp2.flametalk_android.R
+import java.io.UnsupportedEncodingException
+import java.net.URLDecoder
 
 /**
  * @author 김현국
@@ -48,18 +55,28 @@ class FcmService : FirebaseMessagingService() {
     private fun sendNotification(remoteMessage: RemoteMessage) {
 
         var KEY_TALK_GROUP = "FlameTalk"
+        var title = ""
+        var body = ""
+        try {
+            title = URLDecoder.decode(remoteMessage.data["title"], "UTF-8")
+            body = URLDecoder.decode(remoteMessage.data["body"], "UTF-8")
+        } catch (e: UnsupportedEncodingException) {
+            Log.d(TAG, "FcmService - $e")
+        }
 
+        Log.d(TAG, "room - ${remoteMessage.data["room"]}() called")
         // RequestCode, Id를 고유값으로 지정하여 알림이 개별 표시되도록 함
         val uniId: Int = (System.currentTimeMillis() / 7).toInt()
 
         // 일회용 PendingIntent
-//        var bundle: Bundle = Bundle()
-//        bundle.putString("key", "gd")
-//        var pendingIntent: PendingIntent = NavDeepLinkBuilder(applicationContext)
-//            .setGraph(R.navigation.main_navigation)
-//            .setDestination(R.id.navigation_chat_room)
-//            .setArguments(bundle)
-//            .createPendingIntent()
+        var bundle: Bundle = Bundle()
+        bundle.putString("chatroomId", remoteMessage.data["room"])
+        var builder: androidx.core.app.TaskStackBuilder =
+            NavDeepLinkBuilder(applicationContext)
+                .setGraph(R.navigation.main_navigation)
+                .setDestination(R.id.navigation_chat_room)
+                .setArguments(bundle).createTaskStackBuilder()
+        var pendingIntent: PendingIntent = builder.getPendingIntent(bundle.hashCode(), FLAG_IMMUTABLE)!!
         // 알림 채널 이름
         val channelId = "channel" // getString(R.string.firebase_notification_channel_id)
 
@@ -78,14 +95,14 @@ class FcmService : FirebaseMessagingService() {
         // 알림에 대한 UI 정보와 작업을 지정한다.
         val notificationBuilder = NotificationCompat.Builder(this, channelId)
             .setSmallIcon(R.mipmap.ic_launcher) // 아이콘 설정
-            .setContentText(remoteMessage.data["body"].toString()) // 메시지 내용
-            .setContentTitle(remoteMessage.data["title"].toString()) // 제목
+            .setContentText(body) // 메시지 내용
+            .setContentTitle(title) // 제목
             .setPriority(NotificationCompat.PRIORITY_MAX) // Head up display
             .setOnlyAlertOnce(true)
             .setGroup(KEY_TALK_GROUP)
             .setAutoCancel(true)
             .setSound(soundUri)
-        // .setContentIntent(pendingIntent) // 알림 실행 시 Intent
+            .setContentIntent(pendingIntent) // 알림 실행 시 Intent
 
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

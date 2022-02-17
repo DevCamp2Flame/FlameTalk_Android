@@ -51,7 +51,7 @@ class ChatRoomDrawUserListAdapter :
                     .load(profile.image).into(binding.ivChatRoomDrawUserImage)
             } else {
                 Glide.with(this.binding.ivChatRoomDrawUserImage)
-                    .load(R.drawable.ic_add_person_blue_24).into(binding.ivChatRoomDrawUserImage)
+                    .load(R.drawable.ic_person_black_24).into(binding.ivChatRoomDrawUserImage)
             }
         }
     }

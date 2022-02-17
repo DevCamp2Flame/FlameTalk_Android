@@ -2,10 +2,7 @@ package com.sgs.devcamp2.flametalk_android.di.module
 
 import com.google.gson.GsonBuilder
 import com.sgs.devcamp2.flametalk_android.data.source.local.UserPreferences
-import com.sgs.devcamp2.flametalk_android.data.source.remote.api.ChatApi
-import com.sgs.devcamp2.flametalk_android.data.source.remote.api.ChatRoomApi
-import com.sgs.devcamp2.flametalk_android.data.source.remote.api.DeviceApi
-import com.sgs.devcamp2.flametalk_android.data.source.remote.api.OpenProfileApi
+import com.sgs.devcamp2.flametalk_android.data.source.remote.api.*
 import com.sgs.devcamp2.flametalk_android.network.NetworkInterceptor
 import com.sgs.devcamp2.flametalk_android.network.service.*
 import dagger.Module
@@ -97,6 +94,11 @@ class NetworkModule {
     @Singleton
     fun provideChatApi(retrofit: Retrofit): ChatApi {
         return retrofit.create(ChatApi::class.java)
+    }
+    @Provides
+    @Singleton
+    fun provideFriendApi(retrofit: Retrofit): FriendApi {
+        return retrofit.create(FriendApi::class.java)
     }
 
     companion object {

@@ -1,7 +1,6 @@
 package com.sgs.devcamp2.flametalk_android.data.source.remote.api
 
 import com.sgs.devcamp2.flametalk_android.data.common.WrappedResponse
-import com.sgs.devcamp2.flametalk_android.data.model.chat.ChatRes
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.closechatroom.CloseChatRoomReq
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.createchatroom.CreateChatRoomReq
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.createchatroom.CreateChatRoomRes
@@ -14,6 +13,9 @@ import com.sgs.devcamp2.flametalk_android.data.model.chatroom.joinchatrom.JoinCh
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.updatechatroom.UpdateChatRoomReq
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.updatechatroom.UpdateChatRoomRes
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.updateopenchatroomprofile.UpdateOpenChatRoomProfileReq
+import com.sgs.devcamp2.flametalk_android.data.model.chatroom.uploadimg.UploadImgRes
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -61,5 +63,10 @@ interface ChatRoomApi {
     // 채팅방 대화상대 초대
     @POST("/api/chatroom/join")
     suspend fun joinChatRoom(@Body joinChatRoomReq: JoinChatRoomReq): Response<WrappedResponse<JoinChatRoomRes>>
+
+    @Multipart
+    @POST("/api/file")
+    suspend fun fileCreate(@Part file: MultipartBody.Part, @Part("chatroomId") chatroomId: RequestBody?): Response<WrappedResponse<UploadImgRes>>
+
 
 }

@@ -24,6 +24,7 @@ import com.sgs.devcamp2.flametalk_android.domain.entity.UiState
 import com.sgs.devcamp2.flametalk_android.ui.MainViewModel
 import com.sgs.devcamp2.flametalk_android.util.onTextChanged
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 /**
@@ -40,7 +41,6 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
     private val model by activityViewModels<ChatRoomViewModel>()
     private val webSocketModel by activityViewModels<MainViewModel>()
     private val args by navArgs<ChatRoomFragmentArgs>()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,6 +68,8 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
         drawer_binding.rvDrawUserList.layoutManager = LinearLayoutManager(context)
 
         adapter = ChatRoomAdapter(model.userId.value)
+        // 추가
+        adapter.submitList(emptyList())
         userlistAdapter = ChatRoomDrawUserListAdapter()
 
         binding.rvChatRoom.adapter = adapter
@@ -79,6 +81,7 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
         binding.ivChatSend.setOnClickListener(this)
         drawer_binding.ivDrawExit.setOnClickListener(this)
         drawer_binding.ivDrawSetting.setOnClickListener(this)
+        drawer_binding.layoutDrawUserList.setOnClickListener(this)
         initObserve()
         model.connectWebsocket(
             args.chatroomId,
@@ -87,16 +90,10 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
                 Settings.Secure.ANDROID_ID
             )
         )
-
-        getChatList(args.chatroomId)
-    }
-    /**
-     * 채팅 내역 불러오기
-     */
-    fun getChatList(chatroomId: String) {
-        viewLifecycleOwner.lifecycleScope.launch {
-            model.getChatList(chatroomId)
-        }
+        model.getLastReadMessageId(args.chatroomId)
+        /**
+         * chatroomId로 lastReadMessage를 가져오자.
+         */
     }
 
     /**
@@ -139,7 +136,7 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
                     is UiState.Success -> {
                         if (state.data.profileImage == "") {
                             Glide.with(drawer_binding.ivChatRoomDrawUserImage)
-                                .load(R.drawable.ic_add_person_blue_24)
+                                .load(R.drawable.ic_person_white_24)
                                 .into(drawer_binding.ivChatRoomDrawUserImage)
                         } else {
                             Glide.with(drawer_binding.ivChatRoomDrawUserImage)
@@ -156,14 +153,12 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
         }
         // db에서 불러온 chat list adapter로 넘기기
         viewLifecycleOwner.lifecycleScope.launch {
-            model.chatList.collect { state ->
+            model.chatList.collectLatest { state ->
                 when (state) {
                     is UiState.Success -> {
                         // 채팅 데이터 observe
-                        Log.d(TAG, "ChatRoomFragment - chatList collect () called")
                         adapter.submitList(state.data)
-                        binding.rvChatRoom.smoothScrollToPosition(state.data.size)
-                        // model.updateLastReadMessage(state.data[state.data.size - 1].message_id)
+                        binding.rvChatRoom.smoothScrollToPosition(state.data.size - 1)
                     }
                 }
             }
@@ -177,6 +172,44 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
                     }
                     is UiState.Error -> {
                     }
+                }
+            }
+        }
+        /**
+         * 채팅방 채팅 텍스트 리스트를 불러온다. lastReadMessageId 가 있을 경우에, getChatListWithLastReadMessageId 호출
+         * 없을 경우에 getChatList호출
+         */
+        viewLifecycleOwner.lifecycleScope.launch {
+            model.lastReadMessageId.collect {
+                if (it == "") {
+                    model.getChatListWithLastReadMessageId(args.chatroomId, "")
+                } else {
+                    model.getChatListWithLastReadMessageId(args.chatroomId, it)
+                }
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            model.uploadUiState.collect {
+                state ->
+                when (state) {
+                    is UiState.Success ->
+                        {
+                            val imageUrl = state.data.url
+                            webSocketModel.session.collect { state ->
+                                Log.d(TAG, "state - $state")
+                                when (state) {
+                                    is UiState.Success -> {
+                                        model.pushMessage(
+                                            "FILE",
+                                            args.chatroomId,
+                                            state.data,
+                                            null,
+                                            imageUrl
+                                        )
+                                    }
+                                }
+                            }
+                        }
                 }
             }
         }
@@ -216,7 +249,8 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
                                     "TALK",
                                     args.chatroomId,
                                     state.data,
-                                    model.chat.value
+                                    model.chat.value,
+                                    null
                                 )
                             }
                         }
@@ -245,6 +279,11 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
                     }
                 }
             }
+            drawer_binding.layoutDrawUserList ->
+                {
+                    val action = ChatRoomFragmentDirections.actionNavigationChatRoomToJoinUserChatRoomFragment(args.chatroomId)
+                    findNavController().navigate(action)
+                }
         }
     }
     /**
@@ -280,33 +319,25 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
         dialog.show()
     }
 
-
-
     override fun onStop() {
         super.onStop()
-//        lifecycleScope.launch {
-//            model.userChatRoom.collect {
-//                state ->
-//                when (state) {
-//                    is UiState.Success ->
-//                        {
-//                            try {
-//                                model.closeChatRoom(
-//                                    userChatroomId = state.data.userChatroomId,
-//                                    lastReadMessageId = state.data.lastReadMessageId!!
-//                                )
-//                            } catch (e: Exception) {
-//                                Log.d(TAG, "error - $e() called")
-//                            }
-//                        }
-//                }
-//            }
-//        }
+
+        lifecycleScope.launch {
+            model.localChatRoom.collect {
+                state ->
+                when (state) {
+                    is UiState.Success ->
+                        {
+                            model.closeChatRoom(state.data.userChatroomId, state.data.lastReadMessageId!!)
+                        }
+                }
+            }
+        }
     }
     override fun onPause() {
         super.onPause()
         Log.d(TAG, "ChatRoomFragment - onPause() called")
-
+        model.getLastReadMessageId(args.chatroomId)
     }
 
     override fun onStart() {
@@ -317,6 +348,8 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
 
     override fun onDestroy() {
         super.onDestroy()
+        Log.d(TAG, "ChatRoomFragment - onDestroy() called")
+        model.initUploadImageState()
         model.saveExitStatus(
             args.chatroomId,
             Settings.Secure.getString(

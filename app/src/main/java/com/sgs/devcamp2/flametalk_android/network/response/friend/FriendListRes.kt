@@ -12,7 +12,7 @@ import kotlinx.parcelize.Parcelize
  * @property nickname the nickname of User table
  */
 @Parcelize
-data class TempFriend(
+data class FriendListRes(
     var id: String,
     var friend_id: String,
     var nickname: String,

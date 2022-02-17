@@ -105,7 +105,6 @@ class ChatRoomListAdapter constructor(
      * onCreateViewHolder 에서 사용하는 뷰타입을 반환해준다.
      */
     override fun getItemViewType(position: Int): Int {
-        Log.d(TAG, "currnetList[position] - ${currentList[position].thumbnailList}() called")
         return currentList[position].thumbnailList.size
     }
     /**
