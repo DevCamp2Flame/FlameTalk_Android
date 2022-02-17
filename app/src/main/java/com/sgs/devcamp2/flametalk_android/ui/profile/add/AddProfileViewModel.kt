@@ -1,8 +1,10 @@
 package com.sgs.devcamp2.flametalk_android.ui.profile.add
 
 import android.content.Context
+import android.util.DisplayMetrics
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sgs.devcamp2.flametalk_android.data.model.Sticker
 import com.sgs.devcamp2.flametalk_android.data.source.local.UserPreferences
 import com.sgs.devcamp2.flametalk_android.domain.repository.FileRepository
 import com.sgs.devcamp2.flametalk_android.domain.repository.ProfileRepository
@@ -53,6 +55,11 @@ class AddProfileViewModel @Inject constructor(
     // 배경 이미지 url
     private val _backgroundImageUrl = MutableStateFlow("")
     val backgroundImageUrl = _backgroundImageUrl.asStateFlow()
+
+    // 스티커
+//    val stickers = arrayListOf<ProfilePreview>()
+//    private val _stickers = MutableStateFlow<List<Sticker>>(emptyList())
+    var stickers = arrayListOf<Sticker>()
 
     // 파일 통신 결과
     private val _isFileSuccess: MutableStateFlow<Boolean?> = MutableStateFlow(null)
@@ -161,6 +168,23 @@ class AddProfileViewModel @Inject constructor(
         deferred.await()
     }
 
+    fun createSticker(stickerType: Int, x: Double, y: Double) {
+        /**프로필 조회하는 디바이스의 사이즈에 따라 scaling 하기 위해
+         디바이스의 기기 가로, 세로 사이즈로 나누어 position 저장*/
+        val dm: DisplayMetrics = context.resources.displayMetrics
+        val width = dm.widthPixels
+        val height = dm.heightPixels
+
+        val stickerModel = Sticker(
+            stickerId = stickerType,
+            positionX = x / width,
+            positionY = y / height,
+        )
+        stickers.add(stickerModel)
+        Timber.d("스티커 $stickers")
+    }
+
+    // 프로필 생성 통신
     private fun postProfile() {
         viewModelScope.launch {
             try {
@@ -168,7 +192,7 @@ class AddProfileViewModel @Inject constructor(
                     userId = _userId.value,
                     imageUrl = _profileImageUrl.value,
                     bgImageUrl = _backgroundImageUrl.value,
-                    sticker = emptyList(), // TODO: Add Sticker Model
+                    sticker = stickers.toList(), // TODO: Add Sticker Model
                     description = _description.value,
                     isDefault = false
                 )

@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Point
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -76,6 +77,8 @@ class AddProfileFragment : Fragment() {
 
     private fun initUI() {
         // TODO: userDAO에서 로컬에 저장된 nickname을 가져온 후 바인딩
+        val displaySize = Point()
+        requireActivity().windowManager.defaultDisplay.getRealSize(displaySize)
 
         initSticker()
     }
@@ -285,12 +288,14 @@ class AddProfileFragment : Fragment() {
             popupDeleteMenu(it)
         }
         // 스티커 위치 드래그
-        img.setOnTouchListener(StickerListener())
+        img.setOnTouchListener(StickerListener(emoji))
 
         return img
     }
 
-    private inner class StickerListener : View.OnTouchListener {
+    private inner class StickerListener(emoji: Int) : View.OnTouchListener {
+        val emojiType = emoji
+
         override fun onTouch(view: View, event: MotionEvent): Boolean {
             val x = event.rawX.toInt()
             val y = event.rawY.toInt()
@@ -305,6 +310,10 @@ class AddProfileFragment : Fragment() {
                 }
                 MotionEvent.ACTION_UP -> {
                     val itemParams = view.layoutParams as ConstraintLayout.LayoutParams
+                    val endPointX = x - (itemParams.leftMargin / 2)
+                    val endPointY = y - (itemParams.topMargin / 2)
+
+                    viewModel.createSticker(emojiType, endPointX.toDouble(), endPointY.toDouble())
                 }
                 MotionEvent.ACTION_POINTER_DOWN -> {}
                 MotionEvent.ACTION_POINTER_UP -> {}
