@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ChatRoomDao {
     // 채팅방 저장
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(chatroom: ChatRoom): Long
 
     // 채팅방 리스트 조회
@@ -59,4 +59,7 @@ interface ChatRoomDao {
     // 채팅방 업데이트
     @Query("UPDATE chatroom SET title = :title ,inputLock = :inputLock where chatroom.userChatroomId Like :userChatroomId")
     fun updateChatRoomTitle(title: String, inputLock: Boolean, userChatroomId: Long)
+
+    @Query("UPDATE chatroom SET lastReadMessageId = :lastReadMessageId where chatroom.userChatroomId Like :userChatRoomId")
+    fun updateChatRoomLastReadMessage(lastReadMessageId: String, userChatRoomId: Long)
 }

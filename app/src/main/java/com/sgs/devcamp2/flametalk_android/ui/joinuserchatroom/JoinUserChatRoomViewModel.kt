@@ -3,9 +3,9 @@ package com.sgs.devcamp2.flametalk_android.ui.joinuserchatroom
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sgs.devcamp2.flametalk_android.data.model.chatroom.joinchatrom.FriendListRes
-import com.sgs.devcamp2.flametalk_android.data.model.chatroom.joinchatrom.JoinChatRoomReq
-import com.sgs.devcamp2.flametalk_android.data.model.chatroom.joinchatrom.JoinChatRoomRes
+import com.sgs.devcamp2.flametalk_android.data.model.chatroom.inviteroom.FriendListRes
+import com.sgs.devcamp2.flametalk_android.data.model.chatroom.joinchatroom.JoinChatRoomReq
+import com.sgs.devcamp2.flametalk_android.data.model.chatroom.joinchatroom.JoinChatRoomRes
 import com.sgs.devcamp2.flametalk_android.domain.entity.LocalResults
 import com.sgs.devcamp2.flametalk_android.domain.entity.Results
 import com.sgs.devcamp2.flametalk_android.domain.entity.UiState
@@ -38,16 +38,15 @@ class JoinUserChatRoomViewModel @Inject constructor(
     private var _friendListUiState = MutableStateFlow<UiState<List<FriendListRes>>>(UiState.Loading)
     var friendListUiState = _friendListUiState.asStateFlow()
 
-    private var _userId = MutableStateFlow("")
-    var userId = _userId.asStateFlow()
+    var _userId = MutableStateFlow("")
 
     val TAG: String = "로그"
 
     init {
     }
 
-    fun joinUser(chatroomId: String, userId: String) {
-        val joinChatRoomReq = JoinChatRoomReq(chatroomId, userId, _lastReadMessageId.value, null)
+    fun joinUser(chatroomId: String, userId: String, lastReadMessage: String) {
+        val joinChatRoomReq = JoinChatRoomReq(chatroomId, userId, lastReadMessage, null)
         viewModelScope.launch {
             joinUserChatRoomUseCase.invoke(joinChatRoomReq).collect {
                 result ->
@@ -60,7 +59,8 @@ class JoinUserChatRoomViewModel @Inject constructor(
             }
         }
     }
-    fun getLastReadMessageId(chatroomId: String) {
+    fun getLastReadMessageId(chatroomId: String, userId: String) {
+        _userId.value = userId
         viewModelScope.launch {
             getLastReadMessageUseCase.invoke(chatroomId).collect { result ->
                 when (result) {

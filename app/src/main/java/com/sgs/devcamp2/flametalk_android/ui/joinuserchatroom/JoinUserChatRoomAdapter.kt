@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.sgs.devcamp2.flametalk_android.R
-import com.sgs.devcamp2.flametalk_android.data.model.chatroom.joinchatrom.FriendListRes
+import com.sgs.devcamp2.flametalk_android.data.model.chatroom.inviteroom.FriendListRes
 import com.sgs.devcamp2.flametalk_android.databinding.ItemPersonInviteRoomBinding
 
 /**
@@ -53,11 +53,11 @@ class JoinUserChatRoomAdapter(callback: JoinUserChatRoomFragment) :
     inner class PersonViewHolder(val binding: ItemPersonInviteRoomBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(friendListRes: FriendListRes) {
-            Log.d(TAG,"friendList - (${friendListRes.nickname}) called")
-            Glide.with(binding.ivInviteRoomImage).load(friendListRes.preview.imageUrl).into(binding.ivInviteRoomImage)
-            binding.tvInviteRoomUserName.text = friendListRes.nickname
-            binding.layoutInviteRoomItem.setOnClickListener(ItemClickListener(friendListRes.userId))
+        fun bind(friendEntity: FriendListRes) {
+            Log.d(TAG, "friendList - (${friendEntity.nickname}) called")
+            Glide.with(binding.ivInviteRoomImage).load(friendEntity.preview.imageUrl).into(binding.ivInviteRoomImage)
+            binding.tvInviteRoomUserName.text = friendEntity.nickname
+            binding.layoutInviteRoomItem.setOnClickListener(ItemClickListener(friendEntity.userId))
         }
     }
 

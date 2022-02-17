@@ -1,6 +1,7 @@
 package com.sgs.devcamp2.flametalk_android.di.module
 
 import com.sgs.devcamp2.flametalk_android.domain.repository.*
+import com.sgs.devcamp2.flametalk_android.domain.usecase.additionaluserinfo.SignUpUseCase
 import com.sgs.devcamp2.flametalk_android.domain.usecase.chatroom.*
 import com.sgs.devcamp2.flametalk_android.domain.usecase.chatroomlist.GetChatRoomListUseCase
 import com.sgs.devcamp2.flametalk_android.domain.usecase.chatroomlist.GetLocalChatRoomListUseCase
@@ -96,5 +97,9 @@ object UseCaseModule {
     @Provides
     fun provideGetFriendListUseCase(repository: ChatRoomRepository): GetFriendListUseCase {
         return GetFriendListUseCase(repository = repository)
+    }
+    @Provides
+    fun provideSignUpUseCase(repository: AuthRepository): SignUpUseCase {
+        return SignUpUseCase(repository = repository)
     }
 }

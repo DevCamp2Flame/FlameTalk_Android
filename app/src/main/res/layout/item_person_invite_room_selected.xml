@@ -16,18 +16,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:cardElevation="0dp"
-        app:cardCornerRadius="20dp"
-        android:background="@drawable/bg_chat_list_round"
         >
 
         <ImageView
             android:id="@+id/iv_invite_room_selected_image"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:padding="4dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/dummy"
+            android:background="@drawable/bg_imageview_radius_gray"
+            android:padding="1.2dp"
+            tools:src="@drawable/dummy"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"

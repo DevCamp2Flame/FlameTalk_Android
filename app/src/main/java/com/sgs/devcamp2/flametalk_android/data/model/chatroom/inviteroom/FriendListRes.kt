@@ -1,4 +1,4 @@
-package com.sgs.devcamp2.flametalk_android.data.model.chatroom.joinchatrom
+package com.sgs.devcamp2.flametalk_android.data.model.chatroom.inviteroom
 
 /**
  * @author boris
@@ -10,10 +10,10 @@ data class FriendListRes(
     val userId: String,
     val nickname: String,
     val preview: Preview
-
 )
 data class Preview(
     val profileId: Long,
     val imageUrl: String,
     val description: String
+
 )

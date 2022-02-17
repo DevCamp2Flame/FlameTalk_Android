@@ -1,7 +1,7 @@
 package com.sgs.devcamp2.flametalk_android.data.source.remote.api
 
 import com.sgs.devcamp2.flametalk_android.data.common.WrappedResponse
-import com.sgs.devcamp2.flametalk_android.data.model.chatroom.joinchatrom.FriendListRes
+import com.sgs.devcamp2.flametalk_android.data.model.chatroom.inviteroom.FriendListRes
 import retrofit2.Response
 import retrofit2.http.*
 

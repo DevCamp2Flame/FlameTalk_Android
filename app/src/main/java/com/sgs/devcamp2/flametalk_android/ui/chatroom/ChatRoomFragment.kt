@@ -158,7 +158,7 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
                     is UiState.Success -> {
                         // 채팅 데이터 observe
                         adapter.submitList(state.data)
-                        binding.rvChatRoom.smoothScrollToPosition(state.data.size - 1)
+                        // binding.rvChatRoom.smoothScrollToPosition(state.data.size - 1)
                     }
                 }
             }

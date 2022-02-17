@@ -15,14 +15,18 @@ import androidx.navigation.NavDeepLinkBuilder
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.sgs.devcamp2.flametalk_android.R
+import com.sgs.devcamp2.flametalk_android.domain.usecase.mainactivity.SaveReceivedMessageUseCase
 import java.io.UnsupportedEncodingException
 import java.net.URLDecoder
+import javax.inject.Inject
 
 /**
  * @author 김현국
  * @created 2022/01/23
  */
-class FcmService : FirebaseMessagingService() {
+class FcmService @Inject constructor(
+    private val saveReceivedMessageUseCase: SaveReceivedMessageUseCase
+) : FirebaseMessagingService() {
     val TAG: String = "로그"
 
     override fun onNewToken(token: String) {
@@ -61,10 +65,10 @@ class FcmService : FirebaseMessagingService() {
             title = URLDecoder.decode(remoteMessage.data["title"], "UTF-8")
             body = URLDecoder.decode(remoteMessage.data["body"], "UTF-8")
         } catch (e: UnsupportedEncodingException) {
-            Log.d(TAG, "FcmService - $e")
         }
 
         Log.d(TAG, "room - ${remoteMessage.data["room"]}() called")
+
         // RequestCode, Id를 고유값으로 지정하여 알림이 개별 표시되도록 함
         val uniId: Int = (System.currentTimeMillis() / 7).toInt()
 

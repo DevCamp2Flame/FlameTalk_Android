@@ -1,7 +1,6 @@
 package com.sgs.devcamp2.flametalk_android.di.module
 
 import com.sgs.devcamp2.flametalk_android.data.repository.*
-import com.sgs.devcamp2.flametalk_android.data.source.local.dao.FriendDAO
 import com.sgs.devcamp2.flametalk_android.domain.repository.*
 import dagger.Binds
 import dagger.Module
@@ -32,4 +31,6 @@ interface RepositoryModule {
     @Binds
     fun provideDeviceApiRepository(impl: DeviceRepositoryImpl): DeviceRepository
 
+    @Binds
+    fun provideAuthApiRepository(impl: AuthRepositoryImpl): AuthRepository
 }

@@ -132,7 +132,6 @@ class CreateChatRoomFragment : Fragment(), View.OnClickListener {
                         }
                     }
                 }
-            }
         }
     }
 }

@@ -1,14 +1,18 @@
 package com.sgs.devcamp2.flametalk_android.ui.inviteroom
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.ItemPersonInviteRoomSelectedBinding
-import com.sgs.devcamp2.flametalk_android.network.response.friend.FriendListRes
+import com.sgs.devcamp2.flametalk_android.domain.entity.inviteroom.FriendEntity
 import com.sgs.devcamp2.flametalk_android.util.disableClickTemporarily
 
 /**
@@ -17,21 +21,21 @@ import com.sgs.devcamp2.flametalk_android.util.disableClickTemporarily
  */
 class InviteRoomSelectedAdapter constructor(
     selectedCallBack: ItemSelectedClickCallBack
-) : ListAdapter<FriendListRes, RecyclerView.ViewHolder>(diffUtil) {
+) : ListAdapter<FriendEntity, RecyclerView.ViewHolder>(diffUtil) {
     interface ItemSelectedClickCallBack {
-        fun onItemSelectedClick(tempFriend: FriendListRes)
+        fun onItemSelectedClick(tempFriend: FriendEntity)
     }
 
     var itemClickCallBack: ItemSelectedClickCallBack? = selectedCallBack
 
     companion object {
         val TAG: String = "로그"
-        val diffUtil = object : DiffUtil.ItemCallback<FriendListRes>() {
-            override fun areItemsTheSame(oldItem: FriendListRes, newItem: FriendListRes): Boolean {
-                return oldItem.id == newItem.id
+        val diffUtil = object : DiffUtil.ItemCallback<FriendEntity>() {
+            override fun areItemsTheSame(oldItem: FriendEntity, newItem: FriendEntity): Boolean {
+                return oldItem.userId == newItem.userId
             }
 
-            override fun areContentsTheSame(oldItem: FriendListRes, newItem: FriendListRes): Boolean {
+            override fun areContentsTheSame(oldItem: FriendEntity, newItem: FriendEntity): Boolean {
                 return oldItem.selected == newItem.selected
             }
         }
@@ -49,20 +53,29 @@ class InviteRoomSelectedAdapter constructor(
 
     inner class SelectedPersonViewHolder(val binding: ItemPersonInviteRoomSelectedBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(tempFriend: FriendListRes) {
-            binding.tvInviteRoomSelectedUserName.text = tempFriend.nickname
-            binding.layoutInviteRoomSelected.setOnClickListener(ItemClickListener(tempFriend))
+        fun bind(friendEntity: FriendEntity) {
+            if (friendEntity.preview.imageUrl != null) {
+                Log.d(InviteRoomAdapter.TAG, "imageUrl - ${friendEntity.preview.imageUrl}")
+                Glide.with(binding.ivInviteRoomSelectedImage).load(friendEntity.preview.imageUrl)
+                    .transform(CenterCrop(), RoundedCorners(40)).into(binding.ivInviteRoomSelectedImage)
+            } else {
+                Glide.with(binding.ivInviteRoomSelectedImage).load(R.drawable.ic_person_white_24)
+                    .transform(CenterCrop(), RoundedCorners(40)).into(binding.ivInviteRoomSelectedImage)
+            }
+
+            binding.tvInviteRoomSelectedUserName.text = friendEntity.nickname
+            binding.layoutInviteRoomSelected.setOnClickListener(ItemClickListener(friendEntity))
         }
     }
 
     inner class ItemClickListener(
-        var tempFriend: FriendListRes
+        var friendEntity: FriendEntity
     ) : View.OnClickListener {
         override fun onClick(view: View?) {
             view?.disableClickTemporarily()
             when (view?.id) {
                 R.id.layout_invite_room_selected -> {
-                    itemClickCallBack?.onItemSelectedClick(tempFriend)
+                    itemClickCallBack?.onItemSelectedClick(friendEntity)
                 }
             }
         }

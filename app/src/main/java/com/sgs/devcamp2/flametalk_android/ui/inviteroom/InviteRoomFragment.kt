@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentInviteRoomBinding
 import com.sgs.devcamp2.flametalk_android.domain.entity.UiState
-import com.sgs.devcamp2.flametalk_android.network.response.friend.FriendListRes
+import com.sgs.devcamp2.flametalk_android.domain.entity.inviteroom.FriendEntity
 import com.sgs.devcamp2.flametalk_android.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -28,13 +28,11 @@ import kotlinx.coroutines.launch
 class InviteRoomFragment :
     Fragment(),
     InviteRoomAdapter.ItemClickCallBack,
-    InviteRoomMarkAdapter.ItemMarkClickCallBack,
     InviteRoomSelectedAdapter.ItemSelectedClickCallBack,
 
     View.OnClickListener {
     lateinit var binding: FragmentInviteRoomBinding
     lateinit var roomAdapter: InviteRoomAdapter
-    lateinit var roomMarkAdapter: InviteRoomMarkAdapter
     lateinit var inviteRoomSelectedAdapter: InviteRoomSelectedAdapter
 
     private val model by activityViewModels<InviteRoomViewModel>()
@@ -54,11 +52,6 @@ class InviteRoomFragment :
         viewLifecycleOwner.lifecycleScope.launch {
             model.friendList.collect {
                 roomAdapter.submitList(it)
-            }
-        }
-        viewLifecycleOwner.lifecycleScope.launch {
-            model.markFriendList.collect {
-                roomMarkAdapter.submitList(it)
             }
         }
 
@@ -99,32 +92,38 @@ class InviteRoomFragment :
                 }
             }
         }
+        viewLifecycleOwner.lifecycleScope.launch {
+            model.friendListUiState.collect {
+                state ->
+                when (state) {
+                    is UiState.Success ->
+                        {
+                            roomAdapter.submitList(state.data)
+                        }
+                }
+            }
+        }
     }
 
     fun initUI(context: Context) {
         binding.rvInviteRoom.layoutManager = LinearLayoutManager(context)
-        binding.rvInviteRoomMark.layoutManager = LinearLayoutManager(context)
         binding.rvInviteRoomSelected.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
         roomAdapter = InviteRoomAdapter(this)
-        roomMarkAdapter = InviteRoomMarkAdapter(this)
         inviteRoomSelectedAdapter = InviteRoomSelectedAdapter(this)
 
         binding.rvInviteRoom.adapter = roomAdapter
-        binding.rvInviteRoomMark.adapter = roomMarkAdapter
         binding.rvInviteRoomSelected.adapter = inviteRoomSelectedAdapter
 
         binding.tvInviteRoomSubmit.setOnClickListener(this)
         binding.layoutInviteRoomBack.setOnClickListener(this)
+        model.getFriendList()
     }
 
-    override fun onItemClicked(tempFriend: FriendListRes, position: Int, adapter: InviteRoomAdapter) {
-        model.addFriendList(tempFriend, position, adapter)
+    override fun onItemClicked(friendEntity: FriendEntity, position: Int, adapter: InviteRoomAdapter) {
+        model.addFriendList(friendEntity, position, adapter)
     }
-    override fun onItemMarkClicked(tempFriend: FriendListRes, position: Int, adapter: InviteRoomMarkAdapter) {
-        model.addMarkList(tempFriend, position, adapter)
-    }
-    override fun onItemSelectedClick(tempFriend: FriendListRes) {
+    override fun onItemSelectedClick(tempFriend: FriendEntity) {
         model.removeSelectedItem(tempFriend)
     }
     override fun onClick(view: View?) {

@@ -60,9 +60,14 @@ class JoinUserChatRoomFragment :
                 }
             }
         }
+        viewLifecycleOwner.lifecycleScope.launch {
+            model.lastReadMessageId.collect {
+                model.joinUser(args.chatroomId, model._userId.value, it)
+            }
+        }
     }
     override fun onItemClicked(userId: String) {
-        model.joinUser(args.chatroomId, userId)
+        model.getLastReadMessageId(args.chatroomId, userId)
     }
     override fun onClick(view: View?) {
         when (view) {

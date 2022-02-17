@@ -10,9 +10,9 @@ import com.sgs.devcamp2.flametalk_android.data.model.chatroom.createchatroom.Cre
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.getchatroom.GetChatRoomRes
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.getchatroomfiles.GetChatRoomFilesRes
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.getchatroomlist.GetChatRoomListRes
-import com.sgs.devcamp2.flametalk_android.data.model.chatroom.joinchatrom.FriendListRes
-import com.sgs.devcamp2.flametalk_android.data.model.chatroom.joinchatrom.JoinChatRoomReq
-import com.sgs.devcamp2.flametalk_android.data.model.chatroom.joinchatrom.JoinChatRoomRes
+import com.sgs.devcamp2.flametalk_android.data.model.chatroom.inviteroom.FriendListRes
+import com.sgs.devcamp2.flametalk_android.data.model.chatroom.joinchatroom.JoinChatRoomReq
+import com.sgs.devcamp2.flametalk_android.data.model.chatroom.joinchatroom.JoinChatRoomRes
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.updatechatroom.UpdateChatRoomReq
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.updatechatroom.UpdateChatRoomRes
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.updateopenchatroomprofile.UpdateOpenChatRoomProfileReq

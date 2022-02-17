@@ -1,8 +1,8 @@
 package com.sgs.devcamp2.flametalk_android.domain.usecase.chatroom
 
 import com.sgs.devcamp2.flametalk_android.data.common.WrappedResponse
-import com.sgs.devcamp2.flametalk_android.data.model.chatroom.joinchatrom.JoinChatRoomReq
-import com.sgs.devcamp2.flametalk_android.data.model.chatroom.joinchatrom.JoinChatRoomRes
+import com.sgs.devcamp2.flametalk_android.data.model.chatroom.joinchatroom.JoinChatRoomReq
+import com.sgs.devcamp2.flametalk_android.data.model.chatroom.joinchatroom.JoinChatRoomRes
 import com.sgs.devcamp2.flametalk_android.domain.entity.Results
 import com.sgs.devcamp2.flametalk_android.domain.repository.ChatRoomRepository
 import kotlinx.coroutines.flow.Flow

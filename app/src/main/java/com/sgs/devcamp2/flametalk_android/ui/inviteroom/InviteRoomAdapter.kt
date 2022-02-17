@@ -7,18 +7,21 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.ItemPersonInviteRoomBinding
-import com.sgs.devcamp2.flametalk_android.network.response.friend.FriendListRes
+import com.sgs.devcamp2.flametalk_android.domain.entity.inviteroom.FriendEntity
 
 /**
  * @author 김현국
  * @created 2022/01/12
  */
 class InviteRoomAdapter(callback: InviteRoomFragment) :
-    ListAdapter<FriendListRes, RecyclerView.ViewHolder>(diffUtil) {
+    ListAdapter<FriendEntity, RecyclerView.ViewHolder>(diffUtil) {
     interface ItemClickCallBack {
-        fun onItemClicked(tempFriend: FriendListRes, position: Int, adapter: InviteRoomAdapter)
+        fun onItemClicked(tempFriend: FriendEntity, position: Int, adapter: InviteRoomAdapter)
     }
 
     val itemClickCallBack = callback
@@ -27,12 +30,12 @@ class InviteRoomAdapter(callback: InviteRoomFragment) :
      */
     companion object {
         val TAG: String = "로그"
-        val diffUtil = object : DiffUtil.ItemCallback<FriendListRes>() {
-            override fun areItemsTheSame(oldItem: FriendListRes, newItem: FriendListRes): Boolean {
-                return oldItem.id == newItem.id
+        val diffUtil = object : DiffUtil.ItemCallback<FriendEntity>() {
+            override fun areItemsTheSame(oldItem: FriendEntity, newItem: FriendEntity): Boolean {
+                return oldItem.userId == newItem.userId
             }
 
-            override fun areContentsTheSame(oldItem: FriendListRes, newItem: FriendListRes): Boolean {
+            override fun areContentsTheSame(oldItem: FriendEntity, newItem: FriendEntity): Boolean {
                 return oldItem.selected == newItem.selected
             }
         }
@@ -50,18 +53,27 @@ class InviteRoomAdapter(callback: InviteRoomFragment) :
 
     inner class PersonViewHolder(val binding: ItemPersonInviteRoomBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(tempFriend: FriendListRes, position: Int) {
+        fun bind(friendEntity: FriendEntity, position: Int) {
 
-            binding.ivInviteRoomRadioButton.isActivated = tempFriend.selected != "0"
+            if (friendEntity.preview.imageUrl != null) {
+                Log.d(TAG, "imageUrl - ${friendEntity.preview.imageUrl}")
+                Glide.with(binding.ivInviteRoomImage).load(friendEntity.preview.imageUrl)
+                    .transform(CenterCrop(), RoundedCorners(40)).into(binding.ivInviteRoomImage)
+            } else {
+                Glide.with(binding.ivInviteRoomImage).load(R.drawable.ic_person_white_24)
+                    .transform(CenterCrop(), RoundedCorners(40)).into(binding.ivInviteRoomImage)
+            }
+
+            binding.ivInviteRoomRadioButton.isActivated = friendEntity.selected != "0"
             binding.layoutInviteRoomItem.setOnClickListener(
-                ItemClickListener(tempFriend, position, binding)
+                ItemClickListener(friendEntity, position, binding)
             )
-            binding.tvInviteRoomUserName.text = tempFriend.nickname
+            binding.tvInviteRoomUserName.text = friendEntity.nickname
         }
     }
 
     inner class ItemClickListener(
-        var tempFriend: FriendListRes,
+        var friendEntity: FriendEntity,
         var position: Int,
         var binding: ItemPersonInviteRoomBinding
 
@@ -69,13 +81,8 @@ class InviteRoomAdapter(callback: InviteRoomFragment) :
         override fun onClick(view: View?) {
             when (view?.id) {
                 R.id.layout_invite_room_item -> {
-                    if (binding.ivInviteRoomRadioButton.isActivated) {
-                        Log.d(TAG, "binding.ivInviteRoomRadioButton.isSelected - ${binding.ivInviteRoomRadioButton.isSelected} called")
-                        binding.ivInviteRoomRadioButton.isActivated = false
-                    } else {
-                        binding.ivInviteRoomRadioButton.isActivated = true
-                    }
-                    itemClickCallBack?.onItemClicked(tempFriend, position, this@InviteRoomAdapter)
+                    binding.ivInviteRoomRadioButton.isActivated = !binding.ivInviteRoomRadioButton.isActivated
+                    itemClickCallBack?.onItemClicked(friendEntity, position, this@InviteRoomAdapter)
                 }
             }
         }
@@ -84,20 +91,20 @@ class InviteRoomAdapter(callback: InviteRoomFragment) :
      * 유저가 선택을 했다면, selected의 값을 1로 바꿔준다.
      */
     fun putActivate(position: Int) {
-        var list: MutableList<FriendListRes> = currentList.toMutableList()
-        var tempFriend: FriendListRes = currentList[position].copy()
-        tempFriend.selected = "1"
-        list[position] = tempFriend
+        var list: MutableList<FriendEntity> = currentList.toMutableList()
+        var friendEntity: FriendEntity = currentList[position].copy()
+        friendEntity.selected = "1"
+        list[position] = friendEntity
         submitList(list)
     }
     /**
      * 유저가 취소를 하기 위해 재선택을 했다면 , selected 0으로 바꿔준다.
      */
     fun removeActivate(position: Int) {
-        var list: MutableList<FriendListRes> = currentList.toMutableList()
-        var tempFriend: FriendListRes = currentList[position].copy()
-        tempFriend.selected = "0"
-        list[position] = tempFriend
+        var list: MutableList<FriendEntity> = currentList.toMutableList()
+        var friendEntity: FriendEntity = currentList[position].copy()
+        friendEntity.selected = "0"
+        list[position] = friendEntity
         submitList(list)
     }
 }

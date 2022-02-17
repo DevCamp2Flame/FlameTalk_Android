@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.ItemPersonInviteRoomBinding
-import com.sgs.devcamp2.flametalk_android.network.response.friend.FriendListRes
+import com.sgs.devcamp2.flametalk_android.network.response.friend.FriendEntity
 
 /**
  * @author 김현극
@@ -16,21 +16,21 @@ import com.sgs.devcamp2.flametalk_android.network.response.friend.FriendListRes
  */
 class InviteRoomMarkAdapter constructor(
     markCallback: ItemMarkClickCallBack
-) : ListAdapter<FriendListRes, RecyclerView.ViewHolder>(diffUtil) {
+) : ListAdapter<FriendEntity, RecyclerView.ViewHolder>(diffUtil) {
     interface ItemMarkClickCallBack {
-        fun onItemMarkClicked(tempFriend: FriendListRes, position: Int, adapter: InviteRoomMarkAdapter)
+        fun onItemMarkClicked(tempFriend: FriendEntity, position: Int, adapter: InviteRoomMarkAdapter)
     }
 
     var itemClickCallBack: ItemMarkClickCallBack? = markCallback
 
     companion object {
         val TAG: String = "로그"
-        val diffUtil = object : DiffUtil.ItemCallback<FriendListRes>() {
-            override fun areItemsTheSame(oldItem: FriendListRes, newItem: FriendListRes): Boolean {
+        val diffUtil = object : DiffUtil.ItemCallback<FriendEntity>() {
+            override fun areItemsTheSame(oldItem: FriendEntity, newItem: FriendEntity): Boolean {
                 return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: FriendListRes, newItem: FriendListRes): Boolean {
+            override fun areContentsTheSame(oldItem: FriendEntity, newItem: FriendEntity): Boolean {
                 return oldItem.selected == newItem.selected
             }
         }
@@ -47,7 +47,7 @@ class InviteRoomMarkAdapter constructor(
 
     inner class PersonViewHolder(val binding: ItemPersonInviteRoomBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(tempFriend: FriendListRes, position: Int) {
+        fun bind(tempFriend: FriendEntity, position: Int) {
             binding.ivInviteRoomRadioButton.isActivated = tempFriend.selected != "0"
             binding.layoutInviteRoomItem.setOnClickListener(
                 ItemClickListener(tempFriend, position)
@@ -57,7 +57,7 @@ class InviteRoomMarkAdapter constructor(
     }
 
     inner class ItemClickListener(
-        var tempFriend: FriendListRes,
+        var tempFriend: FriendEntity,
         var position: Int
     ) : View.OnClickListener {
         override fun onClick(view: View?) {
@@ -69,15 +69,15 @@ class InviteRoomMarkAdapter constructor(
         }
     }
     fun putActivate(position: Int) {
-        var list: MutableList<FriendListRes> = currentList.toMutableList()
-        var tempFriend: FriendListRes = currentList[position].copy()
+        var list: MutableList<FriendEntity> = currentList.toMutableList()
+        var tempFriend: FriendEntity = currentList[position].copy()
         tempFriend.selected = "1"
         list[position] = tempFriend
         submitList(list)
     }
     fun removeActivate(position: Int) {
-        var list: MutableList<FriendListRes> = currentList.toMutableList()
-        var tempFriend: FriendListRes = currentList[position].copy()
+        var list: MutableList<FriendEntity> = currentList.toMutableList()
+        var tempFriend: FriendEntity = currentList[position].copy()
         tempFriend.selected = "0"
         list[position] = tempFriend
         submitList(list)

@@ -204,7 +204,7 @@ class ChatRoomViewModel @Inject constructor(
                 subscription.collect { msg ->
                     _lastReadMessageId.value = msg.message_id // 내가 읽은 메세지 초기화
                     saveReceivedMessageUseCase.invoke(msg).collect {
-                        if (msg.message_type == "TALK" || msg.message_type =="FILE") {
+                        if (msg.message_type == "TALK" || msg.message_type == "FILE") {
                             _uiState.value = UiState.Success(it)
                         }
                     }
@@ -322,18 +322,13 @@ class ChatRoomViewModel @Inject constructor(
             }
         }
     }
-    fun initUploadImageState(){
+    fun initUploadImageState() {
         _uploadUiState.value = UiState.Loading
     }
 
     fun setBackgroundImage(path: String) {
         if (path != null) {
             _imageUrl.value = path
-        }
-    }
-    fun joinUser(){
-        viewModelScope.launch {
-
         }
     }
 

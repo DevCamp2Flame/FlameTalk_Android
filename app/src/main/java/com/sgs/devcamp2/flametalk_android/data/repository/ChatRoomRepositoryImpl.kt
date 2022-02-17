@@ -13,9 +13,9 @@ import com.sgs.devcamp2.flametalk_android.data.model.chatroom.createchatroom.Cre
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.getchatroom.GetChatRoomRes
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.getchatroomfiles.GetChatRoomFilesRes
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.getchatroomlist.GetChatRoomListRes
-import com.sgs.devcamp2.flametalk_android.data.model.chatroom.joinchatrom.FriendListRes
-import com.sgs.devcamp2.flametalk_android.data.model.chatroom.joinchatrom.JoinChatRoomReq
-import com.sgs.devcamp2.flametalk_android.data.model.chatroom.joinchatrom.JoinChatRoomRes
+import com.sgs.devcamp2.flametalk_android.data.model.chatroom.inviteroom.FriendListRes
+import com.sgs.devcamp2.flametalk_android.data.model.chatroom.joinchatroom.JoinChatRoomReq
+import com.sgs.devcamp2.flametalk_android.data.model.chatroom.joinchatroom.JoinChatRoomRes
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.updatechatroom.UpdateChatRoomReq
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.updatechatroom.UpdateChatRoomRes
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.updateopenchatroomprofile.UpdateOpenChatRoomProfileReq
@@ -137,7 +137,7 @@ class ChatRoomRepositoryImpl @Inject constructor(
                                 if (data.userChatrooms[i].thumbnail?.get(j).isNullOrEmpty()) {
                                     thumbnail = mapperToThumbnail(
                                         data.userChatrooms[i].chatroomId,
-                                        "https://cdn.pixabay.com/photo/2017/02/15/12/12/cat-2068462__480.jpg"
+                                        ""
                                     )
                                 } else {
                                     thumbnail = mapperToThumbnail(
@@ -221,6 +221,7 @@ class ChatRoomRepositoryImpl @Inject constructor(
     override fun closeChatRoom(closeChatRoomReq: CloseChatRoomReq): Flow<Results<Boolean, WrappedResponse<Nothing>>> {
         return flow {
             val response = remote.closeChatRoom(closeChatRoomReq)
+            local.chatRoomDao().updateChatRoomLastReadMessage(closeChatRoomReq.lastReadMessageId, closeChatRoomReq.userChatroomId)
             if (response.isSuccessful) {
                 if (response.body()!!.status == 200) {
                     emit(Results.Success(true))

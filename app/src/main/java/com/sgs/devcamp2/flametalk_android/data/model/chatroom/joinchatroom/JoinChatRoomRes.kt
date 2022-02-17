@@ -1,4 +1,4 @@
-package com.sgs.devcamp2.flametalk_android.data.model.chatroom.joinchatrom
+package com.sgs.devcamp2.flametalk_android.data.model.chatroom.joinchatroom
 
 /**
  * @author 김현국

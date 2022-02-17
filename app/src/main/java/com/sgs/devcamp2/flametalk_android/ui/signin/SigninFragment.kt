@@ -4,6 +4,7 @@ import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -157,7 +158,7 @@ class SigninFragment : Fragment() {
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this.requireActivity()) { task ->
                 if (task.isSuccessful) {
-                    // Log.d("googleAuthToken", "OAuthActivity - firebaseAuthWithGoogle() success called :$idToken")
+                     Log.d("googleAuthToken", "OAuthActivity - firebaseAuthWithGoogle() success called :$idToken")
                     val action = SigninFragmentDirections.actionNavigationSigninToNavigationAdditionalUserInfo(idToken)
                     findNavController().navigate(action)
                 } else {

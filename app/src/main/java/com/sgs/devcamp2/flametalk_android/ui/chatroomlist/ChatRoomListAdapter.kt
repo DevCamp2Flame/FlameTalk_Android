@@ -1,6 +1,5 @@
 package com.sgs.devcamp2.flametalk_android.ui.chatroomlist
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -47,7 +46,8 @@ class ChatRoomListAdapter constructor(
             }
 
             override fun areContentsTheSame(oldItem: ThumbnailWithRoomId, newItem: ThumbnailWithRoomId): Boolean {
-                return oldItem == newItem
+                return oldItem.room.count == newItem.room.count && oldItem.thumbnailList.size == newItem.thumbnailList.size &&
+                    oldItem.room.title == newItem.room.title
             }
         }
     }
@@ -114,8 +114,14 @@ class ChatRoomListAdapter constructor(
     inner class OneViewHolder(val binding: ItemPersonOneChatListBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(chatroom: ThumbnailWithRoomId) {
-            Glide.with(binding.ivOneChatRoomListUserImg).load(chatroom.thumbnailList[0].image)
-                .transform(CenterCrop(), RoundedCorners(40)).into(binding.ivOneChatRoomListUserImg)
+            if (chatroom.thumbnailList[0].image == "") {
+                Glide.with(binding.ivOneChatRoomListUserImg).load(R.drawable.ic_person_white_24)
+                    .transform(CenterCrop(), RoundedCorners(40)).into(binding.ivOneChatRoomListUserImg)
+            } else {
+                Glide.with(binding.ivOneChatRoomListUserImg).load(chatroom.thumbnailList[0].image)
+                    .transform(CenterCrop(), RoundedCorners(40)).into(binding.ivOneChatRoomListUserImg)
+            }
+
             binding.tvOneChatRoomListUserName.text = chatroom.room.title
             binding.tvOneChatRoomListUserCount.text = chatroom.room.count.toString()
         }
@@ -124,10 +130,22 @@ class ChatRoomListAdapter constructor(
     inner class TwoViewHolder(val binding: ItemPersonTwoChatListBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(chatroom: ThumbnailWithRoomId) {
-            Glide.with(binding.ivTwoChatRoomListUserImg).load(chatroom.thumbnailList[0].image)
-                .transform(CenterCrop(), RoundedCorners(30)).into(binding.ivTwoChatRoomListUserImg)
-            Glide.with(binding.ivTwoChatRoomListUserImg2).load(chatroom.thumbnailList[1].image)
-                .transform(CenterCrop(), RoundedCorners(30)).into(binding.ivTwoChatRoomListUserImg2)
+            if (chatroom.thumbnailList[0].image == "") {
+                Glide.with(binding.ivTwoChatRoomListUserImg).load(R.drawable.ic_person_white_24)
+                    .transform(CenterCrop(), RoundedCorners(30)).into(binding.ivTwoChatRoomListUserImg)
+            } else {
+
+                Glide.with(binding.ivTwoChatRoomListUserImg).load(chatroom.thumbnailList[0].image)
+                    .transform(CenterCrop(), RoundedCorners(30)).into(binding.ivTwoChatRoomListUserImg)
+            }
+            if (chatroom.thumbnailList[1].image == "") {
+                Glide.with(binding.ivTwoChatRoomListUserImg2).load(chatroom.thumbnailList[1].image)
+                    .transform(CenterCrop(), RoundedCorners(30)).into(binding.ivTwoChatRoomListUserImg2)
+            } else {
+                Glide.with(binding.ivTwoChatRoomListUserImg2).load(chatroom.thumbnailList[1].image)
+                    .transform(CenterCrop(), RoundedCorners(30)).into(binding.ivTwoChatRoomListUserImg2)
+            }
+
             binding.tvTwoChatRoomListUserName.text = chatroom.room.title
             binding.tvTwoChatRoomListUserCount.text = chatroom.room.count.toString()
         }

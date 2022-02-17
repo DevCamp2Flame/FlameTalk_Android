@@ -22,7 +22,8 @@ class ChatRoomAdapter constructor(
 ) : ListAdapter<Chat, RecyclerView.ViewHolder>(diffUtil) {
     companion object {
         val TAG: String = "로그"
-        val simpleFormat = SimpleDateFormat("kk:mm", Locale("ko", "KR"))
+        val simpleFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")
+        val format = SimpleDateFormat("HH:MM")
         val diffUtil = object : DiffUtil.ItemCallback<Chat>() {
             override fun areItemsTheSame(oldItem: Chat, newItem: Chat): Boolean {
                 return oldItem.message_id == newItem.message_id
@@ -151,9 +152,11 @@ class ChatRoomAdapter constructor(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(chat: Chat) {
             binding.tvLeftStartTextChatRoomMessage.text = chat.contents
-            val date = Date(chat.timeStamp)
-            val str_date = simpleFormat.format(date)
-            binding.tvLeftStartTextChatRoomListDate.text = str_date
+            // val date = Date(chat.timeStamp)
+            // val str_date = simpleFormat.format(date)
+            val date: Date = simpleFormat.parse(chat.created_at)
+            val dateText: String = format.format(date)
+            binding.tvLeftStartTextChatRoomListDate.text = dateText
         }
     }
     /**
@@ -172,9 +175,9 @@ class ChatRoomAdapter constructor(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(chat: Chat) {
             binding.tvRightStartTextChatRoomMessage.text = chat.contents
-            val date = Date(chat.timeStamp)
-            val str_date = simpleFormat.format(date)
-            binding.tvRightStartTextChatRoomListDate.text = str_date
+            val date: Date = simpleFormat.parse(chat.created_at)
+            val dateText: String = format.format(date)
+            binding.tvRightStartTextChatRoomListDate.text = dateText
         }
     }
     /**

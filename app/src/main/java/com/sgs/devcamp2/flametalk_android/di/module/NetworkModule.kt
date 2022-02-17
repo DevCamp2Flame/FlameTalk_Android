@@ -9,14 +9,14 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import java.util.concurrent.TimeUnit
-import javax.inject.Singleton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
+import javax.inject.Singleton
 
 /**
  * @author 박소연
@@ -116,8 +116,13 @@ class NetworkModule {
     fun provideFriendApi(retrofit: Retrofit): FriendApi {
         return retrofit.create(FriendApi::class.java)
     }
+    @Provides
+    @Singleton
+    fun provideAuthApi(retrofit: Retrofit): SignUpApi {
+        return retrofit.create(SignUpApi::class.java)
+    }
 
     companion object {
-        const val BASE_URL = "http://10.99.13.235:8080" // 테스트 전 PC IP 확인
+        const val BASE_URL = "http://10.99.30.180:8080" // 테스트 전 PC IP 확인
     }
 }

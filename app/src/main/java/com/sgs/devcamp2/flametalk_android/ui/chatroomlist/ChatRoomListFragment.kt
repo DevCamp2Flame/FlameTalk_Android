@@ -14,6 +14,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.ThumbnailWithRoomId
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentChatRoomListBinding
@@ -46,6 +47,9 @@ class ChatRoomListFragment : Fragment(), ChatRoomListAdapter.ClickCallBack {
     private fun initUI(context: Context) {
         binding.rvChatListChattingRoom.layoutManager = LinearLayoutManager(context)
         adapterRoom = ChatRoomListAdapter(callback = this)
+        binding.rvChatListChattingRoom.itemAnimator = null
+        binding.rvChatListChattingRoom.itemAnimator = DefaultItemAnimator()
+
         binding.rvChatListChattingRoom.adapter = adapterRoom
         model.getChatRoomList(false)
         model.getDeviceToken(this.requireContext())
