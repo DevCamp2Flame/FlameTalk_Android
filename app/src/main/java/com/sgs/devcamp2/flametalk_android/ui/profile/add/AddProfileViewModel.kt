@@ -1,6 +1,9 @@
 package com.sgs.devcamp2.flametalk_android.ui.profile.add
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
+import android.net.Uri
 import android.util.DisplayMetrics
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,6 +22,14 @@ import kotlinx.coroutines.flow.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import timber.log.Timber
+
+/**
+ * @author 박소연
+ * @created 2022/01/25
+ * @updated 2022/02/17
+ * @desc 프로필 생성 관련 비즈니스 로직 수행
+ *       파일 생성 통신, url 변환, 스티커 생성, 스티커 생성, 프로필 생성 툥산
+ */
 
 @HiltViewModel
 class AddProfileViewModel @Inject constructor(
@@ -46,7 +57,6 @@ class AddProfileViewModel @Inject constructor(
 
     // 프로필 이미지 url
     private val _profileImageUrl = MutableStateFlow("")
-    val profileImageUrl = _profileImageUrl.asStateFlow()
 
     // 배경 이미지
     private val _backgroundImage = MutableStateFlow("")
@@ -54,16 +64,12 @@ class AddProfileViewModel @Inject constructor(
 
     // 배경 이미지 url
     private val _backgroundImageUrl = MutableStateFlow("")
-    val backgroundImageUrl = _backgroundImageUrl.asStateFlow()
 
     // 스티커
-//    val stickers = arrayListOf<ProfilePreview>()
-//    private val _stickers = MutableStateFlow<List<Sticker>>(emptyList())
     var stickers = arrayListOf<Sticker>()
 
     // 파일 통신 결과
     private val _isFileSuccess: MutableStateFlow<Boolean?> = MutableStateFlow(null)
-    val isFileSuccess = _isFileSuccess.asStateFlow()
 
     // 메세지
     private val _message = MutableStateFlow("")
@@ -86,7 +92,6 @@ class AddProfileViewModel @Inject constructor(
 
     fun setProfileDesc(desc: String) {
         _description.value = desc
-        Timber.d("Description ${_description.value}")
     }
 
     fun setProfileImage(path: String?) {
@@ -99,6 +104,20 @@ class AddProfileViewModel @Inject constructor(
         if (path != null) {
             _backgroundImage.value = path
         }
+    }
+
+    // image uri를 path로 전환
+    @SuppressLint("Range")
+    fun uriToPath(activity: Activity, uri: Uri): String {
+        val cursor = activity.contentResolver.query(uri, null, null, null, null)
+        cursor?.moveToNext()
+        val path: String? = cursor?.getString(cursor.getColumnIndex("_data"))
+        cursor?.close()
+
+        if (path.isNullOrEmpty()) {
+            return ""
+        }
+        return path
     }
 
     // 갤러리에서 가져온 프로필, 배경 이미지를 파일 서버로 보내고 파일서버 url을 받는다.
@@ -122,7 +141,6 @@ class AddProfileViewModel @Inject constructor(
             }
             // 파일 통신이 모두 끝나면 프로필 생성 요청을 보낸다
             deferred.await()
-            Timber.d("_isFileSuccess.value: ${_isFileSuccess.value}")
             if (_isFileSuccess.value == true) {
                 postProfile()
             }
@@ -148,18 +166,22 @@ class AddProfileViewModel @Inject constructor(
             try {
                 val response = fileRepository.get().postFileCreate(multipartFile!!, null)
 
-                if (response.status == 200) {
-                    if (type == PROFILE_IMAGE) {
-                        _profileImageUrl.value = response.data.url
-                    } else if (type == BACKGROUND_IMAGE) {
-                        _backgroundImageUrl.value = response.data.url
+                when (response.status) {
+                    200 -> {
+                        if (type == PROFILE_IMAGE) {
+                            _profileImageUrl.value = response.data.url
+                        } else if (type == BACKGROUND_IMAGE) {
+                            _backgroundImageUrl.value = response.data.url
+                        }
+                        _isFileSuccess.value = true
                     }
-                    _isFileSuccess.value = true
-                } else if (response.status == 400) {
-                    _message.value = "10MB가 넘는 파일은 업로드할 수 없습니다."
-                    _isFileSuccess.value = false
-                } else {
-                    _message.value = response.message
+                    400 -> {
+                        _message.value = "10MB가 넘는 파일은 업로드할 수 없습니다."
+                        _isFileSuccess.value = false
+                    }
+                    else -> {
+                        _message.value = response.message
+                    }
                 }
             } catch (ignore: Throwable) {
                 Timber.d("Fail $ignore")
@@ -181,7 +203,6 @@ class AddProfileViewModel @Inject constructor(
             positionY = y / height,
         )
         stickers.add(stickerModel)
-        Timber.d("스티커 $stickers")
     }
 
     // 프로필 생성 통신
@@ -192,16 +213,14 @@ class AddProfileViewModel @Inject constructor(
                     userId = _userId.value,
                     imageUrl = _profileImageUrl.value,
                     bgImageUrl = _backgroundImageUrl.value,
-                    sticker = stickers.toList(), // TODO: Add Sticker Model
+                    sticker = stickers.toList(),
                     description = _description.value,
                     isDefault = false
                 )
                 val response = profileRepository.get().createProfile(request)
 
-                Timber.d("response")
                 if (response.status == 201) {
                     _isSuccess.value = true
-                    Timber.d("Response.status is 201")
                 }
                 _message.value = response.message
                 Timber.d("All Image Create Completed $response")
