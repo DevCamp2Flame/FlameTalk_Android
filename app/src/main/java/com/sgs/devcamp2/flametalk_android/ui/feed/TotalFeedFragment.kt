@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.Navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
@@ -69,8 +71,11 @@ class TotalFeedFragment : Fragment() {
 
         // 뒤로가기 버튼을 누르면 이전의 single Feed의 UI stack을 pop하고 프로필 상세보기로 랜딩한다.
         binding.abTotalFeed.imgAppbarBack.setOnClickListener {
-            // findNavController().navigateUp()
-            // TODO: Feed Total -> Profile
+            findNavController().navigate(
+                TotalFeedFragmentDirections.actionFeedTotalToProfile(
+                    profileId = args.profileId
+                )
+            )
         }
     }
 

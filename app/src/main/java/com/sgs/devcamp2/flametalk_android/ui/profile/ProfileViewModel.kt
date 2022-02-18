@@ -28,7 +28,7 @@ class ProfileViewModel @Inject constructor(
     val userProfile = _userProfile.asStateFlow()
 
     // 프로필 아이디
-    private val _profileId = MutableStateFlow<Long>(0)
+    private val _profileId = MutableStateFlow<Long>(0L)
     val profileId = _profileId.asStateFlow()
 
     // 프로필 상태메세지

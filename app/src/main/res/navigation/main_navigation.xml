@@ -240,7 +240,8 @@
 
         <action
             android:id="@+id/action_feed_single_to_total"
-            app:destination="@id/navigation_total_feed" />
+            app:destination="@id/navigation_total_feed"
+            app:popUpToInclusive="true"/>
         <argument
             android:name="profileId"
             android:defaultValue="0L"
