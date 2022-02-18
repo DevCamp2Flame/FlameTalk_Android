@@ -1,10 +1,15 @@
 package com.sgs.devcamp2.flametalk_android.ui.profile
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import androidx.appcompat.widget.AppCompatImageView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -23,6 +28,7 @@ import com.sgs.devcamp2.flametalk_android.util.toVisibleGone
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
+import timber.log.Timber
 
 /**
  * @author 박소연
@@ -37,6 +43,7 @@ class ProfileFragment : Fragment() {
     private val binding by lazy { FragmentProfileBinding.inflate(layoutInflater) }
     private val viewModel by viewModels<ProfileViewModel>()
     private val args: ProfileFragmentArgs by navArgs()
+    private var rootLayout: ViewGroup? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -164,10 +171,23 @@ class ProfileFragment : Fragment() {
                 binding.tvProfileDesc.text = it?.description
                 Glide.with(binding.imgProfile)
                     .load(it?.imageUrl).apply(RequestOptions.circleCropTransform())
-                    .apply(RequestOptions.placeholderOf(R.drawable.ic_person_white_24))
                     .into(binding.imgProfile)
                 Glide.with(binding.imgProfileBg).load(it?.bgImageUrl)
                     .into(binding.imgProfileBg)
+            }
+        }
+
+        lifecycleScope.launchWhenResumed {
+            viewModel.stickers.collectLatest { sticker ->
+                sticker.forEach {
+                    binding.cstProfile.addView(
+                        createImageView(
+                            it.stickerId,
+                            it.positionX,
+                            it.positionY
+                        )
+                    )
+                }
             }
         }
 
@@ -189,14 +209,61 @@ class ProfileFragment : Fragment() {
         }
     }
 
-    companion object {
-        const val USER_DEFAULT_PROFILE = 1
-        const val FRIEND_PROFILE = 2
-        const val USER_MULTI_PROFILE = 3
-        const val BLOCKED_PROFILE = 4
-        const val HIDDEN_PROFILE = 5
+    @SuppressLint("ClickableViewAccessibility")
+    private fun createImageView(emoji: Int, positionX: Double, positionY: Double): View {
+        rootLayout = binding.cstProfile
 
-        const val TO_BLOCK = 40
-        const val TO_HIDE = 50
+        /**프로필 조회하는 디바이스의 사이즈에 따라 scaling 하기 위해
+         디바이스의 기기 가로, 세로 사이즈로 나누어 position 저장*/
+        val dm: DisplayMetrics = requireContext().resources.displayMetrics
+        val width = dm.widthPixels
+        val height = dm.heightPixels
+        Timber.d("width: $width, height: $height")
+
+        // 스티커를 위한 ImageView 동적 생성
+        val img = AppCompatImageView(requireContext())
+        // 생성할 스티커의 사이즈
+        val param = ConstraintLayout.LayoutParams(100, 100)
+        // 스티커 생성하고 중앙에 배치하기 위한 layout 제약
+        param.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
+        param.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
+
+//        val lParams = img.layoutParams as ConstraintLayout.LayoutParams
+//        lParams.marginStart = positionX.toInt()
+//        lParams.topMargin = positionY.toInt()
+//
+//        img.layoutParams = lParams
+
+        when (emoji) {
+            EMOJI_AWW -> Glide.with(requireContext()).load(R.drawable.emoji_aww).into(img)
+            EMOJI_CLAP -> Glide.with(requireContext()).load(R.drawable.emoji_clap).into(img)
+            EMOJI_DANCE -> Glide.with(requireContext()).load(R.drawable.emoji_dance).into(img)
+            EMOJI_HEART -> Glide.with(requireContext()).load(R.drawable.emoji_hearts).into(img)
+            EMOJI_PARTY -> Glide.with(requireContext()).load(R.drawable.emoji_party).into(img)
+            EMOJI_SAD -> Glide.with(requireContext()).load(R.drawable.emoji_sad).into(img)
+        }
+        // 각 스티커 객체 별 아이디 생성
+        img.id = ViewCompat.generateViewId()
+        img.layoutParams = param
+
+        return img
+    }
+
+    companion object {
+        private const val USER_DEFAULT_PROFILE = 1
+        private const val FRIEND_PROFILE = 2
+        private const val USER_MULTI_PROFILE = 3
+        private const val BLOCKED_PROFILE = 4
+        private const val HIDDEN_PROFILE = 5
+
+        private const val TO_BLOCK = 400
+        private const val TO_HIDE = 500
+
+        private const val EMOJI_AWW = 10
+        private const val EMOJI_CLAP = 20
+        private const val EMOJI_DANCE = 30
+        private const val EMOJI_HEART = 40
+        private const val EMOJI_PARTY = 50
+        private const val EMOJI_SAD = 60
     }
 }

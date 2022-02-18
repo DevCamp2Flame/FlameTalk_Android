@@ -1,0 +1,26 @@
+package com.sgs.devcamp2.flametalk_android.data.model
+
+import android.os.Parcelable
+import androidx.annotation.Keep
+import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
+
+/**
+ * @author 박소연
+ * @created 2022/02/18
+ * @desc 프로필을 꾸미는 스티커의 정보
+ *
+ * [Sticker]
+ * stickerId	Integer	스티커 id
+ * positionX	Double	스티커 x 좌표
+ * positionY	Double	스티커 y 좌표
+ */
+
+@Keep
+@Parcelize
+data class UniqueSticker(
+    @SerializedName("id")
+    val id: Int,
+    @SerializedName("sticker")
+    val sticker: Sticker
+) : Parcelable
