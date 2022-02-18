@@ -78,7 +78,7 @@ class BirthdayAdapter(
             Glide.with(itemView).load(data.preview.imageUrl)
                 .transform(CenterCrop(), RoundedCorners(35))
                 .into(binding.imgFriendPreview)
-            binding.tvFriendPreviewNickname.text = "친구 이름"
+            binding.tvFriendPreviewNickname.text = data.nickname
 
             if (data.preview.description != null) {
                 binding.tvFriendPreviewDesc.toVisible()
