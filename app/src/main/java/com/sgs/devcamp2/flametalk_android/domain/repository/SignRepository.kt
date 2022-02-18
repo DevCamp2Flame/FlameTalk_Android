@@ -61,6 +61,11 @@ class SignRepository @Inject constructor(
         userService.get().getEmailCheck(email)
     }
 
+    // 로그아웃
+    suspend fun logoutUser() = withContext(ioDispatcher) {
+        userPreferences.get().logoutUser()
+    }
+
     // 탈퇴
     suspend fun leaveUser() = withContext(ioDispatcher) {
         userService.get().deleteLeaveUser()

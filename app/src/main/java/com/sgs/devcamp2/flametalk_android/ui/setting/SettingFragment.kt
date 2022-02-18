@@ -8,6 +8,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentSettingBinding
 import com.sgs.devcamp2.flametalk_android.util.toVisibleGone
@@ -19,8 +20,8 @@ import kotlinx.coroutines.launch
 /**
  * @author 박소연
  * @created 2022/01/26
- * @updated
- * @desc 기타 설정 화면 (탈퇴하기)
+ * @updated 2022/02/18
+ * @desc 기타 설정 화면 (탈퇴하기, 로그아웃)
  */
 
 @AndroidEntryPoint
@@ -33,7 +34,7 @@ class SettingFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         initUI()
         return binding.root
     }
@@ -41,6 +42,7 @@ class SettingFragment : Fragment() {
     private fun initUI() {
         initAppbar()
         initLeave()
+        initLogout()
 
         // 메세지 알림
         lifecycleScope.launch {
@@ -66,6 +68,21 @@ class SettingFragment : Fragment() {
         binding.itemSettingLeave.tvSettingDesc.toVisibleGone()
         binding.itemSettingLeave.swSettingTitle.toVisibleGone()
         binding.itemSettingLeave.imgSettingRefresh.toVisibleGone()
+    }
+
+    private fun initLogout() {
+        binding.itemSettingLogout.tvSettingTitle.text = "로그아웃하기"
+        binding.itemSettingLogout.tvSettingDesc.toVisibleGone()
+        binding.itemSettingLogout.swSettingTitle.toVisibleGone()
+        binding.itemSettingLogout.imgSettingRefresh.toVisibleGone()
+
+        binding.itemSettingLogout.root.setOnClickListener {
+            viewModel.logoutUser()
+            Snackbar.make(requireContext(), requireView(), "로그아웃 되었습니다.", Snackbar.LENGTH_SHORT)
+                .show()
+            // findNavController().navigate(R.id.navigation_signin)
+            findNavController().popBackStack()
+        }
     }
 
     private fun initLeaveDialog() {
