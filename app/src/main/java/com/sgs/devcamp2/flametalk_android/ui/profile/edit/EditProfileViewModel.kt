@@ -41,7 +41,7 @@ class EditProfileViewModel @Inject constructor(
     val nickname = _nickname.asStateFlow()
 
     // 프로필 상태메세지
-    private val _description = MutableStateFlow("")
+    private val _description: MutableStateFlow<String?> = MutableStateFlow(null)
     val description = _description.asStateFlow()
 
     // 프로필 이미지
@@ -93,11 +93,11 @@ class EditProfileViewModel @Inject constructor(
 
     fun setUserProfile(data: Profile) {
         _profileId.value = data.profileId
-        if (data.description == null) {
-            _description.value = ""
-        } else {
-            _description.value = data.description.toString()
-        }
+        // if (data.description == null) {
+        //   _description.value = ""
+        // } else {
+        //   _description.value = data.description.toString()
+        // }
         _profileImageUrl.value = data.imageUrl.toString()
         _backgroundImageUrl.value = data.bgImageUrl.toString()
         _isDefault.value = data.isDefault
