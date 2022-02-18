@@ -58,7 +58,9 @@ class SingleFeedViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val response = profileRepository.get().getSingleFeedList(profileId, isBackground)
-                _profileImage.value = response.data.profileImage
+                if (response.data.profileImage != null) {
+                    _profileImage.value = response.data.profileImage
+                }
                 _feeds.value = response.data.feeds
 
                 Timber.d("$response")
