@@ -31,6 +31,7 @@ import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 /**
  * @author 박소연
@@ -64,12 +65,24 @@ class SigninFragment : Fragment() {
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        clearUI()
+    }
+
     private fun initUI() {
         binding.edtSigninEmail.setText(args.id)
         binding.edtSigninPwd.setText(args.password)
 
         initEventListener()
         initGoogleSignin()
+    }
+
+    // 입력 창 초기화
+    private fun clearUI() {
+        Timber.d("Signin onResume 호출")
+        binding.edtSigninEmail.text.clear()
+        binding.edtSigninPwd.text.clear()
     }
 
     private fun initEventListener() {
