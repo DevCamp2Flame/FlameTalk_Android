@@ -23,7 +23,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentEditProfileBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -71,7 +70,6 @@ class EditProfileFragment : Fragment() {
         Glide.with(binding.imgEditProfile)
             .load(args.userInfo!!.imageUrl)
             .apply(RequestOptions.circleCropTransform())
-            .apply(RequestOptions.placeholderOf(R.drawable.ic_person_white_24))
             .into(binding.imgEditProfile)
         // 배경 이미지
         Glide.with(binding.imgEditProfileBg)
@@ -106,7 +104,6 @@ class EditProfileFragment : Fragment() {
                     Glide.with(binding.imgEditProfile)
                         .load(it)
                         .apply(RequestOptions.circleCropTransform())
-                        .apply(RequestOptions.placeholderOf(R.drawable.ic_person_white_24))
                         .into(binding.imgEditProfile)
                 }
             }
