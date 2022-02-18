@@ -23,6 +23,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentEditProfileBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -66,6 +67,7 @@ class EditProfileFragment : Fragment() {
     }
 
     private fun initUI() {
+        /**이미 설정되어 있던 프로필 이미지 정보들은 초기에 바인딩해준다*/
         // 프로필 이미지
         Glide.with(binding.imgEditProfile)
             .load(args.userInfo!!.imageUrl)
@@ -122,7 +124,7 @@ class EditProfileFragment : Fragment() {
         lifecycleScope.launchWhenResumed {
             viewModel.isSuccess.collectLatest {
                 if (it == true) {
-                    findNavController().popBackStack()
+                    findNavController().navigate(R.id.navigation_friend)
                 }
             }
         }
