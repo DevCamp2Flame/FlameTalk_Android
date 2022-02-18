@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <View
+        android:id="@+id/v_birthday_preview"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/bg_skyblue_30"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/img_birthday_preview_icon"
+        android:layout_width="33dp"
+        android:layout_height="33dp"
+        android:src="@drawable/ic_person_18"
+        app:layout_constraintBottom_toBottomOf="@+id/v_birthday_preview"
+        app:layout_constraintEnd_toEndOf="@+id/v_birthday_preview"
+        app:layout_constraintStart_toStartOf="@+id/v_birthday_preview"
+        app:layout_constraintTop_toTopOf="@+id/v_birthday_preview"
+        app:tint="@color/white" />
+
+    <ImageView
+        android:id="@+id/img_birthday_preview"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/img_birthday_preview_none"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/bg_pink_30"
+        android:src="@drawable/ic_smile_white_24"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_birthday_preview_nickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/tv_birthday_preview_desc"
+        app:layout_constraintStart_toEndOf="@+id/img_birthday_preview"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="친구의 생일을 확인해보세요!" />
+
+    <TextView
+        android:id="@+id/tv_birthday_preview_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/tv_birthday_preview_nickname"
+        app:layout_constraintTop_toBottomOf="@+id/tv_birthday_preview_nickname"
+        tools:text="상태메세지" />
+
+    <TextView
+        android:id="@+id/tv_birthday_preview_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/bg_strock_pink_5"
+        android:drawableRight="@drawable/ic_cake_24"
+        android:drawableTint="@color/flame_pink"
+        android:gravity="bottom"
+        android:paddingHorizontal="6dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="6dp"
+        android:textColor="@color/flame_pink"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="축하하기 " />
+</androidx.constraintlayout.widget.ConstraintLayout>

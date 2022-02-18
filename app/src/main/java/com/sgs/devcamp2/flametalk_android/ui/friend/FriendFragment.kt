@@ -21,7 +21,6 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.snackbar.Snackbar
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentFriendBinding
-import com.sgs.devcamp2.flametalk_android.ui.friend.birthday.BirthdayAdapter
 import com.sgs.devcamp2.flametalk_android.ui.friend.friends.FriendAdapter
 import com.sgs.devcamp2.flametalk_android.ui.friend.multi_profile.MultiProfileAdapter
 import com.sgs.devcamp2.flametalk_android.util.toVisible
@@ -49,8 +48,8 @@ class FriendFragment : Fragment() {
     private val multiProfileAdapter: MultiProfileAdapter by lazy {
         MultiProfileAdapter(requireContext())
     }
-    private val birthdayAdapter: BirthdayAdapter by lazy {
-        BirthdayAdapter(requireContext())
+    private val friendBirthdayAdapter: FriendBirthdayAdapter by lazy {
+        FriendBirthdayAdapter(requireContext())
     }
     private val friendAdapter: FriendAdapter by lazy {
         FriendAdapter(requireContext())
@@ -193,15 +192,15 @@ class FriendFragment : Fragment() {
     // 생일인 친구 리스트 초기화
     private fun initBirthdayProfile() {
         binding.rvFriendBirthday.layoutManager = LinearLayoutManager(requireContext())
-        binding.rvFriendBirthday.adapter = birthdayAdapter
+        binding.rvFriendBirthday.adapter = friendBirthdayAdapter
 
         lifecycleScope.launch {
             viewModel.birthProfile.collectLatest {
                 if (it.isNullOrEmpty()) {
                     birthdayVisibility(GONE)
                 } else {
-                    birthdayAdapter.data = it
-                    birthdayAdapter.submitList(it)
+                    friendBirthdayAdapter.data = it
+                    friendBirthdayAdapter.submitList(it)
                     birthdayVisibility(VISIBLE)
                     binding.itemFriendMoreBirthday.tvFriendPreviewCount.text = it.size.toString()
                 }
@@ -212,6 +211,9 @@ class FriendFragment : Fragment() {
         binding.itemFriendMoreBirthday.tvFriendPreviewCount.toVisible()
         binding.itemFriendMoreBirthday.tvFriendPreviewNickname.text = "친구의 생일을 확인해보세요!"
         binding.itemFriendMoreBirthday.tvFriendPreviewDesc.toVisibleGone()
+        binding.itemFriendMoreBirthday.root.setOnClickListener {
+            findNavController().navigate(R.id.navigation_birthday_friend)
+        }
     }
 
     // 주소록 친구 리스트 초기화
