@@ -12,29 +12,26 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.sgs.devcamp2.flametalk_android.data.model.friend.Friend
-import com.sgs.devcamp2.flametalk_android.databinding.ItemFriendPreviewBinding
-import com.sgs.devcamp2.flametalk_android.ui.friend.FriendFragmentDirections
-import com.sgs.devcamp2.flametalk_android.ui.friend.friends.FriendAdapter
+import com.sgs.devcamp2.flametalk_android.databinding.ItemBirthdayPreviewBinding
 import com.sgs.devcamp2.flametalk_android.util.SimpleDiffUtilCallback
-import com.sgs.devcamp2.flametalk_android.util.toVisible
 import com.sgs.devcamp2.flametalk_android.util.toVisibleGone
 
 /**
  * @author 박소연
- * @created 2022/01/14
- * @updated 2022/01/18
- * @desc 1번째 탭 생일인 친구 리스트 adapter
+ * @created 2022/02/18
+ * @updated 2022/02/18
+ * @desc 생일 친구 리스트 adapter
  *       친구 프로필을 선택하면 상세프로필을 볼 수 있음
  */
 
 class BirthdayAdapter(
     private val context: Context
-) : ListAdapter<Friend, BirthdayAdapter.BirthdayViewHolder>(SimpleDiffUtilCallback()) {
+) : ListAdapter<Friend, BirthdayAdapter.ViewHolder>(SimpleDiffUtilCallback()) {
     var data = listOf<Friend>()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BirthdayViewHolder {
-        return BirthdayViewHolder(
-            ItemFriendPreviewBinding.inflate(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        return ViewHolder(
+            ItemBirthdayPreviewBinding.inflate(
                 LayoutInflater.from(context),
                 parent,
                 false
@@ -46,45 +43,40 @@ class BirthdayAdapter(
         return data.size
     }
 
-    override fun onBindViewHolder(holder: BirthdayViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(data[position])
     }
 
-    inner class BirthdayViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        lateinit var binding: ItemFriendPreviewBinding
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        lateinit var binding: ItemBirthdayPreviewBinding
 
-        constructor(binding: ItemFriendPreviewBinding) : this(binding.root) {
+        constructor(binding: ItemBirthdayPreviewBinding) : this(binding.root) {
             this.binding = binding
         }
 
         fun bind(data: Friend) {
-            // 친구 프로필 상세보기로 이동
-            itemView.setOnClickListener {
-                val friendToFriendProfileDirections: NavDirections =
-                    FriendFragmentDirections.actionFriendToProfile(
-                        viewType = FriendAdapter.FRIEND_PROFILE,
-                        profileId = data.preview.profileId,
-                        friendId = data.friendId,
-                        friendUserId = data.userId,
-                        assignedProfileId = data.assignedProfileId
+            // 이미지를 누르면 친구 프로필로 이동
+            binding.root.setOnClickListener {
+                val birthdayToFriendProfileDirections: NavDirections =
+                    BirthdayFragmentDirections.actionBirthdayToProfile(
+                        FRIEND_PROFILE,
+                        data.preview.profileId
                     )
-                it.findNavController().navigate(friendToFriendProfileDirections)
+                it.findNavController().navigate(birthdayToFriendProfileDirections)
             }
 
-            initBirthdayList(data)
+            initFriendList(data)
         }
 
-        private fun initBirthdayList(data: Friend) {
+        private fun initFriendList(data: Friend) {
             Glide.with(itemView).load(data.preview.imageUrl)
                 .transform(CenterCrop(), RoundedCorners(35))
-                .into(binding.imgFriendPreview)
-            binding.tvFriendPreviewNickname.text = data.nickname
-
-            if (data.preview.description != null) {
-                binding.tvFriendPreviewDesc.toVisible()
-                binding.tvFriendPreviewDesc.text = data.preview.description
+                .into(binding.imgBirthdayPreview)
+            binding.tvBirthdayPreviewNickname.text = data.nickname
+            if (data.preview.description == null) {
+                binding.tvBirthdayPreviewDesc.toVisibleGone()
             } else {
-                binding.tvFriendPreviewDesc.toVisibleGone()
+                binding.tvBirthdayPreviewDesc.text = data.preview.description
             }
         }
     }

@@ -73,7 +73,7 @@
             app:destination="@+id/navigation_add_profile" />
         <action
             android:id="@+id/action_friend_to_search"
-            app:destination="@+id/navigation_search"/>
+            app:destination="@+id/navigation_search" />
     </fragment>
 
     <!--휴대폰 번호로 친구 추가-->
@@ -81,8 +81,7 @@
         android:id="@+id/navigation_add_friend"
         android:name="com.sgs.devcamp2.flametalk_android.ui.friend.add.AddFriendFragment"
         android:label="AddFriendFragment"
-        tools:layout="@layout/fragment_add_friend">
-    </fragment>
+        tools:layout="@layout/fragment_add_friend"></fragment>
 
     <!--친구 검색-->
     <fragment
@@ -115,20 +114,20 @@
             app:argType="integer" />
         <argument
             android:name="profileId"
-            app:argType="long"
-            android:defaultValue="0L"/>
+            android:defaultValue="0L"
+            app:argType="long" />
         <argument
             android:name="friendId"
-            app:argType="long"
-            android:defaultValue="0L"/>
+            android:defaultValue="0L"
+            app:argType="long" />
         <argument
             android:name="friendUserId"
-            app:argType="string"
-            android:defaultValue=""/>
+            android:defaultValue=""
+            app:argType="string" />
         <argument
             android:name="assignedProfileId"
-            app:argType="long"
-            android:defaultValue="0L"/>
+            android:defaultValue="0L"
+            app:argType="long" />
         <action
             android:id="@+id/action_profile_to_edit"
             app:destination="@id/navigation_edit_profile" />
@@ -144,7 +143,20 @@
             android:id="@+id/action_profile_to_friend"
             app:destination="@id/navigation_friend"
             app:popUpTo="@id/navigation_friend"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <!--생일 친구-->
+    <fragment
+        android:id="@+id/navigation_birthday_friend"
+        android:name="com.sgs.devcamp2.flametalk_android.ui.friend.birthday.BirthdayFragment"
+        android:label="BirthdayFriend"
+        tools:layout="@layout/fragment_birthday_friend">
+        <action
+            android:id="@+id/action_birthday_to_profile"
+            app:destination="@id/navigation_profile"
+            app:popUpTo="@id/navigation_profile"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <!--숨김 친구-->
@@ -188,13 +200,13 @@
             android:id="@+id/action_edit_to_friend"
             app:destination="@id/navigation_friend"
             app:popUpTo="@id/navigation_friend"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true" />
 
         <argument
             android:name="userInfo"
+            android:defaultValue="@null"
             app:argType="com.sgs.devcamp2.flametalk_android.data.model.profile.Profile"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            app:nullable="true" />
     </fragment>
 
     <!--프로필 생성-->
@@ -212,7 +224,7 @@
             android:id="@+id/action_add_profile_to_friend"
             app:destination="@id/navigation_friend"
             app:popUpTo="@id/navigation_friend"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true" />
 
     </fragment>
 
@@ -250,7 +262,7 @@
         <action
             android:id="@+id/action_feed_single_to_total"
             app:destination="@id/navigation_total_feed"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true" />
         <argument
             android:name="profileId"
             android:defaultValue="0L"
@@ -300,8 +312,7 @@
         android:id="@+id/navigation_open_chat_room"
         android:name="com.sgs.devcamp2.flametalk_android.ui.openchatroom.OpenChatRoomFragment"
         android:label="OpenChatRoom"
-        tools:layout="@layout/fragment_open_chat_room">
-    </fragment>
+        tools:layout="@layout/fragment_open_chat_room"></fragment>
 
 
     <fragment
@@ -314,7 +325,7 @@
             android:id="@+id/action_setting_to_signin"
             app:destination="@id/navigation_signin"
             app:popUpTo="@id/navigation_signin"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true" />
     </fragment>
 
 
@@ -345,7 +356,7 @@
             android:id="@+id/action_inviteRoomFragment_to_navigation_chat_room_Fragment"
             app:destination="@id/navigation_chat_room"
             app:popUpTo="@id/navigation_invite_room"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_navigation_invite_room_to_createChatRoomFragment2"
             app:destination="@id/navigation_create_chat_room"
@@ -426,7 +437,7 @@
         android:id="@+id/navigation_my_open_profile_detail"
         android:name="com.sgs.devcamp2.flametalk_android.ui.openchatroom.myopenprofiledetail.MyOpenProfileDetailFragment"
         android:label="fragment_my_open_profile_detail"
-        tools:layout="@layout/fragment_my_open_profile_detail" >
+        tools:layout="@layout/fragment_my_open_profile_detail">
         <argument
             android:name="openProfile"
             app:argType="com.sgs.devcamp2.flametalk_android.data.model.openprofile.getopenprofilelist.OpenProfile" />
@@ -438,7 +449,7 @@
         android:id="@+id/navigation_edit_my_open_profile_detail"
         android:name="com.sgs.devcamp2.flametalk_android.ui.openchatroom.editmyopenprofiledetail.EditMyOpenProfileDetailFragment"
         android:label="fragment_edit_my_open_profile_detail"
-        tools:layout="@layout/fragment_edit_my_open_profile_detail" >
+        tools:layout="@layout/fragment_edit_my_open_profile_detail">
         <argument
             android:name="openProfile"
             app:argType="com.sgs.devcamp2.flametalk_android.data.model.openprofile.getopenprofilelist.OpenProfile" />
@@ -447,7 +458,7 @@
         android:id="@+id/navigation_update_chat_room"
         android:name="com.sgs.devcamp2.flametalk_android.ui.updatechatroom.UpdateChatRoomFragment"
         android:label="fragment_update_chat_room"
-        tools:layout="@layout/fragment_update_chat_room" >
+        tools:layout="@layout/fragment_update_chat_room">
         <argument
             android:name="chatroomId"
             app:argType="string" />
@@ -456,23 +467,23 @@
         android:id="@+id/navigation_create_chat_room"
         android:name="com.sgs.devcamp2.flametalk_android.ui.createchatroom.CreateChatRoomFragment"
         android:label="fragment_create_chat_room"
-        tools:layout="@layout/fragment_create_chat_room" >
+        tools:layout="@layout/fragment_create_chat_room">
         <action
             android:id="@+id/action_createChatRoomFragment2_to_navigation_chat_room"
             app:destination="@id/navigation_chat_room"
             app:popUpTo="@id/navigation_create_chat_room"
-            app:popUpToInclusive="true"/>
+            app:popUpToInclusive="true" />
         <argument
             android:name="users"
+            android:defaultValue="@null"
             app:argType="string[]"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            app:nullable="true" />
 
         <!--프로필에서 1:1 채팅 생성 시 friendId 전달-->
         <argument
             android:name="singleFriendId"
-            app:argType="string"
-            android:defaultValue=""/>
+            android:defaultValue=""
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/navigation_create_open_chat_room"
