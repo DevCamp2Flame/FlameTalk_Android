@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sgs.devcamp2.flametalk_android.data.model.profile.ProfilePreview
+import com.sgs.devcamp2.flametalk_android.data.source.local.UserPreferences
 import com.sgs.devcamp2.flametalk_android.domain.repository.FriendRepository
 import com.sgs.devcamp2.flametalk_android.domain.repository.ProfileRepository
 import com.sgs.devcamp2.flametalk_android.network.request.friend.AddFriendRequest
@@ -20,6 +21,7 @@ import timber.log.Timber
 @HiltViewModel
 class AddFriendViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
+    private val userPreferences: UserPreferences,
     private val friendRepository: Lazy<FriendRepository>,
     private val profileRepository: Lazy<ProfileRepository>
 ) : ViewModel() {
@@ -51,7 +53,13 @@ class AddFriendViewModel @Inject constructor(
         // 유저 프로필 리스트 불러오기
         getProfileList()
 
-        _nickname.value = "소연"
+        viewModelScope.launch {
+            userPreferences.user.collect {
+                if (it != null) {
+                    _nickname.value = it.nickname
+                }
+            }
+        }
     }
 
     fun clickedProfile(profileId: Long) {
@@ -84,7 +92,6 @@ class AddFriendViewModel @Inject constructor(
                 val response = friendRepository.get().postFriendAdd(request)
                 if (response.status == 200) {
                     _friendData.value = response.data
-                    _isSuccess.value = true
                 } else {
                     _isSuccess.value = false
                     _message.value = response.message

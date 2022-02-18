@@ -77,6 +77,12 @@ class EditProfileFragment : Fragment() {
         Glide.with(binding.imgEditProfileBg)
             .load(args.userInfo!!.bgImageUrl)
             .into(binding.imgEditProfileBg)
+        // 상태메세지
+        if (args.userInfo!!.description == null) {
+            binding.tvEditProfileDesc.text = ""
+        } else {
+            binding.tvEditProfileDesc.text = args.userInfo!!.description
+        }
 
         // 수정할 유저 정보 담기
         if (args.userInfo != null) {
@@ -93,12 +99,15 @@ class EditProfileFragment : Fragment() {
             }
         }
 
+        // 상태메세지
         lifecycleScope.launchWhenResumed {
-            // 상태메세지
             viewModel.description.collectLatest {
-                binding.tvEditProfileDesc.text = it
+                if (it != null) {
+                    binding.tvEditProfileDesc.text = it
+                }
             }
         }
+
         lifecycleScope.launchWhenResumed {
             // 프로필 사진
             viewModel.profileImage.collectLatest {
@@ -152,7 +161,7 @@ class EditProfileFragment : Fragment() {
         binding.tvEditProfileDesc.setOnClickListener {
             val editProfileToDescDirections: NavDirections =
                 EditProfileFragmentDirections.actionEditToEditDesc(
-                    desc = viewModel.description.value,
+                    desc = args.userInfo!!.description,
                     startView = "Edit"
                 )
             findNavController().navigate(editProfileToDescDirections)

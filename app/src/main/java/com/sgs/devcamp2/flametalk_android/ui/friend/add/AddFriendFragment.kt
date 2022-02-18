@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.google.android.material.snackbar.Snackbar
+import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentAddFriendBinding
 import com.sgs.devcamp2.flametalk_android.util.toVisible
 import com.sgs.devcamp2.flametalk_android.util.toVisibleGone
@@ -57,41 +59,32 @@ class AddFriendFragment : Fragment() {
         initProfileList()
 
         binding.imgSignupBack.setOnClickListener {
-            findNavController().popBackStack()
-        }
-
-        lifecycleScope.launch {
-            viewModel.isSuccess.collect {
-                if (it != null) {
-                    if (it) {
-                        binding.tvAddFriendResult.toVisible()
-                        binding.itemAddFriend.root.toVisible()
-                    } else {
-                        binding.tvAddFriendResult.toVisibleGone()
-                        binding.itemAddFriend.root.toVisibleGone()
-                    }
-                }
-            }
+            findNavController().navigate(R.id.navigation_friend)
         }
 
         lifecycleScope.launch {
             viewModel.friendData.collectLatest {
                 if (it != null) {
+                    // 결과 body가 날아오면 뷰를 보여줌
+                    binding.itemAddFriend.root.toVisible()
+                    binding.tvAddFriendResult.toVisible()
+
                     // 프로필 이미지, 닉네임, 상태메세지
                     Glide.with(binding.itemAddFriend.imgFriendPreview).load(it.imageUrl)
                         .transform(CenterCrop(), RoundedCorners(35))
                         .into(binding.itemAddFriend.imgFriendPreview)
-                    binding.itemAddFriend.tvFriendPreviewNickname.text = it.nickname
+                    binding.itemAddFriend.tvFriendPreviewNickname.text = it.friendNickname
                     if (it.description == null) {
                         binding.itemAddFriend.tvFriendPreviewDesc.toVisibleGone()
                     } else {
                         binding.itemAddFriend.tvFriendPreviewDesc.toVisible()
                         binding.itemAddFriend.tvFriendPreviewDesc.text = it.description
                     }
-                    binding.itemAddFriend.tvFriendPreviewNickname.text = it.nickname
+                    binding.itemAddFriend.tvFriendPreviewNickname.text = it.friendNickname
                     binding.itemAddFriend.tvFriendPreviewCount.toVisibleGone()
                 } else {
                     binding.itemAddFriend.root.toVisibleGone()
+                    binding.tvAddFriendResult.toVisibleGone()
                 }
             }
         }
@@ -99,7 +92,7 @@ class AddFriendFragment : Fragment() {
         lifecycleScope.launch {
             viewModel.message.collectLatest {
                 if (it != null) {
-                    binding.tvAddFriendResult.text = it
+                    Snackbar.make(requireView(), it, Snackbar.LENGTH_SHORT).show()
                 }
             }
         }

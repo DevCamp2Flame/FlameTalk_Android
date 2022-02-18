@@ -78,7 +78,13 @@
         android:id="@+id/navigation_add_friend"
         android:name="com.sgs.devcamp2.flametalk_android.ui.friend.add.AddFriendFragment"
         android:label="AddFriendFragment"
-        tools:layout="@layout/fragment_add_friend"></fragment>
+        tools:layout="@layout/fragment_add_friend">
+        <action
+            android:id="@+id/action_add_friend_to_friend"
+            app:destination="@+id/navigation_friend"
+            app:popUpTo="@id/navigation_friend"
+            app:popUpToInclusive="true" />
+    </fragment>
 
     <!--친구 검색-->
     <fragment

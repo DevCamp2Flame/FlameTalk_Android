@@ -142,11 +142,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
+        android:text="친구 추가가 완료되었습니다"
         android:textColor="@color/flame_blue"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/item_add_friend"
         app:layout_constraintStart_toStartOf="@+id/item_add_friend"
-        app:layout_constraintTop_toBottomOf="@+id/item_add_friend"
-        tools:text="친구 추가가 완료되었습니다" />
+        app:layout_constraintTop_toBottomOf="@+id/item_add_friend" />
 </androidx.constraintlayout.widget.ConstraintLayout>
