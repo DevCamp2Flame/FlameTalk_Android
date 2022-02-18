@@ -68,7 +68,6 @@ class SignupViewModel @Inject constructor(
                         _nickname?.value = response.data.nickname
                     }
                     409 -> {
-                        _nickname?.value = response.data.nickname
                         _message.value = response.message
                     }
                     else -> {
