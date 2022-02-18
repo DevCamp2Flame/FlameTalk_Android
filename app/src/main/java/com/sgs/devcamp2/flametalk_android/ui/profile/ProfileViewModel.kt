@@ -3,6 +3,7 @@ package com.sgs.devcamp2.flametalk_android.ui.profile
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sgs.devcamp2.flametalk_android.data.model.Sticker
 import com.sgs.devcamp2.flametalk_android.data.model.profile.Profile
 import com.sgs.devcamp2.flametalk_android.domain.repository.FriendRepository
 import com.sgs.devcamp2.flametalk_android.domain.repository.ProfileRepository
@@ -42,6 +43,10 @@ class ProfileViewModel @Inject constructor(
     private val _backgroundImage = MutableStateFlow("")
     val backgroundImage = _backgroundImage.asStateFlow()
 
+    // 스티커
+    private val _stickers = MutableStateFlow<List<Sticker>>(emptyList())
+    val stickers: MutableStateFlow<List<Sticker>> = _stickers
+
     // 성공 여부
     private val _isSuccess: MutableStateFlow<Boolean?> = MutableStateFlow(null)
     val isSuccess = _isSuccess.asStateFlow()
@@ -62,6 +67,7 @@ class ProfileViewModel @Inject constructor(
 
                 if (response.status == 200) {
                     _userProfile.value = response.data
+                    _stickers.value = response.data.sticker
                 } else {
                     _message.value = response.message
                 }
@@ -118,7 +124,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     companion object {
-        const val TO_BLOCK = 40
-        const val TO_HIDE = 50
+        const val TO_BLOCK = 400
+        const val TO_HIDE = 500
     }
 }

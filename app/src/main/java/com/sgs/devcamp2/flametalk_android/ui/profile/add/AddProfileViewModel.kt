@@ -197,6 +197,7 @@ class AddProfileViewModel @Inject constructor(
         val width = dm.widthPixels
         val height = dm.heightPixels
 
+        // TODO: 추가된 id가 기존에 있을 경우 중복 추가가 아닌 갱신되어야 함
         val stickerModel = Sticker(
             stickerId = stickerType,
             positionX = x / width,
