@@ -181,6 +181,12 @@
             android:id="@+id/action_edit_to_edit_desc"
             app:destination="@id/navigation_profile_desc" />
 
+        <action
+            android:id="@+id/action_edit_to_friend"
+            app:destination="@id/navigation_friend"
+            app:popUpTo="@id/navigation_friend"
+            app:popUpToInclusive="true"/>
+
         <argument
             android:name="userInfo"
             app:argType="com.sgs.devcamp2.flametalk_android.data.model.profile.Profile"

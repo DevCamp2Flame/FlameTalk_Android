@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sgs.devcamp2.flametalk_android.data.model.Sticker
 import com.sgs.devcamp2.flametalk_android.data.model.profile.Profile
-import com.sgs.devcamp2.flametalk_android.data.model.profile.ProfileDummyPreview
 import com.sgs.devcamp2.flametalk_android.data.source.local.UserPreferences
 import com.sgs.devcamp2.flametalk_android.domain.repository.FileRepository
 import com.sgs.devcamp2.flametalk_android.domain.repository.ProfileRepository
@@ -28,10 +27,6 @@ class EditProfileViewModel @Inject constructor(
     private val fileRepository: Lazy<FileRepository>,
     private val profileRepository: Lazy<ProfileRepository>
 ) : ViewModel() {
-
-    // 메인 유저 정보
-    private val _userProfileDummy: MutableStateFlow<ProfileDummyPreview?> = MutableStateFlow(null)
-    val userProfileDummy: MutableStateFlow<ProfileDummyPreview?> = _userProfileDummy
 
     // 유저 id
     private val _userId = MutableStateFlow("")
@@ -100,6 +95,8 @@ class EditProfileViewModel @Inject constructor(
         _profileId.value = data.profileId
         if (_description.value == null) {
             _description.value = ""
+        } else {
+            _description.value = data.description.toString()
         }
         _profileImageUrl.value = data.imageUrl.toString()
         _backgroundImageUrl.value = data.bgImageUrl.toString()

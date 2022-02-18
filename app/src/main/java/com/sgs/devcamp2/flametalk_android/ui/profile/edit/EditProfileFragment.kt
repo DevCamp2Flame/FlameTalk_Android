@@ -67,11 +67,11 @@ class EditProfileFragment : Fragment() {
     }
 
     private fun initUI() {
+        /**이미 설정되어 있던 프로필 이미지 정보들은 초기에 바인딩해준다*/
         // 프로필 이미지
         Glide.with(binding.imgEditProfile)
             .load(args.userInfo!!.imageUrl)
             .apply(RequestOptions.circleCropTransform())
-            .apply(RequestOptions.placeholderOf(R.drawable.ic_person_white_24))
             .into(binding.imgEditProfile)
         // 배경 이미지
         Glide.with(binding.imgEditProfileBg)
@@ -106,7 +106,6 @@ class EditProfileFragment : Fragment() {
                     Glide.with(binding.imgEditProfile)
                         .load(it)
                         .apply(RequestOptions.circleCropTransform())
-                        .apply(RequestOptions.placeholderOf(R.drawable.ic_person_white_24))
                         .into(binding.imgEditProfile)
                 }
             }
@@ -125,7 +124,7 @@ class EditProfileFragment : Fragment() {
         lifecycleScope.launchWhenResumed {
             viewModel.isSuccess.collectLatest {
                 if (it == true) {
-                    findNavController().popBackStack()
+                    findNavController().navigate(R.id.navigation_friend)
                 }
             }
         }
