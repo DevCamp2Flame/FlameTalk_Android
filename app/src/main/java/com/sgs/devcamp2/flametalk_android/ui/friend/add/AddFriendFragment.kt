@@ -73,14 +73,14 @@ class AddFriendFragment : Fragment() {
                     Glide.with(binding.itemAddFriend.imgFriendPreview).load(it.imageUrl)
                         .transform(CenterCrop(), RoundedCorners(35))
                         .into(binding.itemAddFriend.imgFriendPreview)
-                    binding.itemAddFriend.tvFriendPreviewNickname.text = it.nickname
+                    binding.itemAddFriend.tvFriendPreviewNickname.text = it.friendNickname
                     if (it.description == null) {
                         binding.itemAddFriend.tvFriendPreviewDesc.toVisibleGone()
                     } else {
                         binding.itemAddFriend.tvFriendPreviewDesc.toVisible()
                         binding.itemAddFriend.tvFriendPreviewDesc.text = it.description
                     }
-                    binding.itemAddFriend.tvFriendPreviewNickname.text = it.nickname
+                    binding.itemAddFriend.tvFriendPreviewNickname.text = it.friendNickname
                     binding.itemAddFriend.tvFriendPreviewCount.toVisibleGone()
                 } else {
                     binding.itemAddFriend.root.toVisibleGone()
