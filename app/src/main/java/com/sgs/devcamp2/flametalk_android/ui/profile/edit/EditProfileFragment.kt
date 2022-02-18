@@ -28,7 +28,6 @@ import com.sgs.devcamp2.flametalk_android.databinding.FragmentEditProfileBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
-import timber.log.Timber
 
 /**
  * @author 박소연
@@ -103,7 +102,6 @@ class EditProfileFragment : Fragment() {
         // 상태메세지
         lifecycleScope.launchWhenResumed {
             viewModel.description.collectLatest {
-                Timber.d("상태메세지 $it")
                 if (it != null) {
                     binding.tvEditProfileDesc.text = it
                 }

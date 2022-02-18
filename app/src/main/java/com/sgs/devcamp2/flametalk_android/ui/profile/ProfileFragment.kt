@@ -22,7 +22,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentProfileBinding
 import com.sgs.devcamp2.flametalk_android.util.swapViewVisibility
-import com.sgs.devcamp2.flametalk_android.util.toInvisible
 import com.sgs.devcamp2.flametalk_android.util.toVisible
 import com.sgs.devcamp2.flametalk_android.util.toVisibleGone
 import dagger.hilt.android.AndroidEntryPoint
@@ -83,12 +82,6 @@ class ProfileFragment : Fragment() {
             findNavController().navigateUp()
         }
 
-        // 친구 즐겨찾기
-        binding.imgProfileBookmark.setOnClickListener {
-            it.isActivated = !it.isActivated
-            Snackbar.make(requireContext(), it, it.isActivated.toString(), Snackbar.LENGTH_SHORT)
-                .show()
-        }
         // 프로필 수정하기로 이동
         binding.cstProfileEdit.setOnClickListener {
             findNavController().navigate(
@@ -128,14 +121,10 @@ class ProfileFragment : Fragment() {
     private fun initViewType() {
         when (args.viewType) {
             USER_DEFAULT_PROFILE -> { // 내 프로필
-                binding.imgProfileBookmark.toInvisible()
-                binding.imgProfileFriend.toVisibleGone()
-                binding.tvProfileFriend.toVisibleGone()
                 binding.imgProfileMenu.toVisibleGone()
                 swapViewVisibility(binding.cstProfileChat, binding.cstProfileEdit)
             }
             FRIEND_PROFILE -> { // 친구 프로필
-                binding.imgProfileBookmark.toVisible()
                 binding.imgProfileMenu.toVisible()
                 swapViewVisibility(binding.cstProfileEdit, binding.cstProfileChat)
 
@@ -150,9 +139,6 @@ class ProfileFragment : Fragment() {
                 }
             }
             USER_MULTI_PROFILE -> { // 내 멀티 프로필
-                binding.imgProfileBookmark.toInvisible()
-                binding.imgProfileFriend.toVisible()
-                binding.tvProfileFriend.toVisible()
             }
         }
     }
