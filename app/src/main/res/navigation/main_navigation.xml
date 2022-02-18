@@ -119,6 +119,10 @@
             app:argType="long"
             android:defaultValue="0L"/>
         <argument
+            android:name="friendUserId"
+            app:argType="string"
+            android:defaultValue=""/>
+        <argument
             android:name="assignedProfileId"
             app:argType="long"
             android:defaultValue="0L"/>
@@ -449,8 +453,8 @@
         <!--프로필에서 1:1 채팅 생성 시 friendId 전달-->
         <argument
             android:name="singleFriendId"
-            app:argType="long"
-            android:defaultValue="0L"/>
+            app:argType="string"
+            android:defaultValue=""/>
     </fragment>
     <fragment
         android:id="@+id/navigation_create_open_chat_room"

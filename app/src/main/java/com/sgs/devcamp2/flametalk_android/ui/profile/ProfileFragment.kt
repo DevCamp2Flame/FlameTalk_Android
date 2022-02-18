@@ -142,7 +142,7 @@ class ProfileFragment : Fragment() {
                     val profileToCreateChatRoomDirections: NavDirections =
                         ProfileFragmentDirections.actionProfileToCreateChatRoom(
                             // users의 default value를 null로 설정하여 생략
-                            singleFriendId = args.friendId,
+                            singleFriendId = args.friendUserId,
                         )
                     findNavController().navigate(profileToCreateChatRoomDirections)
                 }
