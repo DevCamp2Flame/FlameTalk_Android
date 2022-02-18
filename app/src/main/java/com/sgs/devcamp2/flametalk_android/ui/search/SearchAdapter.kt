@@ -13,7 +13,6 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.sgs.devcamp2.flametalk_android.databinding.ItemFriendPreviewBinding
 import com.sgs.devcamp2.flametalk_android.domain.entity.FriendModel
-import com.sgs.devcamp2.flametalk_android.ui.friend.FriendFragmentDirections
 import com.sgs.devcamp2.flametalk_android.util.SimpleDiffUtilCallback
 import com.sgs.devcamp2.flametalk_android.util.toVisible
 import com.sgs.devcamp2.flametalk_android.util.toVisibleGone
@@ -60,7 +59,7 @@ class SearchAdapter(
             // 친구 프로필 상세보기로 이동
             itemView.setOnClickListener {
                 val friendToFriendProfileDirections: NavDirections =
-                    FriendFragmentDirections.actionFriendToProfile(
+                    SearchFragmentDirections.actionSearchToProfile(
                         FRIEND_PROFILE,
                         data.profileId
                     )

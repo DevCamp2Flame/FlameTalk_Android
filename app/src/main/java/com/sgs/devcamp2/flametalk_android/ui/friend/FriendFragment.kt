@@ -217,7 +217,7 @@ class FriendFragment : Fragment() {
     private fun initFriendProfile() {
         binding.rvFriend.layoutManager = LinearLayoutManager(requireContext())
         binding.rvFriend.adapter = friendAdapter
-        lifecycleScope.launch {
+        lifecycleScope.launchWhenCreated {
             viewModel.friendProfile.collectLatest {
                 if (it == null) {
                     friendVisibility(VISIBLE)
@@ -225,7 +225,7 @@ class FriendFragment : Fragment() {
                     friendVisibility(GONE)
                 } else {
                     friendAdapter.data = it
-                    friendAdapter.submitList(it)
+                    friendAdapter.notifyDataSetChanged()
                     friendVisibility(VISIBLE)
                 }
             }
