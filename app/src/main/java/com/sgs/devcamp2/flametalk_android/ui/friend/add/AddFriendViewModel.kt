@@ -92,7 +92,6 @@ class AddFriendViewModel @Inject constructor(
                 val response = friendRepository.get().postFriendAdd(request)
                 if (response.status == 200) {
                     _friendData.value = response.data
-                    _isSuccess.value = true
                 } else {
                     _isSuccess.value = false
                     _message.value = response.message
