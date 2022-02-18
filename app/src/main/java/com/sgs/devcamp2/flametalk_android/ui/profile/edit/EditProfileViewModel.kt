@@ -93,7 +93,7 @@ class EditProfileViewModel @Inject constructor(
 
     fun setUserProfile(data: Profile) {
         _profileId.value = data.profileId
-        if (_description.value == null) {
+        if (data.description == null) {
             _description.value = ""
         } else {
             _description.value = data.description.toString()
