@@ -27,6 +27,7 @@ class SettingViewModel @Inject constructor(
     private val _message = MutableStateFlow("")
     val message = _message.asStateFlow()
 
+    // 탈퇴하기
     fun leaveUser() {
         viewModelScope.launch {
             try {
@@ -35,15 +36,22 @@ class SettingViewModel @Inject constructor(
                 if (response.status == 200)
                     _isLeave.value = true
 
-                Timber.d("$TAG Success Response: $response")
+                Timber.d("Success Response: $response")
             } catch (ignored: Throwable) {
                 _message.value = "알 수 없는 에러 발생"
-                Timber.d("$TAG Fail Response: $ignored")
+                Timber.d("Fail Response: $ignored")
             }
         }
     }
 
-    companion object {
-        final const val TAG = "SigninViewModel"
+    // 로그아웃
+    fun logoutUser() {
+        viewModelScope.launch {
+            try {
+                signRepository.get().logoutUser()
+            } catch (ignored: Throwable) {
+                Timber.d("Fail Response: $ignored")
+            }
+        }
     }
 }

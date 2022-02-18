@@ -295,6 +295,12 @@
         android:name="com.sgs.devcamp2.flametalk_android.ui.setting.SettingFragment"
         android:label="Setting"
         tools:layout="@layout/fragment_setting">
+
+        <action
+            android:id="@+id/action_setting_to_signin"
+            app:destination="@id/navigation_signin"
+            app:popUpTo="@id/navigation_signin"
+            app:popUpToInclusive="true"/>
     </fragment>
 
 
