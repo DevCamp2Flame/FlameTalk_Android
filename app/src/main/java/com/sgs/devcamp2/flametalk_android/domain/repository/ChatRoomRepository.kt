@@ -48,4 +48,6 @@ interface ChatRoomRepository {
     fun uploadImage(file: MultipartBody.Part, chatroomId: RequestBody?): Flow<Results<UploadImgRes, WrappedResponse<UploadImgRes>>>
     fun joinUser(joinChatRoomReq: JoinChatRoomReq): Flow<Results<JoinChatRoomRes, WrappedResponse<JoinChatRoomRes>>>
     fun getFriendUser(isBirth: Boolean, isHidden: Boolean, isBlock: Boolean): Flow<Results<List<FriendListRes>, WrappedResponse<List<FriendListRes>>>>
+    fun getUserImage(userId: String): Flow<LocalResults<String>>
+    fun getUserChatRoomId(roomId: String): Flow<LocalResults<Long>>
 }

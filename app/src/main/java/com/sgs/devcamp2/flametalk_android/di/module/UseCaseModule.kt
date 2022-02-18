@@ -102,4 +102,8 @@ object UseCaseModule {
     fun provideSignUpUseCase(repository: AuthRepository): SignUpUseCase {
         return SignUpUseCase(repository = repository)
     }
+    @Provides
+    fun provideGetUserImageUseCase(repository: ChatRoomRepository): GetUserImageUseCase {
+        return GetUserImageUseCase(repository = repository)
+    }
 }

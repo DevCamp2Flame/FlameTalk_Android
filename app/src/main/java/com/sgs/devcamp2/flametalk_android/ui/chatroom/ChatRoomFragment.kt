@@ -66,7 +66,8 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
         drawer_binding = binding.layoutDrawer
         binding.rvChatRoom.layoutManager = LinearLayoutManager(context)
         drawer_binding.rvDrawUserList.layoutManager = LinearLayoutManager(context)
-        drawer_binding.rvDrawFileList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        drawer_binding.rvDrawFileList.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
         adapter = ChatRoomAdapter(model.userId.value)
         userlistAdapter = ChatRoomDrawUserListAdapter()
@@ -91,10 +92,12 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
                 Settings.Secure.ANDROID_ID
             )
         )
-        model.getLastReadMessageId(args.chatroomId)
         /**
-         * chatroomId로 lastReadMessage를 가져오자.
+         * chatRoomId로 userChatRoomId를 가져옴
          */
+        // model.getChatRoomModel(args.chatroomId)
+        // model.getLastReadMessageId(args.chatroomId)
+        model.getUserChatRoomId(args.chatroomId)
     }
     /**
      * 채팅방 입장시, 채팅방 구독
@@ -114,7 +117,13 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
     }
 
     fun initObserve() {
-        // 타이틀과 채팅방 인원수 init
+        viewLifecycleOwner.lifecycleScope.launch {
+            model.userChatRoomId.collect {
+                model.getChatRoomDetail(it)
+            }
+        }
+
+// 타이틀과 채팅방 인원수 init
         viewLifecycleOwner.lifecycleScope.launch {
             model.userChatRoom.collect { state ->
                 when (state) {
@@ -142,6 +151,13 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
                         drawer_binding.tvChatRoomDrawUser.text = state.data.profileNickname
                         fileListAdapter.submitList(state.data.files)
                         userlistAdapter.submitList(state.data.profiles)
+                        var map: HashMap<String, String> = HashMap()
+                        for (i in 0 until state.data.profiles.size) {
+                            Log.d(TAG,"userId - ${state.data.profiles.get(i).image}() called")
+                            map.put(state.data.profiles.get(i).userId, state.data.profiles.get(i).image)
+                        }
+                        adapter.updateProfiles(map)
+                        model.getChatList(args.chatroomId)
                     }
                     is UiState.Error -> {
                     }
@@ -156,7 +172,6 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
                         // 채팅 데이터 observe
                         adapter.submitList(state.data)
                         binding.rvChatRoom.smoothScrollToPosition(state.data.size)
-                        // binding.rvChatRoom.smoothScrollToPosition(state.data.size - 1)
                     }
                 }
             }
@@ -207,6 +222,11 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
                         }
                     }
                 }
+            }
+        }
+        viewLifecycleOwner.lifecycleScope.launch {
+            model.userChatroomId.collect {
+                model.getChatRoomDetail(it)
             }
         }
     }

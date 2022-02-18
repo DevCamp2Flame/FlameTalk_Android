@@ -44,7 +44,7 @@ class ChatRoomRepositoryImpl @Inject constructor(
     private val ioDispatcher: CoroutineDispatcher,
     private val local: AppDatabase,
     private val remote: ChatRoomApi,
-    private val friendRemote: FriendApi
+    private val friendRemote: FriendApi,
 ) : ChatRoomRepository {
     /**
      * 채팅방 생성 api 호출 및 room database 저장 function입니다.
@@ -66,6 +66,12 @@ class ChatRoomRepositoryImpl @Inject constructor(
                 }
             }
         }.flowOn(ioDispatcher)
+    }
+    override fun getUserImage(userId: String): Flow<LocalResults<String>> {
+        return flow {
+            val response = local.friendDao().getFriendImageUrl(userId)
+            emit(LocalResults.Success(response))
+        }
     }
 
     override fun enterChatRoom() {
@@ -380,6 +386,12 @@ class ChatRoomRepositoryImpl @Inject constructor(
             } else {
                 Log.d("로그", "ChatRoomRepositoryImpl - not succeeful() called")
             }
+        }
+    }
+    override fun getUserChatRoomId(roomId: String): Flow<LocalResults<Long>> {
+        return flow {
+            val response = local.chatRoomDao().getUserChatRoomId(roomId)
+            emit(LocalResults.Success(response))
         }
     }
 }

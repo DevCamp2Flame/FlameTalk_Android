@@ -7,11 +7,14 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.data.model.chat.Chat
 import com.sgs.devcamp2.flametalk_android.databinding.*
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.HashMap
 
 /**
  * @author 김현국
@@ -24,6 +27,7 @@ class ChatRoomAdapter constructor(
         val TAG: String = "로그"
         val simpleFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")
         val format = SimpleDateFormat("HH:MM")
+        var profiles: HashMap<String, String> = HashMap()
         val diffUtil = object : DiffUtil.ItemCallback<Chat>() {
             override fun areItemsTheSame(oldItem: Chat, newItem: Chat): Boolean {
                 return oldItem.message_id == newItem.message_id
@@ -154,6 +158,16 @@ class ChatRoomAdapter constructor(
             binding.tvLeftStartTextChatRoomMessage.text = chat.contents
             // val date = Date(chat.timeStamp)
             // val str_date = simpleFormat.format(date)
+
+            val url = profiles.get(chat.sender_id)
+            if (url != null) {
+                Glide.with(binding.ivLeftStartTextChatRoomUserImg).load(url)
+                    .transform(CenterCrop(), RoundedCorners(5)).into(binding.ivLeftStartTextChatRoomUserImg)
+            } else {
+                Glide.with(binding.ivLeftStartTextChatRoomUserImg).load(R.drawable.ic_person_white_24)
+                    .transform(CenterCrop(), RoundedCorners(5)).into(binding.ivLeftStartTextChatRoomUserImg)
+            }
+
             val date: Date = simpleFormat.parse(chat.created_at)
             val dateText: String = format.format(date)
             binding.tvLeftStartTextChatRoomListDate.text = dateText
@@ -188,5 +202,9 @@ class ChatRoomAdapter constructor(
         fun bind(chat: Chat) {
             binding.tvRightTextChatRoomMessage.text = chat.contents
         }
+    }
+
+    fun updateProfiles(profileMap: HashMap<String, String>) {
+        profiles = profileMap
     }
 }

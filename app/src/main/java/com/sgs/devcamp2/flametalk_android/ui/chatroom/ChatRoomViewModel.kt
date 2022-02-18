@@ -43,6 +43,7 @@ class ChatRoomViewModel @Inject constructor(
     private val getChatListHistoryUseCase: GetChatListHistoryUseCase,
     private val getLastReadMessageUseCase: GetLastReadMessageUseCase,
     private val upLoadImageUseCase: UpLoadImageUseCase,
+    private val getUserChatRoomIdUseCase: GetUserChatRoomIdUseCase,
     private val client: OkHttpClient,
     private val request: Request,
     private val webSocketListener: WebSocketListener,
@@ -77,8 +78,13 @@ class ChatRoomViewModel @Inject constructor(
     private var _roomId = MutableStateFlow("")
     val roomId = _roomId.asStateFlow()
     var userChatroomId = MutableStateFlow(0L)
+    var userChatRoomId = MutableStateFlow(0L)
     private val _imageUrl = MutableStateFlow<String>("")
     val imageUrl = _imageUrl.asStateFlow()
+
+    private val _chatRoomModel = MutableStateFlow<UiState<ChatRoom>>(UiState.Loading)
+    var chatRoomModel = _chatRoomModel.asStateFlow()
+
     private var webSocket: WebSocket? = null
 
     init {
@@ -91,7 +97,21 @@ class ChatRoomViewModel @Inject constructor(
             }
         }
     }
-    /**
+    fun getUserChatRoomId(chatroomId: String) {
+        viewModelScope.launch {
+            getUserChatRoomIdUseCase.invoke(chatroomId).collect {
+                result ->
+                when (result) {
+                    is LocalResults.Success ->
+                        {
+                            userChatRoomId.value = result.data
+                        }
+                }
+            }
+        }
+    }
+
+/**
      * 현재 사용자가 채팅방을 보고 있는지 상태 update하는 function입니다.
      */
     fun connectWebsocket(chatroomId: String, deviceId: String) {

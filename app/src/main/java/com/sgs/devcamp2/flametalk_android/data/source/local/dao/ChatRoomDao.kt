@@ -80,4 +80,7 @@ interface ChatRoomDao {
 
     @Query("UPDATE chatroom SET lastReadMessageId = :lastReadMessageId , updated_at = :updated_at where chatroom.userChatroomId Like :userChatRoomId")
     fun updateChatRoomLastReadMessageWithTime(lastReadMessageId: String, updated_at: Long, userChatRoomId: Long)
+
+    @Query("SELECT userChatroomId FROM chatroom WHERE chatroom.id Like :roomId")
+    fun getUserChatRoomId(roomId: String): Long
 }
