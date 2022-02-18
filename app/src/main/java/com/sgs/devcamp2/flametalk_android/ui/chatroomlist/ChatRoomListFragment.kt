@@ -62,7 +62,6 @@ class ChatRoomListFragment : Fragment(), ChatRoomListAdapter.ClickCallBack {
                     model.uiState.collect { state ->
                         when (state) {
                             is UiState.Success -> {
-
                                 model.getLocalChatRoomList(false)
                             }
                         }

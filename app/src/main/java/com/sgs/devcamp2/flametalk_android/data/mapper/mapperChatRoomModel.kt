@@ -21,6 +21,7 @@ fun mapperToChatRoomModel(isOpen: Boolean, i: Int, getChatRoomListRes: GetChatRo
         getChatRoomListRes.userChatrooms[i].lastReadMessageId,
         getChatRoomListRes.userChatrooms[i].inputLock,
         getChatRoomListRes.userChatrooms[i].count,
+        "",
         System.currentTimeMillis(),
         System.currentTimeMillis()
     )
@@ -34,6 +35,7 @@ fun mapperToChatRoomModel(createChatRoomRes: CreateChatRoomRes): ChatRoom {
         lastReadMessageId = null,
         inputLock = false,
         count = createChatRoomRes.count,
+        "",
         created_at = System.currentTimeMillis(),
         updated_at = System.currentTimeMillis()
     )
@@ -41,6 +43,7 @@ fun mapperToChatRoomModel(createChatRoomRes: CreateChatRoomRes): ChatRoom {
 fun mapperToChatRoomUpdateModel(chatRes: ChatRes): ChatRoomUpdate {
     return ChatRoomUpdate(
         chatRes.room_id,
+        chatRes.contents!!,
         lastReadMessageId = chatRes.message_id,
         updated_at = System.currentTimeMillis()
     )

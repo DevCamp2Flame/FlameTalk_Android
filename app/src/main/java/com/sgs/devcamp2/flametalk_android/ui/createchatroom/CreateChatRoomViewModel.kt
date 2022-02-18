@@ -57,6 +57,7 @@ class CreateChatRoomViewModel @Inject constructor(
      */
     fun createChatRoom(users: List<String>) {
         val userList = users.toMutableList()
+        Log.d("로그", "userList - $userList")
         userList.add(_userId.value)
         val createChatRoomReq = CreateChatRoomReq(
             hostId = _userId.value,

@@ -79,8 +79,6 @@ class ChatRoomRepositoryImpl @Inject constructor(
      */
     override fun getChatList(chatroomId: String): Flow<LocalResults<ChatWithRoomId>> {
         return flow {
-            val TAG: String = "로그"
-            Log.d(TAG, "chatroomId - $chatroomId() called")
             var chatwithRoomId: ChatWithRoomId? = null
             var deffer = coroutineScope {
                 async {
@@ -89,16 +87,6 @@ class ChatRoomRepositoryImpl @Inject constructor(
             }
             deffer.await()
             emit(LocalResults.Success(chatwithRoomId!!))
-            //            .collectLatest {
-//                try {
-//                    if (it != null) {
-//                        Log.d(TAG, "ChatRoomRepositoryImpl getChatList - $it() called")
-//                        emit(LocalResults.Success(it))
-//                    }
-//                } catch (e: NullPointerException) {
-//                    Log.d(TAG, "error - ${e.cause}")
-//                }
-//            }
         }.flowOn(ioDispatcher)
     }
     /**

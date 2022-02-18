@@ -30,10 +30,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-
-import javax.inject.Inject
 import timber.log.Timber
-
+import javax.inject.Inject
 
 /**
  * @author 박소연
@@ -172,7 +170,7 @@ class SigninFragment : Fragment() {
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this.requireActivity()) { task ->
                 if (task.isSuccessful) {
-                     Log.d("googleAuthToken", "OAuthActivity - firebaseAuthWithGoogle() success called :$idToken")
+                    Log.d("googleAuthToken", "OAuthActivity - firebaseAuthWithGoogle() success called :$idToken")
                     val action = SigninFragmentDirections.actionNavigationSigninToNavigationAdditionalUserInfo(idToken)
                     findNavController().navigate(action)
                 } else {

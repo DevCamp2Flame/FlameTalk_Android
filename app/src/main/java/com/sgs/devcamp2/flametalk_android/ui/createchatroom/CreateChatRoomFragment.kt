@@ -129,6 +129,9 @@ class CreateChatRoomFragment : Fragment(), View.OnClickListener {
                         // [소연] Profile에서 올 경우 userList가 없어 null처리 함
                         if (args.users != null) {
                             model.createChatRoom(args.users!!.toList())
+                        } else {
+                            val friendList: List<String> = listOf(args.singleFriendId)
+                            model.createChatRoom(friendList)
                         }
                     }
                 }

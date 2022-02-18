@@ -14,12 +14,14 @@ import com.sgs.devcamp2.flametalk_android.data.model.chatroom.ThumbnailWithRoomI
 import com.sgs.devcamp2.flametalk_android.databinding.*
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
 /**
  * @author 김현국
  * @created 2022/01/26
  */
-class ChatRoomListAdapter constructor(
+class ChatRoomListAdapter @Inject constructor(
+
     callback: ClickCallBack
 ) : ListAdapter<ThumbnailWithRoomId, RecyclerView.ViewHolder>(diffUtil) {
     interface ClickCallBack {
@@ -139,7 +141,7 @@ class ChatRoomListAdapter constructor(
                     .transform(CenterCrop(), RoundedCorners(30)).into(binding.ivTwoChatRoomListUserImg)
             }
             if (chatroom.thumbnailList[1].image == "") {
-                Glide.with(binding.ivTwoChatRoomListUserImg2).load(chatroom.thumbnailList[1].image)
+                Glide.with(binding.ivTwoChatRoomListUserImg2).load(R.drawable.ic_person_white_24)
                     .transform(CenterCrop(), RoundedCorners(30)).into(binding.ivTwoChatRoomListUserImg2)
             } else {
                 Glide.with(binding.ivTwoChatRoomListUserImg2).load(chatroom.thumbnailList[1].image)
@@ -154,15 +156,33 @@ class ChatRoomListAdapter constructor(
     inner class ThreeViewHolder(val binding: ItemPersonThreeChatListBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(chatroom: ThumbnailWithRoomId) {
-            Glide.with(binding.ivThreeChatRoomListUserImg)
-                .load(chatroom.thumbnailList[0].image).transform(CenterCrop(), RoundedCorners(15))
-                .into(binding.ivThreeChatRoomListUserImg)
-            Glide.with(binding.ivThreeChatRoomListUserImg2).load(chatroom.thumbnailList[1].image)
-                .transform(CenterCrop(), RoundedCorners(15))
-                .into(binding.ivThreeChatRoomListUserImg2)
-            Glide.with(binding.ivThreeChatRoomListUserImg3).load(chatroom.thumbnailList[2].image)
-                .transform(CenterCrop(), RoundedCorners(15))
-                .into(binding.ivThreeChatRoomListUserImg3)
+            if (chatroom.thumbnailList[0].image == "") {
+                Glide.with(binding.ivThreeChatRoomListUserImg)
+                    .load(R.drawable.ic_person_white_24).transform(CenterCrop(), RoundedCorners(15))
+                    .into(binding.ivThreeChatRoomListUserImg)
+            } else {
+                Glide.with(binding.ivThreeChatRoomListUserImg)
+                    .load(chatroom.thumbnailList[0].image).transform(CenterCrop(), RoundedCorners(15))
+                    .into(binding.ivThreeChatRoomListUserImg)
+            }
+            if (chatroom.thumbnailList[1].image == "") {
+                Glide.with(binding.ivThreeChatRoomListUserImg2)
+                    .load(R.drawable.ic_person_white_24).transform(CenterCrop(), RoundedCorners(15))
+                    .into(binding.ivThreeChatRoomListUserImg2)
+            } else {
+                Glide.with(binding.ivThreeChatRoomListUserImg2)
+                    .load(chatroom.thumbnailList[1].image).transform(CenterCrop(), RoundedCorners(15))
+                    .into(binding.ivThreeChatRoomListUserImg2)
+            }
+            if (chatroom.thumbnailList[2].image == "") {
+                Glide.with(binding.ivThreeChatRoomListUserImg3)
+                    .load(R.drawable.ic_person_white_24).transform(CenterCrop(), RoundedCorners(15))
+                    .into(binding.ivThreeChatRoomListUserImg3)
+            } else {
+                Glide.with(binding.ivThreeChatRoomListUserImg3)
+                    .load(chatroom.thumbnailList[2].image).transform(CenterCrop(), RoundedCorners(15))
+                    .into(binding.ivThreeChatRoomListUserImg3)
+            }
             binding.tvThreeChatRoomListUserName.text = chatroom.room.title
             binding.tvThreeChatRoomListUserCount.text = chatroom.room.count.toString()
         }
@@ -171,14 +191,34 @@ class ChatRoomListAdapter constructor(
     inner class FourViewHolder(val binding: ItemPersonFourChatListBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(chatroom: ThumbnailWithRoomId) {
-            Glide.with(binding.ivFourChatRoomListUserImg).load(chatroom.thumbnailList[0].image)
-                .transform(CenterCrop(), RoundedCorners(5)).into(binding.ivFourChatRoomListUserImg)
-            Glide.with(binding.ivFourChatRoomListUserImg2).load(chatroom.thumbnailList[1].image)
-                .transform(CenterCrop(), RoundedCorners(5)).into(binding.ivFourChatRoomListUserImg2)
-            Glide.with(binding.ivFourChatRoomListUserImg3).load(chatroom.thumbnailList[2].image)
-                .transform(CenterCrop(), RoundedCorners(5)).into(binding.ivFourChatRoomListUserImg3)
-            Glide.with(binding.ivFourChatRoomListUserImg4).load(chatroom.thumbnailList[3].image)
-                .transform(CenterCrop(), RoundedCorners(5)).into(binding.ivFourChatRoomListUserImg4)
+            if (chatroom.thumbnailList[0].image == "") {
+                Glide.with(binding.ivFourChatRoomListUserImg).load(R.drawable.ic_person_white_24)
+                    .transform(CenterCrop(), RoundedCorners(5)).into(binding.ivFourChatRoomListUserImg)
+            } else {
+                Glide.with(binding.ivFourChatRoomListUserImg).load(chatroom.thumbnailList[0].image)
+                    .transform(CenterCrop(), RoundedCorners(5)).into(binding.ivFourChatRoomListUserImg)
+            }
+            if (chatroom.thumbnailList[1].image == "") {
+                Glide.with(binding.ivFourChatRoomListUserImg2).load(R.drawable.ic_person_white_24)
+                    .transform(CenterCrop(), RoundedCorners(5)).into(binding.ivFourChatRoomListUserImg2)
+            } else {
+                Glide.with(binding.ivFourChatRoomListUserImg2).load(chatroom.thumbnailList[1].image)
+                    .transform(CenterCrop(), RoundedCorners(5)).into(binding.ivFourChatRoomListUserImg2)
+            }
+            if (chatroom.thumbnailList[2].image == "") {
+                Glide.with(binding.ivFourChatRoomListUserImg3).load(R.drawable.ic_person_white_24)
+                    .transform(CenterCrop(), RoundedCorners(5)).into(binding.ivFourChatRoomListUserImg3)
+            } else {
+                Glide.with(binding.ivFourChatRoomListUserImg3).load(chatroom.thumbnailList[2].image)
+                    .transform(CenterCrop(), RoundedCorners(5)).into(binding.ivFourChatRoomListUserImg3)
+            }
+            if (chatroom.thumbnailList[3].image == "") {
+                Glide.with(binding.ivFourChatRoomListUserImg4).load(R.drawable.ic_person_white_24)
+                    .transform(CenterCrop(), RoundedCorners(5)).into(binding.ivFourChatRoomListUserImg4)
+            } else {
+                Glide.with(binding.ivFourChatRoomListUserImg4).load(chatroom.thumbnailList[3].image)
+                    .transform(CenterCrop(), RoundedCorners(5)).into(binding.ivFourChatRoomListUserImg4)
+            }
             binding.tvFourChatRoomListUserName.text = chatroom.room.title
             binding.tvFourChatRoomListUserCount.text = chatroom.room.count.toString()
         }

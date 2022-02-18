@@ -132,14 +132,6 @@
             app:layout_constraintStart_toEndOf="@id/tv_four_chat_room_list_user_name"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/iv_four_chat_room_list_alarm"
-            android:layout_width="15dp"
-            android:layout_height="20dp"
-            android:layout_marginStart="10dp"
-            android:src="@drawable/ic_alarm"
-            app:layout_constraintStart_toEndOf="@id/tv_four_chat_room_list_user_count"
-            app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
             android:id="@+id/tv_four_chat_room_list_message"

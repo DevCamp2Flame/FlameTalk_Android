@@ -12,7 +12,7 @@ import com.sgs.devcamp2.flametalk_android.data.model.chat.Chat
 @Dao
 interface ChatDao {
 
-    //채팅 저장
+    // 채팅 저장
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(chat: Chat): Long
 }
