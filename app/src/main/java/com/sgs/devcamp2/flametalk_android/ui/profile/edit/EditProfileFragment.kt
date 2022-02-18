@@ -145,8 +145,7 @@ class EditProfileFragment : Fragment() {
 
         // 배경 이미지 변경
         binding.imgEditProfileGalleryBg.setOnClickListener {
-            // TODO: 배경 이미지 가져오기
-            // getProfileImage(BACKGROUND_IMAGE)
+            getProfileImage(BACKGROUND_IMAGE)
         }
 
         // 상태 메세지 변경
