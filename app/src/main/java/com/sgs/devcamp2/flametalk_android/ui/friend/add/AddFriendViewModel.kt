@@ -86,14 +86,14 @@ class AddFriendViewModel @Inject constructor(
             try {
                 val request = AddFriendRequest(_profileId.value, phoneNumber)
                 val response = friendRepository.get().postFriendAdd(request)
-
-                if (response.status == 201) {
+                if (response.status == 200) {
                     _friendData.value = response.data
                     _isSuccess.value = true
                 } else {
                     _isSuccess.value = false
                     _message.value = response.message
                 }
+                Timber.d("Add Friend Success: $response")
                 _message.value = null
                 _isSuccess.value = null
             } catch (ignored: Throwable) {

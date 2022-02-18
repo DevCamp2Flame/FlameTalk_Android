@@ -20,6 +20,7 @@ import com.sgs.devcamp2.flametalk_android.util.toVisibleGone
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
+import timber.log.Timber
 
 /**
  * @author 박소연
@@ -149,6 +150,7 @@ class SingleFeedFragment : Fragment() {
 
         // 프로필+배경 피드로 이동
         binding.imgSingleFeedToTotal.setOnClickListener {
+            Timber.d("")
             findNavController().navigate(
                 SingleFeedFragmentDirections.actionFeedSingleToTotal(
                     args.profileId,

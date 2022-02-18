@@ -203,14 +203,15 @@ class FriendFragment : Fragment() {
                     birthdayAdapter.data = it
                     birthdayAdapter.submitList(it)
                     birthdayVisibility(VISIBLE)
+                    binding.itemFriendMoreBirthday.tvFriendPreviewCount.text = it.size.toString()
                 }
             }
         }
         // 마지막 아이템: 친구의 생일을 확인해보세요
         binding.itemFriendMoreBirthday.imgFriendPreviewNone.toVisible()
         binding.itemFriendMoreBirthday.tvFriendPreviewCount.toVisible()
+        binding.itemFriendMoreBirthday.tvFriendPreviewNickname.text = "친구의 생일을 확인해보세요!"
         binding.itemFriendMoreBirthday.tvFriendPreviewDesc.toVisibleGone()
-        binding.itemFriendMoreBirthday.tvFriendPreviewCount.text = "n"
     }
 
     // 주소록 친구 리스트 초기화

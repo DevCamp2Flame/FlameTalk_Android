@@ -2,7 +2,8 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "421d8c5c893c0fd5c079765ad5d76865",
+
+    "identityHash": "7274d15d16ca3f36803df07203b34e62",
     "entities": [
       {
         "tableName": "chatroom",
@@ -224,12 +225,18 @@
       },
       {
         "tableName": "friend",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`profileId` INTEGER NOT NULL, `nickname` TEXT NOT NULL, `imageUrl` TEXT, `description` TEXT, PRIMARY KEY(`profileId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`profileId` INTEGER NOT NULL, `userId` TEXT NOT NULL, `nickname` TEXT NOT NULL, `imageUrl` TEXT, `description` TEXT, PRIMARY KEY(`profileId`))",
         "fields": [
           {
             "fieldPath": "profileId",
             "columnName": "profileId",
             "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userId",
+            "columnName": "userId",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -264,7 +271,9 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '421d8c5c893c0fd5c079765ad5d76865')"
+
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7274d15d16ca3f36803df07203b34e62')"
+
     ]
   }
 }

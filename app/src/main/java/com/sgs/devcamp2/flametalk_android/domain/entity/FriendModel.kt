@@ -8,11 +8,12 @@ import androidx.room.PrimaryKey
 /**
  * @author 박소연
  * @created 2022/02/12
- * @created 2022/02/12
+ * @created 2022/02/18
  * @desc RoomDB에 저장할 친구 프로필 정보. 검색에 이용한다.
  *
  * [FriendModel]
  * profileId         	String	친구의 프로필 id
+ * userId         	    String	친구의 유저 id
  * nickname         	String	친구의 유저 닉네임
  * imageUrl         	String	친구의 프로필 이미지 url
  * description         	String	친구의 상태메세지
@@ -23,6 +24,9 @@ data class FriendModel(
     @PrimaryKey
     @ColumnInfo(name = "profileId")
     val profileId: Long,
+    @NonNull
+    @ColumnInfo(name = "userId")
+    val userId: String,
     @NonNull
     @ColumnInfo(name = "nickname")
     val nickname: String,

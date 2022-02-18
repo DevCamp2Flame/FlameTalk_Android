@@ -229,6 +229,7 @@ class FriendViewModel @Inject constructor(
                 friendsData = _friendProfile.value!!.map {
                     FriendModel(
                         profileId = it.preview.profileId,
+                        userId = it.userId,
                         nickname = it.nickname,
                         imageUrl = it.preview.imageUrl,
                         description = it.preview.description
