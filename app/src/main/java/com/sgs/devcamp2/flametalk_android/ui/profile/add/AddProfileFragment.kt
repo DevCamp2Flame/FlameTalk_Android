@@ -110,7 +110,6 @@ class AddProfileFragment : Fragment() {
                 Glide.with(binding.imgAddProfile)
                     .load(it)
                     .apply(RequestOptions.circleCropTransform())
-                    .apply(RequestOptions.placeholderOf(R.drawable.ic_person_white_24))
                     .into(binding.imgAddProfile)
             }
         }
@@ -279,12 +278,13 @@ class AddProfileFragment : Fragment() {
             popupDeleteMenu(it)
         }
         // 스티커 위치 드래그
-        img.setOnTouchListener(StickerListener(emoji))
+        img.setOnTouchListener(StickerListener(img.id, emoji))
 
         return img
     }
 
-    private inner class StickerListener(emoji: Int) : View.OnTouchListener {
+    private inner class StickerListener(id: Int, emoji: Int) : View.OnTouchListener {
+        val stickerId = id
         val emojiType = emoji
 
         @SuppressLint("ClickableViewAccessibility")
@@ -305,7 +305,7 @@ class AddProfileFragment : Fragment() {
                     val endPointX = x - (itemParams.leftMargin / 2)
                     val endPointY = y - (itemParams.topMargin / 2)
 
-                    viewModel.createSticker(emojiType, endPointX.toDouble(), endPointY.toDouble())
+                    viewModel.createSticker(stickerId, emojiType, endPointX.toDouble(), endPointY.toDouble())
                 }
                 MotionEvent.ACTION_POINTER_DOWN -> {}
                 MotionEvent.ACTION_POINTER_UP -> {}

@@ -190,7 +190,7 @@ class AddProfileViewModel @Inject constructor(
         deferred.await()
     }
 
-    fun createSticker(stickerType: Int, x: Double, y: Double) {
+    fun createSticker(id: Int, stickerType: Int, x: Double, y: Double) {
         /**프로필 조회하는 디바이스의 사이즈에 따라 scaling 하기 위해
          디바이스의 기기 가로, 세로 사이즈로 나누어 position 저장*/
         val dm: DisplayMetrics = context.resources.displayMetrics
