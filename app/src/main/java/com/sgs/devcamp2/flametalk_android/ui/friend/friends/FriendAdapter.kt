@@ -64,6 +64,7 @@ class FriendAdapter(
                         viewType = FRIEND_PROFILE,
                         profileId = data.preview.profileId,
                         friendId = data.friendId,
+                        friendUserId = data.userId,
                         assignedProfileId = data.assignedProfileId
                     )
                 it.findNavController().navigate(friendToFriendProfileDirections)

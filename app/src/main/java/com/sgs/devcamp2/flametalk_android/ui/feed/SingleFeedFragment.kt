@@ -103,6 +103,11 @@ class SingleFeedFragment : Fragment() {
     }
 
     private fun initEventListener() {
+        // 뒤로가기 버튼
+        binding.imgSingleFeedClose.setOnClickListener {
+            findNavController().popBackStack()
+        }
+
         // 이미지를 슬라이드하며 index, 공개 여부를 변경
         binding.vpSingleFeed.registerOnPageChangeCallback(object : OnPageChangeCallback() {
             @SuppressLint("SetTextI18n")

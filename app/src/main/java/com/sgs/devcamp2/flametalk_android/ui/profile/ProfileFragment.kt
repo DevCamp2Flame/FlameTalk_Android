@@ -142,7 +142,7 @@ class ProfileFragment : Fragment() {
                     val profileToCreateChatRoomDirections: NavDirections =
                         ProfileFragmentDirections.actionProfileToCreateChatRoom(
                             // users의 default value를 null로 설정하여 생략
-                            singleFriendId = args.friendId,
+                            singleFriendId = args.friendUserId,
                         )
                     findNavController().navigate(profileToCreateChatRoomDirections)
                 }
@@ -152,18 +152,12 @@ class ProfileFragment : Fragment() {
                 binding.imgProfileFriend.toVisible()
                 binding.tvProfileFriend.toVisible()
             }
-            BLOCKED_PROFILE -> { // 차단된 프로필
-                // TODO: 차단 해제 여부 버튼 노출
-            }
-            HIDDEN_PROFILE -> { // 숨긴 프로필
-                // TODO: 숨김 해제 여부 버튼 노출
-            }
         }
     }
 
     // 유저프로필 초기화
     private fun initUserProfile() {
-        viewModel.getProfileData(profileId = args.profileId)
+        viewModel.getProfileData(args.profileId)
 
         lifecycleScope.launchWhenResumed {
             viewModel.userProfile.collectLatest {
@@ -253,8 +247,6 @@ class ProfileFragment : Fragment() {
         private const val USER_DEFAULT_PROFILE = 1
         private const val FRIEND_PROFILE = 2
         private const val USER_MULTI_PROFILE = 3
-        private const val BLOCKED_PROFILE = 4
-        private const val HIDDEN_PROFILE = 5
 
         private const val TO_BLOCK = 400
         private const val TO_HIDE = 500
