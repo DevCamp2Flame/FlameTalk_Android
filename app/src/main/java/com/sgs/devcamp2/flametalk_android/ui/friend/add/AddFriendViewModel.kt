@@ -3,9 +3,7 @@ package com.sgs.devcamp2.flametalk_android.ui.friend.add
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sgs.devcamp2.flametalk_android.data.dummy.getDummyProfiles
 import com.sgs.devcamp2.flametalk_android.data.model.profile.ProfilePreview
-import com.sgs.devcamp2.flametalk_android.data.source.local.UserPreferences
 import com.sgs.devcamp2.flametalk_android.domain.repository.FriendRepository
 import com.sgs.devcamp2.flametalk_android.domain.repository.ProfileRepository
 import com.sgs.devcamp2.flametalk_android.network.request.friend.AddFriendRequest
@@ -22,11 +20,9 @@ import timber.log.Timber
 @HiltViewModel
 class AddFriendViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val userPreferences: UserPreferences,
     private val friendRepository: Lazy<FriendRepository>,
     private val profileRepository: Lazy<ProfileRepository>
 ) : ViewModel() {
-    private var dummyProfileData: List<ProfilePreview> = getDummyProfiles()
 
     // 유저 프로필 리스트
     private val _profiles = MutableStateFlow<List<ProfilePreview>>(emptyList())
@@ -71,7 +67,7 @@ class AddFriendViewModel @Inject constructor(
                     _profiles.value = response.data.profiles
 
                     // Result
-                    Timber.d("User Profile ${_profiles?.value}")
+                    Timber.d("User Profile ${_profiles.value}")
                 } else {
                     _message.value = response.message
                 }
