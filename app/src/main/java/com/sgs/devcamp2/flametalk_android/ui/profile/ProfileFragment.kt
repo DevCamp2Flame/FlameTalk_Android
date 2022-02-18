@@ -131,10 +131,12 @@ class ProfileFragment : Fragment() {
                 binding.imgProfileBookmark.toInvisible()
                 binding.imgProfileFriend.toVisibleGone()
                 binding.tvProfileFriend.toVisibleGone()
+                binding.imgProfileMenu.toVisibleGone()
                 swapViewVisibility(binding.cstProfileChat, binding.cstProfileEdit)
             }
             FRIEND_PROFILE -> { // 친구 프로필
                 binding.imgProfileBookmark.toVisible()
+                binding.imgProfileMenu.toVisible()
                 swapViewVisibility(binding.cstProfileEdit, binding.cstProfileChat)
 
                 // 클릭한 프로필의 유저와 1:1 채팅방 생성 페이지로 이동
