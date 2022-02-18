@@ -53,45 +53,32 @@ class ChatRoomViewModel @Inject constructor(
     var chat = _chat.asStateFlow()
     lateinit var _jsonStompSessions: StompSessionWithKxSerialization
     private var _drawUserState = MutableStateFlow<UiState<GetChatRoomEntity>>(UiState.Loading)
-
     var drawUserState = _drawUserState.asStateFlow()
-
     private var _deleteUiState = MutableStateFlow<UiState<Boolean>>(UiState.Loading)
     var deleteUiState = _deleteUiState.asStateFlow()
-
     private var _closeUiState = MutableStateFlow<UiState<Boolean>>(UiState.Loading)
     var closeUiState = _closeUiState.asStateFlow()
-
     private var _uploadUiState = MutableStateFlow<UiState<UploadImgRes>>(UiState.Loading)
     var uploadUiState = _uploadUiState.asStateFlow()
-
     private var _chatList = MutableStateFlow<UiState<List<Chat>>>(UiState.Loading)
     var chatList = _chatList.asStateFlow()
-
     private var _lastReadMessageId = MutableStateFlow("")
     var lastReadMessageId = _lastReadMessageId.asStateFlow()
-
     private var _uiState = MutableStateFlow<UiState<Long>>(UiState.Loading)
     var uiState = _uiState.asStateFlow()
-
     private var _userChatRoom = MutableStateFlow<UiState<ChatRoom>>(UiState.Loading)
     var userChatRoom = _userChatRoom.asStateFlow()
-
     private var _localChatRoom = MutableStateFlow<UiState<ChatRoom>>(UiState.Loading)
     var localChatRoom = _localChatRoom.asStateFlow()
-
     private var _userId = MutableStateFlow("")
     val userId = _userId.asStateFlow()
-
     private var _nickname = MutableStateFlow("")
     val nickname = _nickname.asStateFlow()
-
     private var _roomId = MutableStateFlow("")
     val roomId = _roomId.asStateFlow()
-
+    var userChatroomId = MutableStateFlow(0L)
     private val _imageUrl = MutableStateFlow<String>("")
     val imageUrl = _imageUrl.asStateFlow()
-
     private var webSocket: WebSocket? = null
 
     init {
@@ -134,6 +121,7 @@ class ChatRoomViewModel @Inject constructor(
                     is LocalResults.Success -> {
                         _chatList.value = UiState.Success(result.data.chatList)
                         _userChatRoom.value = UiState.Success(result.data.room)
+                        userChatroomId.value = result.data.room.userChatroomId
                     }
                 }
             }
@@ -146,7 +134,7 @@ class ChatRoomViewModel @Inject constructor(
                 .collectLatest { result ->
                     when (result) {
                         is Results.Success -> {
-                            Log.d(TAG, "getChatListWithLastReadMesaageId - $chatroomId")
+                            Log.d(TAG, "getChatList - called")
                             getChatList(chatroomId)
                         }
                     }
@@ -205,6 +193,7 @@ class ChatRoomViewModel @Inject constructor(
                     _lastReadMessageId.value = msg.message_id // 내가 읽은 메세지 초기화
                     saveReceivedMessageUseCase.invoke(msg).collect {
                         if (msg.message_type == "TALK" || msg.message_type == "FILE") {
+                            Log.d(TAG, "message - $msg")
                             _uiState.value = UiState.Success(it)
                         }
                     }
@@ -217,7 +206,13 @@ class ChatRoomViewModel @Inject constructor(
      * @param messageType 사용자가 보내는 채팅 메시지의 type ( TALK, INVITE , ENTER , FILE )
      * 연결된 websocket session에 메세지를 전송한다.
      */
-    fun pushMessage(messageType: String, roomId: String, session: StompSession, contents: String?, file_url: String?) {
+    fun pushMessage(
+        messageType: String,
+        roomId: String,
+        session: StompSession,
+        contents: String?,
+        file_url: String?
+    ) {
         viewModelScope.launch {
             if (contents !== "") {
                 _jsonStompSessions = session.withJsonConversions()
@@ -239,7 +234,8 @@ class ChatRoomViewModel @Inject constructor(
                         ChatReq.serializer()
                     )
                 } else if (messageType == "FILE") {
-                    val chatReq3 = ChatReq("FILE", roomId, _userId.value, _nickname.value, null, file_url)
+                    val chatReq3 =
+                        ChatReq("FILE", roomId, _userId.value, _nickname.value, null, file_url)
                     _jsonStompSessions.convertAndSend(
                         "/pub/chat/message",
                         chatReq3, ChatReq.serializer()
@@ -288,7 +284,6 @@ class ChatRoomViewModel @Inject constructor(
             webSocket?.send(gson.toJson(map))
             delay(500L)
             webSocket?.cancel()
-            onCleared()
         }
     }
 
@@ -309,19 +304,19 @@ class ChatRoomViewModel @Inject constructor(
 
     fun uploadImage(multipartfile: MultipartBody.Part) {
         viewModelScope.launch {
-            val roomIdBody: RequestBody = RequestBody.create("text/plain".toMediaTypeOrNull(), _roomId.value)
-            upLoadImageUseCase.invoke(multipartfile, roomIdBody).collect {
-                result ->
+            val roomIdBody: RequestBody =
+                RequestBody.create("text/plain".toMediaTypeOrNull(), _roomId.value)
+            upLoadImageUseCase.invoke(multipartfile, roomIdBody).collect { result ->
                 when (result) {
-                    is Results.Success ->
-                        {
-                            Log.d(TAG, "ChatRoomViewModel - uploadImage() called")
-                            _uploadUiState.value = UiState.Success(result.data)
-                        }
+                    is Results.Success -> {
+                        Log.d(TAG, "ChatRoomViewModel - uploadImage() called")
+                        _uploadUiState.value = UiState.Success(result.data)
+                    }
                 }
             }
         }
     }
+
     fun initUploadImageState() {
         _uploadUiState.value = UiState.Loading
     }
@@ -331,5 +326,4 @@ class ChatRoomViewModel @Inject constructor(
             _imageUrl.value = path
         }
     }
-
 }

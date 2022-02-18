@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "fc842f49a36be79ccf807e162adaf55d",
+    "identityHash": "421d8c5c893c0fd5c079765ad5d76865",
     "entities": [
       {
         "tableName": "chatroom",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `userChatroomId` INTEGER NOT NULL, `title` TEXT NOT NULL, `isOpen` INTEGER NOT NULL, `lastReadMessageId` TEXT, `inputLock` INTEGER NOT NULL, `count` INTEGER NOT NULL, `updated_at` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `userChatroomId` INTEGER NOT NULL, `title` TEXT NOT NULL, `isOpen` INTEGER NOT NULL, `lastReadMessageId` TEXT, `inputLock` INTEGER NOT NULL, `count` INTEGER NOT NULL, `created_at` INTEGER, `updated_at` INTEGER, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -51,10 +51,16 @@
             "notNull": true
           },
           {
+            "fieldPath": "created_at",
+            "columnName": "created_at",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
             "fieldPath": "updated_at",
             "columnName": "updated_at",
             "affinity": "INTEGER",
-            "notNull": true
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -258,7 +264,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'fc842f49a36be79ccf807e162adaf55d')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '421d8c5c893c0fd5c079765ad5d76865')"
     ]
   }
 }

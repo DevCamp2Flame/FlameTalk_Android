@@ -56,12 +56,13 @@ class CreateChatRoomViewModel @Inject constructor(
      * 선택한 친구들로 채팅방을 생성하는 function입니다.
      */
     fun createChatRoom(users: List<String>) {
+        val userList = users.toMutableList()
+        userList.add(_userId.value)
         val createChatRoomReq = CreateChatRoomReq(
             hostId = _userId.value,
             hostOpenProfileId = null,
             isOpen = false,
-            // users = users,
-            users = listOf("1644818015360854128", "1644822119663225091"),
+            users = userList,
             title = null,
             thumbnail = null
         )

@@ -131,7 +131,7 @@ class InviteRoomFragment :
             binding.tvInviteRoomSubmit -> {
                 var users: MutableList<String> = emptyList<String>().toMutableList()
                 for (i in 0 until model.selectedFriendList.value.size) {
-                    users.add(model.selectedFriendList.value[i].nickname)
+                    users.add(model.selectedFriendList.value[i].userId)
                 }
                 val action = InviteRoomFragmentDirections.actionNavigationInviteRoomToCreateChatRoomFragment2(users.toTypedArray())
                 findNavController().navigate(action)

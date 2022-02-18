@@ -38,10 +38,10 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
     lateinit var drawer_binding: DrawerLayoutChatRoomBinding
     lateinit var adapter: ChatRoomAdapter
     lateinit var userlistAdapter: ChatRoomDrawUserListAdapter
+    lateinit var fileListAdapter: ChatRoomDrawFileListAdapter
     private val model by activityViewModels<ChatRoomViewModel>()
     private val webSocketModel by activityViewModels<MainViewModel>()
     private val args by navArgs<ChatRoomFragmentArgs>()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         subscribeRoom()
@@ -66,13 +66,14 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
         drawer_binding = binding.layoutDrawer
         binding.rvChatRoom.layoutManager = LinearLayoutManager(context)
         drawer_binding.rvDrawUserList.layoutManager = LinearLayoutManager(context)
+        drawer_binding.rvDrawFileList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
         adapter = ChatRoomAdapter(model.userId.value)
-        // 추가
-        adapter.submitList(emptyList())
         userlistAdapter = ChatRoomDrawUserListAdapter()
+        fileListAdapter = ChatRoomDrawFileListAdapter()
 
         binding.rvChatRoom.adapter = adapter
+        drawer_binding.rvDrawFileList.adapter = fileListAdapter
         drawer_binding.rvDrawUserList.adapter = userlistAdapter
 
         binding.ivChatRoomDraw.setOnClickListener(this)
@@ -95,7 +96,6 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
          * chatroomId로 lastReadMessage를 가져오자.
          */
     }
-
     /**
      * 채팅방 입장시, 채팅방 구독
      */
@@ -116,19 +116,15 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
     fun initObserve() {
         // 타이틀과 채팅방 인원수 init
         viewLifecycleOwner.lifecycleScope.launch {
-            model.userChatRoom.collect {
-                state ->
+            model.userChatRoom.collect { state ->
                 when (state) {
-                    is UiState.Success ->
-                        {
-
-                            binding.tvChatRoomTitle.text = state.data.title
-                            binding.tvChatRoomUserCount.text = state.data.count.toString()
-                        }
+                    is UiState.Success -> {
+                        binding.tvChatRoomTitle.text = state.data.title
+                        binding.tvChatRoomUserCount.text = state.data.count.toString()
+                    }
                 }
             }
         }
-
         // drawer view에 정보 업데이트
         viewLifecycleOwner.lifecycleScope.launch {
             model.drawUserState.collect { state ->
@@ -144,6 +140,7 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
                                 .into(drawer_binding.ivChatRoomDrawUserImage)
                         }
                         drawer_binding.tvChatRoomDrawUser.text = state.data.profileNickname
+                        fileListAdapter.submitList(state.data.files)
                         userlistAdapter.submitList(state.data.profiles)
                     }
                     is UiState.Error -> {
@@ -158,6 +155,7 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
                     is UiState.Success -> {
                         // 채팅 데이터 observe
                         adapter.submitList(state.data)
+                        binding.rvChatRoom.smoothScrollToPosition(state.data.size)
                         // binding.rvChatRoom.smoothScrollToPosition(state.data.size - 1)
                     }
                 }
@@ -189,27 +187,25 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
             }
         }
         viewLifecycleOwner.lifecycleScope.launch {
-            model.uploadUiState.collect {
-                state ->
+            model.uploadUiState.collect { state ->
                 when (state) {
-                    is UiState.Success ->
-                        {
-                            val imageUrl = state.data.url
-                            webSocketModel.session.collect { state ->
-                                Log.d(TAG, "state - $state")
-                                when (state) {
-                                    is UiState.Success -> {
-                                        model.pushMessage(
-                                            "FILE",
-                                            args.chatroomId,
-                                            state.data,
-                                            null,
-                                            imageUrl
-                                        )
-                                    }
+                    is UiState.Success -> {
+                        val imageUrl = state.data.url
+                        webSocketModel.session.collect { state ->
+                            Log.d(TAG, "state - $state")
+                            when (state) {
+                                is UiState.Success -> {
+                                    model.pushMessage(
+                                        "FILE",
+                                        args.chatroomId,
+                                        state.data,
+                                        null,
+                                        imageUrl
+                                    )
                                 }
                             }
                         }
+                    }
                 }
             }
         }
@@ -219,22 +215,19 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
         when (view) {
             binding.ivChatRoomDraw -> {
                 viewLifecycleOwner.lifecycleScope.launch {
-                    model.userChatRoom.collect {
-                        state ->
+                    model.userChatRoom.collect { state ->
                         when (state) {
-                            is UiState.Success ->
-                                {
-                                    binding.layoutChatRoomDraw.openDrawer(Gravity.RIGHT)
-                                    model.getChatRoomDetail(userChatroomId = state.data.userChatroomId)
-                                }
+                            is UiState.Success -> {
+                                binding.layoutChatRoomDraw.openDrawer(Gravity.RIGHT)
+                                model.getChatRoomDetail(userChatroomId = state.data.userChatroomId)
+                            }
                         }
                     }
                 }
             }
-            binding.layoutChatRoomArrowSpace ->
-                {
-                    findNavController().popBackStack()
-                }
+            binding.layoutChatRoomArrowSpace -> {
+                findNavController().popBackStack()
+            }
             binding.ivChatRoomFile -> {
                 findNavController().navigate(R.id.action_navigation_chat_room_to_navigation_chat_Room_Bottom_Sheet)
             }
@@ -264,26 +257,26 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
             drawer_binding.ivDrawSetting -> {
                 // thumbnail이 포함된 정보를 넘겨야한다.
                 viewLifecycleOwner.lifecycleScope.launch {
-                    model.userChatRoom.collect {
-                        state ->
+                    model.userChatRoom.collect { state ->
                         when (state) {
-                            is UiState.Success ->
-                                {
-                                    val action =
-                                        ChatRoomFragmentDirections.actionNavigationChatRoomToNavigationUpdateChatRoom(
-                                            chatroomId = state.data.id
-                                        )
-                                    findNavController().navigate(action)
-                                }
+                            is UiState.Success -> {
+                                val action =
+                                    ChatRoomFragmentDirections.actionNavigationChatRoomToNavigationUpdateChatRoom(
+                                        chatroomId = state.data.id
+                                    )
+                                findNavController().navigate(action)
+                            }
                         }
                     }
                 }
             }
-            drawer_binding.layoutDrawUserList ->
-                {
-                    val action = ChatRoomFragmentDirections.actionNavigationChatRoomToJoinUserChatRoomFragment(args.chatroomId)
-                    findNavController().navigate(action)
-                }
+            drawer_binding.layoutDrawUserList -> {
+                val action =
+                    ChatRoomFragmentDirections.actionNavigationChatRoomToJoinUserChatRoomFragment(
+                        args.chatroomId
+                    )
+                findNavController().navigate(action)
+            }
         }
     }
     /**
@@ -298,13 +291,11 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
                     }
                     DialogInterface.BUTTON_POSITIVE -> {
                         viewLifecycleOwner.lifecycleScope.launch {
-                            model.userChatRoom.collect {
-                                state ->
+                            model.userChatRoom.collect { state ->
                                 when (state) {
-                                    is UiState.Success ->
-                                        {
-                                            model.deleteChatRoom(userChatroomId = state.data.userChatroomId)
-                                        }
+                                    is UiState.Success -> {
+                                        model.deleteChatRoom(userChatroomId = state.data.userChatroomId)
+                                    }
                                 }
                             }
                         }
@@ -319,21 +310,6 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
         dialog.show()
     }
 
-    override fun onStop() {
-        super.onStop()
-
-        lifecycleScope.launch {
-            model.localChatRoom.collect {
-                state ->
-                when (state) {
-                    is UiState.Success ->
-                        {
-                            model.closeChatRoom(state.data.userChatroomId, state.data.lastReadMessageId!!)
-                        }
-                }
-            }
-        }
-    }
     override fun onPause() {
         super.onPause()
         Log.d(TAG, "ChatRoomFragment - onPause() called")
@@ -349,6 +325,9 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
     override fun onDestroy() {
         super.onDestroy()
         Log.d(TAG, "ChatRoomFragment - onDestroy() called")
+        model.closeChatRoom(
+            model.userChatroomId.value, model.lastReadMessageId.value
+        )
         model.initUploadImageState()
         model.saveExitStatus(
             args.chatroomId,

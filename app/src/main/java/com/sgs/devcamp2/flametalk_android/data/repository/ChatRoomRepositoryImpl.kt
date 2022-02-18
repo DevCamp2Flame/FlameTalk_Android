@@ -29,10 +29,11 @@ import com.sgs.devcamp2.flametalk_android.domain.entity.chatroom.ChatRoomEntity
 import com.sgs.devcamp2.flametalk_android.domain.entity.chatroom.GetChatRoomEntity
 import com.sgs.devcamp2.flametalk_android.domain.repository.ChatRoomRepository
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.*
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import java.lang.NullPointerException
 import javax.inject.Inject
 
 /**
@@ -80,18 +81,24 @@ class ChatRoomRepositoryImpl @Inject constructor(
         return flow {
             val TAG: String = "로그"
             Log.d(TAG, "chatroomId - $chatroomId() called")
-            local.chatRoomDao().getChatRoomWithId(chatroomId).collect {
-                try {
-                    if (it != null) {
-                        Log.d(TAG, "ChatRoomRepositoryImpl getChatList - $it() called")
-                        if (it.room.id == chatroomId) {
-                            emit(LocalResults.Success(it))
-                        }
-                    }
-                } catch (e: NullPointerException) {
-                    Log.d(TAG, "error - ${e.cause}")
+            var chatwithRoomId: ChatWithRoomId? = null
+            var deffer = coroutineScope {
+                async {
+                    chatwithRoomId = local.chatRoomDao().getChatRoomWithId(chatroomId)
                 }
             }
+            deffer.await()
+            emit(LocalResults.Success(chatwithRoomId!!))
+            //            .collectLatest {
+//                try {
+//                    if (it != null) {
+//                        Log.d(TAG, "ChatRoomRepositoryImpl getChatList - $it() called")
+//                        emit(LocalResults.Success(it))
+//                    }
+//                } catch (e: NullPointerException) {
+//                    Log.d(TAG, "error - ${e.cause}")
+//                }
+//            }
         }.flowOn(ioDispatcher)
     }
     /**
@@ -127,26 +134,75 @@ class ChatRoomRepositoryImpl @Inject constructor(
                     val body = response.body()!!
                     val data = body.data!!
                     for (i in 0 until data.userChatrooms.size) {
-                        val chatRoom = mapperToChatRoomModel(isOpen, i, data)
-                        local.chatRoomDao().insert(chatRoom)
-                        if (data.userChatrooms[i].thumbnail?.size == 0) {
-                        } else {
-                            local.chatRoomDao().deleteThumbnailwithRoomId(chatRoom.id)
-                            for (j in 0 until data.userChatrooms[i].thumbnail!!.size) {
-                                lateinit var thumbnail: Thumbnail
-                                if (data.userChatrooms[i].thumbnail?.get(j).isNullOrEmpty()) {
-                                    thumbnail = mapperToThumbnail(
-                                        data.userChatrooms[i].chatroomId,
-                                        ""
-                                    )
-                                } else {
-                                    thumbnail = mapperToThumbnail(
-                                        data.userChatrooms[i].chatroomId,
-                                        data.userChatrooms[i].thumbnail?.get(j)!!
-                                    )
+                        // local db에서 데이터가 있는지 찾는다.
+                        val getChatRoomWithThumnail = local.chatRoomDao()
+                            .getChatRoomWithThumbnailAndId(data.userChatrooms[i].chatroomId)
+                        if (getChatRoomWithThumnail == null) {
+                            // 데이터가 없다면 넣는다.
+                            val chatRoom = mapperToChatRoomModel(isOpen, i, data)
+                            var deferred = coroutineScope {
+                                async {
+                                    local.chatRoomDao().insert(chatRoom)
                                 }
-                                local.chatRoomDao().insertThumbnail(thumbnail)
                             }
+                            deferred.await()
+                            var deferred2 = coroutineScope {
+                                async {
+                                    if (data.userChatrooms[i].thumbnail?.size != 0) {
+                                        for (j in 0 until data.userChatrooms[i].thumbnail!!.size) {
+                                            lateinit var thumbnail: Thumbnail
+                                            if (data.userChatrooms[i].thumbnail?.get(j)
+                                                .isNullOrEmpty()
+                                            ) {
+                                                thumbnail = mapperToThumbnail(
+                                                    data.userChatrooms[i].chatroomId,
+                                                    ""
+                                                )
+                                            } else {
+                                                thumbnail = mapperToThumbnail(
+                                                    data.userChatrooms[i].chatroomId,
+                                                    data.userChatrooms[i].thumbnail?.get(j)!!
+                                                )
+                                            }
+                                            local.chatRoomDao().insertThumbnail(thumbnail)
+                                        }
+                                    }
+                                }
+                            }
+                            deferred2.await()
+                        } else {
+                            var deffered3 = coroutineScope {
+                                async {
+                                    local.chatRoomDao().updateChatRoomInfo(
+                                        data.userChatrooms[i].title,
+                                        data.userChatrooms[i].inputLock,
+                                        data.userChatrooms[i].count,
+                                        data.userChatrooms[i].chatroomId
+                                    )
+                                    if (data.userChatrooms[i].thumbnail?.size != 0) {
+                                        local.chatRoomDao()
+                                            .deleteThumbnailwithRoomId(data.userChatrooms[i].chatroomId)
+                                        for (j in 0 until data.userChatrooms[i].thumbnail!!.size) {
+                                            lateinit var thumbnail: Thumbnail
+                                            if (data.userChatrooms[i].thumbnail?.get(j)
+                                                .isNullOrEmpty()
+                                            ) {
+                                                thumbnail = mapperToThumbnail(
+                                                    data.userChatrooms[i].chatroomId,
+                                                    ""
+                                                )
+                                            } else {
+                                                thumbnail = mapperToThumbnail(
+                                                    data.userChatrooms[i].chatroomId,
+                                                    data.userChatrooms[i].thumbnail?.get(j)!!
+                                                )
+                                            }
+                                            local.chatRoomDao().insertThumbnail(thumbnail)
+                                        }
+                                    }
+                                }
+                            }
+                            deffered3.await()
                         }
                     }
                     emit(Results.Success(data))
@@ -198,7 +254,8 @@ class ChatRoomRepositoryImpl @Inject constructor(
                 if (response.body()!!.status == 200) {
                     val body = response.body()!!
                     val data = body.data!!
-                    local.chatRoomDao().updateChatRoomTitle(data.title, data.inputLock, data.userChatroomId)
+                    local.chatRoomDao()
+                        .updateChatRoomTitle(data.title, data.inputLock, data.userChatroomId)
                     if (data.thumbnail[0] != null) {
                         local.chatRoomDao().deleteThumbnailwithRoomId(chatroomId)
                         lateinit var thumbnail: Thumbnail
@@ -220,12 +277,21 @@ class ChatRoomRepositoryImpl @Inject constructor(
      */
     override fun closeChatRoom(closeChatRoomReq: CloseChatRoomReq): Flow<Results<Boolean, WrappedResponse<Nothing>>> {
         return flow {
+            Log.d("로그", "closeChatRoomReq - $closeChatRoomReq")
             val response = remote.closeChatRoom(closeChatRoomReq)
-            local.chatRoomDao().updateChatRoomLastReadMessage(closeChatRoomReq.lastReadMessageId, closeChatRoomReq.userChatroomId)
+            Log.d("로그", "response  - $response")
             if (response.isSuccessful) {
-                if (response.body()!!.status == 200) {
-                    emit(Results.Success(true))
+                var deffer = coroutineScope {
+                    async {
+                        local.chatRoomDao().updateChatRoomLastReadMessageWithTime(
+                            closeChatRoomReq.lastReadMessageId,
+                            System.currentTimeMillis(),
+                            closeChatRoomReq.userChatroomId
+                        )
+                    }
                 }
+                deffer.await()
+                emit(Results.Success(true))
             }
         }.flowOn(ioDispatcher)
     }
@@ -266,6 +332,7 @@ class ChatRoomRepositoryImpl @Inject constructor(
             }
         }.flowOn(ioDispatcher)
     }
+
     override fun getChatRoomModel(chatroomId: String): Flow<LocalResults<ChatRoom>> {
         return flow {
             local.chatRoomDao().getChatRoomModel(chatroomId).collect {
@@ -273,7 +340,11 @@ class ChatRoomRepositoryImpl @Inject constructor(
             }
         }
     }
-    override fun uploadImage(file: MultipartBody.Part, chatroomId: RequestBody?): Flow<Results<UploadImgRes, WrappedResponse<UploadImgRes>>> {
+
+    override fun uploadImage(
+        file: MultipartBody.Part,
+        chatroomId: RequestBody?
+    ): Flow<Results<UploadImgRes, WrappedResponse<UploadImgRes>>> {
         return flow {
             val response = remote.fileCreate(file, chatroomId)
             Log.d("로그", "response - $response() called")
@@ -301,7 +372,12 @@ class ChatRoomRepositoryImpl @Inject constructor(
             }
         }
     }
-    override fun getFriendUser(isBirth: Boolean, isHidden: Boolean, isBlock: Boolean): Flow<Results<List<FriendListRes>, WrappedResponse<List<FriendListRes>>>> {
+
+    override fun getFriendUser(
+        isBirth: Boolean,
+        isHidden: Boolean,
+        isBlock: Boolean
+    ): Flow<Results<List<FriendListRes>, WrappedResponse<List<FriendListRes>>>> {
         return flow {
             val response = friendRemote.getFriendList(isBirth, isHidden, isBlock)
             Log.d("로그", "ChatRoomRepositoryImpl - getFriendUser() called")
