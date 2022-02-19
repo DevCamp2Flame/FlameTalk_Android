@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -251,15 +252,24 @@ class AddProfileFragment : Fragment() {
 
     @SuppressLint("ClickableViewAccessibility")
     private fun createImageView(emoji: Int): View {
+        /**프로필 조회하는 디바이스의 사이즈에 따라 scaling 하기 위해
+         디바이스의 기기 가로, 세로 사이즈로 나누어 position 저장*/
+        val dm: DisplayMetrics = requireContext().resources.displayMetrics
+        val width = dm.widthPixels
+        val height = dm.heightPixels
+
         // 스티커를 위한 ImageView 동적 생성
         val img = AppCompatImageView(requireContext())
         // 생성할 스티커의 사이즈
         val param = ConstraintLayout.LayoutParams(100, 100)
         // 스티커 생성하고 중앙에 배치하기 위한 layout 제약
-        param.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
-        param.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
+        param.leftToLeft = ConstraintLayout.LayoutParams.PARENT_ID
+        // param.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
         param.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
-        param.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
+        // param.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
+        // param.marginStart = 300
+        param.leftMargin = width / 2
+        param.topMargin = height / 2
         img.layoutParams = param
 
         when (emoji) {
@@ -274,6 +284,7 @@ class AddProfileFragment : Fragment() {
         img.id = ViewCompat.generateViewId()
         img.layoutParams = param
 
+        // 스티커 삭제
         img.setOnLongClickListener {
             popupDeleteMenu(it)
         }
@@ -289,35 +300,38 @@ class AddProfileFragment : Fragment() {
 
         @SuppressLint("ClickableViewAccessibility")
         override fun onTouch(view: View, event: MotionEvent): Boolean {
+            // 화면의 원시 좌표
             val x = event.rawX.toInt()
             val y = event.rawY.toInt()
 
             when (event.action and MotionEvent.ACTION_MASK) {
                 MotionEvent.ACTION_DOWN -> {
                     val lParams = view.layoutParams as ConstraintLayout.LayoutParams
-                    /**스티커의 정상 이동 속도를 위해 margin이 모두 2배로 설정되어 있으므로
-                     *  사용자가 터치한 정상 위치로 스티커를 위치시키기 위해서는 margin을 2로 나눈 값을 설정해야 함*/
-                    xPoint = x - (lParams.leftMargin / 2)
-                    yPoint = y - (lParams.topMargin / 2)
+                    /** 손가락으로 터치 한 좌표에 스티커를 위치시킨다 */
+                    xPoint = x - lParams.leftMargin
+                    yPoint = y - lParams.topMargin
                 }
                 MotionEvent.ACTION_UP -> {
                     val itemParams = view.layoutParams as ConstraintLayout.LayoutParams
-                    val endPointX = x - (itemParams.leftMargin / 2)
-                    val endPointY = y - (itemParams.topMargin / 2)
 
-                    viewModel.createSticker(stickerId, emojiType, endPointX.toDouble(), endPointY.toDouble())
+                    /** 손가락 뗄 때 해당 스티커의 정보를 ViewModel의 arrayList에 추가한다 */
+                    viewModel.createSticker(
+                        stickerId,
+                        emojiType,
+                        itemParams.leftMargin.toDouble(),
+                        itemParams.topMargin.toDouble()
+                    )
                 }
                 MotionEvent.ACTION_POINTER_DOWN -> {}
                 MotionEvent.ACTION_POINTER_UP -> {}
                 MotionEvent.ACTION_MOVE -> {
+                    /** 손가락이 움직이는 좌표에 스티커를 위치시킨다 */
                     val layoutParams = view.layoutParams as ConstraintLayout.LayoutParams
                     layoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
                     layoutParams.leftToLeft = ConstraintLayout.LayoutParams.PARENT_ID
-                    /**스티커의 초기 위치를 위해 ConstraintLayout을 parent로 부터 top, bottom, start, end 제약을 걸음
-                     이동 방향의 반대로 제약조건이 작용하기 때문에, lParams의 margin에 저장된 값 보다 반의 속도로 이동하므로
-                     정상적으로 이동되도록 보이려면 2배로 margin을 설정해야 함*/
-                    layoutParams.leftMargin = 2 * (x - xPoint)
-                    layoutParams.topMargin = 2 * (y - yPoint)
+
+                    layoutParams.leftMargin = x - xPoint
+                    layoutParams.topMargin = y - yPoint
                     view.layoutParams = layoutParams
                 }
             }
@@ -332,8 +346,10 @@ class AddProfileFragment : Fragment() {
         popupMenu.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.menu_delete -> {
-                    // TODO: ViewModel 함수로 삭제할 아이템의 아이디를 전달
+                    // View에서 아이템 삭제
                     binding.cstAddProfile.removeView(item)
+                    // 함수로 삭제할 아이템의 아이디를 전달
+                    viewModel.removeSticker(item.id)
                 }
                 else -> { // 실행되지 않음
                 }

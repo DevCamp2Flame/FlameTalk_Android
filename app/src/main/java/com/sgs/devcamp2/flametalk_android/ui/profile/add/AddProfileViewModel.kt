@@ -56,7 +56,6 @@ class AddProfileViewModel @Inject constructor(
     val profileImage = _profileImage.asStateFlow()
 
     // 프로필 이미지 url
-    // private val _profileImageUrl = MutableStateFlow("")
     private val _profileImageUrl: MutableStateFlow<String?> = MutableStateFlow(null)
 
     // 배경 이미지
@@ -64,7 +63,6 @@ class AddProfileViewModel @Inject constructor(
     val backgroundImage = _backgroundImage.asStateFlow()
 
     // 배경 이미지 url
-    // private val _backgroundImageUrl = MutableStateFlow("")
     private val _backgroundImageUrl: MutableStateFlow<String?> = MutableStateFlow(null)
 
     // 스티커
@@ -203,9 +201,13 @@ class AddProfileViewModel @Inject constructor(
         val stickerModel = Sticker(
             stickerId = stickerType,
             positionX = x / width,
-            positionY = y / height,
+            positionY = y / height
         )
         stickers.add(stickerModel)
+    }
+
+    fun removeSticker(id: Int) {
+        stickers.removeIf { it.stickerId == id }
     }
 
     // 프로필 생성 통신
@@ -226,8 +228,7 @@ class AddProfileViewModel @Inject constructor(
                     _isSuccess.value = true
                 }
                 _message.value = response.message
-                Timber.d("All Image Create Completed $response")
-                Timber.d("Success ${_isSuccess.value}")
+                Timber.d("Success $response")
             } catch (ignore: Throwable) {
                 Timber.d("Fail $ignore")
             }
