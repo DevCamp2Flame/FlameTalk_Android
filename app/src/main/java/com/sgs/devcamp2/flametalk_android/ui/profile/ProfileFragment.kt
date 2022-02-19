@@ -31,8 +31,9 @@ import kotlinx.coroutines.flow.collectLatest
 /**
  * @author 박소연
  * @created 2022/01/17
- * @created 2022/01/31
- * @desc 프로필 상세 보기 페이지
+ * @created 2022/02/19
+ * @desc 프로필 상세 보기 페이지. 프로필 유형(내 멀티프로필, 친구 프로필) 여부에 따라 버튼, 메뉴가 다름
+ *       스티커를 붙였을 경우 스티커들이 저장된 좌표에 붙음
  */
 
 @AndroidEntryPoint
@@ -89,31 +90,18 @@ class ProfileFragment : Fragment() {
             )
         }
 
-        // 프로필 메뉴: 숨김친구, 차단친구
+        /**프로필 메뉴: 프로필 유형에 따라 메뉴가 다름
+         * 친구 프로필 -> 친구 숨기기, 친구 차단하기
+         * 내 멀티프로필 -> 삭제하기 */
         binding.imgProfileMenu.setOnClickListener {
-            val popupMenu = PopupMenu(context, binding.imgProfileMenu)
-            popupMenu.inflate(R.menu.profile_menu)
-            popupMenu.setOnMenuItemClickListener {
-                when (it.itemId) {
-                    R.id.menu_hide -> {
-                        // 숨김 친구 요청
-                        viewModel.changeFriendStatue(TO_HIDE, args.friendId, args.assignedProfileId)
-                    }
-                    R.id.menu_block -> {
-                        // 차단 친구 요청
-                        viewModel.changeFriendStatue(
-                            TO_BLOCK,
-                            args.friendId,
-                            args.assignedProfileId
-                        )
-                    }
-                    else -> {
-                        // 실행되지 않음
-                    }
+            when (args.viewType) {
+                FRIEND_PROFILE -> { // 친구 프로필
+                    friendPopup()
                 }
-                return@setOnMenuItemClickListener false
+                USER_MULTI_PROFILE -> {
+                    multiProfilePopup()
+                }
             }
-            popupMenu.show()
         }
     }
 
@@ -225,6 +213,47 @@ class ProfileFragment : Fragment() {
         img.layoutParams = param
 
         return img
+    }
+
+    private fun friendPopup() {
+        val popupMenu = PopupMenu(context, binding.imgProfileMenu)
+        popupMenu.inflate(R.menu.profile_menu)
+        popupMenu.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.menu_hide -> {
+                    // 숨김 친구 요청
+                    viewModel.changeFriendStatue(TO_HIDE, args.friendId, args.assignedProfileId)
+                }
+                R.id.menu_block -> {
+                    // 차단 친구 요청
+                    viewModel.changeFriendStatue(
+                        TO_BLOCK,
+                        args.friendId,
+                        args.assignedProfileId
+                    )
+                }
+                else -> {
+                    // 실행되지 않음
+                }
+            }
+            return@setOnMenuItemClickListener false
+        }
+        popupMenu.show()
+    }
+
+    private fun multiProfilePopup() {
+        val popupMenu = PopupMenu(context, binding.imgProfileMenu)
+        popupMenu.inflate(R.menu.delete_menu)
+        popupMenu.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.menu_delete -> {
+                    // 프로필 삭제 요청
+                    viewModel.deleteProfile(args.profileId)
+                }
+            }
+            return@setOnMenuItemClickListener false
+        }
+        popupMenu.show()
     }
 
     companion object {
