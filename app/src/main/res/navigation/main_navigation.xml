@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_navigation"
-    app:startDestination="@id/navigation_signin">
+    app:startDestination="@id/navigation_splash">
 
     <fragment
         android:id="@+id/navigation_splash"
@@ -81,7 +81,13 @@
         android:id="@+id/navigation_add_friend"
         android:name="com.sgs.devcamp2.flametalk_android.ui.friend.add.AddFriendFragment"
         android:label="AddFriendFragment"
-        tools:layout="@layout/fragment_add_friend"></fragment>
+        tools:layout="@layout/fragment_add_friend">
+        <action
+            android:id="@+id/action_add_friend_to_friend"
+            app:destination="@+id/navigation_friend"
+            app:popUpTo="@id/navigation_friend"
+            app:popUpToInclusive="true" />
+    </fragment>
 
     <!--친구 검색-->
     <fragment

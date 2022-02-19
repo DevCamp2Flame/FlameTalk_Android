@@ -39,6 +39,12 @@ interface ProfileService {
     @GET("/api/membership/profile")
     suspend fun getProfileList(): ProfileListResponse
 
+    // 프로필 삭제
+    @DELETE("/api/membership/profile/{profileId}")
+    suspend fun deleteProfile(
+        @Path("profileId") profileId: Long
+    ): CommonResponse
+
     /*  피드 */
     // 피드 리스트 조회 (프로필 or 배경)
     @GET("/api/membership/feed")

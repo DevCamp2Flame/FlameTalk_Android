@@ -58,15 +58,15 @@ class SingleFeedFragment : Fragment() {
             args.isBackground
         )
 
-        viewModel.feeds.observe(
-            viewLifecycleOwner
-        ) { it ->
-            it?.let {
-                singleFeedAdapter.data = it
-                singleFeedAdapter.submitList(it)
-
-                if (it.isEmpty()) {
+        lifecycleScope.launchWhenResumed {
+            viewModel.feeds.collectLatest {
+                if (it == null) { // 초기 상태
+                    binding.tvSingleFeedEmpty.toVisibleGone()
+                } else if (it.isEmpty()) {
                     binding.tvSingleFeedEmpty.toVisible()
+                } else {
+                    singleFeedAdapter.data = it
+                    singleFeedAdapter.submitList(it)
                 }
             }
         }

@@ -1,7 +1,6 @@
 package com.sgs.devcamp2.flametalk_android.ui.feed
 
 import android.content.Context
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sgs.devcamp2.flametalk_android.domain.repository.ProfileRepository
@@ -26,8 +25,8 @@ class TotalFeedViewModel @Inject constructor(
     val profileImage = _profileImage?.asStateFlow()
 
     // 피드 리스트
-    private val _totalFeed: MutableLiveData<List<Feed>> = MutableLiveData()
-    val totalFeed: MutableLiveData<List<Feed>> = _totalFeed
+    private val _totalFeed: MutableStateFlow<List<Feed>?> = MutableStateFlow(null)
+    val totalFeed: MutableStateFlow<List<Feed>?> = _totalFeed
 
     // 피드 재호출할지 여부
     private val _reload = MutableStateFlow(false)

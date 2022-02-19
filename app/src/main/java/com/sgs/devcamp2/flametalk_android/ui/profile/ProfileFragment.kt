@@ -22,19 +22,18 @@ import com.google.android.material.snackbar.Snackbar
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentProfileBinding
 import com.sgs.devcamp2.flametalk_android.util.swapViewVisibility
-import com.sgs.devcamp2.flametalk_android.util.toInvisible
 import com.sgs.devcamp2.flametalk_android.util.toVisible
 import com.sgs.devcamp2.flametalk_android.util.toVisibleGone
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
-import timber.log.Timber
 
 /**
  * @author 박소연
  * @created 2022/01/17
- * @created 2022/01/31
- * @desc 프로필 상세 보기 페이지
+ * @created 2022/02/19
+ * @desc 프로필 상세 보기 페이지. 프로필 유형(내 멀티프로필, 친구 프로필) 여부에 따라 버튼, 메뉴가 다름
+ *       스티커를 붙였을 경우 스티커들이 저장된 좌표에 붙음
  */
 
 @AndroidEntryPoint
@@ -43,6 +42,7 @@ class ProfileFragment : Fragment() {
     private val binding by lazy { FragmentProfileBinding.inflate(layoutInflater) }
     private val viewModel by viewModels<ProfileViewModel>()
     private val args: ProfileFragmentArgs by navArgs()
+    val param = ConstraintLayout.LayoutParams(100, 100)
     private var rootLayout: ViewGroup? = null
 
     override fun onCreateView(
@@ -83,12 +83,6 @@ class ProfileFragment : Fragment() {
             findNavController().navigateUp()
         }
 
-        // 친구 즐겨찾기
-        binding.imgProfileBookmark.setOnClickListener {
-            it.isActivated = !it.isActivated
-            Snackbar.make(requireContext(), it, it.isActivated.toString(), Snackbar.LENGTH_SHORT)
-                .show()
-        }
         // 프로필 수정하기로 이동
         binding.cstProfileEdit.setOnClickListener {
             findNavController().navigate(
@@ -96,31 +90,18 @@ class ProfileFragment : Fragment() {
             )
         }
 
-        // 프로필 메뉴: 숨김친구, 차단친구
+        /**프로필 메뉴: 프로필 유형에 따라 메뉴가 다름
+         * 친구 프로필 -> 친구 숨기기, 친구 차단하기
+         * 내 멀티프로필 -> 삭제하기 */
         binding.imgProfileMenu.setOnClickListener {
-            val popupMenu = PopupMenu(context, binding.imgProfileMenu)
-            popupMenu.inflate(R.menu.profile_menu)
-            popupMenu.setOnMenuItemClickListener {
-                when (it.itemId) {
-                    R.id.menu_hide -> {
-                        // 숨김 친구 요청
-                        viewModel.changeFriendStatue(TO_HIDE, args.friendId, args.assignedProfileId)
-                    }
-                    R.id.menu_block -> {
-                        // 차단 친구 요청
-                        viewModel.changeFriendStatue(
-                            TO_BLOCK,
-                            args.friendId,
-                            args.assignedProfileId
-                        )
-                    }
-                    else -> {
-                        // 실행되지 않음
-                    }
+            when (args.viewType) {
+                FRIEND_PROFILE -> { // 친구 프로필
+                    friendPopup()
                 }
-                return@setOnMenuItemClickListener false
+                USER_MULTI_PROFILE -> {
+                    multiProfilePopup()
+                }
             }
-            popupMenu.show()
         }
     }
 
@@ -128,14 +109,10 @@ class ProfileFragment : Fragment() {
     private fun initViewType() {
         when (args.viewType) {
             USER_DEFAULT_PROFILE -> { // 내 프로필
-                binding.imgProfileBookmark.toInvisible()
-                binding.imgProfileFriend.toVisibleGone()
-                binding.tvProfileFriend.toVisibleGone()
                 binding.imgProfileMenu.toVisibleGone()
                 swapViewVisibility(binding.cstProfileChat, binding.cstProfileEdit)
             }
             FRIEND_PROFILE -> { // 친구 프로필
-                binding.imgProfileBookmark.toVisible()
                 binding.imgProfileMenu.toVisible()
                 swapViewVisibility(binding.cstProfileEdit, binding.cstProfileChat)
 
@@ -150,15 +127,14 @@ class ProfileFragment : Fragment() {
                 }
             }
             USER_MULTI_PROFILE -> { // 내 멀티 프로필
-                binding.imgProfileBookmark.toInvisible()
-                binding.imgProfileFriend.toVisible()
-                binding.tvProfileFriend.toVisible()
             }
         }
     }
 
     // 유저프로필 초기화
     private fun initUserProfile() {
+        rootLayout = binding.cstProfile
+
         viewModel.getProfileData(args.profileId)
 
         lifecycleScope.launchWhenResumed {
@@ -172,7 +148,7 @@ class ProfileFragment : Fragment() {
                     .into(binding.imgProfileBg)
             }
         }
-
+        rootLayout = binding.cstProfile
         lifecycleScope.launchWhenResumed {
             viewModel.stickers.collectLatest { sticker ->
                 sticker.forEach {
@@ -207,28 +183,22 @@ class ProfileFragment : Fragment() {
 
     @SuppressLint("ClickableViewAccessibility")
     private fun createImageView(emoji: Int, positionX: Double, positionY: Double): View {
-        rootLayout = binding.cstProfile
 
         /**프로필 조회하는 디바이스의 사이즈에 따라 scaling 하기 위해
          디바이스의 기기 가로, 세로 사이즈로 나누어 position 저장*/
         val dm: DisplayMetrics = requireContext().resources.displayMetrics
         val width = dm.widthPixels
         val height = dm.heightPixels
-        Timber.d("width: $width, height: $height")
 
         // 스티커를 위한 ImageView 동적 생성
         val img = AppCompatImageView(requireContext())
         // 생성할 스티커의 사이즈
         val param = ConstraintLayout.LayoutParams(100, 100)
-        // 스티커 생성하고 중앙에 배치하기 위한 layout 제약
+        // 생성한 스티커를 저장된 좌표에 배치하기 위한 layout 제약
         param.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
         param.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
-
-//        val lParams = img.layoutParams as ConstraintLayout.LayoutParams
-//        lParams.marginStart = positionX.toInt()
-//        lParams.topMargin = positionY.toInt()
-//
-//        img.layoutParams = lParams
+        param.marginStart = (positionX * width).toInt()
+        param.topMargin = (positionY * height).toInt()
 
         when (emoji) {
             EMOJI_AWW -> Glide.with(requireContext()).load(R.drawable.emoji_aww).into(img)
@@ -243,6 +213,47 @@ class ProfileFragment : Fragment() {
         img.layoutParams = param
 
         return img
+    }
+
+    private fun friendPopup() {
+        val popupMenu = PopupMenu(context, binding.imgProfileMenu)
+        popupMenu.inflate(R.menu.profile_menu)
+        popupMenu.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.menu_hide -> {
+                    // 숨김 친구 요청
+                    viewModel.changeFriendStatue(TO_HIDE, args.friendId, args.assignedProfileId)
+                }
+                R.id.menu_block -> {
+                    // 차단 친구 요청
+                    viewModel.changeFriendStatue(
+                        TO_BLOCK,
+                        args.friendId,
+                        args.assignedProfileId
+                    )
+                }
+                else -> {
+                    // 실행되지 않음
+                }
+            }
+            return@setOnMenuItemClickListener false
+        }
+        popupMenu.show()
+    }
+
+    private fun multiProfilePopup() {
+        val popupMenu = PopupMenu(context, binding.imgProfileMenu)
+        popupMenu.inflate(R.menu.delete_menu)
+        popupMenu.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.menu_delete -> {
+                    // 프로필 삭제 요청
+                    viewModel.deleteProfile(args.profileId)
+                }
+            }
+            return@setOnMenuItemClickListener false
+        }
+        popupMenu.show()
     }
 
     companion object {

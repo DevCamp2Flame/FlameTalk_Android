@@ -69,8 +69,6 @@ class FriendViewModel @Inject constructor(
         getProfileList()
         getFriendList(BIRTHDAY_FRIEND)
         getFriendList(FRIEND)
-        // _birthProfile.value = dummyBirthdayData
-        // _friendProfile.value = dummyFriendData
     }
 
     private fun getProfileList() {
@@ -96,11 +94,6 @@ class FriendViewModel @Inject constructor(
                     } else {
                         _multiProfile.value = multiProfile
                     }
-                    // _multiProfile.value = multiProfile.toList()
-
-                    // Result
-//                    Timber.d("User Profile ${_userProfile.value}")
-//                    Timber.d("Multi Profile ${_multiProfile.value}")
                 } else {
                     _message.value = response.message
                 }
@@ -128,9 +121,6 @@ class FriendViewModel @Inject constructor(
                             saveFriendProfiles()
                         }
                     }
-
-                    // Result
-//                    Timber.d("Birthday Response ${response.data}")
                     Timber.d("Get Friend ${_friendProfile.value}")
                 } else {
                     _message.value = response!!.message

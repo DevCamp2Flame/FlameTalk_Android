@@ -34,8 +34,8 @@ data class AddFriendResponse(
     data class Data(
         @SerializedName("friendId")
         val friendId: Long,
-        @SerializedName("nickname")
-        val nickname: String,
+        @SerializedName("friendNickname")
+        val friendNickname: String,
         @SerializedName("profileId")
         val profileId: Long,
         @SerializedName("imageUrl")
