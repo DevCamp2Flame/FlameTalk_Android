@@ -19,7 +19,7 @@ import com.sgs.devcamp2.flametalk_android.util.toVisibleGone
 /**
  * @author 박소연
  * @created 2022/02/02
- * @created 2022/02/16
+ * @created 2022/02/19
  * @desc 프로필과 배경화면의 변경 이력을 보여주는 수직 스크롤 형태의 피드 리스트 adapter
  */
 
@@ -71,7 +71,8 @@ class TotalFeedAdapter(
             Glide.with(itemView).load(profileImage)
                 .apply(RequestOptions.placeholderOf(R.drawable.ic_person_white_24))
                 .into(binding.imgTotalFeedThumbnail)
-            binding.tvTotalFeedUpdate.text = data.updatedDate
+            binding.tvTotalFeedUpdate.text =
+                "${data.updatedDate.substring(5, 7)}월 ${data.updatedDate.substring(8, 10)}일"
             Glide.with(itemView).load(data.imageUrl).into(binding.imgTotalFeed)
             if (data.isLock) {
                 binding.tvTotalFeedPrivate.toVisible()
@@ -88,11 +89,11 @@ class TotalFeedAdapter(
                 popupMenu.setOnMenuItemClickListener {
                     when (it.itemId) {
                         R.id.menu_lock -> {
-                            // TODO: RecyclerView에서 viewmodel의 함수 호출해야 함
+                            // 피드 공개 범위 변경
                             onClickChangeLockItem.invoke(data)
                         }
                         R.id.menu_delete -> {
-                            // TODO: RecyclerView에서 viewmodel의 함수 호출해야 함
+                            // 피드 아이템 삭제
                             onClickDeleteItem.invoke(data)
                         }
                     }
