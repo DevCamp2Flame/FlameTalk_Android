@@ -17,7 +17,7 @@
 | Member | Role |
 | :-----------------------------------: | :---------------------------------------: | 
 | [<img src="https://avatars.githubusercontent.com/paksuua" width="100">](https://github.com/paksuua) </br> <h4>[박소연](https://github.com/paksuua)</h4> |<div align="left"> **- 로그인 회원가입 및 유저 인증 기능 개발**</br> - 연락처 동기화하여 친구 추가 및 친구 상태 관리 (숨김, 차단친구) </br> - 유저 프로필 관리 </br> - 프로필, 배경화면 이미지 히스토리 피드 구현 </br> - 파일 서버 통신 </br> - 친구 리스트 검색 기능 (Room을 이용한 내부 DB 기반 검색) </br> - 프로필 스티커 기능 </div>|
-|[<img src="https://avatars.githubusercontent.com/014967" width="100">](https://github.com/014967) </br> <h4> [김현국](https://github.com/014967) </h4> | <div align="left">  - 구글 Auth 회원가입  </br> - Stomp websocket을 통한 채팅 </br> - Room Database를 통한 채팅내역, 채팅방 저장 </br> - 오픈 프로필 생성 및 관리 </br> - [ 개발중 ] Fcm Push Server 구현 </div> |
+|[<img src="https://avatars.githubusercontent.com/014967" width="100">](https://github.com/014967) </br> <h4> [김현국](https://github.com/014967) </h4> | <div align="left">  - 구글 Auth 회원가입  </br> - Stomp websocket을 통한 채팅 </br> - Room Database를 통한 채팅내역, 채팅방 저장 </br> - 오픈 프로필 생성 및 관리 </br> -  Fcm Push Server 구현 </div> |
 
 
 ## 2. Version Info
