@@ -72,15 +72,16 @@ class ChatRoomListFragment : Fragment(), ChatRoomListAdapter.ClickCallBack {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    model.localUiState.collect {
-                        state ->
+                    model.localUiState.collect { state ->
                         when (state) {
-                            is UiState.Success ->
-                                {
-                                    if (state.data.isNotEmpty()) {
-                                        adapterRoom.submitList(state.data)
+                            is UiState.Success -> {
+                                if (state.data.isNotEmpty()) {
+                                    val list: List<ThumbnailWithRoomId> = state.data.sortedByDescending {
+                                        it.room.updated_at
                                     }
+                                    adapterRoom.submitList(list)
                                 }
+                            }
                         }
                     }
                 }
@@ -127,26 +128,23 @@ class ChatRoomListFragment : Fragment(), ChatRoomListAdapter.ClickCallBack {
 
     private fun pushDeviceToken() {
         lifecycleScope.launch {
-            model.deviceToken.collect {
-                state ->
+            model.deviceToken.collect { state ->
                 when (state) {
-                    is UiState.Success ->
-                        {
-                            model.saveDeviceToken(state.data)
-                        }
+                    is UiState.Success -> {
+                        model.saveDeviceToken(state.data)
+                    }
                 }
             }
         }
     }
+
     private fun successSavedToken() {
         lifecycleScope.launch {
-            model.deviceTokenUiState.collect {
-                state ->
+            model.deviceTokenUiState.collect { state ->
                 when (state) {
-                    is UiState.Success ->
-                        {
-                            Log.d(TAG, "successSavedToken - ${state.data} called")
-                        }
+                    is UiState.Success -> {
+                        Log.d(TAG, "successSavedToken - ${state.data} called")
+                    }
                 }
             }
         }

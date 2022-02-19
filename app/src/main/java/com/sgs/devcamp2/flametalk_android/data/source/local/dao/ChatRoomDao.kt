@@ -78,9 +78,21 @@ interface ChatRoomDao {
     @Query("UPDATE chatroom SET lastReadMessageId = :lastReadMessageId where chatroom.userChatroomId Like :userChatRoomId")
     fun updateChatRoomLastReadMessage(lastReadMessageId: String, userChatRoomId: Long)
 
-    @Query("UPDATE chatroom SET lastReadMessageId = :lastReadMessageId , updated_at = :updated_at where chatroom.userChatroomId Like :userChatRoomId")
+    @Query("UPDATE chatroom SET lastReadMessageId = :lastReadMessageId , updated_at = :updated_at  where chatroom.userChatroomId Like :userChatRoomId")
     fun updateChatRoomLastReadMessageWithTime(lastReadMessageId: String, updated_at: Long, userChatRoomId: Long)
 
     @Query("SELECT userChatroomId FROM chatroom WHERE chatroom.id Like :roomId")
     fun getUserChatRoomId(roomId: String): Long
+
+    @Query("UPDATE chatroom SET lastReadMessageId = :lastReadMessageId ,text =:text ,updated_at = :updated_at where chatroom.userChatroomId Like :userChatRoomId")
+    fun updateChatRoomWithMessageText(lastReadMessageId: String, text: String, updated_at: Long, userChatRoomId: Long): Int
+
+    @Query("UPDATE chatroom set text =:text, updated_at = :updated_at , messageCount = messageCount + 1 where chatroom.id Like :roomId")
+    fun updateText(text: String?, roomId: String?, updated_at: Long): Int
+
+    @Query("UPDATE chatroom set messageCount = 0 where chatroom.id Like :roomId")
+    fun updateMessageCount(roomId: String): Int
+
+//    @Query("UPDATE chatroom set text :text where chatroom.id Like :roomId")
+//    fun updateMessageText()
 }

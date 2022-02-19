@@ -49,7 +49,7 @@ class ChatRoomListAdapter @Inject constructor(
 
             override fun areContentsTheSame(oldItem: ThumbnailWithRoomId, newItem: ThumbnailWithRoomId): Boolean {
                 return oldItem.room.count == newItem.room.count && oldItem.thumbnailList.size == newItem.thumbnailList.size &&
-                    oldItem.room.title == newItem.room.title
+                    oldItem.room.title == newItem.room.title && oldItem.room.text == newItem.room.text
             }
         }
     }
@@ -124,8 +124,17 @@ class ChatRoomListAdapter @Inject constructor(
                     .transform(CenterCrop(), RoundedCorners(40)).into(binding.ivOneChatRoomListUserImg)
             }
 
+            val updated_at = simpleFormat.format(chatroom.room.updated_at)
+            if (chatroom.room.messageCount == 0) {
+                binding.tvOneChatRoomMessageCount.visibility = View.GONE
+            } else {
+                binding.tvOneChatRoomMessageCount.visibility = View.VISIBLE
+                binding.tvOneChatRoomMessageCount.text = chatroom.room.messageCount.toString()
+            }
+
+            binding.tvOneChatRoomListDate.text = updated_at
+            binding.tvOneChatRoomListMessage.text = chatroom.room.text
             binding.tvOneChatRoomListUserName.text = chatroom.room.title
-            binding.tvOneChatRoomListUserCount.text = chatroom.room.count.toString()
         }
     }
 
@@ -147,7 +156,9 @@ class ChatRoomListAdapter @Inject constructor(
                 Glide.with(binding.ivTwoChatRoomListUserImg2).load(chatroom.thumbnailList[1].image)
                     .transform(CenterCrop(), RoundedCorners(30)).into(binding.ivTwoChatRoomListUserImg2)
             }
-
+            val updated_at = simpleFormat.format(chatroom.room.updated_at)
+            binding.tvTwoChatRoomListDate.text = updated_at
+            binding.tvTwoChatRoomListMessage.text = chatroom.room.text
             binding.tvTwoChatRoomListUserName.text = chatroom.room.title
             binding.tvTwoChatRoomListUserCount.text = chatroom.room.count.toString()
         }
@@ -183,6 +194,9 @@ class ChatRoomListAdapter @Inject constructor(
                     .load(chatroom.thumbnailList[2].image).transform(CenterCrop(), RoundedCorners(15))
                     .into(binding.ivThreeChatRoomListUserImg3)
             }
+            val updated_at = simpleFormat.format(chatroom.room.updated_at)
+            binding.tvThreeChatRoomListDate.text = updated_at
+            binding.tvThreeChatRoomListMessage.text = chatroom.room.text
             binding.tvThreeChatRoomListUserName.text = chatroom.room.title
             binding.tvThreeChatRoomListUserCount.text = chatroom.room.count.toString()
         }
@@ -219,7 +233,10 @@ class ChatRoomListAdapter @Inject constructor(
                 Glide.with(binding.ivFourChatRoomListUserImg4).load(chatroom.thumbnailList[3].image)
                     .transform(CenterCrop(), RoundedCorners(5)).into(binding.ivFourChatRoomListUserImg4)
             }
+            val updated_at = simpleFormat.format(chatroom.room.updated_at)
+            binding.tvFourChatRoomListDate.text = updated_at
             binding.tvFourChatRoomListUserName.text = chatroom.room.title
+            binding.tvFourChatRoomListMessage.text = chatroom.room.text
             binding.tvFourChatRoomListUserCount.text = chatroom.room.count.toString()
         }
     }

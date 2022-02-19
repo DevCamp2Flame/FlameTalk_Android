@@ -61,15 +61,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="4" />
 
-            <ImageView
-                android:id="@+id/iv_chat_room_search"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginEnd="10dp"
-                android:src="@drawable/ic_search"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/iv_chat_room_draw"
-                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/iv_chat_room_draw"
@@ -127,23 +118,13 @@
                 android:background="@android:color/transparent"
                 android:inputType="text"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/iv_chat_room_emoji"
+                app:layout_constraintEnd_toStartOf="@id/iv_chat_send"
                 app:layout_constraintStart_toEndOf="@id/iv_chat_room_file"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="SpeakableTextPresentCheck">
 
                 <requestFocus />
             </EditText>
-
-            <ImageView
-                android:id="@+id/iv_chat_room_emoji"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:src="@drawable/ic_emoji"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/iv_chat_send"
-                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/iv_chat_send"

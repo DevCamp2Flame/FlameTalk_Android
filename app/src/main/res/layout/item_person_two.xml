@@ -14,11 +14,10 @@
 
     <ImageView
         android:id="@+id/iv_person_two_img_1"
-        android:layout_width="0dp"
-        app:layout_constraintWidth_percent="0.6"
-        app:layout_constraintHeight_percent="0.6"
-        android:layout_height="0dp"
-        android:background="@drawable/bg_layout_round_gray"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:background="@drawable/bg_imageview_radius_gray"
+        android:padding="1.2dp"
         tools:src="@drawable/dummy"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -26,11 +25,10 @@
         />
     <ImageView
         android:id="@+id/iv_person_two_img_2"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintWidth_percent="0.6"
-        app:layout_constraintHeight_percent="0.6"
-        android:background="@drawable/bg_layout_round_gray"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:background="@drawable/bg_imageview_radius_gray"
+        android:padding="1.2dp"
         tools:src="@drawable/dummy"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>

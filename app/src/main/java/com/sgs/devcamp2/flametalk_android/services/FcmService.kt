@@ -12,21 +12,20 @@ import android.os.Bundle
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.navigation.NavDeepLinkBuilder
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkManager
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.sgs.devcamp2.flametalk_android.R
-import com.sgs.devcamp2.flametalk_android.domain.usecase.mainactivity.SaveReceivedMessageUseCase
 import java.io.UnsupportedEncodingException
 import java.net.URLDecoder
-import javax.inject.Inject
 
 /**
  * @author 김현국
  * @created 2022/01/23
  */
-class FcmService @Inject constructor(
-    private val saveReceivedMessageUseCase: SaveReceivedMessageUseCase
-) : FirebaseMessagingService() {
+class FcmService : FirebaseMessagingService() {
     val TAG: String = "로그"
 
     override fun onNewToken(token: String) {
@@ -41,13 +40,8 @@ class FcmService @Inject constructor(
         Log.i("로그: ", "성공적으로 토큰을 저장함")
     }
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
-        Log.d(TAG, "From: " + remoteMessage!!.from)
-        Log.d(TAG, "remoteMessage - $remoteMessage")
 
-        // Notification 메시지를 수신할 경우는
-        // remoteMessage.notification?.body!! 여기에 내용이 저장되어있다.
-        // Log.d(TAG, "Notification Message Body: " + remoteMessage.notification?.body!!)
-
+        Log.d(TAG,"remoteMessage - ${remoteMessage.data["title"]}() called")
         if (remoteMessage.data.isNotEmpty()) {
             sendNotification(remoteMessage)
         } else {
@@ -58,14 +52,23 @@ class FcmService @Inject constructor(
 
     private fun sendNotification(remoteMessage: RemoteMessage) {
 
+        val worker = OneTimeWorkRequest.Builder(FcmUpdateWorker::class.java)
+        val data = Data.Builder()
+
         var KEY_TALK_GROUP = "FlameTalk"
         var title = ""
         var body = ""
+        var roomId = ""
         try {
             title = URLDecoder.decode(remoteMessage.data["title"], "UTF-8")
             body = URLDecoder.decode(remoteMessage.data["body"], "UTF-8")
+            roomId = remoteMessage.data["room"].toString()
+            data.putString("text", body)
+            data.putString("room", roomId)
         } catch (e: UnsupportedEncodingException) {
         }
+        worker.setInputData(data.build())
+        WorkManager.getInstance(applicationContext).enqueue(worker.build())
 
         Log.d(TAG, "room - ${remoteMessage.data["room"]}() called")
 

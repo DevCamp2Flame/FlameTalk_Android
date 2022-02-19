@@ -12,7 +12,7 @@ import javax.inject.Inject
 class GetLastReadMessageUseCase @Inject constructor(
     private val repository: ChatRepository
 ) {
-    suspend fun invoke(chatroomId: String): Flow<LocalResults<String>> {
+     fun invoke(chatroomId: String): Flow<LocalResults<String>?> {
         return repository.getLastReadMessageId(chatroomId)
     }
 }

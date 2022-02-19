@@ -65,8 +65,21 @@ class JoinUserChatRoomFragment :
                 model.joinUser(args.chatroomId, model._userId.value, it)
             }
         }
+        viewLifecycleOwner.lifecycleScope.launch {
+            model.joinUiState.collect {
+                state ->
+                when (state) {
+                    is UiState.Success ->
+                        {
+                            binding.pbLoading.visibility = View.GONE
+                            findNavController().popBackStack()
+                        }
+                }
+            }
+        }
     }
     override fun onItemClicked(userId: String) {
+        binding.pbLoading.visibility = View.VISIBLE
         model.getLastReadMessageId(args.chatroomId, userId)
     }
     override fun onClick(view: View?) {

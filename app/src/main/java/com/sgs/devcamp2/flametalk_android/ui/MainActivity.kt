@@ -27,10 +27,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         initNavigationBar()
 
-        model.connectChatServer()
+        try {
+            model.connectChatServer()
+        } catch (e: Exception) {
+        }
         initObserve()
         model.getDeviceToken(this)
-
     }
 
     private fun initNavigationBar() {
@@ -75,10 +77,5 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-    }
-
-
-    override fun onDestroy() {
-        super.onDestroy()
     }
 }

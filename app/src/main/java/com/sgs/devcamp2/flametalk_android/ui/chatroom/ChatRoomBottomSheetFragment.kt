@@ -77,7 +77,6 @@ class ChatRoomBottomSheetFragment : DialogFragment(), View.OnClickListener {
                     }
                 }
             }
-
         return binding.root
     }
 

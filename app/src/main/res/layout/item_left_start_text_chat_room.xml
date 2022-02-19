@@ -18,9 +18,9 @@
 
         <ImageView
             android:id="@+id/iv_left_start_text_chat_room_user_img"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="@drawable/bg_layout_round_gray"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_imageview_radius_gray"
             android:padding="1.2dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"

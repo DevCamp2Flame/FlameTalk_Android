@@ -63,7 +63,7 @@ class ChatRoomViewModel @Inject constructor(
     var uploadUiState = _uploadUiState.asStateFlow()
     private var _chatList = MutableStateFlow<UiState<List<Chat>>>(UiState.Loading)
     var chatList = _chatList.asStateFlow()
-    private var _lastReadMessageId = MutableStateFlow("")
+    var _lastReadMessageId = MutableStateFlow("")
     var lastReadMessageId = _lastReadMessageId.asStateFlow()
     private var _uiState = MutableStateFlow<UiState<Long>>(UiState.Loading)
     var uiState = _uiState.asStateFlow()
@@ -77,7 +77,6 @@ class ChatRoomViewModel @Inject constructor(
     val nickname = _nickname.asStateFlow()
     private var _roomId = MutableStateFlow("")
     val roomId = _roomId.asStateFlow()
-    var userChatroomId = MutableStateFlow(0L)
     var userChatRoomId = MutableStateFlow(0L)
     private val _imageUrl = MutableStateFlow<String>("")
     val imageUrl = _imageUrl.asStateFlow()
@@ -97,6 +96,7 @@ class ChatRoomViewModel @Inject constructor(
             }
         }
     }
+
     fun getUserChatRoomId(chatroomId: String) {
         viewModelScope.launch {
             getUserChatRoomIdUseCase.invoke(chatroomId).collect {
@@ -141,7 +141,7 @@ class ChatRoomViewModel @Inject constructor(
                     is LocalResults.Success -> {
                         _chatList.value = UiState.Success(result.data.chatList)
                         _userChatRoom.value = UiState.Success(result.data.room)
-                        userChatroomId.value = result.data.room.userChatroomId
+                        userChatRoomId.value = result.data.room.userChatroomId
                     }
                 }
             }
@@ -211,6 +211,7 @@ class ChatRoomViewModel @Inject constructor(
             val collectorJob = launch {
                 subscription.collect { msg ->
                     _lastReadMessageId.value = msg.message_id // 내가 읽은 메세지 초기화
+                    Log.d(TAG, "msg - $msg() called")
                     saveReceivedMessageUseCase.invoke(msg).collect {
                         if (msg.message_type == "TALK" || msg.message_type == "FILE") {
                             Log.d(TAG, "message - $msg")
@@ -281,6 +282,7 @@ class ChatRoomViewModel @Inject constructor(
             closeChatRoomUseCase.invoke(closeChatRoomReq).collect { result ->
                 when (result) {
                     is Results.Success -> {
+                        Log.d(TAG, "resultSuccess - closeChatRoom() called")
                         _closeUiState.value = UiState.Success(true)
                     }
                 }
@@ -309,12 +311,18 @@ class ChatRoomViewModel @Inject constructor(
 
     fun getLastReadMessageId(chatroomId: String) {
         viewModelScope.launch {
+            Log.d(TAG, "ChatRoomViewModel - getLastReadMessageId(1) called")
             getLastReadMessageUseCase.invoke(chatroomId).collect { result ->
                 when (result) {
                     is LocalResults.Success -> {
+                        Log.d(TAG, "ChatRoomViewModel - getLastReadMessageId(2) called")
+                        if (result.data == null) {
+                            _lastReadMessageId.value = ""
+                        }
                         _lastReadMessageId.value = result.data
                     }
                     is LocalResults.Error -> {
+                        Log.d(TAG, "ChatRoomViewModel - getLastReadMessageId(3) called")
                         _lastReadMessageId.value = ""
                     }
                 }
@@ -339,6 +347,9 @@ class ChatRoomViewModel @Inject constructor(
 
     fun initUploadImageState() {
         _uploadUiState.value = UiState.Loading
+    }
+    fun initLastReadMessage() {
+        _lastReadMessageId.value = ""
     }
 
     fun setBackgroundImage(path: String) {

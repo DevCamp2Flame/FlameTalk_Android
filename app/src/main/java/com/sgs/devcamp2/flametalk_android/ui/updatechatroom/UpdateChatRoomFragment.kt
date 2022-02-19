@@ -26,6 +26,7 @@ import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.Thumbnail
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentUpdateChatRoomBinding
 import com.sgs.devcamp2.flametalk_android.domain.entity.UiState
@@ -288,23 +289,44 @@ class UpdateChatRoomFragment :
 
     fun initGlidePersonOne(thumbnailList: List<Thumbnail>) {
         binding.layoutPersonOneImage.root.visibility = View.VISIBLE
+//        if (thumbnailList[0].image != "") {
         Glide.with(binding.layoutPersonOneImage.ivPersonOneImg)
             .load(thumbnailList[0].image)
             .transform(CenterCrop(), RoundedCorners(35))
+            .fallback(R.drawable.ic_person_white_24)
             .into(binding.layoutPersonOneImage.ivPersonOneImg)
+//        } else {
+//            Glide.with(binding.layoutPersonOneImage.ivPersonOneImg)
+//                .load(R.drawable.ic_person_white_24)
+//                .transform(CenterCrop(), RoundedCorners(35))
+//                .into(binding.layoutPersonOneImage.ivPersonOneImg)
+//        }
+
         binding.layoutPersonOneImage.root.setOnClickListener(this)
     }
 
     fun initGlidePersonTwo(thumbnailList: List<Thumbnail>) {
         binding.layoutPersonTwoImage.root.visibility = View.VISIBLE
+//        if (thumbnailList[0].image != "") {
         Glide.with(binding.layoutPersonTwoImage.ivPersonTwoImg1)
             .load(thumbnailList[0].image)
             .transform(CenterCrop(), RoundedCorners(35))
+            .fallback(R.drawable.ic_person_white_24)
             .into(binding.layoutPersonTwoImage.ivPersonTwoImg1)
+//        } else {
+//            Glide.with(binding.layoutPersonTwoImage.ivPersonTwoImg1)
+//                .load(R.drawable.ic_person_white_24)
+//                .transform(CenterCrop(), RoundedCorners(35))
+//                .into(binding.layoutPersonTwoImage.ivPersonTwoImg1)
+//        }
+//
         Glide.with(binding.layoutPersonTwoImage.ivPersonTwoImg2)
             .load(thumbnailList[1].image)
             .transform(CenterCrop(), RoundedCorners(35))
+            .fallback(R.drawable.ic_person_white_24)
+            .placeholder(R.drawable.ic_person_white_24)
             .into(binding.layoutPersonTwoImage.ivPersonTwoImg2)
+
         binding.layoutPersonTwoImage.root.setOnClickListener(this)
     }
 

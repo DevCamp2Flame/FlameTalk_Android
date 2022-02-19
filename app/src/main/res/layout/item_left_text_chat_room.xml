@@ -7,19 +7,29 @@
     android:layout_height="wrap_content"
     android:id="@+id/item_left_text_chat_room">
 
+
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout_left_text_chat_room_image_container"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:cardElevation="0dp"
-        app:cardCornerRadius="20dp"
-        />
+        >
 
-
+        <ImageView
+            android:id="@+id/iv_left_start_text_chat_room_user_img"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_imageview_radius_gray"
+            android:padding="1.2dp"
+            tools:src="@drawable/dummy"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout_left_text_chat_room_text_container"
@@ -40,8 +50,16 @@
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-
             >
+            <TextView
+                android:id="@+id/tv_left_start_text_chat_room_user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="김현국"
+                android:textStyle="bold"
+                android:textSize="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
             <TextView
                 android:id="@+id/tv_left_text_chat_room_message"
                 android:layout_width="wrap_content"
@@ -55,6 +73,7 @@
                 android:padding="6dp"
                 android:textSize="10dp"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_left_start_text_chat_room_user_name"
 
                 />
         </androidx.constraintlayout.widget.ConstraintLayout>

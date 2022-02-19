@@ -50,4 +50,5 @@ interface ChatRoomRepository {
     fun getFriendUser(isBirth: Boolean, isHidden: Boolean, isBlock: Boolean): Flow<Results<List<FriendListRes>, WrappedResponse<List<FriendListRes>>>>
     fun getUserImage(userId: String): Flow<LocalResults<String>>
     fun getUserChatRoomId(roomId: String): Flow<LocalResults<Long>>
+    fun updateChatRoomText(text: String, roomId: String): Flow<LocalResults<Boolean>>
 }

@@ -14,6 +14,6 @@ import kotlinx.coroutines.flow.Flow
 interface ChatRepository {
     fun saveReceivedMessage(chatRes: ChatRes): Flow<Long>
     fun getMessageHistory(roomId: String, lastReadMessage: String): Flow<Results<List<ChatRes>, WrappedResponse<List<ChatRes>>>>
-    fun getLastReadMessageId(chatroomId: String): Flow<LocalResults<String>>
+    fun getLastReadMessageId(chatroomId: String): Flow<LocalResults<String>?>
 
 }

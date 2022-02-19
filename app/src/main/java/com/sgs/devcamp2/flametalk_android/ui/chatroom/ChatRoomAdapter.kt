@@ -25,8 +25,8 @@ class ChatRoomAdapter constructor(
 ) : ListAdapter<Chat, RecyclerView.ViewHolder>(diffUtil) {
     companion object {
         val TAG: String = "로그"
-        val simpleFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS")
-        val format = SimpleDateFormat("HH:MM")
+
+        val format = SimpleDateFormat("kk:mm", Locale("ko", "KR"))
         var profiles: HashMap<String, String> = HashMap()
         val diffUtil = object : DiffUtil.ItemCallback<Chat>() {
             override fun areItemsTheSame(oldItem: Chat, newItem: Chat): Boolean {
@@ -138,14 +138,26 @@ class ChatRoomAdapter constructor(
     }
     inner class FileRightMessageViewHolder(val binding: ItemRightStartFileChatRoomBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(chat: Chat) {
-
             Glide.with(binding.ivRightStartFileChatRoomMessage).load(chat.file_url).into(binding.ivRightStartFileChatRoomMessage)
         }
     }
     inner class FileLeftMessageViewHolder(val binding: ItemLeftStartFileChatRoomBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(chat: Chat) {
+            val url = profiles.get(chat.sender_id)
+            if (url != null) {
+                Glide.with(binding.ivLeftStartFileChatRoomUserImg).load(url)
+                    .transform(CenterCrop(), RoundedCorners(5)).into(binding.ivLeftStartFileChatRoomUserImg)
+            } else {
+                Glide.with(binding.ivLeftStartFileChatRoomUserImg).load(R.drawable.ic_person_white_24)
+                    .transform(CenterCrop(), RoundedCorners(5)).into(binding.ivLeftStartFileChatRoomUserImg)
+            }
+
+            // val date: Date = simpleFormat.parse(chat.created_at)
+            val date = Date(chat.created_at)
+            val dateText: String = format.format(date)
+            binding.tvLeftStartFileChatRoomListDate.text = dateText
             binding.tvLeftStartTextChatRoomUserName.text = chat.nickname
-            Glide.with(binding.ivLeftStartFileChatRoomUserImg).load(chat.file_url).into(binding.ivLeftStartFileChatRoomUserImg)
+            Glide.with(binding.ivLeftStartFileChatRoomMessage).load(chat.file_url).into(binding.ivLeftStartFileChatRoomMessage)
         }
     }
 
@@ -155,10 +167,8 @@ class ChatRoomAdapter constructor(
     inner class LeftStartViewHolder(val binding: ItemLeftStartTextChatRoomBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(chat: Chat) {
+            binding.tvLeftStartTextChatRoomUserName.text = chat.nickname
             binding.tvLeftStartTextChatRoomMessage.text = chat.contents
-            // val date = Date(chat.timeStamp)
-            // val str_date = simpleFormat.format(date)
-
             val url = profiles.get(chat.sender_id)
             if (url != null) {
                 Glide.with(binding.ivLeftStartTextChatRoomUserImg).load(url)
@@ -167,8 +177,8 @@ class ChatRoomAdapter constructor(
                 Glide.with(binding.ivLeftStartTextChatRoomUserImg).load(R.drawable.ic_person_white_24)
                     .transform(CenterCrop(), RoundedCorners(5)).into(binding.ivLeftStartTextChatRoomUserImg)
             }
-
-            val date: Date = simpleFormat.parse(chat.created_at)
+//            val date: Date = simpleFormat.parse(chat.created_at)
+            val date = Date(chat.created_at)
             val dateText: String = format.format(date)
             binding.tvLeftStartTextChatRoomListDate.text = dateText
         }
@@ -189,7 +199,8 @@ class ChatRoomAdapter constructor(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(chat: Chat) {
             binding.tvRightStartTextChatRoomMessage.text = chat.contents
-            val date: Date = simpleFormat.parse(chat.created_at)
+//            val date: Date = simpleFormat.parse(chat.created_at)
+            val date = Date(chat.created_at)
             val dateText: String = format.format(date)
             binding.tvRightStartTextChatRoomListDate.text = dateText
         }

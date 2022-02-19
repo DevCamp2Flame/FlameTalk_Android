@@ -10,14 +10,11 @@ import com.sgs.devcamp2.flametalk_android.data.source.remote.api.ChatApi
 import com.sgs.devcamp2.flametalk_android.domain.entity.LocalResults
 import com.sgs.devcamp2.flametalk_android.domain.entity.Results
 import com.sgs.devcamp2.flametalk_android.domain.repository.ChatRepository
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import java.lang.Exception
-import java.lang.NullPointerException
 import javax.inject.Inject
 
 /**
@@ -37,10 +34,19 @@ class ChatRepositoryImp @Inject constructor(
      */
     override fun saveReceivedMessage(chatRes: ChatRes): Flow<Long> {
         return flow {
+            val TAG: String = "로그"
             val chat = mapperToChat(chatRes)
-            val index = db.chatDao().insert(chat)
+            Log.d(TAG, "chat - $chat")
+            val deferr: Deferred<Long> = CoroutineScope(ioDispatcher).async {
+                db.chatDao().insert(chat)
+            }
+            val index = deferr.await()
+            Log.d(TAG, "index - $index")
             val chatRoomUpdateModel = mapperToChatRoomUpdateModel(chatRes)
-            val updateIndex = db.chatRoomDao().updateLastReadMessageId(chatRoomUpdateModel)
+            val deferr2: Deferred<Unit> = CoroutineScope(ioDispatcher).async {
+                db.chatRoomDao().updateLastReadMessageId(chatRoomUpdateModel)
+            }
+            deferr2.await()
             emit(index)
         }.flowOn(ioDispatcher)
     }
@@ -83,15 +89,20 @@ class ChatRepositoryImp @Inject constructor(
         }.flowOn(ioDispatcher)
     }
 
-    override fun getLastReadMessageId(chatroomId: String): Flow<LocalResults<String>> {
+    override fun getLastReadMessageId(chatroomId: String): Flow<LocalResults<String>?> {
         return flow {
-            try {
-                db.chatRoomDao().getLastReadMessageId(chatroomId)?.collect {
-                    emit(LocalResults.Success(it))
-                }
-            } catch (e: NullPointerException) {
-                emit(LocalResults.Error("lastReadMessageId가 없습니다."))
+            val TAG: String = "로그"
+            var messageId: String = ""
+            var messageCount = 0
+            val deferr: Deferred<String?> = CoroutineScope(ioDispatcher).async {
+                db.chatDao().getLastMessageWithRoomId(chatroomId)
             }
+            messageId = deferr.await().toString()
+            val deferr2: Deferred<Int> = CoroutineScope(ioDispatcher).async {
+                db.chatRoomDao().updateMessageCount(chatroomId)
+            }
+            messageCount = deferr2.await()
+            emit(LocalResults.Success(messageId))
         }.flowOn(ioDispatcher)
     }
 }

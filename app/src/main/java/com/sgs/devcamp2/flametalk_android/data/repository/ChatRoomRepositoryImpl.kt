@@ -28,9 +28,7 @@ import com.sgs.devcamp2.flametalk_android.domain.entity.Results
 import com.sgs.devcamp2.flametalk_android.domain.entity.chatroom.ChatRoomEntity
 import com.sgs.devcamp2.flametalk_android.domain.entity.chatroom.GetChatRoomEntity
 import com.sgs.devcamp2.flametalk_android.domain.repository.ChatRoomRepository
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -86,13 +84,11 @@ class ChatRoomRepositoryImpl @Inject constructor(
     override fun getChatList(chatroomId: String): Flow<LocalResults<ChatWithRoomId>> {
         return flow {
             var chatwithRoomId: ChatWithRoomId? = null
-            var deffer = coroutineScope {
-                async {
-                    chatwithRoomId = local.chatRoomDao().getChatRoomWithId(chatroomId)
-                }
+            var deffer: Deferred<ChatWithRoomId> = CoroutineScope(ioDispatcher).async {
+                local.chatRoomDao().getChatRoomWithId(chatroomId)
             }
-            deffer.await()
-            emit(LocalResults.Success(chatwithRoomId!!))
+            chatwithRoomId = deffer.await()
+            emit(LocalResults.Success(chatwithRoomId))
         }.flowOn(ioDispatcher)
     }
     /**
@@ -271,20 +267,27 @@ class ChatRoomRepositoryImpl @Inject constructor(
      */
     override fun closeChatRoom(closeChatRoomReq: CloseChatRoomReq): Flow<Results<Boolean, WrappedResponse<Nothing>>> {
         return flow {
-            Log.d("로그", "closeChatRoomReq - $closeChatRoomReq")
+            val TAG: String = "로그"
+            Log.d(TAG, "ChatRoomRepositoryImpl - closeChatRoom(1) called")
             val response = remote.closeChatRoom(closeChatRoomReq)
-            Log.d("로그", "response  - $response")
+            Log.d(TAG, "ChatRoomRepositoryImpl - closeChatRoom(2-1) $closeChatRoomReq called")
+            Log.d(TAG, "ChatRoomRepositoryImpl - closeChatRoom(2-2) : $response called")
             if (response.isSuccessful) {
-                var deffer = coroutineScope {
-                    async {
-                        local.chatRoomDao().updateChatRoomLastReadMessageWithTime(
-                            closeChatRoomReq.lastReadMessageId,
-                            System.currentTimeMillis(),
-                            closeChatRoomReq.userChatroomId
-                        )
-                    }
+                var response: String = ""
+                var updateResponse = 0
+                var deffer: Deferred<String> = CoroutineScope(ioDispatcher).async {
+                    local.chatDao().getContents(closeChatRoomReq.lastReadMessageId)
                 }
-                deffer.await()
+                response = deffer.await()
+                var deffer2: Deferred<Int> = CoroutineScope(ioDispatcher).async {
+                    local.chatRoomDao().updateChatRoomWithMessageText(
+                        closeChatRoomReq.lastReadMessageId,
+                        response,
+                        System.currentTimeMillis(),
+                        closeChatRoomReq.userChatroomId,
+                    )
+                }
+                updateResponse = deffer2.await()
                 emit(Results.Success(true))
             }
         }.flowOn(ioDispatcher)
@@ -356,7 +359,7 @@ class ChatRoomRepositoryImpl @Inject constructor(
         return flow {
             val response = remote.joinChatRoom(joinChatRoomReq)
             if (response.isSuccessful) {
-                if (response.body()!!.status == 201) {
+                if (response.body()!!.status == 200) {
                     val body = response.body()!!
                     val data = body.data!!
                     emit(Results.Success(data))
@@ -392,6 +395,23 @@ class ChatRoomRepositoryImpl @Inject constructor(
         return flow {
             val response = local.chatRoomDao().getUserChatRoomId(roomId)
             emit(LocalResults.Success(response))
+        }
+    }
+
+    override fun updateChatRoomText(text: String, roomId: String): Flow<LocalResults<Boolean>> {
+        return flow {
+            var response = 0
+            val deffer = coroutineScope {
+                async {
+                    response = local.chatRoomDao().updateText(text, roomId, System.currentTimeMillis())
+                }
+            }
+            deffer.await()
+            if (response != 0) {
+                emit(LocalResults.Success(true))
+            } else {
+                emit(LocalResults.Success(false))
+            }
         }
     }
 }

@@ -33,5 +33,5 @@ data class Chat(
     @Nonnull @ColumnInfo(name = "nickname") val nickname: String,
     @ColumnInfo(name = "contents") val contents: String?,
     @ColumnInfo(name = "file_url") val file_url: String?,
-    @Nonnull @ColumnInfo(name = "created_at") val created_at: String
+    @Nonnull @ColumnInfo(name = "created_at") val created_at: Long
 )

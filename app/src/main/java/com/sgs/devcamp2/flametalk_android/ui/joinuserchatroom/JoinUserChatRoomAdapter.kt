@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.inviteroom.FriendListRes
-import com.sgs.devcamp2.flametalk_android.databinding.ItemPersonInviteRoomBinding
+import com.sgs.devcamp2.flametalk_android.databinding.ItemPersonJoinRoomBinding
 
 /**
  * @author 김현국
@@ -42,22 +42,25 @@ class JoinUserChatRoomAdapter(callback: JoinUserChatRoomFragment) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_person_invite_room, parent, false)
-        return PersonViewHolder(ItemPersonInviteRoomBinding.bind(view))
+            .inflate(R.layout.item_person_join_room, parent, false)
+        return PersonViewHolder(ItemPersonJoinRoomBinding.bind(view))
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         (holder as PersonViewHolder).bind(getItem(position))
     }
 
-    inner class PersonViewHolder(val binding: ItemPersonInviteRoomBinding) :
+    inner class PersonViewHolder(val binding: ItemPersonJoinRoomBinding) :
         RecyclerView.ViewHolder(binding.root) {
-
         fun bind(friendEntity: FriendListRes) {
             Log.d(TAG, "friendList - (${friendEntity.nickname}) called")
-            Glide.with(binding.ivInviteRoomImage).load(friendEntity.preview.imageUrl).into(binding.ivInviteRoomImage)
-            binding.tvInviteRoomUserName.text = friendEntity.nickname
-            binding.layoutInviteRoomItem.setOnClickListener(ItemClickListener(friendEntity.userId))
+            if (friendEntity.preview.imageUrl == "") {
+                Glide.with(binding.ivJoinRoomImage).load(R.drawable.ic_person_white_24).into(binding.ivJoinRoomImage)
+            } else {
+                Glide.with(binding.ivJoinRoomImage).load(friendEntity.preview.imageUrl).into(binding.ivJoinRoomImage)
+            }
+            binding.tvJoinRoomUserName.text = friendEntity.nickname
+            binding.layoutJoinRoomItem.setOnClickListener(ItemClickListener(friendEntity.userId))
         }
     }
 
@@ -66,7 +69,7 @@ class JoinUserChatRoomAdapter(callback: JoinUserChatRoomFragment) :
     ) : View.OnClickListener {
         override fun onClick(view: View?) {
             when (view?.id) {
-                R.id.layout_invite_room_item -> {
+                R.id.layout_join_room_item -> {
                     itemClickCallBack?.onItemClicked(userId)
                 }
             }

@@ -12,7 +12,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -92,12 +94,8 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
                 Settings.Secure.ANDROID_ID
             )
         )
-        /**
-         * chatRoomId로 userChatRoomId를 가져옴
-         */
-        // model.getChatRoomModel(args.chatroomId)
-        // model.getLastReadMessageId(args.chatroomId)
         model.getUserChatRoomId(args.chatroomId)
+        model.getLastReadMessageId(args.chatroomId)
     }
     /**
      * 채팅방 입장시, 채팅방 구독
@@ -122,7 +120,6 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
                 model.getChatRoomDetail(it)
             }
         }
-
 // 타이틀과 채팅방 인원수 init
         viewLifecycleOwner.lifecycleScope.launch {
             model.userChatRoom.collect { state ->
@@ -153,8 +150,11 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
                         userlistAdapter.submitList(state.data.profiles)
                         var map: HashMap<String, String> = HashMap()
                         for (i in 0 until state.data.profiles.size) {
-                            Log.d(TAG,"userId - ${state.data.profiles.get(i).image}() called")
-                            map.put(state.data.profiles.get(i).userId, state.data.profiles.get(i).image)
+                            Log.d(TAG, "userId - ${state.data.profiles.get(i).image}() called")
+                            map.put(
+                                state.data.profiles.get(i).userId,
+                                state.data.profiles.get(i).image
+                            )
                         }
                         adapter.updateProfiles(map)
                         model.getChatList(args.chatroomId)
@@ -201,7 +201,7 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
                 }
             }
         }
-        viewLifecycleOwner.lifecycleScope.launch {
+        lifecycleScope.launch {
             model.uploadUiState.collect { state ->
                 when (state) {
                     is UiState.Success -> {
@@ -225,8 +225,14 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
             }
         }
         viewLifecycleOwner.lifecycleScope.launch {
-            model.userChatroomId.collect {
-                model.getChatRoomDetail(it)
+            viewLifecycleOwner.repeatOnLifecycle(state = Lifecycle.State.DESTROYED) {
+                launch {
+                    model.lastReadMessageId.collect {
+                        model.closeChatRoom(
+                            model.userChatRoomId.value, it
+                        )
+                    }
+                }
             }
         }
     }
@@ -330,24 +336,22 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
         dialog.show()
     }
 
-    override fun onPause() {
-        super.onPause()
-        Log.d(TAG, "ChatRoomFragment - onPause() called")
-        model.getLastReadMessageId(args.chatroomId)
-    }
-
     override fun onStart() {
         super.onStart()
-        Log.d(TAG, "ChatRoomFragment - onStart() called")
+        Log.d(TAG, "ChatRoomFragment - onStart(1) called")
+        model.getLastReadMessageId(args.chatroomId)
         model.updateState()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d(TAG, "ChatRoomFragment - onPause(2) called")
+        model.getLastReadMessageId(args.chatroomId)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.d(TAG, "ChatRoomFragment - onDestroy() called")
-        model.closeChatRoom(
-            model.userChatroomId.value, model.lastReadMessageId.value
-        )
+        Log.d(TAG, "ChatRoomFragment - onDestroy(3) called")
         model.initUploadImageState()
         model.saveExitStatus(
             args.chatroomId,
