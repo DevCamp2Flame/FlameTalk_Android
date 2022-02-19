@@ -100,7 +100,7 @@ class FriendViewModel @Inject constructor(
 
                     // Result
 //                    Timber.d("User Profile ${_userProfile.value}")
-//                    Timber.d("Multi Profile ${_multiProfile.value}")
+                    Timber.d("프로필 ${response.data.profiles}")
                 } else {
                     _message.value = response.message
                 }

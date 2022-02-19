@@ -45,6 +45,11 @@ class ProfileRepository @Inject constructor(
         profileService.get().getProfileList()
     }
 
+    // 프로필 삭제
+    suspend fun deleteProfile(profileId: Long) = withContext(ioDispatcher) {
+        profileService.get().deleteProfile(profileId)
+    }
+
     /**
      *   Feed
      */

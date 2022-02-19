@@ -51,6 +51,10 @@ class ProfileViewModel @Inject constructor(
     private val _isSuccess: MutableStateFlow<Boolean?> = MutableStateFlow(null)
     val isSuccess = _isSuccess.asStateFlow()
 
+    // 성공 여부
+    private val _deleteSuccess: MutableStateFlow<Boolean?> = MutableStateFlow(null)
+    val deleteSuccess = _deleteSuccess.asStateFlow()
+
     // 사용자에게 피드백 할 에러메세지
     private val _message = MutableStateFlow("")
     val message = _message.asStateFlow()
@@ -75,6 +79,24 @@ class ProfileViewModel @Inject constructor(
             } catch (error: Throwable) {
                 _error.value = error.toString()
                 Timber.d("Fail Response: $_error")
+            }
+        }
+    }
+
+    // 프로필 삭제
+    fun deleteProfile(profileId: Long) {
+        viewModelScope.launch {
+            try {
+                val response = profileRepository.get().deleteProfile(profileId)
+
+                if (response.status == 200) {
+                    _isSuccess.value = true
+                } else {
+                    _message.value = response.message
+                }
+                Timber.d("Success Response: $response")
+            } catch (error: Throwable) {
+                Timber.d("Fail Response: $error")
             }
         }
     }
