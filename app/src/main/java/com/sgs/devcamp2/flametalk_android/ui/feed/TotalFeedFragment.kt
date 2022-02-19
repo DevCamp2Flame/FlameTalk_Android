@@ -85,15 +85,15 @@ class TotalFeedFragment : Fragment() {
         binding.rvTotalFeed.layoutManager = LinearLayoutManager(requireContext())
         binding.rvTotalFeed.adapter = totalFeedAdapter
 
-        viewModel.totalFeed.observe(
-            viewLifecycleOwner
-        ) { it ->
-            it?.let {
-                totalFeedAdapter.data = it
-                totalFeedAdapter.submitList(it)
-
-                if (it.isEmpty()) {
+        lifecycleScope.launchWhenResumed {
+            viewModel.totalFeed.collectLatest {
+                if (it == null) { // 초기 상태
+                    binding.tvSingleFeedEmpty.toVisibleGone()
+                } else if (it.isEmpty()) {
                     binding.tvSingleFeedEmpty.toVisible()
+                } else {
+                    totalFeedAdapter.data = it
+                    totalFeedAdapter.submitList(it)
                 }
             }
         }

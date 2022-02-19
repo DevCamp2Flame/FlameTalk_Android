@@ -1,8 +1,6 @@
 package com.sgs.devcamp2.flametalk_android.ui.feed
 
 import android.content.Context
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sgs.devcamp2.flametalk_android.domain.repository.ProfileRepository
@@ -28,17 +26,17 @@ class SingleFeedViewModel @Inject constructor(
     private val _profileImage = MutableStateFlow("")
     val profileImage = _profileImage.asStateFlow()
 
-    // 프로필 아이디
-    private val _profileId: MutableLiveData<Long> = MutableLiveData(0L)
-    val profileId: LiveData<Long> = _profileId
+//    // 프로필 아이디
+//    private val _profileId: MutableLiveData<Long> = MutableLiveData(0L)
+//    val profileId: LiveData<Long> = _profileId
 
     // 피드 리스트
-    private val _feeds: MutableLiveData<List<Feed>> = MutableLiveData()
-    val feeds: MutableLiveData<List<Feed>> = _feeds
+    private val _feeds: MutableStateFlow<List<Feed>?> = MutableStateFlow(null)
+    val feeds: MutableStateFlow<List<Feed>?> = _feeds
 
     // 피드 재호출할지 여부
     private val _reload = MutableStateFlow(false)
-    val reload = _reload?.asStateFlow()
+    val reload = _reload.asStateFlow()
 
     // 피드 재호출할지 여부
     private val _lockChanged: MutableStateFlow<Boolean>? = null
@@ -49,7 +47,7 @@ class SingleFeedViewModel @Inject constructor(
 
     // 현재 보고있는 image feed position
     private val _currentPosition = MutableStateFlow(1)
-    val currentPosition = _currentPosition?.asStateFlow()
+    val currentPosition = _currentPosition.asStateFlow()
 
     private val _error: MutableStateFlow<String>? = null
     val error = _error?.asStateFlow()
@@ -88,7 +86,7 @@ class SingleFeedViewModel @Inject constructor(
 
                 _reload.value = false
                 Timber.d("$response")
-                Timber.d("아이템 삭제 요청 ${item!!.feedId}")
+                Timber.d("아이템 삭제 요청 ${item.feedId}")
             } catch (ignored: Throwable) {
                 _error?.value = "알 수 없는 에러 발생"
                 Timber.d("Error:  $ignored")
@@ -111,7 +109,7 @@ class SingleFeedViewModel @Inject constructor(
                 }
 
                 Timber.d("$response")
-                Timber.d("아이템 숨김여부 변경 요청 ${item!!.feedId}")
+                Timber.d("아이템 숨김여부 변경 요청 ${item.feedId}")
             } catch (ignored: Throwable) {
                 _error?.value = "알 수 없는 에러 발생"
                 Timber.d("Error:  $ignored")

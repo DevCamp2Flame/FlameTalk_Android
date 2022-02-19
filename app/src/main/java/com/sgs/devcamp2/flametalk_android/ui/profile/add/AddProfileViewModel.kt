@@ -56,14 +56,16 @@ class AddProfileViewModel @Inject constructor(
     val profileImage = _profileImage.asStateFlow()
 
     // 프로필 이미지 url
-    private val _profileImageUrl = MutableStateFlow("")
+    // private val _profileImageUrl = MutableStateFlow("")
+    private val _profileImageUrl: MutableStateFlow<String?> = MutableStateFlow(null)
 
     // 배경 이미지
     private val _backgroundImage = MutableStateFlow("")
     val backgroundImage = _backgroundImage.asStateFlow()
 
     // 배경 이미지 url
-    private val _backgroundImageUrl = MutableStateFlow("")
+    // private val _backgroundImageUrl = MutableStateFlow("")
+    private val _backgroundImageUrl: MutableStateFlow<String?> = MutableStateFlow(null)
 
     // 스티커
     var stickers = arrayListOf<Sticker>()
