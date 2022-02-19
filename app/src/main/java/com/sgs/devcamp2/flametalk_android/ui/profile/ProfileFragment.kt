@@ -31,8 +31,9 @@ import kotlinx.coroutines.flow.collectLatest
 /**
  * @author 박소연
  * @created 2022/01/17
- * @created 2022/01/31
- * @desc 프로필 상세 보기 페이지
+ * @created 2022/02/19
+ * @desc 프로필 상세 보기 페이지. 프로필 유형(내 멀티프로필, 친구 프로필) 여부에 따라 버튼, 메뉴가 다름
+ *       스티커를 붙였을 경우 스티커들이 저장된 좌표에 붙음
  */
 
 @AndroidEntryPoint
