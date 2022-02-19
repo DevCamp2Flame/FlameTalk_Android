@@ -195,7 +195,7 @@ class FriendFragment : Fragment() {
         binding.rvFriendBirthday.adapter = friendBirthdayAdapter
 
         lifecycleScope.launch {
-            viewModel.birthProfile.collectLatest {
+            viewModel.birthProfile.collect {
                 if (it.isNullOrEmpty()) {
                     birthdayVisibility(GONE)
                 } else {
@@ -208,6 +208,7 @@ class FriendFragment : Fragment() {
         }
         // 마지막 아이템: 친구의 생일을 확인해보세요
         binding.itemFriendMoreBirthday.imgFriendPreviewNone.toVisible()
+        binding.itemFriendMoreBirthday.imgFriendPreviewNoneIcon.toVisible()
         binding.itemFriendMoreBirthday.tvFriendPreviewCount.toVisible()
         binding.itemFriendMoreBirthday.tvFriendPreviewNickname.text = "친구의 생일을 확인해보세요!"
         binding.itemFriendMoreBirthday.tvFriendPreviewDesc.toVisibleGone()
@@ -221,7 +222,7 @@ class FriendFragment : Fragment() {
         binding.rvFriend.layoutManager = LinearLayoutManager(requireContext())
         binding.rvFriend.adapter = friendAdapter
         lifecycleScope.launchWhenCreated {
-            viewModel.friendProfile.collectLatest {
+            viewModel.friendProfile.collect {
                 if (it == null) {
                     friendVisibility(VISIBLE)
                 } else if (it.isEmpty()) {
@@ -256,7 +257,6 @@ class FriendFragment : Fragment() {
     private fun loadFriends() {
         if (checkPermission()) {
             // 권한이 있으면 연락처 리스트를 불러온다
-            // viewModel.getContactList()
             viewModel.getContactsList()
         } else {
             Snackbar.make(
