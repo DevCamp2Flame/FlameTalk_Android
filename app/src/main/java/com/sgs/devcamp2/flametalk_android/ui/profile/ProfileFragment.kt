@@ -27,7 +27,6 @@ import com.sgs.devcamp2.flametalk_android.util.toVisibleGone
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
-import timber.log.Timber
 
 /**
  * @author 박소연
@@ -42,6 +41,7 @@ class ProfileFragment : Fragment() {
     private val binding by lazy { FragmentProfileBinding.inflate(layoutInflater) }
     private val viewModel by viewModels<ProfileViewModel>()
     private val args: ProfileFragmentArgs by navArgs()
+    val param = ConstraintLayout.LayoutParams(100, 100)
     private var rootLayout: ViewGroup? = null
 
     override fun onCreateView(
@@ -145,6 +145,8 @@ class ProfileFragment : Fragment() {
 
     // 유저프로필 초기화
     private fun initUserProfile() {
+        rootLayout = binding.cstProfile
+
         viewModel.getProfileData(args.profileId)
 
         lifecycleScope.launchWhenResumed {
@@ -158,7 +160,7 @@ class ProfileFragment : Fragment() {
                     .into(binding.imgProfileBg)
             }
         }
-
+        rootLayout = binding.cstProfile
         lifecycleScope.launchWhenResumed {
             viewModel.stickers.collectLatest { sticker ->
                 sticker.forEach {
@@ -193,28 +195,22 @@ class ProfileFragment : Fragment() {
 
     @SuppressLint("ClickableViewAccessibility")
     private fun createImageView(emoji: Int, positionX: Double, positionY: Double): View {
-        rootLayout = binding.cstProfile
 
         /**프로필 조회하는 디바이스의 사이즈에 따라 scaling 하기 위해
          디바이스의 기기 가로, 세로 사이즈로 나누어 position 저장*/
         val dm: DisplayMetrics = requireContext().resources.displayMetrics
         val width = dm.widthPixels
         val height = dm.heightPixels
-        Timber.d("width: $width, height: $height")
 
         // 스티커를 위한 ImageView 동적 생성
         val img = AppCompatImageView(requireContext())
         // 생성할 스티커의 사이즈
         val param = ConstraintLayout.LayoutParams(100, 100)
-        // 스티커 생성하고 중앙에 배치하기 위한 layout 제약
+        // 생성한 스티커를 저장된 좌표에 배치하기 위한 layout 제약
         param.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
         param.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
-
-//        val lParams = img.layoutParams as ConstraintLayout.LayoutParams
-//        lParams.marginStart = positionX.toInt()
-//        lParams.topMargin = positionY.toInt()
-//
-//        img.layoutParams = lParams
+        param.marginStart = (positionX * width).toInt()
+        param.topMargin = (positionY * height).toInt()
 
         when (emoji) {
             EMOJI_AWW -> Glide.with(requireContext()).load(R.drawable.emoji_aww).into(img)
