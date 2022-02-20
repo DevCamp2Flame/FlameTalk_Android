@@ -1,6 +1,5 @@
 package com.sgs.devcamp2.flametalk_android.ui.chatroomlist
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,12 +14,14 @@ import com.sgs.devcamp2.flametalk_android.data.model.chatroom.ThumbnailWithRoomI
 import com.sgs.devcamp2.flametalk_android.databinding.*
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
 /**
  * @author 김현국
  * @created 2022/01/26
  */
-class ChatRoomListAdapter constructor(
+class ChatRoomListAdapter @Inject constructor(
+
     callback: ClickCallBack
 ) : ListAdapter<ThumbnailWithRoomId, RecyclerView.ViewHolder>(diffUtil) {
     interface ClickCallBack {
@@ -47,7 +48,8 @@ class ChatRoomListAdapter constructor(
             }
 
             override fun areContentsTheSame(oldItem: ThumbnailWithRoomId, newItem: ThumbnailWithRoomId): Boolean {
-                return oldItem == newItem
+                return oldItem.room.count == newItem.room.count && oldItem.thumbnailList.size == newItem.thumbnailList.size &&
+                    oldItem.room.title == newItem.room.title && oldItem.room.text == newItem.room.text
             }
         }
     }
@@ -105,7 +107,6 @@ class ChatRoomListAdapter constructor(
      * onCreateViewHolder 에서 사용하는 뷰타입을 반환해준다.
      */
     override fun getItemViewType(position: Int): Int {
-        Log.d(TAG, "currnetList[position] - ${currentList[position].thumbnailList}() called")
         return currentList[position].thumbnailList.size
     }
     /**
@@ -115,20 +116,55 @@ class ChatRoomListAdapter constructor(
     inner class OneViewHolder(val binding: ItemPersonOneChatListBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(chatroom: ThumbnailWithRoomId) {
-            Glide.with(binding.ivOneChatRoomListUserImg).load(chatroom.thumbnailList[0].image)
-                .transform(CenterCrop(), RoundedCorners(40)).into(binding.ivOneChatRoomListUserImg)
+            if (chatroom.thumbnailList[0].image == "") {
+                Glide.with(binding.ivOneChatRoomListUserImg).load(R.drawable.ic_person_white_24)
+                    .transform(CenterCrop(), RoundedCorners(40)).into(binding.ivOneChatRoomListUserImg)
+            } else {
+                Glide.with(binding.ivOneChatRoomListUserImg).load(chatroom.thumbnailList[0].image)
+                    .transform(CenterCrop(), RoundedCorners(40)).into(binding.ivOneChatRoomListUserImg)
+            }
+
+            val updated_at = simpleFormat.format(chatroom.room.updated_at)
+            if (chatroom.room.messageCount == 0) {
+                binding.tvOneChatRoomMessageCount.visibility = View.GONE
+            } else {
+                binding.tvOneChatRoomMessageCount.visibility = View.VISIBLE
+                binding.tvOneChatRoomMessageCount.text = chatroom.room.messageCount.toString()
+            }
+
+            binding.tvOneChatRoomListDate.text = updated_at
+            binding.tvOneChatRoomListMessage.text = chatroom.room.text
             binding.tvOneChatRoomListUserName.text = chatroom.room.title
-            binding.tvOneChatRoomListUserCount.text = chatroom.room.count.toString()
         }
     }
 
     inner class TwoViewHolder(val binding: ItemPersonTwoChatListBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(chatroom: ThumbnailWithRoomId) {
-            Glide.with(binding.ivTwoChatRoomListUserImg).load(chatroom.thumbnailList[0].image)
-                .transform(CenterCrop(), RoundedCorners(30)).into(binding.ivTwoChatRoomListUserImg)
-            Glide.with(binding.ivTwoChatRoomListUserImg2).load(chatroom.thumbnailList[1].image)
-                .transform(CenterCrop(), RoundedCorners(30)).into(binding.ivTwoChatRoomListUserImg2)
+            if (chatroom.thumbnailList[0].image == "") {
+                Glide.with(binding.ivTwoChatRoomListUserImg).load(R.drawable.ic_person_white_24)
+                    .transform(CenterCrop(), RoundedCorners(30)).into(binding.ivTwoChatRoomListUserImg)
+            } else {
+
+                Glide.with(binding.ivTwoChatRoomListUserImg).load(chatroom.thumbnailList[0].image)
+                    .transform(CenterCrop(), RoundedCorners(30)).into(binding.ivTwoChatRoomListUserImg)
+            }
+            if (chatroom.thumbnailList[1].image == "") {
+                Glide.with(binding.ivTwoChatRoomListUserImg2).load(R.drawable.ic_person_white_24)
+                    .transform(CenterCrop(), RoundedCorners(30)).into(binding.ivTwoChatRoomListUserImg2)
+            } else {
+                Glide.with(binding.ivTwoChatRoomListUserImg2).load(chatroom.thumbnailList[1].image)
+                    .transform(CenterCrop(), RoundedCorners(30)).into(binding.ivTwoChatRoomListUserImg2)
+            }
+            val updated_at = simpleFormat.format(chatroom.room.updated_at)
+            if (chatroom.room.messageCount == 0) {
+                binding.tvTwoChatRoomMessageCount.visibility = View.GONE
+            } else {
+                binding.tvTwoChatRoomMessageCount.visibility = View.VISIBLE
+                binding.tvTwoChatRoomMessageCount.text = chatroom.room.messageCount.toString()
+            }
+            binding.tvTwoChatRoomListDate.text = updated_at
+            binding.tvTwoChatRoomListMessage.text = chatroom.room.text
             binding.tvTwoChatRoomListUserName.text = chatroom.room.title
             binding.tvTwoChatRoomListUserCount.text = chatroom.room.count.toString()
         }
@@ -137,15 +173,42 @@ class ChatRoomListAdapter constructor(
     inner class ThreeViewHolder(val binding: ItemPersonThreeChatListBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(chatroom: ThumbnailWithRoomId) {
-            Glide.with(binding.ivThreeChatRoomListUserImg)
-                .load(chatroom.thumbnailList[0].image).transform(CenterCrop(), RoundedCorners(15))
-                .into(binding.ivThreeChatRoomListUserImg)
-            Glide.with(binding.ivThreeChatRoomListUserImg2).load(chatroom.thumbnailList[1].image)
-                .transform(CenterCrop(), RoundedCorners(15))
-                .into(binding.ivThreeChatRoomListUserImg2)
-            Glide.with(binding.ivThreeChatRoomListUserImg3).load(chatroom.thumbnailList[2].image)
-                .transform(CenterCrop(), RoundedCorners(15))
-                .into(binding.ivThreeChatRoomListUserImg3)
+            if (chatroom.thumbnailList[0].image == "") {
+                Glide.with(binding.ivThreeChatRoomListUserImg)
+                    .load(R.drawable.ic_person_white_24).transform(CenterCrop(), RoundedCorners(15))
+                    .into(binding.ivThreeChatRoomListUserImg)
+            } else {
+                Glide.with(binding.ivThreeChatRoomListUserImg)
+                    .load(chatroom.thumbnailList[0].image).transform(CenterCrop(), RoundedCorners(15))
+                    .into(binding.ivThreeChatRoomListUserImg)
+            }
+            if (chatroom.thumbnailList[1].image == "") {
+                Glide.with(binding.ivThreeChatRoomListUserImg2)
+                    .load(R.drawable.ic_person_white_24).transform(CenterCrop(), RoundedCorners(15))
+                    .into(binding.ivThreeChatRoomListUserImg2)
+            } else {
+                Glide.with(binding.ivThreeChatRoomListUserImg2)
+                    .load(chatroom.thumbnailList[1].image).transform(CenterCrop(), RoundedCorners(15))
+                    .into(binding.ivThreeChatRoomListUserImg2)
+            }
+            if (chatroom.thumbnailList[2].image == "") {
+                Glide.with(binding.ivThreeChatRoomListUserImg3)
+                    .load(R.drawable.ic_person_white_24).transform(CenterCrop(), RoundedCorners(15))
+                    .into(binding.ivThreeChatRoomListUserImg3)
+            } else {
+                Glide.with(binding.ivThreeChatRoomListUserImg3)
+                    .load(chatroom.thumbnailList[2].image).transform(CenterCrop(), RoundedCorners(15))
+                    .into(binding.ivThreeChatRoomListUserImg3)
+            }
+            if (chatroom.room.messageCount == 0) {
+                binding.tvThreeChatRoomMessageCount.visibility = View.GONE
+            } else {
+                binding.tvThreeChatRoomMessageCount.visibility = View.VISIBLE
+                binding.tvThreeChatRoomMessageCount.text = chatroom.room.messageCount.toString()
+            }
+            val updated_at = simpleFormat.format(chatroom.room.updated_at)
+            binding.tvThreeChatRoomListDate.text = updated_at
+            binding.tvThreeChatRoomListMessage.text = chatroom.room.text
             binding.tvThreeChatRoomListUserName.text = chatroom.room.title
             binding.tvThreeChatRoomListUserCount.text = chatroom.room.count.toString()
         }
@@ -154,15 +217,44 @@ class ChatRoomListAdapter constructor(
     inner class FourViewHolder(val binding: ItemPersonFourChatListBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(chatroom: ThumbnailWithRoomId) {
-            Glide.with(binding.ivFourChatRoomListUserImg).load(chatroom.thumbnailList[0].image)
-                .transform(CenterCrop(), RoundedCorners(5)).into(binding.ivFourChatRoomListUserImg)
-            Glide.with(binding.ivFourChatRoomListUserImg2).load(chatroom.thumbnailList[1].image)
-                .transform(CenterCrop(), RoundedCorners(5)).into(binding.ivFourChatRoomListUserImg2)
-            Glide.with(binding.ivFourChatRoomListUserImg3).load(chatroom.thumbnailList[2].image)
-                .transform(CenterCrop(), RoundedCorners(5)).into(binding.ivFourChatRoomListUserImg3)
-            Glide.with(binding.ivFourChatRoomListUserImg4).load(chatroom.thumbnailList[3].image)
-                .transform(CenterCrop(), RoundedCorners(5)).into(binding.ivFourChatRoomListUserImg4)
+            if (chatroom.thumbnailList[0].image == "") {
+                Glide.with(binding.ivFourChatRoomListUserImg).load(R.drawable.ic_person_white_24)
+                    .transform(CenterCrop(), RoundedCorners(5)).into(binding.ivFourChatRoomListUserImg)
+            } else {
+                Glide.with(binding.ivFourChatRoomListUserImg).load(chatroom.thumbnailList[0].image)
+                    .transform(CenterCrop(), RoundedCorners(5)).into(binding.ivFourChatRoomListUserImg)
+            }
+            if (chatroom.thumbnailList[1].image == "") {
+                Glide.with(binding.ivFourChatRoomListUserImg2).load(R.drawable.ic_person_white_24)
+                    .transform(CenterCrop(), RoundedCorners(5)).into(binding.ivFourChatRoomListUserImg2)
+            } else {
+                Glide.with(binding.ivFourChatRoomListUserImg2).load(chatroom.thumbnailList[1].image)
+                    .transform(CenterCrop(), RoundedCorners(5)).into(binding.ivFourChatRoomListUserImg2)
+            }
+            if (chatroom.thumbnailList[2].image == "") {
+                Glide.with(binding.ivFourChatRoomListUserImg3).load(R.drawable.ic_person_white_24)
+                    .transform(CenterCrop(), RoundedCorners(5)).into(binding.ivFourChatRoomListUserImg3)
+            } else {
+                Glide.with(binding.ivFourChatRoomListUserImg3).load(chatroom.thumbnailList[2].image)
+                    .transform(CenterCrop(), RoundedCorners(5)).into(binding.ivFourChatRoomListUserImg3)
+            }
+            if (chatroom.thumbnailList[3].image == "") {
+                Glide.with(binding.ivFourChatRoomListUserImg4).load(R.drawable.ic_person_white_24)
+                    .transform(CenterCrop(), RoundedCorners(5)).into(binding.ivFourChatRoomListUserImg4)
+            } else {
+                Glide.with(binding.ivFourChatRoomListUserImg4).load(chatroom.thumbnailList[3].image)
+                    .transform(CenterCrop(), RoundedCorners(5)).into(binding.ivFourChatRoomListUserImg4)
+            }
+            val updated_at = simpleFormat.format(chatroom.room.updated_at)
+            if (chatroom.room.messageCount == 0) {
+                binding.tvFourChatRoomMessageCount.visibility = View.GONE
+            } else {
+                binding.tvFourChatRoomMessageCount.visibility = View.VISIBLE
+                binding.tvFourChatRoomMessageCount.text = chatroom.room.messageCount.toString()
+            }
+            binding.tvFourChatRoomListDate.text = updated_at
             binding.tvFourChatRoomListUserName.text = chatroom.room.title
+            binding.tvFourChatRoomListMessage.text = chatroom.room.text
             binding.tvFourChatRoomListUserCount.text = chatroom.room.count.toString()
         }
     }

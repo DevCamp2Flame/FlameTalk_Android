@@ -1,5 +1,6 @@
 package com.sgs.devcamp2.flametalk_android.data.repository
 
+import android.util.Log
 import com.sgs.devcamp2.flametalk_android.data.common.WrappedResponse
 import com.sgs.devcamp2.flametalk_android.data.model.device.saveDeviceToken.SaveDeviceTokenReq
 import com.sgs.devcamp2.flametalk_android.data.model.device.saveDeviceToken.SaveDeviceTokenRes
@@ -23,13 +24,21 @@ class DeviceRepositoryImpl @Inject constructor(
     /**
      * 로그인 성공시 fcm의 devicetoken을 업데이트하는 function입니다.
      */
+    val TAG: String = "로그"
     override suspend fun saveDeviceToken(saveDeviceTokenReq: SaveDeviceTokenReq): Flow<Results<SaveDeviceTokenRes, WrappedResponse<SaveDeviceTokenRes>>> {
         return flow {
             val response = remote.saveDeviceToken(saveDeviceTokenReq)
             if (response.isSuccessful) {
-                val body = response.body()!!
-                val data = body.data!!
-                emit(Results.Success(data))
+                if (response.body()!!.status == 200) {
+                    val body = response.body()!!
+                    val data = body.data!!
+                    emit(Results.Success(data))
+                } else {
+                    Log.d(TAG, "status - ${response.body()!!.status}")
+                }
+            } else {
+                Log.d(TAG, "DeviceRepositoryImpl -${response.code()}")
+                Log.d(TAG, "DeviceRepositoryImpl -${response.errorBody()}")
             }
         }.flowOn(ioDispatcher)
     }

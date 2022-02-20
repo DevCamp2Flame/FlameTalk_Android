@@ -21,4 +21,7 @@ interface FriendDAO {
     // 친구 전체 조회
     @Query("SELECT * FROM friend")
     fun getAllFriends(): Flow<List<FriendModel>>
+
+    @Query("SELECT imageUrl FROM friend WHERE userId = :userId")
+    fun getFriendImageUrl(userId: String): String
 }

@@ -12,6 +12,8 @@ import androidx.room.PrimaryKey
 data class ChatRoomUpdate(
     @PrimaryKey @ColumnInfo(name = "id")
     val id: String,
+    @ColumnInfo(name = "text") val text: String?,
+    @ColumnInfo(name = "messageCount") val messageCount: Int,
     @ColumnInfo(name = "lastReadMessageId")
     val lastReadMessageId: String,
     @ColumnInfo(name = "updated_at") val updated_at: Long

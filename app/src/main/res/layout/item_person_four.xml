@@ -13,10 +13,10 @@
 
     <ImageView
         android:id="@+id/iv_person_four_img_1"
-        android:layout_width="0dp"
-        app:layout_constraintWidth_percent="0.5"
-        app:layout_constraintHeight_percent="0.5"
-        android:layout_height="0dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/bg_imageview_radius_gray"
+        android:padding="1.2dp"
         tools:src="@drawable/dummy"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -25,29 +25,29 @@
         />
     <ImageView
         android:id="@+id/iv_person_four_img_2"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintWidth_percent="0.5"
-        app:layout_constraintHeight_percent="0.5"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/bg_imageview_radius_gray"
+        android:padding="1.2dp"
         tools:src="@drawable/dummy"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:translationZ="2dp"/>
     <ImageView
         android:id="@+id/iv_person_four_img_3"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintWidth_percent="0.5"
-        app:layout_constraintHeight_percent="0.5"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/bg_imageview_radius_gray"
+        android:padding="1.2dp"
         tools:src="@drawable/dummy"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
     <ImageView
         android:id="@+id/iv_person_four_img_4"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintWidth_percent="0.5"
-        app:layout_constraintHeight_percent="0.5"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/bg_imageview_radius_gray"
+        android:padding="1.2dp"
         tools:src="@drawable/dummy"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>

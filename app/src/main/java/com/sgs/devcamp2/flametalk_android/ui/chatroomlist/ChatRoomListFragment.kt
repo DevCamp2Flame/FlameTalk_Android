@@ -3,6 +3,7 @@ package com.sgs.devcamp2.flametalk_android.ui.chatroomlist
 import android.app.AlertDialog
 import android.content.*
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.ThumbnailWithRoomId
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentChatRoomListBinding
@@ -39,15 +41,18 @@ class ChatRoomListFragment : Fragment(), ChatRoomListAdapter.ClickCallBack {
         binding = FragmentChatRoomListBinding.inflate(inflater, container, false)
         initUI(this.requireContext())
         initObserve()
-
         return binding.root
     }
 
     private fun initUI(context: Context) {
         binding.rvChatListChattingRoom.layoutManager = LinearLayoutManager(context)
         adapterRoom = ChatRoomListAdapter(callback = this)
+        binding.rvChatListChattingRoom.itemAnimator = null
+        binding.rvChatListChattingRoom.itemAnimator = DefaultItemAnimator()
+
         binding.rvChatListChattingRoom.adapter = adapterRoom
         model.getChatRoomList(false)
+        model.getDeviceToken(this.requireContext())
     }
 
     fun initObserve() {
@@ -57,7 +62,6 @@ class ChatRoomListFragment : Fragment(), ChatRoomListAdapter.ClickCallBack {
                     model.uiState.collect { state ->
                         when (state) {
                             is UiState.Success -> {
-
                                 model.getLocalChatRoomList(false)
                             }
                         }
@@ -68,20 +72,23 @@ class ChatRoomListFragment : Fragment(), ChatRoomListAdapter.ClickCallBack {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    model.localUiState.collect {
-                        state ->
+                    model.localUiState.collect { state ->
                         when (state) {
-                            is UiState.Success ->
-                                {
-                                    if (state.data.isNotEmpty()) {
-                                        adapterRoom.submitList(state.data)
+                            is UiState.Success -> {
+                                if (state.data.isNotEmpty()) {
+                                    val list: List<ThumbnailWithRoomId> = state.data.sortedByDescending {
+                                        it.room.updated_at
                                     }
+                                    adapterRoom.submitList(list)
                                 }
+                            }
                         }
                     }
                 }
             }
         }
+        pushDeviceToken()
+        successSavedToken()
     }
 
     override fun onItemLongClicked(position: Int, chatroom: ThumbnailWithRoomId) {
@@ -110,11 +117,36 @@ class ChatRoomListFragment : Fragment(), ChatRoomListAdapter.ClickCallBack {
         true
     }
 
-    override fun onItemShortClicked(position: Int, chatroom: ThumbnailWithRoomId) {
+    override fun onItemShortClicked(position: Int, chatroomid: ThumbnailWithRoomId) {
         var action =
             ChattingViewPagerFragmentDirections.actionNavigationChattingViewPagerFragmentToNavigationChatRoom(
-                chatroom.room.id,
+                chatroomid.room.id,
             )
+        Log.d(TAG, "chatRoomId - ${chatroomid.room.id}() called")
         findNavController().navigate(action)
+    }
+
+    private fun pushDeviceToken() {
+        lifecycleScope.launch {
+            model.deviceToken.collect { state ->
+                when (state) {
+                    is UiState.Success -> {
+                        model.saveDeviceToken(state.data)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun successSavedToken() {
+        lifecycleScope.launch {
+            model.deviceTokenUiState.collect { state ->
+                when (state) {
+                    is UiState.Success -> {
+                        Log.d(TAG, "successSavedToken - ${state.data} called")
+                    }
+                }
+            }
+        }
     }
 }

@@ -132,14 +132,6 @@
             app:layout_constraintStart_toEndOf="@id/tv_four_chat_room_list_user_name"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/iv_four_chat_room_list_alarm"
-            android:layout_width="15dp"
-            android:layout_height="20dp"
-            android:layout_marginStart="10dp"
-            android:src="@drawable/ic_alarm"
-            app:layout_constraintStart_toEndOf="@id/tv_four_chat_room_list_user_count"
-            app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
             android:id="@+id/tv_four_chat_room_list_message"
@@ -153,14 +145,27 @@
 
 
         <TextView
-            android:id="@+id/tv_chat_room_list_date"
+            android:id="@+id/tv_four_chat_room_list_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             tools:text="오전 09시 30분"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_four_chat_room_message_count"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/bg_round_red"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            app:layout_constraintTop_toBottomOf="@id/tv_four_chat_room_list_date"
+            app:layout_constraintStart_toStartOf="@id/tv_four_chat_room_list_date"
+            app:layout_constraintEnd_toEndOf="@id/tv_four_chat_room_list_date"
+            tools:text="0"
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

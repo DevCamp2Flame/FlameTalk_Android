@@ -14,7 +14,7 @@ import javax.inject.Inject
 class CloseChatRoomUseCase @Inject constructor(
     private val repository: ChatRoomRepository
 ) {
-    suspend fun invoke(closeChatRoomReq: CloseChatRoomReq): Flow<Results<Boolean, WrappedResponse<Nothing>>> {
+    fun invoke(closeChatRoomReq: CloseChatRoomReq): Flow<Results<Boolean, WrappedResponse<Nothing>>> {
         return repository.closeChatRoom(closeChatRoomReq)
     }
 }

@@ -1,6 +1,7 @@
 package com.sgs.devcamp2.flametalk_android.di.module
 
 import com.sgs.devcamp2.flametalk_android.domain.repository.*
+import com.sgs.devcamp2.flametalk_android.domain.usecase.additionaluserinfo.SignUpUseCase
 import com.sgs.devcamp2.flametalk_android.domain.usecase.chatroom.*
 import com.sgs.devcamp2.flametalk_android.domain.usecase.chatroomlist.GetChatRoomListUseCase
 import com.sgs.devcamp2.flametalk_android.domain.usecase.chatroomlist.GetLocalChatRoomListUseCase
@@ -12,7 +13,6 @@ import com.sgs.devcamp2.flametalk_android.domain.usecase.myopenchatprofile.GetOp
 import com.sgs.devcamp2.flametalk_android.domain.usecase.myopenprofiledetail.DeleteOpenProfileUseCase
 import com.sgs.devcamp2.flametalk_android.domain.usecase.myopenprofiledetail.GetOpenProfileUseCase
 import com.sgs.devcamp2.flametalk_android.domain.usecase.myopenprofiledetail.UpdateOpenProfileUseCase
-import com.sgs.devcamp2.flametalk_android.ui.friend.FriendViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -89,5 +89,21 @@ object UseCaseModule {
     @Provides
     fun provideSaveDeviceTokenUseCase(repository: DeviceRepository): SaveDeviceTokenUseCase {
         return SaveDeviceTokenUseCase(repository = repository)
+    }
+    @Provides
+    fun provideJoinUserChatRoomUseCase(repository: ChatRoomRepository): JoinUserChatRoomUseCase {
+        return JoinUserChatRoomUseCase(repository = repository)
+    }
+    @Provides
+    fun provideGetFriendListUseCase(repository: ChatRoomRepository): GetFriendListUseCase {
+        return GetFriendListUseCase(repository = repository)
+    }
+    @Provides
+    fun provideSignUpUseCase(repository: AuthRepository): SignUpUseCase {
+        return SignUpUseCase(repository = repository)
+    }
+    @Provides
+    fun provideGetUserImageUseCase(repository: ChatRoomRepository): GetUserImageUseCase {
+        return GetUserImageUseCase(repository = repository)
     }
 }

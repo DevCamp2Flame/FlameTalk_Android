@@ -1,18 +1,20 @@
 package com.sgs.devcamp2.flametalk_android.data.repository
 
+import android.util.Log
 import com.sgs.devcamp2.flametalk_android.data.common.WrappedResponse
 import com.sgs.devcamp2.flametalk_android.data.mapper.mapperToChat
 import com.sgs.devcamp2.flametalk_android.data.mapper.mapperToChatRoomUpdateModel
 import com.sgs.devcamp2.flametalk_android.data.model.chat.ChatRes
 import com.sgs.devcamp2.flametalk_android.data.source.local.database.AppDatabase
 import com.sgs.devcamp2.flametalk_android.data.source.remote.api.ChatApi
+import com.sgs.devcamp2.flametalk_android.domain.entity.LocalResults
 import com.sgs.devcamp2.flametalk_android.domain.entity.Results
 import com.sgs.devcamp2.flametalk_android.domain.repository.ChatRepository
-import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import java.lang.NullPointerException
+import java.lang.Exception
 import javax.inject.Inject
 
 /**
@@ -32,10 +34,19 @@ class ChatRepositoryImp @Inject constructor(
      */
     override fun saveReceivedMessage(chatRes: ChatRes): Flow<Long> {
         return flow {
+            val TAG: String = "로그"
             val chat = mapperToChat(chatRes)
-            val index = db.chatDao().insert(chat)
+            Log.d(TAG, "chat - $chat")
+            val deferr: Deferred<Long> = CoroutineScope(ioDispatcher).async {
+                db.chatDao().insert(chat)
+            }
+            val index = deferr.await()
+            Log.d(TAG, "index - $index")
             val chatRoomUpdateModel = mapperToChatRoomUpdateModel(chatRes)
-            val updateIndex = db.chatRoomDao().updateLastReadMessageId(chatRoomUpdateModel)
+            val deferr2: Deferred<Unit> = CoroutineScope(ioDispatcher).async {
+                db.chatRoomDao().updateLastReadMessageId(chatRoomUpdateModel)
+            }
+            deferr2.await()
             emit(index)
         }.flowOn(ioDispatcher)
     }
@@ -51,22 +62,48 @@ class ChatRepositoryImp @Inject constructor(
     ): Flow<Results<List<ChatRes>, WrappedResponse<List<ChatRes>>>> {
         return flow {
             val response = remote.getChatMessageHistory(roomId, lastReadMessage)
+            val TAG: String = "로그"
             if (response.isSuccessful) {
                 if (response.body()!!.status == 200) {
                     val data = response.body()!!.data
-                    try{
-                        for (i in 0 until data!!.size) {
-                            val chat = mapperToChat(data[i])
-                            db.chatDao().insert(chat)
+
+                    var deferred = coroutineScope {
+                        async {
+                            try {
+                                for (i in 0 until data!!.size) {
+                                    val chat = mapperToChat(data[i])
+                                    db.chatDao().insert(chat)
+                                }
+                                Log.d(TAG, "ChatRepositoryImp - getMessageHistory(1) called")
+                            } catch (e: Exception) {
+                            }
                         }
                     }
-                    catch(e : NullPointerException)
-                    {
-                        e.printStackTrace()
+                    deferred.await()
+                    var messageCount = 0
+                    val deferr2: Deferred<Int> = CoroutineScope(ioDispatcher).async {
+                        db.chatRoomDao().updateMessageCount(roomId)
                     }
+                    messageCount = deferr2.await()
+                    Log.d(TAG, "ChatRepositoryImp - getMessageHistory(2) called")
                     emit(Results.Success(data!!))
                 }
+            } else {
+                Log.d(TAG, "response - notSuccessful")
             }
-        }
+        }.flowOn(ioDispatcher)
+    }
+
+    override fun getLastReadMessageId(chatroomId: String): Flow<LocalResults<String>?> {
+        return flow {
+            val TAG: String = "로그"
+            var messageId: String = ""
+
+            val deferr: Deferred<String?> = CoroutineScope(ioDispatcher).async {
+                db.chatDao().getLastMessageWithRoomId(chatroomId)
+            }
+            messageId = deferr.await().toString()
+            emit(LocalResults.Success(messageId))
+        }.flowOn(ioDispatcher)
     }
 }

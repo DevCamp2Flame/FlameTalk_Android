@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.sgs.devcamp2.flametalk_android.data.mapper.mapperToUserChatRoomModel
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.createchatroom.CreateChatRoomReq
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.getchatroomlist.UserChatRoom
+import com.sgs.devcamp2.flametalk_android.data.source.local.UserPreferences
 import com.sgs.devcamp2.flametalk_android.domain.entity.Results
 import com.sgs.devcamp2.flametalk_android.domain.entity.UiState
 import com.sgs.devcamp2.flametalk_android.domain.entity.chatroom.ChatRoomEntity
@@ -24,6 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CreateChatRoomViewModel @Inject constructor(
     val createChatRoomUseCase: CreateChatRoomUseCase,
+    val userPreferences: UserPreferences
 ) : ViewModel() {
     var firstMessage = ""
     lateinit var session: StompSession
@@ -38,14 +40,14 @@ class CreateChatRoomViewModel @Inject constructor(
     val nickname = _nickname.asStateFlow()
 
     init {
-//        viewModelScope.launch {
-//            userDAO.user.collect {
-//                if (it != null) {
-//                    _userId.value = it.userId
-//                    _nickname.value = it.nickname
-//                }
-//            }
-//        }
+        viewModelScope.launch {
+            userPreferences.user.collect {
+                if (it != null) {
+                    _userId.value = it.userId
+                    _nickname.value = it.nickname
+                }
+            }
+        }
     }
     fun updateFirstMessage(input: String) {
         firstMessage = input
@@ -54,12 +56,14 @@ class CreateChatRoomViewModel @Inject constructor(
      * 선택한 친구들로 채팅방을 생성하는 function입니다.
      */
     fun createChatRoom(users: List<String>) {
+        val userList = users.toMutableList()
+        Log.d("로그", "userList - $userList")
+        userList.add(_userId.value)
         val createChatRoomReq = CreateChatRoomReq(
             hostId = _userId.value,
             hostOpenProfileId = null,
             isOpen = false,
-            // users = users,
-            users = listOf("1644502512465033741", "1644502326105613328"),
+            users = userList,
             title = null,
             thumbnail = null
         )

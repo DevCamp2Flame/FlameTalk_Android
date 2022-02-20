@@ -14,7 +14,7 @@ import javax.inject.Inject
 class GetChatRoomListUseCase @Inject constructor(
     private val repository: ChatRoomRepository
 ) {
-    suspend fun invoke(isOpen: Boolean): Flow<Results<GetChatRoomListRes, WrappedResponse<GetChatRoomListRes>>> {
+    fun invoke(isOpen: Boolean): Flow<Results<GetChatRoomListRes, WrappedResponse<GetChatRoomListRes>>> {
         return repository.getChatRoomList(isOpen)
     }
 }

@@ -26,9 +26,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         initNavigationBar()
-//        model.connectChatServer()
-//        initReceiveMessage()
-//        model.getDeviceToken(this)
+
+        try {
+            model.connectChatServer()
+        } catch (e: Exception) {
+        }
+        initObserve()
+        model.getDeviceToken(this)
     }
 
     private fun initNavigationBar() {
@@ -54,6 +58,9 @@ class MainActivity : AppCompatActivity() {
         binding.btnvView.setupWithNavController(navController)
         binding.btnvView.itemIconTintList = null
     }
+    private fun initObserve() {
+        initReceiveMessage()
+    }
 
     private fun initReceiveMessage() {
         lifecycleScope.launch {
@@ -70,9 +77,5 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
     }
 }

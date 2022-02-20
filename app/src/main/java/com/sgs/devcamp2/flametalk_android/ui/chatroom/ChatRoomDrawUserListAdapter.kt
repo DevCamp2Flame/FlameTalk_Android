@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.sgs.devcamp2.flametalk_android.R
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.getchatroom.Profile
 import com.sgs.devcamp2.flametalk_android.databinding.ItemPersonChattingRoomBinding
@@ -48,10 +50,12 @@ class ChatRoomDrawUserListAdapter :
             binding.tvChatRoomDrawUser.text = profile.nickname
             if (profile.image != null) {
                 Glide.with(this.binding.ivChatRoomDrawUserImage)
-                    .load(profile.image).into(binding.ivChatRoomDrawUserImage)
+                    .load(profile.image)
+                    .transform(CenterCrop(), RoundedCorners(30)).into(binding.ivChatRoomDrawUserImage)
             } else {
                 Glide.with(this.binding.ivChatRoomDrawUserImage)
-                    .load(R.drawable.ic_add_person_blue_24).into(binding.ivChatRoomDrawUserImage)
+                    .load(R.drawable.ic_person_white_24)
+                    .transform(CenterCrop(), RoundedCorners(30)).into(binding.ivChatRoomDrawUserImage)
             }
         }
     }

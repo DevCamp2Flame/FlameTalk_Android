@@ -1,6 +1,7 @@
 package com.sgs.devcamp2.flametalk_android.ui.createchatroom
 
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,7 +28,6 @@ import kotlinx.coroutines.launch
  */
 @AndroidEntryPoint
 class CreateChatRoomFragment : Fragment(), View.OnClickListener {
-
     lateinit var binding: FragmentCreateChatRoomBinding
     private val model by viewModels<CreateChatRoomViewModel>()
     private val args by navArgs<CreateChatRoomFragmentArgs>()
@@ -44,39 +44,54 @@ class CreateChatRoomFragment : Fragment(), View.OnClickListener {
         initObserve()
         return binding.root
     }
+
     fun initUI() {
         binding.etChatRoomInputText.onTextChanged {
             model.updateFirstMessage(it.toString())
         }
         binding.ivChatSend.setOnClickListener(this)
     }
+
     fun initObserve() {
         viewLifecycleOwner.lifecycleScope.launch {
-            model.createUiState.collect {
-                state ->
+            model.createUiState.collect { state ->
                 when (state) {
-                    is UiState.Success ->
-                        {
-                            model.updateRoomInfo(state.data)
-                            chatRoomModel.receivedMessage(model.session, model.createdRoomInfo!!.chatroomId)
-                            chatRoomModel.pushMessage("INVITE", state.data.chatroomId, model.session, model.firstMessage)
-                        }
+                    is UiState.Success -> {
+                        model.updateRoomInfo(state.data)
+                        chatRoomModel.connectWebsocket(
+                            model.createdRoomInfo!!.chatroomId,
+                            Settings.Secure.getString(
+                                requireContext().contentResolver,
+                                Settings.Secure.ANDROID_ID
+                            )
+                        )
+                        chatRoomModel.receivedMessage(
+                            model.session,
+                            model.createdRoomInfo!!.chatroomId
+                        )
+                        chatRoomModel.pushMessage(
+                            "INVITE",
+                            state.data.chatroomId,
+                            model.session,
+                            model.firstMessage,
+                            null
+                        )
+                    }
                 }
             }
         }
         viewLifecycleOwner.lifecycleScope.launch {
-            chatRoomModel.uiState.collect {
-                state ->
+            chatRoomModel.uiState.collect { state ->
                 when (state) {
-                    is UiState.Success ->
-                        {
-                            if (model.createdRoomInfo != null) {
-                                val action = CreateChatRoomFragmentDirections.actionCreateChatRoomFragment2ToNavigationChatRoom(
+                    is UiState.Success -> {
+                        if (model.createdRoomInfo != null) {
+                            val action =
+                                CreateChatRoomFragmentDirections.actionCreateChatRoomFragment2ToNavigationChatRoom(
                                     model.createdRoomInfo!!.chatroomId
                                 )
-                                findNavController().navigate(action)
-                            }
+                            findNavController().navigate(action)
                         }
+                    }
                 }
             }
         }
@@ -88,15 +103,13 @@ class CreateChatRoomFragment : Fragment(), View.OnClickListener {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
                     // 뷰가 start가 되는 순간 다시 session을 얻는다.
-                    webSocketModel.session.collect {
-                        state ->
+                    webSocketModel.session.collect { state ->
                         when (state) {
-                            is UiState.Success ->
-                                {
-                                    // 내가 보낸 메시지도 받게 되므로 이 순간에 db를 연결한다.
-                                    // sbusribe를 늦게해야한다.
-                                    model.session = state.data
-                                }
+                            is UiState.Success -> {
+                                // 내가 보낸 메시지도 받게 되므로 이 순간에 db를 연결한다.
+                                // sbusribe를 늦게해야한다.
+                                model.session = state.data
+                            }
                         }
                     }
                 }
@@ -106,6 +119,7 @@ class CreateChatRoomFragment : Fragment(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         when (view) {
+
             binding.ivChatSend ->
                 {
                     // 채팅방 생성 api 호출
@@ -115,6 +129,9 @@ class CreateChatRoomFragment : Fragment(), View.OnClickListener {
                         // [소연] Profile에서 올 경우 userList가 없어 null처리 함
                         if (args.users != null) {
                             model.createChatRoom(args.users!!.toList())
+                        } else {
+                            val friendList: List<String> = listOf(args.singleFriendId)
+                            model.createChatRoom(friendList)
                         }
                     }
                 }

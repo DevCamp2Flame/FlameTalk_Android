@@ -40,6 +40,6 @@ class WebSocketModule {
     @Provides
     @Singleton
     fun provideRequest(): Request {
-        return Request.Builder().url("ws://10.99.30.180:8086/presence").build()
+        return Request.Builder().url("ws://10.99.30.180:8080/presence").build()
     }
 }

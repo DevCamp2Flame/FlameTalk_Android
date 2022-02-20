@@ -16,30 +16,51 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ChatRoomDao {
     // 채팅방 저장
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(chatroom: ChatRoom): Long
 
     // 채팅방 리스트 조회
     @Query("SELECT * FROM chatroom WHERE chatroom.isOpen LIKE :isOpen")
     fun getChatRoom(isOpen: Boolean): Flow<List<ThumbnailWithRoomId>>
 
+    // 채팅하는 chatRoomId의 썸네일 조회 -> update를 하기 위해서
+    @Transaction
+    @Query("SELECT * FROM chatroom where chatroom.id LIKE :chatroomId")
+    fun getThumbnailWithRoomId(chatroomId: String): Flow<ThumbnailWithRoomId>
+
     // chatroomId에 해당하는 chat 리스트 조회
     @Transaction
     @Query("SELECT * FROM chatroom Where chatroom.id LIKE :chatroomId")
-    fun getChatRoomWithId(chatroomId: String): Flow<ChatWithRoomId>
+    fun getChatRoomWithId(chatroomId: String): ChatWithRoomId
+
+    @Transaction
+    @Query("SELECT * FROM chatroom WHERE chatroom.id Like :chatroomId")
+    fun getChatRoomWithThumbnailAndId(chatroomId: String): ThumbnailWithRoomId
+
+    @Transaction
+    @Query("SELECT * FROM chatroom Where chatroom.id LIKE :chatroomId")
+    fun getChatRoomWithRoomId(chatroomId: String): ChatWithRoomId
 
     // 썸네일 저장
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertThumbnail(thumbnail: Thumbnail)
 
-    // 채팅하는 chatRoomId의 썸네일 조회
-    @Transaction
-    @Query("SELECT * FROM chatroom where chatroom.id LIKE :chatroomId")
-    fun getThumbnailWithRoomId(chatroomId: String): Flow<ThumbnailWithRoomId>
+    // 채팅룸 update_at 갱신
+    @Query("UPDATE chatroom SET updated_at = :updated_at where chatroom.id = :chatroomId")
+    fun updateChatRoom(updated_at: Long, chatroomId: String)
+
+    @Query("UPDATE chatroom Set title = :title, inputLock = :inputLock, count = :count where chatroom.id Like :chatroomId")
+    fun updateChatRoomInfo(title: String, inputLock: Boolean, count: Int, chatroomId: String)
 
     // 마지막으로 읽은 message id 갱신
     @Update(entity = ChatRoom::class)
     fun updateLastReadMessageId(chatroomUpdate: ChatRoomUpdate)
+
+    @Query("SELECT lastReadMessageId FROM chatroom where chatroom.id Like :chatroomId")
+    fun getLastReadMessageId(chatroomId: String): Flow<String>?
+
+    @Query("SELECT * FROM chatroom where chatroom.id Like :chatroomId")
+    fun getChatRoomModel(chatroomId: String): Flow<ChatRoom>
 
     // 채팅방 삭제
     @Query("DELETE FROM chatroom where userChatroomId Like :userchatroomId")
@@ -49,4 +70,27 @@ interface ChatRoomDao {
     @Transaction
     @Query("DELETE  FROM thumbnail where room_id LIKE :chatroomId")
     fun deleteThumbnailwithRoomId(chatroomId: String)
+
+    // 채팅방 업데이트
+    @Query("UPDATE chatroom SET title = :title ,inputLock = :inputLock where chatroom.userChatroomId Like :userChatroomId")
+    fun updateChatRoomTitle(title: String, inputLock: Boolean, userChatroomId: Long)
+
+    @Query("UPDATE chatroom SET lastReadMessageId = :lastReadMessageId where chatroom.userChatroomId Like :userChatRoomId")
+    fun updateChatRoomLastReadMessage(lastReadMessageId: String, userChatRoomId: Long)
+
+    @Query("UPDATE chatroom SET lastReadMessageId = :lastReadMessageId , updated_at = :updated_at  where chatroom.userChatroomId Like :userChatRoomId")
+    fun updateChatRoomLastReadMessageWithTime(lastReadMessageId: String, updated_at: Long, userChatRoomId: Long)
+
+    @Query("SELECT userChatroomId FROM chatroom WHERE chatroom.id Like :roomId")
+    fun getUserChatRoomId(roomId: String): Long
+
+    @Query("UPDATE chatroom SET lastReadMessageId = :lastReadMessageId ,text =:text ,updated_at = :updated_at where chatroom.userChatroomId Like :userChatRoomId")
+    fun updateChatRoomWithMessageText(lastReadMessageId: String, text: String, updated_at: Long, userChatRoomId: Long): Int
+
+    @Query("UPDATE chatroom set text =:text, updated_at = :updated_at , messageCount = messageCount + 1 where chatroom.id Like :roomId")
+    fun updateText(text: String?, roomId: String?, updated_at: Long): Int
+
+    @Query("UPDATE chatroom set messageCount = 0 where chatroom.id Like :roomId")
+    fun updateMessageCount(roomId: String): Int
+
 }

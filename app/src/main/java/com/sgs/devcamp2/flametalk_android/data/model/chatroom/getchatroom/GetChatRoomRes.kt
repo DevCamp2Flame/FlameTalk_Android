@@ -16,6 +16,7 @@ data class GetChatRoomRes(
 
 data class Profile(
     val id: Long,
+    val userId: String,
     val nickname: String,
     val image: String
 )

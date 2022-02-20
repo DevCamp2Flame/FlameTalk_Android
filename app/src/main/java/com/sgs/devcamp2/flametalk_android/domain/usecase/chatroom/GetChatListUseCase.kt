@@ -13,7 +13,7 @@ import javax.inject.Inject
 class GetChatListUseCase @Inject constructor(
     private val repository: ChatRoomRepository
 ) {
-    suspend fun invoke(chatroomId: String): Flow<LocalResults<ChatWithRoomId>> {
+    fun invoke(chatroomId: String): Flow<LocalResults<ChatWithRoomId>> {
         return repository.getChatList(chatroomId)
     }
 }

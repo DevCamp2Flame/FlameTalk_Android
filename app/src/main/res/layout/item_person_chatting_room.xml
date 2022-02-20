@@ -12,15 +12,15 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-
-        android:background="@drawable/bg_chat_list_round">
+        >
 
 
         <ImageView
             android:id="@+id/iv_chat_room_draw_user_image"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:src="@drawable/ic_person_black_24"
+            android:src="@drawable/ic_person_white_24"
+            android:background="@drawable/bg_imageview_radius_gray"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -34,6 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="김현국 "
+        android:layout_marginStart="20dp"
         app:layout_constraintStart_toEndOf="@id/layout_chat_room_draw_image_area"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>

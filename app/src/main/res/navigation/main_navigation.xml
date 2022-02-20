@@ -34,6 +34,9 @@
             android:name="password"
             android:defaultValue=""
             app:argType="string" />
+        <action
+            android:id="@+id/action_navigation_signin_to_navigation_additional_user_info"
+            app:destination="@id/navigation_additional_user_info" />
     </fragment>
 
     <fragment
@@ -346,6 +349,9 @@
         <action
             android:id="@+id/action_navigation_chat_room_to_navigation_update_chat_room"
             app:destination="@id/navigation_update_chat_room" />
+        <action
+            android:id="@+id/action_navigation_chat_room_to_joinUserChatRoomFragment"
+            app:destination="@id/joinUserChatRoomFragment" />
     </fragment>
     <fragment
         android:id="@+id/navigation_invite_room"
@@ -391,9 +397,14 @@
         android:name="com.sgs.devcamp2.flametalk_android.ui.signup.AdditionalUserInfoFragment"
         android:label="fragment_additional_user_info"
         tools:layout="@layout/fragment_additional_user_info">
+
+        <argument
+            android:name="token"
+            app:argType="string"
+            app:nullable="true" />
         <action
-            android:id="@+id/action_additionalUserInfoFragment_to_navigation_chatting_ViewPager_Fragment"
-            app:destination="@id/navigation_chatting_viewPager_fragment" />
+            android:id="@+id/action_navigation_additional_user_info_to_navigation_signin"
+            app:destination="@id/navigation_signin" />
     </fragment>
 
     <!--네이밍 변경이 필요할 것 같습니다-->
@@ -485,6 +496,14 @@
         android:name="com.sgs.devcamp2.flametalk_android.ui.createopenchatroom.CreateOpenChatRoomFragment"
         android:label="fragment_create_open_chat_room"
         tools:layout="@layout/fragment_create_open_chat_room" />
+    <fragment
+        android:id="@+id/joinUserChatRoomFragment"
+        android:name="com.sgs.devcamp2.flametalk_android.ui.joinuserchatroom.JoinUserChatRoomFragment"
+        android:label="JoinUserChatRoomFragment" >
+        <argument
+            android:name="chatroomId"
+            app:argType="string" />
+    </fragment>
 
 
 </navigation>

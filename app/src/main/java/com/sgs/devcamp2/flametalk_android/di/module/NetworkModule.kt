@@ -2,24 +2,21 @@ package com.sgs.devcamp2.flametalk_android.di.module
 
 import com.google.gson.GsonBuilder
 import com.sgs.devcamp2.flametalk_android.data.source.local.UserPreferences
-import com.sgs.devcamp2.flametalk_android.data.source.remote.api.ChatApi
-import com.sgs.devcamp2.flametalk_android.data.source.remote.api.ChatRoomApi
-import com.sgs.devcamp2.flametalk_android.data.source.remote.api.DeviceApi
-import com.sgs.devcamp2.flametalk_android.data.source.remote.api.OpenProfileApi
+import com.sgs.devcamp2.flametalk_android.data.source.remote.api.*
 import com.sgs.devcamp2.flametalk_android.network.NetworkInterceptor
 import com.sgs.devcamp2.flametalk_android.network.service.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import java.util.concurrent.TimeUnit
-import javax.inject.Singleton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
+import javax.inject.Singleton
 
 /**
  * @author 박소연
@@ -114,8 +111,18 @@ class NetworkModule {
     fun provideChatApi(retrofit: Retrofit): ChatApi {
         return retrofit.create(ChatApi::class.java)
     }
+    @Provides
+    @Singleton
+    fun provideFriendApi(retrofit: Retrofit): FriendApi {
+        return retrofit.create(FriendApi::class.java)
+    }
+    @Provides
+    @Singleton
+    fun provideAuthApi(retrofit: Retrofit): SignUpApi {
+        return retrofit.create(SignUpApi::class.java)
+    }
 
     companion object {
-        const val BASE_URL = "http://10.99.13.235:8080" // 테스트 전 PC IP 확인
+        const val BASE_URL = "http://10.99.30.180:8080" // 테스트 전 PC IP 확인
     }
 }
