@@ -157,6 +157,12 @@ class ChatRoomListAdapter @Inject constructor(
                     .transform(CenterCrop(), RoundedCorners(30)).into(binding.ivTwoChatRoomListUserImg2)
             }
             val updated_at = simpleFormat.format(chatroom.room.updated_at)
+            if (chatroom.room.messageCount == 0) {
+                binding.tvTwoChatRoomMessageCount.visibility = View.GONE
+            } else {
+                binding.tvTwoChatRoomMessageCount.visibility = View.VISIBLE
+                binding.tvTwoChatRoomMessageCount.text = chatroom.room.messageCount.toString()
+            }
             binding.tvTwoChatRoomListDate.text = updated_at
             binding.tvTwoChatRoomListMessage.text = chatroom.room.text
             binding.tvTwoChatRoomListUserName.text = chatroom.room.title
@@ -193,6 +199,12 @@ class ChatRoomListAdapter @Inject constructor(
                 Glide.with(binding.ivThreeChatRoomListUserImg3)
                     .load(chatroom.thumbnailList[2].image).transform(CenterCrop(), RoundedCorners(15))
                     .into(binding.ivThreeChatRoomListUserImg3)
+            }
+            if (chatroom.room.messageCount == 0) {
+                binding.tvThreeChatRoomMessageCount.visibility = View.GONE
+            } else {
+                binding.tvThreeChatRoomMessageCount.visibility = View.VISIBLE
+                binding.tvThreeChatRoomMessageCount.text = chatroom.room.messageCount.toString()
             }
             val updated_at = simpleFormat.format(chatroom.room.updated_at)
             binding.tvThreeChatRoomListDate.text = updated_at
@@ -234,6 +246,12 @@ class ChatRoomListAdapter @Inject constructor(
                     .transform(CenterCrop(), RoundedCorners(5)).into(binding.ivFourChatRoomListUserImg4)
             }
             val updated_at = simpleFormat.format(chatroom.room.updated_at)
+            if (chatroom.room.messageCount == 0) {
+                binding.tvFourChatRoomMessageCount.visibility = View.GONE
+            } else {
+                binding.tvFourChatRoomMessageCount.visibility = View.VISIBLE
+                binding.tvFourChatRoomMessageCount.text = chatroom.room.messageCount.toString()
+            }
             binding.tvFourChatRoomListDate.text = updated_at
             binding.tvFourChatRoomListUserName.text = chatroom.room.title
             binding.tvFourChatRoomListMessage.text = chatroom.room.text

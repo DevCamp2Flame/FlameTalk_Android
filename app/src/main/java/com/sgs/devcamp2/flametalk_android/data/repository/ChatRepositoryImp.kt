@@ -80,6 +80,11 @@ class ChatRepositoryImp @Inject constructor(
                         }
                     }
                     deferred.await()
+                    var messageCount = 0
+                    val deferr2: Deferred<Int> = CoroutineScope(ioDispatcher).async {
+                        db.chatRoomDao().updateMessageCount(roomId)
+                    }
+                    messageCount = deferr2.await()
                     Log.d(TAG, "ChatRepositoryImp - getMessageHistory(2) called")
                     emit(Results.Success(data!!))
                 }
@@ -93,15 +98,11 @@ class ChatRepositoryImp @Inject constructor(
         return flow {
             val TAG: String = "로그"
             var messageId: String = ""
-            var messageCount = 0
+
             val deferr: Deferred<String?> = CoroutineScope(ioDispatcher).async {
                 db.chatDao().getLastMessageWithRoomId(chatroomId)
             }
             messageId = deferr.await().toString()
-            val deferr2: Deferred<Int> = CoroutineScope(ioDispatcher).async {
-                db.chatRoomDao().updateMessageCount(chatroomId)
-            }
-            messageCount = deferr2.await()
             emit(LocalResults.Success(messageId))
         }.flowOn(ioDispatcher)
     }

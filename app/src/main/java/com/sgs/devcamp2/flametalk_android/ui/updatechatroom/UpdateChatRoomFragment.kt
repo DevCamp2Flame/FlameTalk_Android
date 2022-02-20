@@ -41,7 +41,6 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class UpdateChatRoomFragment :
     Fragment(),
-    CompoundButton.OnCheckedChangeListener,
     View.OnClickListener {
     lateinit var binding: FragmentUpdateChatRoomBinding
     private val model by viewModels<UpdateChatRoomViewModel>()
@@ -95,7 +94,6 @@ class UpdateChatRoomFragment :
     }
 
     fun initUI() {
-        binding.swUpdateChatRoomLock.setOnCheckedChangeListener(this)
         binding.layoutUpdateChatRoomArrowSpace.setOnClickListener(this)
         binding.etUpdateChatRoomTitleName.onTextChanged {
             model.updateTitle(it.toString())
@@ -116,7 +114,6 @@ class UpdateChatRoomFragment :
                 when (state) {
                     is UiState.Success -> {
                         binding.etUpdateChatRoomTitleName.setText(state.data.room.title)
-                        binding.swUpdateChatRoomLock.isChecked = state.data.room.inputLock
                         when (state.data.thumbnailList.size) {
                             1 -> {
                                 initGlidePersonOne(state.data.thumbnailList)
@@ -143,6 +140,7 @@ class UpdateChatRoomFragment :
                 launch {
                     model.imageUrl.collect {
                         Glide.with(binding.ivUpdateChatRoomProfileImage).load(it)
+                            .fallback(R.drawable.ic_person_white_24)
                             .into(binding.ivUpdateChatRoomProfileImage)
                     }
                 }
@@ -177,17 +175,6 @@ class UpdateChatRoomFragment :
         }
     }
 
-    override fun onCheckedChanged(button: CompoundButton?, isChecked: Boolean) {
-        when (button) {
-            binding.swUpdateChatRoomLock -> {
-                if (isChecked) {
-                    model.updateInputLock()
-                } else {
-                    model.updateInputLock()
-                }
-            }
-        }
-    }
 
     override fun onClick(view: View?) {
         when (view) {
@@ -335,14 +322,17 @@ class UpdateChatRoomFragment :
         Glide.with(binding.layoutPersonThreeImage.ivPersonThreeImg1)
             .load(thumbnailList[0].image)
             .transform(CenterCrop(), RoundedCorners(35))
+            .fallback(R.drawable.ic_person_white_24)
             .into(binding.layoutPersonThreeImage.ivPersonThreeImg1)
         Glide.with(binding.layoutPersonThreeImage.ivPersonThreeImg2)
             .load(thumbnailList[1].image)
             .transform(CenterCrop(), RoundedCorners(35))
+            .fallback(R.drawable.ic_person_white_24)
             .into(binding.layoutPersonThreeImage.ivPersonThreeImg2)
         Glide.with(binding.layoutPersonThreeImage.ivPersonThreeImg3)
             .load(thumbnailList[2].image)
             .transform(CenterCrop(), RoundedCorners(35))
+            .fallback(R.drawable.ic_person_white_24)
             .into(binding.layoutPersonThreeImage.ivPersonThreeImg3)
         binding.layoutPersonThreeImage.root.setOnClickListener(this)
     }
@@ -352,18 +342,22 @@ class UpdateChatRoomFragment :
         Glide.with(binding.layoutPersonFourImage.ivPersonFourImg1)
             .load(thumbnailList[0].image)
             .transform(CenterCrop(), RoundedCorners(35))
+            .fallback(R.drawable.ic_person_white_24)
             .into(binding.layoutPersonFourImage.ivPersonFourImg1)
         Glide.with(binding.layoutPersonFourImage.ivPersonFourImg2)
             .load(thumbnailList[1].image)
             .transform(CenterCrop(), RoundedCorners(35))
+            .fallback(R.drawable.ic_person_white_24)
             .into(binding.layoutPersonFourImage.ivPersonFourImg2)
         Glide.with(binding.layoutPersonFourImage.ivPersonFourImg3)
             .load(thumbnailList[2].image)
             .transform(CenterCrop(), RoundedCorners(35))
+            .fallback(R.drawable.ic_person_white_24)
             .into(binding.layoutPersonFourImage.ivPersonFourImg3)
         Glide.with(binding.layoutPersonFourImage.ivPersonFourImg4)
             .load(thumbnailList[3].image)
             .transform(CenterCrop(), RoundedCorners(35))
+            .fallback(R.drawable.ic_person_white_24)
             .into(binding.layoutPersonFourImage.ivPersonFourImg4)
         binding.layoutPersonFourImage.root.setOnClickListener(this)
     }

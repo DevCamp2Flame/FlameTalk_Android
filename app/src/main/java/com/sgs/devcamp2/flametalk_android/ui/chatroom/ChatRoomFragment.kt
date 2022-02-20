@@ -20,6 +20,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.sgs.devcamp2.flametalk_android.R
+import com.sgs.devcamp2.flametalk_android.data.model.chat.Chat
 import com.sgs.devcamp2.flametalk_android.databinding.DrawerLayoutChatRoomBinding
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentChatRoomBinding
 import com.sgs.devcamp2.flametalk_android.domain.entity.UiState
@@ -126,7 +127,11 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
                 when (state) {
                     is UiState.Success -> {
                         binding.tvChatRoomTitle.text = state.data.title
-                        binding.tvChatRoomUserCount.text = state.data.count.toString()
+                        if (state.data.count == 2) {
+                            binding.tvChatRoomUserCount.text = ""
+                        } else {
+                            binding.tvChatRoomUserCount.text = state.data.count.toString()
+                        }
                     }
                 }
             }
@@ -156,6 +161,12 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
                                 state.data.profiles.get(i).image
                             )
                         }
+                        if (state.data.profiles.size == 1) {
+                            binding.tvChatRoomUserCount.text = ""
+                        } else {
+                            binding.tvChatRoomUserCount.text = (state.data.profiles.size + 1).toString()
+                        }
+
                         adapter.updateProfiles(map)
                         model.getChatList(args.chatroomId)
                     }
@@ -170,7 +181,10 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
                 when (state) {
                     is UiState.Success -> {
                         // 채팅 데이터 observe
-                        adapter.submitList(state.data)
+                        val list: List<Chat> = state.data.sortedBy {
+                            it.created_at
+                        }
+                        adapter.submitList(list)
                         binding.rvChatRoom.smoothScrollToPosition(state.data.size)
                     }
                 }

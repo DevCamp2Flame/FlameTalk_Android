@@ -1,5 +1,6 @@
 package com.sgs.devcamp2.flametalk_android.ui.chatroom
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -138,6 +139,7 @@ class ChatRoomAdapter constructor(
     }
     inner class FileRightMessageViewHolder(val binding: ItemRightStartFileChatRoomBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(chat: Chat) {
+            Log.d(TAG, "url - ${chat.file_url}() called")
             Glide.with(binding.ivRightStartFileChatRoomMessage).load(chat.file_url).into(binding.ivRightStartFileChatRoomMessage)
         }
     }

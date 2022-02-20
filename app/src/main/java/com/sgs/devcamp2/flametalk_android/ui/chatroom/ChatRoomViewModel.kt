@@ -316,7 +316,7 @@ class ChatRoomViewModel @Inject constructor(
                 when (result) {
                     is LocalResults.Success -> {
                         Log.d(TAG, "ChatRoomViewModel - getLastReadMessageId(2) called")
-                        if (result.data == null) {
+                        if (result.data == "null") {
                             _lastReadMessageId.value = ""
                         }
                         _lastReadMessageId.value = result.data

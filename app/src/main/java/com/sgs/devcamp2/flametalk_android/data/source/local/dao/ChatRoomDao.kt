@@ -93,6 +93,4 @@ interface ChatRoomDao {
     @Query("UPDATE chatroom set messageCount = 0 where chatroom.id Like :roomId")
     fun updateMessageCount(roomId: String): Int
 
-//    @Query("UPDATE chatroom set text :text where chatroom.id Like :roomId")
-//    fun updateMessageText()
 }

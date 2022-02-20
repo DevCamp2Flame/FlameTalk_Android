@@ -87,6 +87,8 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_chat_room"
                 android:layout_width="match_parent"
+                tools:itemCount="2"
+                tools:listitem="@layout/item_right_start_text_chat_room"
                 android:layout_height="match_parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
