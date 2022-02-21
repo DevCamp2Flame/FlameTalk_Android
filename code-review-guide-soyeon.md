@@ -28,6 +28,7 @@
    - 확장함수 적옹
    - AppBar의 layout의 include
 10.  [주소록 전화번호 가져온 후 통신 요청 보내기](#index_10)
+11.  [이미지뷰 동적 생성 및 positioning](#index_11)
 
 ## 📚 파일 디렉터리 구조
 ```
@@ -78,7 +79,7 @@ FlameTalk에서 뷰와 비즈니스 로직을 효과적으로 분리하기 위�
 대개 개발자들이 Android MVVM에서 UI Controller와 ViewModel을 1:1로 쓰기도 하지만 MVVM의 특성을 살려보기 위해 프로필 편집 ↔️ 상태메세지 편집에서 ViewModel을 공유하여 데이터를 전달하도록 구현했습니다.
 
 <div align="center">
-<img src="https://user-images.githubusercontent.com/43838030/153770515-84f882be-0b1a-4881-9d4f-d8123d66e746.gif" width="250"></div>
+<img src="https://user-images.githubusercontent.com/43838030/154879820-e2882540-2ea8-4b35-aa30-572abc41462e.gif" width="250"></div>
 
 (아래의 타이틀을 누르면 코드로 이동합니다.)
 
@@ -236,7 +237,7 @@ class CoroutineModule {
 
 
 <div align="center">
-<img src="https://user-images.githubusercontent.com/43838030/153855126-a9537873-a680-418c-a453-28d9cc32d507.gif" width="250">
+<img src="https://user-images.githubusercontent.com/43838030/154879830-8ab635b4-bbef-43a5-b3ef-9312ab301263.gif" width="250">
 </div>
 
 
@@ -342,6 +343,8 @@ fragment_friend.xml
         app:layout_constraintTop_toTopOf="parent" />
 ``` 
 
+</br>
+
 <h2 id="index_10">10. 주소록 전화번호 가져온 후 통신 요청 보내기</h2>
 이번 프로젝트에서 연락처 데이터를 가져와 서버로 '연락처 리스트 기반 친구 추가 API' 통신 요청을 보내는 기능을 구현했습니다. 처음엔 연락처 가져오는 작업을 Fragment에서 수행했으나 연락처 데이터가 많은 실기기에서 테스트 시 메인스레드의 부담이 생겨 백그라운드 스레드에서 동작하도록 변경했습니다(네트워크와 IO 작업과 같이 시간이 오래 걸리는 작업은 Background 동작해야 합니다. 오래 걸리는 작업으로 인해 UI 컴포넌트를 그리는 작업을 5초 이상 방해받으면 ANR이 발생하며 앱이 비정상종료됩니다.)
 연락처를 가져오는 작업이 끝난 후 통신 요청을 보내야하기 때문에 Coroutine의 deferred를 이용하여 비동기 동작이 끝난 시점 이후에 친구 추가 통신 요청을 보내도록 구현했습니다.
@@ -350,4 +353,16 @@ fragment_friend.xml
 
 [주소록 내 전화번호 가져오기 글](https://abrasive-ziconium-edb.notion.site/Contacts-4c9864307a3f4c6e902e707121256e11)
 
+</br>
 
+<h2 id="index_11">11. 이미지뷰 동적 생성 및 positioning</h2>
+
+<div align="center">
+   
+
+| 프로필 생성 | 프로필 조회|
+|:---:|:---:|
+| <img src="https://user-images.githubusercontent.com/43838030/154879839-a09e0304-43ab-43bc-9231-3869f0e19e1c.gif" width="250"> | <img src="https://user-images.githubusercontent.com/43838030/154879844-6d4a1478-962c-4fcd-b48a-3602a9d4d1c2.gif" width="250"> |
+| 하단의 스티커를 클릭해 생성하고 각 아이템을 드래그하여 위치 변경 | 프로필 생성 시 전달된 스티커 위치에 각각의 스티커가 위치함 |
+   
+</div>
