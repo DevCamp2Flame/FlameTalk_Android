@@ -263,10 +263,8 @@ class AddProfileFragment : Fragment() {
         val param = ConstraintLayout.LayoutParams(100, 100)
         // 스티커 생성하고 중앙에 배치하기 위한 layout 제약
         param.leftToLeft = ConstraintLayout.LayoutParams.PARENT_ID
-        // param.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
         param.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
-        // param.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
-        // param.marginStart = 300
+
         param.leftMargin = width / 2
         param.topMargin = height / 2
         img.layoutParams = param
