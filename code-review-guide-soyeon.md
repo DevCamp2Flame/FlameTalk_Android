@@ -25,7 +25,7 @@
 7. [ RoomDB를 이용한 local data 기반 검색](#index_7)
 8. [LiveData 대신 StateFlow를 이용](#index_8)
 9. [코드의 재사용성에 대한 고민](#index_9)
-   - 확장함수 적옹
+   - DiffUtil의 확장함수 - SimpleDiffUtilCallback
    - AppBar의 layout의 include
 10.  [주소록 전화번호 가져온 후 통신 요청 보내기](#index_10)
 11.  [이미지뷰 동적 생성 및 positioning](#index_11)
@@ -322,10 +322,39 @@ LiveData는 Android에서 권장하는 AAC로 UI에서 ViewModel의 LiveData 객
 [LivaData 대신 StateFlow 적용기](https://abrasive-ziconium-edb.notion.site/Flow-LiveData-StateFlow-14b57895d8f34f6ab2eb73a84d180578)
 
 <h2 id="index_9">9. 코드의 재사용성에 대한 고민</h2>
-1. 재사용을 위해 확장함수 적용
+1. DiffUtil의 확장함수 - SimpleDiffUtilCallback
 반복되는 기능의 구현으로 인한 보일러플레이트를 줄이고 코드의 가독성을 높이고자 util 디렉터리에 확장함수를 만들어 사용하고 있습니다. 확장함수의 일부 구현 사례입니다.
 
-[ViewExt](https://github.com/DevCamp2Flame/FlameTalk_Android/blob/develop/app/src/main/java/com/sgs/devcamp2/flametalk_android/util/ViewExt.kt)
+[SimpleDiffUtilCallback.kt](https://github.com/DevCamp2Flame/FlameTalk_Android/blob/develop/app/src/main/java/com/sgs/devcamp2/flametalk_android/util/SimpleDiffUtilCallback.kt)
+RecyclerView에 List 데이터를 Adapter에 할당하고 갱신하는데 notifyDataSetChanged()를 이용하여 전체갱신할 수 있습니다. 그러나 이 방법은 매번 전체 데이터를 UI에 갱신하여 비효율적이고 UI 깜빡임 현상이 나타납니다. 따라서 리스트 아이템 중 다른 아이템만 가져오는 DiffUtil을 적용하기 위해 해당 콜백 함수를 구현했고, 리스트 아이템의 모델에 상관 없이 재사용할 수 있도록 확장함수인 SimpleDiffUtilCallback을 만들었습니다. 결과적으로 UI Controller에서 notifyDataSetChanged() 대신 submitList()를 호출하여 리스트 변경 사항만 업데이트하게 됩니다.
+
+```
+/**
+ * @author 박소연
+ * @created 2022/01/17
+ * @desc RecyclerView DiffUtil 확장함수
+ *       반환하는 데이터 타입, 모델에 상관없이 쓸 수 있음
+ */
+
+class SimpleDiffUtilCallback<T : Any> : DiffUtil.ItemCallback<T>() {
+    override fun areItemsTheSame(oldItem: T, newItem: T): Boolean {
+        return oldItem == newItem
+    }
+
+    @SuppressLint("DiffUtilEquals")
+    override fun areContentsTheSame(oldItem: T, newItem: T): Boolean {
+        return oldItem == newItem
+    }
+}
+```
+
+SimpleDiffUtilCallback의 사용 예시
+```
+class SingleFeedAdapter(
+    private val context: Context
+) : ListAdapter<Feed, SingleFeedAdapter.FeedHorizentalViewHolder>(SimpleDiffUtilCallback()) {
+    var data = listOf<Feed>()
+```
 
 2. AppBar layout의 재사용
 
