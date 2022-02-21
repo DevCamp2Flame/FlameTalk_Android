@@ -35,7 +35,6 @@ class SignupViewModel @Inject constructor(
     private val _emailCheck = MutableStateFlow(false)
     val emailCheck = _emailCheck.asStateFlow()
 
-    // TODO: StateFlow -> Single StateFlow Event
     private val _message = MutableStateFlow("")
     val message = _message.asStateFlow()
 

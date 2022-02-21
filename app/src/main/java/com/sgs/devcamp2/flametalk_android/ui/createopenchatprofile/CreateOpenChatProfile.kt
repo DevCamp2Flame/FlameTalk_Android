@@ -56,6 +56,7 @@ class CreateOpenChatProfile : Fragment(), View.OnClickListener {
         initObserve()
         return binding.root
     }
+
     fun initUI() {
         binding.etCreateOpenChatProfileName.setText("") // user 이름 가져오기
         binding.etCreateOpenChatProfileName.onTextChanged {
@@ -69,6 +70,7 @@ class CreateOpenChatProfile : Fragment(), View.OnClickListener {
         binding.tvCreateOpenChatProfileSubmit.setOnClickListener(this)
         binding.ivCreateOpenChatProfileBackgroundImgSelect.setOnClickListener(this)
     }
+
     fun initObserve() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -81,48 +83,43 @@ class CreateOpenChatProfile : Fragment(), View.OnClickListener {
             }
         }
     }
+
     fun submitOpenProfile() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    model.uiState.collect {
-                        state ->
+                    model.uiState.collect { state ->
                         when (state) {
-                            is UiState.Success ->
-                                {
-                                    binding.pbCreateOpenChatProfileLoading.visibility = View.GONE
-                                    findNavController().popBackStack()
-                                }
-                            is UiState.Loading ->
-                                {
-                                    binding.pbCreateOpenChatProfileLoading.visibility = View.VISIBLE
-                                }
-                            is UiState.Error ->
-                                {
-                                    // progress bar visible gone
-                                }
+                            is UiState.Success -> {
+                                binding.pbCreateOpenChatProfileLoading.visibility = View.GONE
+                                findNavController().popBackStack()
+                            }
+                            is UiState.Loading -> {
+                                binding.pbCreateOpenChatProfileLoading.visibility = View.VISIBLE
+                            }
+                            is UiState.Error -> {
+                                // progress bar visible gone
+                            }
                         }
                     }
                 }
             }
         }
     }
+
     override fun onClick(view: View?) {
         when (view) {
-            binding.tvCreateOpenChatProfileSubmit ->
-                {
-                    model.addOpenProfile()
-                }
-            binding.ivCreateOpenChatProfileBackgroundImgSelect ->
-                {
-                    getProfileImage(2)
-                }
+            binding.tvCreateOpenChatProfileSubmit -> {
+                model.addOpenProfile()
+            }
+            binding.ivCreateOpenChatProfileBackgroundImgSelect -> {
+                getProfileImage(2)
+            }
         }
     }
 
     // 이미지 변경
     private fun getProfileImage(type: Int) {
-        // TODO: SDK 버전에 따라 외장 저장소 접근 로직을 다르게 처리 (Android 10(Q, 29) 이상/미만)
         if (checkPermission()) {
             val intent = Intent(Intent.ACTION_PICK)
             intent.type = MediaStore.Images.Media.CONTENT_TYPE
@@ -140,6 +137,7 @@ class CreateOpenChatProfile : Fragment(), View.OnClickListener {
             requestPermission()
         }
     }
+
     private fun checkPermission(): Boolean {
         return ContextCompat.checkSelfPermission(
             requireActivity(),
@@ -177,6 +175,7 @@ class CreateOpenChatProfile : Fragment(), View.OnClickListener {
         }
         return path
     }
+
     companion object {
 
         private const val PROFILE_IMAGE = 2

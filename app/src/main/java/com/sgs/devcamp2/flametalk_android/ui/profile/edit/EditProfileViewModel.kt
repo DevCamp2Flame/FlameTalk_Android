@@ -185,7 +185,7 @@ class EditProfileViewModel @Inject constructor(
             userId = _userId.value,
             imageUrl = _profileImageUrl.value,
             bgImageUrl = _backgroundImageUrl.value,
-            sticker = emptyList(), // TODO: 스티커 정보, 프로필 내 positioning 할 수 있는 상대적 위치 정보
+            sticker = emptyList(),
             description = _description.value,
             isDefault = _isDefault.value!!
         )

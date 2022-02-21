@@ -118,10 +118,6 @@ class AddFriendFragment : Fragment() {
     private fun initEventListener() {
         // 친구 추가
         binding.cktAddFriendConfirm.setOnClickListener {
-            // TODO: 1.프로필 recyclerView에서 click된 item의 UI border처리
-            // TODO: 2.click된 item의 profileId를 _profileId에 저장
-
-            // 현재의 Id가
             viewModel.addFriend(binding.edtAddFriendTel.text.toString())
         }
 

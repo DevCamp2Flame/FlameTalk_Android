@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sgs.devcamp2.flametalk_android.domain.repository.ProfileRepository
-import com.sgs.devcamp2.flametalk_android.domain.repository.SignRepository
 import com.sgs.devcamp2.flametalk_android.network.response.feed.Feed
 import dagger.Lazy
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,17 +17,12 @@ import timber.log.Timber
 @HiltViewModel
 class SingleFeedViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val signRepository: Lazy<SignRepository>,
     private val profileRepository: Lazy<ProfileRepository>
 ) : ViewModel() {
 
     // 프로필 이미지
     private val _profileImage = MutableStateFlow("")
     val profileImage = _profileImage.asStateFlow()
-
-//    // 프로필 아이디
-//    private val _profileId: MutableLiveData<Long> = MutableLiveData(0L)
-//    val profileId: LiveData<Long> = _profileId
 
     // 피드 리스트
     private val _feeds: MutableStateFlow<List<Feed>?> = MutableStateFlow(null)
@@ -101,7 +95,7 @@ class SingleFeedViewModel @Inject constructor(
                 val response = profileRepository.get().updateFeedImageLock(item!!.feedId)
 
                 if (response.status == 200) {
-                    _lockChanged?.value = true // TODO: 서버 response의 결과 할당
+                    _lockChanged?.value = true
                     _reload.value = true
                 } else {
                     _reload.value = false

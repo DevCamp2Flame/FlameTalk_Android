@@ -11,7 +11,6 @@ import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CompoundButton
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
@@ -162,19 +161,16 @@ class UpdateChatRoomFragment :
          * 이미지가 s3에 성공적으로 올라갔을 경우
          */
         viewLifecycleOwner.lifecycleScope.launch {
-            model.imageUploadState.collect {
-                state ->
+            model.imageUploadState.collect { state ->
                 when (state) {
-                    is UiState.Success ->
-                        {
-                            model.updateImageUrl(state.data.url)
-                            model.updateChatRoom(args.chatroomId, model._userChatroomId.value)
-                        }
+                    is UiState.Success -> {
+                        model.updateImageUrl(state.data.url)
+                        model.updateChatRoom(args.chatroomId, model._userChatroomId.value)
+                    }
                 }
             }
         }
     }
-
 
     override fun onClick(view: View?) {
         when (view) {
@@ -217,9 +213,9 @@ class UpdateChatRoomFragment :
             }
         }
     }
+
     // 이미지 변경
     private fun getProfileImage(type: Int) {
-        // TODO: SDK 버전에 따라 외장 저장소 접근 로직을 다르게 처리 (Android 10(Q, 29) 이상/미만)
         if (checkPermission()) {
             val intent = Intent(Intent.ACTION_PICK)
             intent.type = MediaStore.Images.Media.CONTENT_TYPE
@@ -244,6 +240,7 @@ class UpdateChatRoomFragment :
             Manifest.permission.READ_EXTERNAL_STORAGE
         ) == PackageManager.PERMISSION_GRANTED
     }
+
     // 저장소 접근 권한
     private fun requestPermission() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(
@@ -260,6 +257,7 @@ class UpdateChatRoomFragment :
             )
         }
     }
+
     // image uri를 path로 전환
     @SuppressLint("Range")
     private fun uriToPath(uri: Uri): String {

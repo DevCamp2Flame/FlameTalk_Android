@@ -56,17 +56,16 @@ class EditMyOpenProfileDetailFragment : Fragment(), View.OnClickListener {
         initUI()
         return binding.root
     }
+
     fun initObserve() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    model.uiState.collect {
-                        state ->
+                    model.uiState.collect { state ->
                         when (state) {
-                            is UiState.Success ->
-                                {
-                                    findNavController().popBackStack()
-                                }
+                            is UiState.Success -> {
+                                findNavController().popBackStack()
+                            }
                         }
                     }
                 }
@@ -80,7 +79,6 @@ class EditMyOpenProfileDetailFragment : Fragment(), View.OnClickListener {
             model.editMyOpenProfileImage.collect {
                 Glide.with(this@EditMyOpenProfileDetailFragment)
                     .load(it)
-
                     .into(binding.ivEditMyOpenProfileDetailImage)
             }
         }
@@ -99,20 +97,17 @@ class EditMyOpenProfileDetailFragment : Fragment(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         when (view) {
-            binding.tvEditMyOpenProfileDetailSubmit ->
-                {
-                    model.updateOpenProfile()
-                }
-            binding.layoutEditMyOpenProfileDetailImage ->
-                {
-                    getProfileImage(2)
-                }
+            binding.tvEditMyOpenProfileDetailSubmit -> {
+                model.updateOpenProfile()
+            }
+            binding.layoutEditMyOpenProfileDetailImage -> {
+                getProfileImage(2)
+            }
         }
     }
 
     // 이미지 변경
     private fun getProfileImage(type: Int) {
-        // TODO: SDK 버전에 따라 외장 저장소 접근 로직을 다르게 처리 (Android 10(Q, 29) 이상/미만)
         if (checkPermission()) {
             val intent = Intent(Intent.ACTION_PICK)
             intent.type = MediaStore.Images.Media.CONTENT_TYPE
@@ -168,6 +163,7 @@ class EditMyOpenProfileDetailFragment : Fragment(), View.OnClickListener {
         }
         return path
     }
+
     companion object {
 
         private const val BACKGROUND_IMAGE = 2

@@ -113,7 +113,6 @@ class ProfileViewModel @Inject constructor(
                     TO_BLOCK -> block = true
                 }
                 val request = FriendStatusRequest(
-                    // TODO: ISSUE 친구 리스트 조회 시, assigned profile Id를 서버로부터 추가로 받아야 함
                     assignedProfileId = assignedProfileId,
                     isMarked = mark,
                     isHidden = hide,
