@@ -323,6 +323,7 @@ LiveData는 Android에서 권장하는 AAC로 UI에서 ViewModel의 LiveData 객
 
 <h2 id="index_9">9. 코드의 재사용성에 대한 고민</h2>
 1. DiffUtil의 확장함수 - SimpleDiffUtilCallback
+
 반복되는 기능의 구현으로 인한 보일러플레이트를 줄이고 코드의 가독성을 높이고자 util 디렉터리에 확장함수를 만들어 사용하고 있습니다. 확장함수의 일부 구현 사례입니다.
 
 [SimpleDiffUtilCallback.kt](https://github.com/DevCamp2Flame/FlameTalk_Android/blob/develop/app/src/main/java/com/sgs/devcamp2/flametalk_android/util/SimpleDiffUtilCallback.kt)
