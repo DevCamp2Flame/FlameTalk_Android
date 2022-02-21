@@ -366,3 +366,101 @@ fragment_friend.xml
 | 하단의 스티커를 클릭해 생성하고 각 아이템을 드래그하여 위치 변경 | 프로필 생성 시 전달된 스티커 위치에 각각의 스티커가 위치함 |
    
 </div>
+
+유저 프로필에 스티커를 붙여 꾸밀 수 있는 기능을 구현하였습니다.
+
+## [프로필 생성](https://github.com/DevCamp2Flame/FlameTalk_Android/blob/develop/app/src/main/java/com/sgs/devcamp2/flametalk_android/ui/profile/add/AddProfileFragment.kt)
+
+프로필 생성 화면에서 하단에 스티커 메뉴를 추가했습니다. 각각을 누르면 화면 중앙에 스티커 각각에 id를 부여하여 ImageView를 동적으로 생성합니다.
+View.OnTouchListener를 이용하여 사용자의 터치 이벤트를 다음과 같이 처리합니다.
+터치할 때, 움직일 때  -> 터치한 좌표에 스티커 위치 시킴
+터치를 뗄 때 -> 해당 스티커의 정보(스티커 종류, 위치 좌표)를 ViewModel의 createSticker 함수를 호출
+
+스티커를 붙이는 유저의 디바이스 화면 사이즈와 해당 프로필을 조회하는 유저의 디바이스 화면 사이즈가 다를 수 있습니다. 따라서 다양한 디바이스 화면 사이즈에 상대적으로 스티커의 좌표를 위치시키기 위해 x, y위치 좌표값을 가로, 세로 사이즈로 나눈 비율로 저장했습니다. 
+
+### [AddProfileViewModel](https://raw.githubusercontent.com/DevCamp2Flame/FlameTalk_Android/develop/app/src/main/java/com/sgs/devcamp2/flametalk_android/ui/profile/add/AddProfileViewModel.kt)
+
+createSticker
+```
+    fun createSticker(id: Int, stickerType: Int, x: Double, y: Double) {
+        /**프로필 조회하는 디바이스의 사이즈에 따라 scaling 하기 위해
+         디바이스의 기기 가로, 세로 사이즈로 나누어 position 저장*/
+        val dm: DisplayMetrics = context.resources.displayMetrics
+        val width = dm.widthPixels
+        val height = dm.heightPixels
+
+        val stickerModel = Sticker(
+            stickerId = stickerType,
+            positionX = x / width,
+            positionY = y / height
+        )
+        stickers.add(stickerModel)
+    }
+```
+
+removeSticker
+```
+    fun removeSticker(id: Int) {
+        stickers.removeIf { it.stickerId == id }
+    }
+```
+다음과 같이 생성한 스티커, 삭제한 스티커의 정보를 반영하고 프로필 생성 이벤트 호출 시 다른 프로필 정보와 스티커 정보를 담아 프로필 생성 API의 request로 요청합니다.
+
+
+## [프로필 조회](https://github.com/DevCamp2Flame/FlameTalk_Android/blob/develop/app/src/main/java/com/sgs/devcamp2/flametalk_android/ui/profile/ProfileFragment.kt)
+
+프로필 조회 시 서버로 부터 넘겨받은 스티커 리스트를 forEach문을 돌며 UI에 스티커 ImageView로 동적 생성합니다.
+```
+lifecycleScope.launchWhenResumed {
+            viewModel.stickers.collectLatest { sticker ->
+                sticker.forEach {
+                    binding.cstProfile.addView(
+                        createImageView(
+                            it.stickerId,
+                            it.positionX,
+                            it.positionY
+                        )
+                    )
+                }
+            }
+        }
+
+```
+
+프로필을 조회하는 디바이스의 화면 비율에 맞춰 스티커를 ConstraintLayout 내 배치합니다. 스티커 생성 시 각각의 스티커 종류 정보를 담았으므로 생성한 스티커의 에셋과 동일한 이미지뷰를 생성할 수 있습니다.
+```
+    private fun createImageView(emoji: Int, positionX: Double, positionY: Double): View {
+
+        /**프로필 조회하는 디바이스의 사이즈에 따라 scaling 하기 위해
+         디바이스의 기기 가로, 세로 사이즈로 나누어 position 저장*/
+        val dm: DisplayMetrics = requireContext().resources.displayMetrics
+        val width = dm.widthPixels
+        val height = dm.heightPixels
+
+        // 스티커를 위한 ImageView 동적 생성
+        val img = AppCompatImageView(requireContext())
+        // 생성할 스티커의 사이즈
+        val param = ConstraintLayout.LayoutParams(100, 100)
+        // 생성한 스티커를 저장된 좌표에 배치하기 위한 layout 제약
+        param.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
+        param.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
+        param.marginStart = (positionX * width).toInt()
+        param.topMargin = (positionY * height).toInt()
+
+        when (emoji) {
+            EMOJI_AWW -> Glide.with(requireContext()).load(R.drawable.emoji_aww).into(img)
+            EMOJI_CLAP -> Glide.with(requireContext()).load(R.drawable.emoji_clap).into(img)
+            EMOJI_DANCE -> Glide.with(requireContext()).load(R.drawable.emoji_dance).into(img)
+            EMOJI_HEART -> Glide.with(requireContext()).load(R.drawable.emoji_hearts).into(img)
+            EMOJI_PARTY -> Glide.with(requireContext()).load(R.drawable.emoji_party).into(img)
+            EMOJI_SAD -> Glide.with(requireContext()).load(R.drawable.emoji_sad).into(img)
+        }
+        // 각 스티커 객체 별 아이디 생성
+        img.id = ViewCompat.generateViewId()
+        img.layoutParams = param
+
+        return img
+    }
+
+```
+
