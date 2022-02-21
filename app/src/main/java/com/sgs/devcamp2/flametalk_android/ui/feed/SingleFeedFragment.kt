@@ -79,7 +79,6 @@ class SingleFeedFragment : Fragment() {
             }
         }
 
-        // TODO: response로 Feed Data가 오면 확인
         lifecycleScope.launchWhenStarted {
             viewModel.lockChanged?.collectLatest {
                 when (it) {

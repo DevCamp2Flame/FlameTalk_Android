@@ -263,8 +263,6 @@ class FriendFragment : Fragment() {
                 requireView(), "권한이 없으면 연락처 동기화로 친구추가할 수 없습니다.", Snackbar.LENGTH_SHORT
             ).show()
         }
-        // TODO: 연락처에서 친구 리스트 load
-        // TODO: 친구 추가 통신 요청하는 뷰모델 함수 호출
     }
 
     // 주소록 접근 권한 확인

@@ -5,6 +5,7 @@
     android:id="@+id/main_navigation"
     app:startDestination="@id/navigation_splash">
 
+    <!--스플래시-->
     <fragment
         android:id="@+id/navigation_splash"
         android:name="com.sgs.devcamp2.flametalk_android.ui.splash.SplashFragment"
@@ -15,6 +16,7 @@
             app:destination="@id/navigation_signin" />
     </fragment>
 
+    <!--로그인-->
     <fragment
         android:id="@+id/navigation_signin"
         android:name="com.sgs.devcamp2.flametalk_android.ui.signin.SigninFragment"
@@ -39,6 +41,7 @@
             app:destination="@id/navigation_additional_user_info" />
     </fragment>
 
+    <!--회원가입-->
     <fragment
         android:id="@+id/navigation_signup"
         android:name="com.sgs.devcamp2.flametalk_android.ui.signup.SignupFragment"
@@ -101,12 +104,6 @@
             app:popUpTo="@id/navigation_profile"
             app:popUpToInclusive="true" />
     </fragment>
-
-    <fragment
-        android:id="@+id/navigation_phonebook"
-        android:name="com.sgs.devcamp2.flametalk_android.ui.friend.phonebook.PhoneBookFragment"
-        android:label="PhoneBook"
-        tools:layout="@layout/fragment_phone_book"></fragment>
 
     <!--프로필 상세보기-->
     <fragment
@@ -320,7 +317,7 @@
         android:label="OpenChatRoom"
         tools:layout="@layout/fragment_open_chat_room"></fragment>
 
-
+    <!--설정 탭-->
     <fragment
         android:id="@+id/navigation_setting"
         android:name="com.sgs.devcamp2.flametalk_android.ui.setting.SettingFragment"
@@ -499,7 +496,7 @@
     <fragment
         android:id="@+id/joinUserChatRoomFragment"
         android:name="com.sgs.devcamp2.flametalk_android.ui.joinuserchatroom.JoinUserChatRoomFragment"
-        android:label="JoinUserChatRoomFragment" >
+        android:label="JoinUserChatRoomFragment">
         <argument
             android:name="chatroomId"
             app:argType="string" />

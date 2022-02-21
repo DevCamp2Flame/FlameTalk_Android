@@ -30,13 +30,13 @@ import androidx.fragment.app.activityViewModels
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentChatRoomBottomSheetBinding
 import com.sgs.devcamp2.flametalk_android.util.pathToMultipartImageFile
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
 
 /**
  * @author 김현국
@@ -52,7 +52,10 @@ class ChatRoomBottomSheetFragment : DialogFragment(), View.OnClickListener {
     private val getBackgroundImageLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK && result.data?.data != null) {
-                val multiPartfile: MultipartBody.Part? = pathToMultipartImageFile(uriToPath(result.data!!.data!!), "image.*".toMediaTypeOrNull())
+                val multiPartfile: MultipartBody.Part? = pathToMultipartImageFile(
+                    uriToPath(result.data!!.data!!),
+                    "image.*".toMediaTypeOrNull()
+                )
                 if (multiPartfile != null) {
                     model.uploadImage(multiPartfile)
                 }
@@ -71,7 +74,8 @@ class ChatRoomBottomSheetFragment : DialogFragment(), View.OnClickListener {
         resultLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if (result.resultCode == RESULT_OK) {
-                    val multiPartfile: MultipartBody.Part? = pathToMultipartImageFile(currentPhotoPath, "image.*".toMediaTypeOrNull())
+                    val multiPartfile: MultipartBody.Part? =
+                        pathToMultipartImageFile(currentPhotoPath, "image.*".toMediaTypeOrNull())
                     if (multiPartfile != null) {
                         model.uploadImage(multiPartfile)
                     }
@@ -104,11 +108,10 @@ class ChatRoomBottomSheetFragment : DialogFragment(), View.OnClickListener {
 
     override fun onClick(view: View?) {
         when (view) {
-            binding.layoutDialogBottomSheetAlbum ->
-                {
-                    Log.d(TAG, "ChatRoomBottomSheetFragment - onClick() called")
-                    getProfileImage(2)
-                }
+            binding.layoutDialogBottomSheetAlbum -> {
+                Log.d(TAG, "ChatRoomBottomSheetFragment - onClick() called")
+                getProfileImage(2)
+            }
             binding.layoutDialogBottomSheetCamera -> {
                 dispatchTakePictureIntent()
             }
@@ -134,6 +137,7 @@ class ChatRoomBottomSheetFragment : DialogFragment(), View.OnClickListener {
         }
         resultLauncher.launch(Intent)
     }
+
     @Throws(IOException::class)
     private fun createImageFile(): File {
         // Create an image file name
@@ -149,9 +153,9 @@ class ChatRoomBottomSheetFragment : DialogFragment(), View.OnClickListener {
             Log.d(TAG, "currentPhotoPath - $currentPhotoPath")
         }
     }
+
     // 이미지 변경
     private fun getProfileImage(type: Int) {
-        // TODO: SDK 버전에 따라 외장 저장소 접근 로직을 다르게 처리 (Android 10(Q, 29) 이상/미만)
         if (checkPermission()) {
             Log.d(TAG, "ChatRoomBottomSheetFragment - checkPermission() called")
             val intent = Intent(Intent.ACTION_PICK)
@@ -178,6 +182,7 @@ class ChatRoomBottomSheetFragment : DialogFragment(), View.OnClickListener {
             Manifest.permission.READ_EXTERNAL_STORAGE
         ) == PackageManager.PERMISSION_GRANTED
     }
+
     // 저장소 접근 권한
     private fun requestPermission() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(
@@ -194,6 +199,7 @@ class ChatRoomBottomSheetFragment : DialogFragment(), View.OnClickListener {
             )
         }
     }
+
     // image uri를 path로 전환
     @SuppressLint("Range")
     private fun uriToPath(uri: Uri): String {
@@ -207,6 +213,7 @@ class ChatRoomBottomSheetFragment : DialogFragment(), View.OnClickListener {
         }
         return path
     }
+
     companion object {
         private const val BACKGROUND_IMAGE = 2
         private const val PERMISSION_CALLBACK_CONSTANT = 100

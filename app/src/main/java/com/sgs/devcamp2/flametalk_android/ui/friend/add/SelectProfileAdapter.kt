@@ -20,8 +20,6 @@ import com.sgs.devcamp2.flametalk_android.util.SimpleDiffUtilCallback
  * @desc 친구 추가 시 보여줄 프로필을 선택해야 한다.
  *       초기에는 선택이 안되어있음. 한번 선택을 하면 해제할 수 없음. single 선택임
  */
-// TODO: 초기에는 선택이 안되어있음
-// TODO: 한번 선택을 하면 해제할 수 없음. single 선택임
 
 class SelectProfileAdapter(
     private val context: Context,

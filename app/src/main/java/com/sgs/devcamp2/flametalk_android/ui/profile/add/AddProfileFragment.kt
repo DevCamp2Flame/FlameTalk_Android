@@ -222,7 +222,6 @@ class AddProfileFragment : Fragment() {
     private fun initSticker() {
         rootLayout = binding.cstAddProfile
 
-        // 하단의 이모티콘 메뉴 버튼 // TODO: 확장성을 고려하여 RecyclerView로 변경
         Glide.with(requireContext()).load(R.drawable.emoji_aww).into(binding.imgAddProfileEmoji1)
         Glide.with(requireContext()).load(R.drawable.emoji_clap).into(binding.imgAddProfileEmoji2)
         Glide.with(requireContext()).load(R.drawable.emoji_dance).into(binding.imgAddProfileEmoji3)
