@@ -13,7 +13,7 @@ class ConnectWebSocketUseCase @Inject constructor(
     private val repository: MainActivityRepository
 ) {
     suspend fun invoke():
-        Flow<StompSession> {
+        Flow<StompSession?> {
         return repository.connectWebSocket()
     }
 }
