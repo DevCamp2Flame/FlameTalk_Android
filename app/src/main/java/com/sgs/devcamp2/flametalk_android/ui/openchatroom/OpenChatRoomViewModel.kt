@@ -23,6 +23,7 @@ import javax.inject.Inject
 class OpenChatRoomViewModel @Inject constructor(
     private val getChatRoomListUseCase: GetChatRoomListUseCase
 ) : ViewModel() {
+
     private val _uiState = MutableStateFlow<UiState<GetChatRoomListRes>>(UiState.Loading)
     val uiState = _uiState.asStateFlow()
 

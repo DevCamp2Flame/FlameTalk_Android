@@ -22,8 +22,9 @@ class InviteRoomViewModel @Inject constructor(
     private val getFriendListUseCase: GetFriendListUseCase
 ) : ViewModel() {
     val TAG: String = "로그"
-    private var _friendList = MutableStateFlow<List<FriendEntity>>(emptyList())
-    private var _selectedFriendList = MutableStateFlow<List<FriendEntity>>(emptyList())
+    private val _friendList = MutableStateFlow<List<FriendEntity>>(emptyList())
+    private val _selectedFriendList = MutableStateFlow<List<FriendEntity>>(emptyList())
+
     private var friendAdapter: InviteRoomAdapter? = null
     private var markAdapter: InviteRoomMarkAdapter? = null
 
@@ -32,14 +33,16 @@ class InviteRoomViewModel @Inject constructor(
     private var selectedMap = HashMap<String, SelectedTable>()
     private val _uiEvent = MutableStateFlow<UiState<Any>>(UiState.Loading)
     val uiEvent = _uiEvent.asStateFlow()
+
     private val _uiState = MutableStateFlow<UiState<Boolean>>(UiState.Loading)
     val uiState = _uiState.asStateFlow()
-    private var _friendListUiState = MutableStateFlow<UiState<List<FriendEntity>>>(UiState.Loading)
-    var friendListUiState = _friendListUiState.asStateFlow()
-    var friendList = _friendList.asStateFlow()
-        get() = _friendList
-    var selectedFriendList = _selectedFriendList.asStateFlow()
-        get() = _selectedFriendList
+
+    private val _friendListUiState = MutableStateFlow<UiState<List<FriendEntity>>>(UiState.Loading)
+    val friendListUiState = _friendListUiState.asStateFlow()
+
+    val friendList = _friendList.asStateFlow()
+
+    val selectedFriendList = _selectedFriendList.asStateFlow()
 
     init {
     }

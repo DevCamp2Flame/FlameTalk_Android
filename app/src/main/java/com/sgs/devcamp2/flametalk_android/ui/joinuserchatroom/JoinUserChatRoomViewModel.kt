@@ -29,16 +29,16 @@ class JoinUserChatRoomViewModel @Inject constructor(
     private val getFriendListUseCase: GetFriendListUseCase
 ) : ViewModel() {
 
-    private var _lastReadMessageId = MutableStateFlow("")
-    var lastReadMessageId = _lastReadMessageId.asStateFlow()
+    private val _lastReadMessageId = MutableStateFlow("")
+    val lastReadMessageId = _lastReadMessageId.asStateFlow()
 
-    private var _joinUiState = MutableStateFlow<UiState<JoinChatRoomRes>>(UiState.Loading)
-    var joinUiState = _joinUiState.asStateFlow()
+    private val _joinUiState = MutableStateFlow<UiState<JoinChatRoomRes>>(UiState.Loading)
+    val joinUiState = _joinUiState.asStateFlow()
 
-    private var _friendListUiState = MutableStateFlow<UiState<List<FriendListRes>>>(UiState.Loading)
-    var friendListUiState = _friendListUiState.asStateFlow()
+    private val _friendListUiState = MutableStateFlow<UiState<List<FriendListRes>>>(UiState.Loading)
+    val friendListUiState = _friendListUiState.asStateFlow()
 
-    var _userId = MutableStateFlow("")
+    val _userId = MutableStateFlow("")
 
     val TAG: String = "로그"
 
