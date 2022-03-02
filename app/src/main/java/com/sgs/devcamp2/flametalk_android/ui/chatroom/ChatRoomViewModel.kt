@@ -50,39 +50,48 @@ class ChatRoomViewModel @Inject constructor(
     private val userPreferences: UserPreferences
 ) : ViewModel() {
     val TAG: String = "로그"
-    private var _chat = MutableStateFlow<String>("")
-    var chat = _chat.asStateFlow()
+    private val _chat = MutableStateFlow<String>("")
+    val chat = _chat.asStateFlow()
+
     lateinit var _jsonStompSessions: StompSessionWithKxSerialization
-    private var _drawUserState = MutableStateFlow<UiState<GetChatRoomEntity>>(UiState.Loading)
-    var drawUserState = _drawUserState.asStateFlow()
-    private var _deleteUiState = MutableStateFlow<UiState<Boolean>>(UiState.Loading)
-    var deleteUiState = _deleteUiState.asStateFlow()
-    private var _closeUiState = MutableStateFlow<UiState<Boolean>>(UiState.Loading)
-    var closeUiState = _closeUiState.asStateFlow()
-    private var _uploadUiState = MutableStateFlow<UiState<UploadImgRes>>(UiState.Loading)
-    var uploadUiState = _uploadUiState.asStateFlow()
-    private var _chatList = MutableStateFlow<UiState<List<Chat>>>(UiState.Loading)
-    var chatList = _chatList.asStateFlow()
-    var _lastReadMessageId = MutableStateFlow("")
-    var lastReadMessageId = _lastReadMessageId.asStateFlow()
-    private var _uiState = MutableStateFlow<UiState<Long>>(UiState.Loading)
-    var uiState = _uiState.asStateFlow()
-    private var _userChatRoom = MutableStateFlow<UiState<ChatRoom>>(UiState.Loading)
-    var userChatRoom = _userChatRoom.asStateFlow()
-    private var _localChatRoom = MutableStateFlow<UiState<ChatRoom>>(UiState.Loading)
-    var localChatRoom = _localChatRoom.asStateFlow()
-    private var _userId = MutableStateFlow("")
+
+    private val _drawUserState = MutableStateFlow<UiState<GetChatRoomEntity>>(UiState.Loading)
+    val drawUserState = _drawUserState.asStateFlow()
+
+    private val _deleteUiState = MutableStateFlow<UiState<Boolean>>(UiState.Loading)
+    val deleteUiState = _deleteUiState.asStateFlow()
+
+    private val _closeUiState = MutableStateFlow<UiState<Boolean>>(UiState.Loading)
+    val closeUiState = _closeUiState.asStateFlow()
+
+    private val _uploadUiState = MutableStateFlow<UiState<UploadImgRes>>(UiState.Loading)
+    val uploadUiState = _uploadUiState.asStateFlow()
+
+    private val _chatList = MutableStateFlow<UiState<List<Chat>>>(UiState.Loading)
+    val chatList = _chatList.asStateFlow()
+
+    val _lastReadMessageId = MutableStateFlow("")
+    val lastReadMessageId = _lastReadMessageId.asStateFlow()
+
+    private val _uiState = MutableStateFlow<UiState<Long>>(UiState.Loading)
+    val uiState = _uiState.asStateFlow()
+
+    private val _userChatRoom = MutableStateFlow<UiState<ChatRoom>>(UiState.Loading)
+    val userChatRoom = _userChatRoom.asStateFlow()
+
+    private val _userId = MutableStateFlow("")
     val userId = _userId.asStateFlow()
-    private var _nickname = MutableStateFlow("")
+
+    private val _nickname = MutableStateFlow("")
     val nickname = _nickname.asStateFlow()
-    private var _roomId = MutableStateFlow("")
+
+    private val _roomId = MutableStateFlow("")
     val roomId = _roomId.asStateFlow()
-    var userChatRoomId = MutableStateFlow(0L)
+
+    val userChatRoomId = MutableStateFlow(0L)
+
     private val _imageUrl = MutableStateFlow<String>("")
     val imageUrl = _imageUrl.asStateFlow()
-
-    private val _chatRoomModel = MutableStateFlow<UiState<ChatRoom>>(UiState.Loading)
-    var chatRoomModel = _chatRoomModel.asStateFlow()
 
     private var webSocket: WebSocket? = null
 

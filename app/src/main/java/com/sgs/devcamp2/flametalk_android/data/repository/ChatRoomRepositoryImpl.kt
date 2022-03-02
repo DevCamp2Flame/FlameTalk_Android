@@ -61,6 +61,12 @@ class ChatRoomRepositoryImpl @Inject constructor(
                     local.chatRoomDao().insert(chatroomModel)
                     val chatRoomEntity = mapperToChatRoomEntity(data)
                     emit(Results.Success(chatRoomEntity))
+                } else if (response.body()!!.status == 400) {
+                    emit(Results.Error("잘못된 요청입니다"))
+                } else if (response.body()!!.status == 401) {
+                    emit(Results.Error("권한이 없습니다"))
+                } else {
+                    emit(Results.Error("서버 에러입니다"))
                 }
             }
         }.flowOn(ioDispatcher)
@@ -105,6 +111,14 @@ class ChatRoomRepositoryImpl @Inject constructor(
                     val data = body.data!!
                     val getChatRoomEntity = mapperToGetChatRoomEntity(data)
                     emit(Results.Success(getChatRoomEntity))
+                } else if (response.body()!!.status == 400) {
+                    emit(Results.Error("잘못된 요청입니다"))
+                } else if (response.body()!!.status == 401) {
+                    emit(Results.Error("권한이 없습니다"))
+                } else if (response.body()!!.status == 404) {
+                    emit(Results.Error("존재하지 않는 채팅방입니다"))
+                } else {
+                    emit(Results.Error("서버 에러입니다"))
                 }
             }
         }.flowOn(ioDispatcher)
@@ -196,6 +210,12 @@ class ChatRoomRepositoryImpl @Inject constructor(
                         }
                     }
                     emit(Results.Success(data))
+                } else if (response.body()!!.status == 400) {
+                    emit(Results.Error("잘못된 요청입니다"))
+                } else if (response.body()!!.status == 401) {
+                    emit(Results.Error("권한이 없습니다"))
+                } else {
+                    emit(Results.Error("서버 에러입니다"))
                 }
             }
         }.flowOn(ioDispatcher)
@@ -257,6 +277,12 @@ class ChatRoomRepositoryImpl @Inject constructor(
                     }
 
                     emit(Results.Success(data))
+                } else if (response.body()!!.status == 400) {
+                    emit(Results.Error("잘못된 요청입니다"))
+                } else if (response.body()!!.status == 401) {
+                    emit(Results.Error("권한이 없습니다"))
+                } else {
+                    emit(Results.Error("서버 에러입니다"))
                 }
             }
         }.flowOn(ioDispatcher)
@@ -268,27 +294,33 @@ class ChatRoomRepositoryImpl @Inject constructor(
     override fun closeChatRoom(closeChatRoomReq: CloseChatRoomReq): Flow<Results<Boolean, WrappedResponse<Nothing>>> {
         return flow {
             val TAG: String = "로그"
-            Log.d(TAG, "ChatRoomRepositoryImpl - closeChatRoom(1) called")
             val response = remote.closeChatRoom(closeChatRoomReq)
-            Log.d(TAG, "ChatRoomRepositoryImpl - closeChatRoom(2-1) $closeChatRoomReq called")
-            Log.d(TAG, "ChatRoomRepositoryImpl - closeChatRoom(2-2) : $response called")
+
             if (response.isSuccessful) {
-                var response: String = ""
-                var updateResponse = 0
-                var deffer: Deferred<String> = CoroutineScope(ioDispatcher).async {
-                    local.chatDao().getContents(closeChatRoomReq.lastReadMessageId)
+                if (response.body()!!.status == 200) {
+                    var response: String = ""
+                    var updateResponse = 0
+                    var deffer: Deferred<String> = CoroutineScope(ioDispatcher).async {
+                        local.chatDao().getContents(closeChatRoomReq.lastReadMessageId)
+                    }
+                    response = deffer.await()
+                    var deffer2: Deferred<Int> = CoroutineScope(ioDispatcher).async {
+                        local.chatRoomDao().updateChatRoomWithMessageText(
+                            closeChatRoomReq.lastReadMessageId,
+                            response,
+                            System.currentTimeMillis(),
+                            closeChatRoomReq.userChatroomId,
+                        )
+                    }
+                    updateResponse = deffer2.await()
+                    emit(Results.Success(true))
+                } else if (response.body()!!.status == 400) {
+                    emit(Results.Error("잘못된 요청입니다"))
+                } else if (response.body()!!.status == 401) {
+                    emit(Results.Error("권한이 없습니다"))
+                } else {
+                    emit(Results.Error("서버 에러입니다"))
                 }
-                response = deffer.await()
-                var deffer2: Deferred<Int> = CoroutineScope(ioDispatcher).async {
-                    local.chatRoomDao().updateChatRoomWithMessageText(
-                        closeChatRoomReq.lastReadMessageId,
-                        response,
-                        System.currentTimeMillis(),
-                        closeChatRoomReq.userChatroomId,
-                    )
-                }
-                updateResponse = deffer2.await()
-                emit(Results.Success(true))
             }
         }.flowOn(ioDispatcher)
     }
@@ -317,6 +349,12 @@ class ChatRoomRepositoryImpl @Inject constructor(
                 if (response.body()!!.status == 200) {
                     local.chatRoomDao().deleteChatRoomWithuserChatroomId(userChatroomId)
                     emit(Results.Success(true))
+                } else if (response.body()!!.status == 400) {
+                    emit(Results.Error("잘못된 요청입니다"))
+                } else if (response.body()!!.status == 401) {
+                    emit(Results.Error("권한이 없습니다"))
+                } else {
+                    emit(Results.Error("서버 에러입니다"))
                 }
             }
         }.flowOn(ioDispatcher)
@@ -350,9 +388,15 @@ class ChatRoomRepositoryImpl @Inject constructor(
                     val body = response.body()!!
                     val data = body.data!!
                     emit(Results.Success(data))
+                } else if (response.body()!!.status == 400) {
+                    emit(Results.Error("잘못된 요청입니다"))
+                } else if (response.body()!!.status == 401) {
+                    emit(Results.Error("권한이 없습니다"))
+                } else {
+                    emit(Results.Error("서버 에러입니다"))
                 }
             }
-        }
+        }.flowOn(ioDispatcher)
     }
 
     override fun joinUser(joinChatRoomReq: JoinChatRoomReq): Flow<Results<JoinChatRoomRes, WrappedResponse<JoinChatRoomRes>>> {
@@ -363,11 +407,15 @@ class ChatRoomRepositoryImpl @Inject constructor(
                     val body = response.body()!!
                     val data = body.data!!
                     emit(Results.Success(data))
+                } else if (response.body()!!.status == 400) {
+                    emit(Results.Error("잘못된 요청입니다"))
+                } else if (response.body()!!.status == 401) {
+                    emit(Results.Error("권한이 없습니다"))
                 } else {
-                    Log.d("로그", "ChatRoomRepositoryImpl - joinUser() else called")
+                    emit(Results.Error("서버 에러입니다"))
                 }
             }
-        }
+        }.flowOn(ioDispatcher)
     }
 
     override fun getFriendUser(
@@ -383,19 +431,21 @@ class ChatRoomRepositoryImpl @Inject constructor(
                     val body = response.body()!!
                     val data = body.data!!
                     emit(Results.Success(data))
+                } else if (response.body()!!.status == 400) {
+                    emit(Results.Error("잘못된 요청입니다"))
+                } else if (response.body()!!.status == 401) {
+                    emit(Results.Error("권한이 없습니다"))
                 } else {
-                    Log.d("로그", "getFriendUser - error")
+                    emit(Results.Error("서버 에러입니다"))
                 }
-            } else {
-                Log.d("로그", "ChatRoomRepositoryImpl - not succeeful() called")
             }
-        }
+        }.flowOn(ioDispatcher)
     }
     override fun getUserChatRoomId(roomId: String): Flow<LocalResults<Long>> {
         return flow {
             val response = local.chatRoomDao().getUserChatRoomId(roomId)
             emit(LocalResults.Success(response))
-        }
+        }.flowOn(ioDispatcher)
     }
 
     override fun updateChatRoomText(text: String, roomId: String): Flow<LocalResults<Boolean>> {
@@ -412,6 +462,6 @@ class ChatRoomRepositoryImpl @Inject constructor(
             } else {
                 emit(LocalResults.Success(false))
             }
-        }
+        }.flowOn(ioDispatcher)
     }
 }

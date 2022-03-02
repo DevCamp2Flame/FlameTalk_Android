@@ -27,8 +27,12 @@ class AuthRepositoryImpl @Inject constructor(
                 if (response.body()!!.status == 200) {
                     val data = response.body()!!.data
                     emit(Results.Success(data!!))
+                } else if (response.body()!!.status == 400) {
+                    emit(Results.Error("잘못된 요청입니다"))
+                } else if (response.body()!!.status == 401) {
+                    emit(Results.Error("권한이 없습니다"))
                 } else {
-                    emit(Results.Error("error"))
+                    emit(Results.Error("서버 에러입니다"))
                 }
             }
         }.flowOn(ioDispatcher)
