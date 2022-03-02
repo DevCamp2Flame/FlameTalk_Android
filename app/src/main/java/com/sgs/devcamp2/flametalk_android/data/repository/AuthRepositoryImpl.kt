@@ -24,8 +24,12 @@ class AuthRepositoryImpl @Inject constructor(
         return flow {
             val response = remote.signUp(authReq)
             if (response.isSuccessful) {
-                val data = response.body()!!.data
-                emit(Results.Success(data!!))
+                if (response.body()!!.status == 200) {
+                    val data = response.body()!!.data
+                    emit(Results.Success(data!!))
+                } else {
+                    emit(Results.Error("error"))
+                }
             }
         }.flowOn(ioDispatcher)
     }

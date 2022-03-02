@@ -8,6 +8,6 @@ import org.hildan.krossbow.stomp.StompSession
  * @created 2022/01/31
  */
 interface MainActivityRepository {
-    suspend fun connectWebSocket(): Flow<StompSession>
+    suspend fun connectWebSocket(): Flow<StompSession?>
 
 }

@@ -3,6 +3,7 @@ package com.sgs.devcamp2.flametalk_android.ui
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -26,11 +27,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         initNavigationBar()
-
-        try {
-            model.connectChatServer()
-        } catch (e: Exception) {
-        }
+        model.connectChatServer()
         initObserve()
         model.getDeviceToken(this)
     }
@@ -73,6 +70,7 @@ class MainActivity : AppCompatActivity() {
                         Log.d(TAG, "MainActivity - initReceiveMessage() called")
                     }
                     is UiState.Error -> {
+                        Toast.makeText(this@MainActivity, state.error, Toast.LENGTH_SHORT).show()
                     }
                 }
             }

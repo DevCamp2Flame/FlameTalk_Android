@@ -6,12 +6,14 @@ import com.sgs.devcamp2.flametalk_android.data.source.local.UserPreferences
 import com.sgs.devcamp2.flametalk_android.network.response.ErrorResponse
 import com.sgs.devcamp2.flametalk_android.util.AuthUtil
 import com.sgs.devcamp2.flametalk_android.util.addHeader
-import okhttp3.Interceptor
-import okhttp3.RequestBody
-import okhttp3.Response
+import okhttp3.*
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okio.Buffer
 import okio.IOException
+import org.hildan.krossbow.stomp.WebSocketConnectionException
+import org.json.JSONObject
 import timber.log.Timber
+import java.net.ConnectException
 
 /**
  * @author 박소연
@@ -27,6 +29,7 @@ class NetworkInterceptor(
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
 
+        lateinit var response: Response
         // Content-Type 정보와 파라미터로 받은 token을 API 요청 시 request header에 자동 주입
         val request = chain.request()
             .addHeader("Content-Type", "application/json")
@@ -42,7 +45,17 @@ class NetworkInterceptor(
         Timber.d("headers -> ${request.headers}")
         Timber.d("body -> ${request.body?.toBodyInfo()}")
 
-        var response = chain.proceed(request)
+        try {
+            response = chain.proceed(request)
+        } catch (e: ConnectException) {
+            // Timber.d("exception -> $e")
+            var jsonObject: JSONObject = JSONObject()
+            jsonObject.put("status", 600)
+            jsonObject.put("message", "error")
+            var responseBody = ResponseBody.create("application/json".toMediaTypeOrNull(), jsonObject.toString())
+            response = Response.Builder().code(600).request(request).protocol(Protocol.HTTP_1_1).message("error").body(responseBody).build()
+            Timber.d("response -> $response")
+        }
 
         if (!response.isSuccessful) {
             Timber.d("Code ${response.code}")
