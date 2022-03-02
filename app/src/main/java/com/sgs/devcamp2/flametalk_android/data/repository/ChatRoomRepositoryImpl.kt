@@ -1,6 +1,5 @@
 package com.sgs.devcamp2.flametalk_android.data.repository
 
-import android.util.Log
 import com.sgs.devcamp2.flametalk_android.data.common.WrappedResponse
 import com.sgs.devcamp2.flametalk_android.data.mapper.*
 import com.sgs.devcamp2.flametalk_android.data.model.chat.ChatWithRoomId
@@ -89,12 +88,12 @@ class ChatRoomRepositoryImpl @Inject constructor(
      */
     override fun getChatList(chatroomId: String): Flow<LocalResults<ChatWithRoomId>> {
         return flow {
-            var chatwithRoomId: ChatWithRoomId? = null
-            var deffer: Deferred<ChatWithRoomId> = CoroutineScope(ioDispatcher).async {
+            val chatWithRoomId: ChatWithRoomId?
+            val deffer: Deferred<ChatWithRoomId> = CoroutineScope(ioDispatcher).async {
                 local.chatRoomDao().getChatRoomWithId(chatroomId)
             }
-            chatwithRoomId = deffer.await()
-            emit(LocalResults.Success(chatwithRoomId))
+            chatWithRoomId = deffer.await()
+            emit(LocalResults.Success(chatWithRoomId))
         }.flowOn(ioDispatcher)
     }
     /**
@@ -144,13 +143,13 @@ class ChatRoomRepositoryImpl @Inject constructor(
                         if (getChatRoomWithThumnail == null) {
                             // 데이터가 없다면 넣는다.
                             val chatRoom = mapperToChatRoomModel(isOpen, i, data)
-                            var deferred = coroutineScope {
+                            val deferred = coroutineScope {
                                 async {
                                     local.chatRoomDao().insert(chatRoom)
                                 }
                             }
                             deferred.await()
-                            var deferred2 = coroutineScope {
+                            val deferred2 = coroutineScope {
                                 async {
                                     if (data.userChatrooms[i].thumbnail?.size != 0) {
                                         for (j in 0 until data.userChatrooms[i].thumbnail!!.size) {
@@ -175,7 +174,7 @@ class ChatRoomRepositoryImpl @Inject constructor(
                             }
                             deferred2.await()
                         } else {
-                            var deffered3 = coroutineScope {
+                            val deffered3 = coroutineScope {
                                 async {
                                     local.chatRoomDao().updateChatRoomInfo(
                                         data.userChatrooms[i].title,
@@ -293,26 +292,24 @@ class ChatRoomRepositoryImpl @Inject constructor(
      */
     override fun closeChatRoom(closeChatRoomReq: CloseChatRoomReq): Flow<Results<Boolean, WrappedResponse<Nothing>>> {
         return flow {
-            val TAG: String = "로그"
             val response = remote.closeChatRoom(closeChatRoomReq)
 
             if (response.isSuccessful) {
                 if (response.body()!!.status == 200) {
-                    var response: String = ""
-                    var updateResponse = 0
-                    var deffer: Deferred<String> = CoroutineScope(ioDispatcher).async {
+                    var res: String = ""
+                    val deffer: Deferred<String> = CoroutineScope(ioDispatcher).async {
                         local.chatDao().getContents(closeChatRoomReq.lastReadMessageId)
                     }
-                    response = deffer.await()
-                    var deffer2: Deferred<Int> = CoroutineScope(ioDispatcher).async {
+                    res = deffer.await()
+                    val deffer2: Deferred<Int> = CoroutineScope(ioDispatcher).async {
                         local.chatRoomDao().updateChatRoomWithMessageText(
                             closeChatRoomReq.lastReadMessageId,
-                            response,
+                            res,
                             System.currentTimeMillis(),
                             closeChatRoomReq.userChatroomId,
                         )
                     }
-                    updateResponse = deffer2.await()
+                    deffer2.await()
                     emit(Results.Success(true))
                 } else if (response.body()!!.status == 400) {
                     emit(Results.Error("잘못된 요청입니다"))
@@ -334,6 +331,12 @@ class ChatRoomRepositoryImpl @Inject constructor(
             if (response.isSuccessful) {
                 if (response.body()!!.status == 200) {
                     emit(Results.Success(true))
+                } else if (response.body()!!.status == 400) {
+                    emit(Results.Error("잘못된 요청입니다"))
+                } else if (response.body()!!.status == 401) {
+                    emit(Results.Error("권한이 없습니다"))
+                } else {
+                    emit(Results.Error("서버 에러입니다"))
                 }
             }
         }.flowOn(ioDispatcher)
@@ -382,7 +385,6 @@ class ChatRoomRepositoryImpl @Inject constructor(
     ): Flow<Results<UploadImgRes, WrappedResponse<UploadImgRes>>> {
         return flow {
             val response = remote.fileCreate(file, chatroomId)
-            Log.d("로그", "response - $response() called")
             if (response.isSuccessful) {
                 if (response.body()!!.status == 200) {
                     val body = response.body()!!
@@ -425,7 +427,6 @@ class ChatRoomRepositoryImpl @Inject constructor(
     ): Flow<Results<List<FriendListRes>, WrappedResponse<List<FriendListRes>>>> {
         return flow {
             val response = friendRemote.getFriendList(isBirth, isHidden, isBlock)
-            Log.d("로그", "ChatRoomRepositoryImpl - getFriendUser() called")
             if (response.isSuccessful) {
                 if (response.body()!!.status == 200) {
                     val body = response.body()!!

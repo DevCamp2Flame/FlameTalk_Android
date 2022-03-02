@@ -16,7 +16,7 @@ import javax.inject.Inject
 class UpLoadImageUseCase @Inject constructor(
     val repository: ChatRoomRepository
 ) {
-    fun invoke(file: MultipartBody.Part,  chatroomId: RequestBody?): Flow<Results<UploadImgRes, WrappedResponse<UploadImgRes>>> {
+    fun invoke(file: MultipartBody.Part, chatroomId: RequestBody?): Flow<Results<UploadImgRes, WrappedResponse<UploadImgRes>>> {
         return repository.uploadImage(file, chatroomId)
     }
 }

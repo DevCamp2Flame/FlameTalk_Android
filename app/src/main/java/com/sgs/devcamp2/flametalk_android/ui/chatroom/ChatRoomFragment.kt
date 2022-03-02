@@ -179,14 +179,26 @@ class ChatRoomFragment : Fragment(), View.OnClickListener {
         viewLifecycleOwner.lifecycleScope.launch {
             model.chatList.collectLatest { state ->
                 when (state) {
-                    is UiState.Success -> {
-                        // 채팅 데이터 observe
-                        val list: List<Chat> = state.data.sortedBy {
-                            it.created_at
+                    is UiState.Init ->
+                        {
                         }
-                        adapter.submitList(list)
-                        binding.rvChatRoom.smoothScrollToPosition(state.data.size)
-                    }
+
+                    is UiState.Success ->
+                        {
+                            // 채팅 데이터 observe
+                            val list: List<Chat> = state.data.sortedBy {
+                                it.created_at
+                            }
+                            adapter.submitList(list)
+                            binding.rvChatRoom.smoothScrollToPosition(state.data.size)
+                        }
+                    is UiState.Loading ->
+                        {
+
+                        }
+                    is UiState.Error ->
+                        {
+                        }
                 }
             }
         }

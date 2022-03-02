@@ -74,7 +74,6 @@ class ChatRepositoryImp @Inject constructor(
                                     val chat = mapperToChat(data[i])
                                     db.chatDao().insert(chat)
                                 }
-                                Log.d(TAG, "ChatRepositoryImp - getMessageHistory(1) called")
                             } catch (e: Exception) {
                             }
                         }
@@ -85,15 +84,14 @@ class ChatRepositoryImp @Inject constructor(
                         db.chatRoomDao().updateMessageCount(roomId)
                     }
                     messageCount = deferr2.await()
-                    Log.d(TAG, "ChatRepositoryImp - getMessageHistory(2) called")
                     emit(Results.Success(data!!))
+                } else if (response.body()!!.status == 400) {
+                    emit(Results.Error("잘못된 요청입니다"))
+                } else if (response.body()!!.status == 401) {
+                    emit(Results.Error("권한이 없습니다"))
+                } else {
+                    emit(Results.Error("서버 에러입니다"))
                 }
-            } else if (response.body()!!.status == 400) {
-                emit(Results.Error("잘못된 요청입니다"))
-            } else if (response.body()!!.status == 401) {
-                emit(Results.Error("권한이 없습니다"))
-            } else {
-                emit(Results.Error("서버 에러입니다"))
             }
         }.flowOn(ioDispatcher)
     }
@@ -107,7 +105,11 @@ class ChatRepositoryImp @Inject constructor(
                 db.chatDao().getLastMessageWithRoomId(chatroomId)
             }
             messageId = deferr.await().toString()
-            emit(LocalResults.Success(messageId))
+            if (messageId != "") {
+                emit(LocalResults.Success(messageId))
+            } else {
+                emit(LocalResults.Error(""))
+            }
         }.flowOn(ioDispatcher)
     }
 }

@@ -3,7 +3,6 @@ package com.sgs.devcamp2.flametalk_android.ui.chatroomlist
 import android.app.AlertDialog
 import android.content.*
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +19,7 @@ import com.sgs.devcamp2.flametalk_android.data.model.chatroom.ThumbnailWithRoomI
 import com.sgs.devcamp2.flametalk_android.databinding.FragmentChatRoomListBinding
 import com.sgs.devcamp2.flametalk_android.domain.entity.UiState
 import com.sgs.devcamp2.flametalk_android.ui.chattingviewpager.ChattingViewPagerFragmentDirections
+import com.sgs.devcamp2.flametalk_android.util.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -37,7 +37,7 @@ class ChatRoomListFragment : Fragment(), ChatRoomListAdapter.ClickCallBack {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentChatRoomListBinding.inflate(inflater, container, false)
         initUI(this.requireContext())
         initObserve()
@@ -64,6 +64,16 @@ class ChatRoomListFragment : Fragment(), ChatRoomListAdapter.ClickCallBack {
                             is UiState.Success -> {
                                 model.getLocalChatRoomList(false)
                             }
+                            is UiState.Error ->
+                                {
+                                    model.getLocalChatRoomList(false)
+                                }
+                            is UiState.Loading ->
+                                {
+                                }
+                            is UiState.Init ->
+                                {
+                                }
                         }
                     }
                 }
@@ -82,6 +92,15 @@ class ChatRoomListFragment : Fragment(), ChatRoomListAdapter.ClickCallBack {
                                     adapterRoom.submitList(list)
                                 }
                             }
+                            is UiState.Error ->
+                                {
+                                }
+                            is UiState.Loading ->
+                                {
+                                }
+                            is UiState.Init ->
+                                {
+                                }
                         }
                     }
                 }
@@ -91,15 +110,15 @@ class ChatRoomListFragment : Fragment(), ChatRoomListAdapter.ClickCallBack {
         successSavedToken()
     }
 
-    override fun onItemLongClicked(position: Int, chatroom: ThumbnailWithRoomId) {
+    override fun onItemLongClicked(position: Int, chatRoom: ThumbnailWithRoomId) {
         /**
          * itemClickCallback
          * item long Click 시 dialog 생성
          * items 로 메뉴 생성 후 인덱스로 접근
          */
-        var items = arrayOf("채팅방 이름 설정", "즐겨찾기에 추가", "채팅방 상단 고정", "채팅방 알람 켜기", "나가기")
-        var dialog = AlertDialog.Builder(this.requireContext())
-        var dialogListener = DialogInterface.OnClickListener { _, which ->
+        val items = arrayOf("채팅방 이름 설정", "즐겨찾기에 추가", "채팅방 상단 고정", "채팅방 알람 켜기", "나가기")
+        val dialog = AlertDialog.Builder(this.requireContext())
+        val dialogListener = DialogInterface.OnClickListener { _, which ->
             run {
                 when (which) {
                     4 -> {
@@ -109,20 +128,18 @@ class ChatRoomListFragment : Fragment(), ChatRoomListAdapter.ClickCallBack {
             }
         }
 
-        dialog.setTitle(chatroom.room.title)
+        dialog.setTitle(chatRoom.room.title)
         dialog.setItems(
             items, dialogListener
         )
         dialog.show()
-        true
     }
 
-    override fun onItemShortClicked(position: Int, chatroomid: ThumbnailWithRoomId) {
-        var action =
+    override fun onItemShortClicked(position: Int, chatRoom: ThumbnailWithRoomId) {
+        val action =
             ChattingViewPagerFragmentDirections.actionNavigationChattingViewPagerFragmentToNavigationChatRoom(
-                chatroomid.room.id,
+                chatRoom.room.id,
             )
-        Log.d(TAG, "chatRoomId - ${chatroomid.room.id}() called")
         findNavController().navigate(action)
     }
 
@@ -133,6 +150,15 @@ class ChatRoomListFragment : Fragment(), ChatRoomListAdapter.ClickCallBack {
                     is UiState.Success -> {
                         model.saveDeviceToken(state.data)
                     }
+                    is UiState.Error ->
+                        {
+                        }
+                    is UiState.Init ->
+                        {
+                        }
+                    is UiState.Loading ->
+                        {
+                        }
                 }
             }
         }
@@ -143,7 +169,11 @@ class ChatRoomListFragment : Fragment(), ChatRoomListAdapter.ClickCallBack {
             model.deviceTokenUiState.collect { state ->
                 when (state) {
                     is UiState.Success -> {
-                        Log.d(TAG, "successSavedToken - ${state.data} called")
+                        context?.showToast("토큰 저장 성공")
+                    }
+                    else -> {
+                        // Log.d(TAG, "successSavedToken - error() called")
+                        context?.showToast("토큰 저장 실패")
                     }
                 }
             }
