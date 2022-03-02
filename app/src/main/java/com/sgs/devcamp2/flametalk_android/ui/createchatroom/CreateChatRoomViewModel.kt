@@ -28,15 +28,21 @@ class CreateChatRoomViewModel @Inject constructor(
     val userPreferences: UserPreferences
 ) : ViewModel() {
     var firstMessage = ""
+
     lateinit var session: StompSession
-    private var _createUiState = MutableStateFlow<UiState<ChatRoomEntity>>(UiState.Loading)
-    var createUiState = _createUiState.asStateFlow()
-    private var _successPushUiState = MutableStateFlow<UiState<Long>>(UiState.Loading)
+
+    private val _createUiState = MutableStateFlow<UiState<ChatRoomEntity>>(UiState.Loading)
+    val createUiState = _createUiState.asStateFlow()
+
+    private val _successPushUiState = MutableStateFlow<UiState<Long>>(UiState.Loading)
     val successPushUiState = _successPushUiState.asStateFlow()
+
     var createdRoomInfo: UserChatRoom? = null
-    private var _userId = MutableStateFlow("")
+
+    private val _userId = MutableStateFlow("")
     val userId = _userId.asStateFlow()
-    private var _nickname = MutableStateFlow("")
+
+    private val _nickname = MutableStateFlow("")
     val nickname = _nickname.asStateFlow()
 
     init {

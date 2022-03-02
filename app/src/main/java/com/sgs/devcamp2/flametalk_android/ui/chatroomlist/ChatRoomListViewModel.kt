@@ -36,10 +36,10 @@ class ChatRoomListViewModel @Inject constructor(
     private val _localUiState = MutableStateFlow<UiState<List<ThumbnailWithRoomId>>>(UiState.Loading)
     val localUiState = _localUiState.asStateFlow()
 
-    private var _deviceToken = MutableStateFlow<UiState<String>>(UiState.Loading)
+    private val _deviceToken = MutableStateFlow<UiState<String>>(UiState.Loading)
     val deviceToken = _deviceToken.asStateFlow()
 
-    private var _deviceTokenUiState = MutableStateFlow<UiState<SaveDeviceTokenRes>>(UiState.Loading)
+    private val _deviceTokenUiState = MutableStateFlow<UiState<SaveDeviceTokenRes>>(UiState.Loading)
     val deviceTokenUiState = _deviceTokenUiState.asStateFlow()
 
     /**
