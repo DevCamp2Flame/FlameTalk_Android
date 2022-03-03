@@ -1,6 +1,5 @@
 package com.sgs.devcamp2.flametalk_android.ui.createchatroom
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sgs.devcamp2.flametalk_android.data.mapper.mapperToUserChatRoomModel
@@ -63,7 +62,6 @@ class CreateChatRoomViewModel @Inject constructor(
      */
     fun createChatRoom(users: List<String>) {
         val userList = users.toMutableList()
-        Log.d("로그", "userList - $userList")
         userList.add(_userId.value)
         val createChatRoomReq = CreateChatRoomReq(
             hostId = _userId.value,
@@ -83,7 +81,7 @@ class CreateChatRoomViewModel @Inject constructor(
                         }
                     is Results.Error ->
                         {
-                            Log.d("로그", "CreateChatRoomViewModel - createChatRoom() called")
+                            _createUiState.value = UiState.Error(result.message)
                         }
                 }
             }

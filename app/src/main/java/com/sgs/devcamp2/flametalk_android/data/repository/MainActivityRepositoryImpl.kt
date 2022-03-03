@@ -20,15 +20,12 @@ class MainActivityRepositoryImpl @Inject constructor(
     private val stompClient: StompClient,
 ) : MainActivityRepository {
     /**
-     * krossbow library를 이용하여 connection을 맺는 function 입니다.
+     * KrossBow Library 를 이용하여 connection 을 맺는 function 입니다.
      */
-    val TAG: String = "로그"
     override suspend fun connectWebSocket(): Flow<StompSession?> {
         return flow {
-            lateinit var connection: StompSession
-
             try {
-                connection = stompClient.connect(WEB_SOCKET_URL)
+                val connection = stompClient.connect(WEB_SOCKET_URL)
                 emit(connection)
             } catch (e: ConnectionTimeout) {
                 emit(null)
@@ -41,6 +38,6 @@ class MainActivityRepositoryImpl @Inject constructor(
     }
 
     companion object {
-        val WEB_SOCKET_URL = "ws://10.0.2.2:8085/stomp/chat/websocket"
+        const val WEB_SOCKET_URL = "ws://10.0.2.2:8085/stomp/chat/websocket"
     }
 }

@@ -1,8 +1,11 @@
 package com.sgs.devcamp2.flametalk_android.data.repository
 
-import android.util.Log
+import com.sgs.devcamp2.flametalk_android.data.common.Status
 import com.sgs.devcamp2.flametalk_android.data.common.WrappedResponse
-import com.sgs.devcamp2.flametalk_android.data.mapper.*
+import com.sgs.devcamp2.flametalk_android.data.mapper.mapperToChatRoomEntity
+import com.sgs.devcamp2.flametalk_android.data.mapper.mapperToChatRoomModel
+import com.sgs.devcamp2.flametalk_android.data.mapper.mapperToGetChatRoomEntity
+import com.sgs.devcamp2.flametalk_android.data.mapper.mapperToThumbnail
 import com.sgs.devcamp2.flametalk_android.data.model.chat.ChatWithRoomId
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.ChatRoom
 import com.sgs.devcamp2.flametalk_android.data.model.chatroom.Thumbnail
@@ -28,8 +31,14 @@ import com.sgs.devcamp2.flametalk_android.domain.entity.Results
 import com.sgs.devcamp2.flametalk_android.domain.entity.chatroom.ChatRoomEntity
 import com.sgs.devcamp2.flametalk_android.domain.entity.chatroom.GetChatRoomEntity
 import com.sgs.devcamp2.flametalk_android.domain.repository.ChatRoomRepository
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import javax.inject.Inject
@@ -45,28 +54,33 @@ class ChatRoomRepositoryImpl @Inject constructor(
     private val friendRemote: FriendApi,
 ) : ChatRoomRepository {
     /**
-     * 채팅방 생성 api 호출 및 room database 저장 function입니다.
+     * 채팅방 생성 api 호출 및 room database 저장 function 입니다.
      * @param createChatRoomReq 채팅방 생성 request model
-     * @desc 서버에 채팅방 생성 api를 호출하고, response를 받아 chatroomModel과 chatRoomEntity로 mapping합니다.
-     * chatRoomModel를 room database에 저장하고, chatRoomEntity는 호출된 viewModel로 이동하게 됩니다.
+     * @desc 서버에 채팅방 생성 api 를 호출하고, response 를 받아 chatroomModel 과 chatRoomEntity 로 mapping 합니다.
+     * chatRoomModel 를 room database 에 저장하고, chatRoomEntity 는 호출된 viewModel 로 이동하게 됩니다.
      */
     override fun createChatRoom(createChatRoomReq: CreateChatRoomReq): Flow<Results<ChatRoomEntity, WrappedResponse<CreateChatRoomRes>>> {
         return flow {
             val response = remote.createChatRoom(createChatRoomReq)
             if (response.isSuccessful) {
-                if (response.body()!!.status == 200) {
-                    val body = response.body()!!
-                    val data = body.data!!
-                    val chatroomModel = mapperToChatRoomModel(data)
-                    local.chatRoomDao().insert(chatroomModel)
-                    val chatRoomEntity = mapperToChatRoomEntity(data)
-                    emit(Results.Success(chatRoomEntity))
-                } else if (response.body()!!.status == 400) {
-                    emit(Results.Error("잘못된 요청입니다"))
-                } else if (response.body()!!.status == 401) {
-                    emit(Results.Error("권한이 없습니다"))
-                } else {
-                    emit(Results.Error("서버 에러입니다"))
+                when (response.body()!!.status) {
+                    Status.OK -> {
+                        val body = response.body()!!
+                        val data = body.data!!
+                        val chatroomModel = mapperToChatRoomModel(data)
+                        local.chatRoomDao().insert(chatroomModel)
+                        val chatRoomEntity = mapperToChatRoomEntity(data)
+                        emit(Results.Success(chatRoomEntity))
+                    }
+                    Status.BAD_REQUEST -> {
+                        emit(Results.Error("잘못된 요청입니다"))
+                    }
+                    Status.UNAUTHORIZED -> {
+                        emit(Results.Error("권한이 없습니다"))
+                    }
+                    else -> {
+                        emit(Results.Error("서버 에러입니다"))
+                    }
                 }
             }
         }.flowOn(ioDispatcher)
@@ -82,23 +96,23 @@ class ChatRoomRepositoryImpl @Inject constructor(
         TODO("Not yet implemented")
     }
     /**
-     * 채팅 리스트 불러오기  function입니다.
+     * 채팅 리스트 불러오기  function 입니다.
      * @param chatroomId 채팅방 roomId
-     * @desc room Database에 저장된 채팅 텍스트를 가져옵니다.
-     * api가 아님 local에서 불러오기 때문에 localResults sealed class를 사용했습니다.
+     * @desc room Database 에 저장된 채팅 텍스트를 가져옵니다.
+     * api 가 아님 local 에서 불러오기 때문에 localResults sealed class 를 사용했습니다.
      */
     override fun getChatList(chatroomId: String): Flow<LocalResults<ChatWithRoomId>> {
         return flow {
-            var chatwithRoomId: ChatWithRoomId? = null
-            var deffer: Deferred<ChatWithRoomId> = CoroutineScope(ioDispatcher).async {
+            val chatWithRoomId: ChatWithRoomId?
+            val deffer: Deferred<ChatWithRoomId> = CoroutineScope(ioDispatcher).async {
                 local.chatRoomDao().getChatRoomWithId(chatroomId)
             }
-            chatwithRoomId = deffer.await()
-            emit(LocalResults.Success(chatwithRoomId))
+            chatWithRoomId = deffer.await()
+            emit(LocalResults.Success(chatWithRoomId))
         }.flowOn(ioDispatcher)
     }
     /**
-     * 채팅의 상세정보 불러오기 function입니다.
+     * 채팅의 상세정보 불러오기 function 입니다.
      * @param userChatroomId 유저채팅방Id
      * @desc api 호출을 통해서 보고자하는 채팅방의 상세 정보 를 볼 수 있습니다.
      */
@@ -106,76 +120,49 @@ class ChatRoomRepositoryImpl @Inject constructor(
         return flow {
             val response = remote.getChatRoom(userChatroomId)
             if (response.isSuccessful) {
-                if (response.body()!!.status == 200) {
-                    val body = response.body()!!
-                    val data = body.data!!
-                    val getChatRoomEntity = mapperToGetChatRoomEntity(data)
-                    emit(Results.Success(getChatRoomEntity))
-                } else if (response.body()!!.status == 400) {
-                    emit(Results.Error("잘못된 요청입니다"))
-                } else if (response.body()!!.status == 401) {
-                    emit(Results.Error("권한이 없습니다"))
-                } else if (response.body()!!.status == 404) {
-                    emit(Results.Error("존재하지 않는 채팅방입니다"))
-                } else {
-                    emit(Results.Error("서버 에러입니다"))
+                when (response.body()!!.status) {
+                    Status.OK -> {
+                        val body = response.body()!!
+                        val data = body.data!!
+                        val getChatRoomEntity = mapperToGetChatRoomEntity(data)
+                        emit(Results.Success(getChatRoomEntity))
+                    }
+                    Status.BAD_REQUEST -> {
+                        emit(Results.Error("잘못된 요청입니다"))
+                    }
+                    Status.UNAUTHORIZED -> {
+                        emit(Results.Error("권한이 없습니다"))
+                    }
+                    Status.FILE_NOT_FOUND -> {
+                        emit(Results.Error("존재하지 않는 채팅방입니다"))
+                    }
+                    else -> {
+                        emit(Results.Error("서버 에러입니다"))
+                    }
                 }
             }
         }.flowOn(ioDispatcher)
     }
     /**
-     * 채팅방 리스트 불러오기 function입니다.
+     * 채팅방 리스트 불러오기 function 입니다.
      * @param isOpen 오픈채팅방 유무
-     * @desc 채팅방 리스트를 불러오고, 내부 database에 저장합니다.
-     * 또한 변경된 썸네일이 있다면, 기존 내부 database에 저장된 썸네일 리스트를 지우고,
+     * @desc 채팅방 리스트를 불러오고, 내부 database 에 저장합니다.
+     * 또한 변경된 썸네일이 있다면, 기존 내부 database 에 저장된 썸네일 리스트를 지우고,
      * 새로운 썸네일로 변경하고 저장합니다.
      */
-    override fun getChatRoomList(isOpen: Boolean): Flow<Results<GetChatRoomListRes, WrappedResponse<GetChatRoomListRes>>> {
+    override fun getChatRoomList
+    (isOpen: Boolean): Flow<Results<GetChatRoomListRes, WrappedResponse<GetChatRoomListRes>>> {
         return flow {
             val response = remote.getChatRoomList(isOpen)
             if (response.isSuccessful) {
-                if (response.body()!!.status == 200) {
-                    val body = response.body()!!
-                    val data = body.data!!
-                    for (i in 0 until data.userChatrooms.size) {
-                        // local db에서 데이터가 있는지 찾는다.
-                        val getChatRoomWithThumnail = local.chatRoomDao()
-                            .getChatRoomWithThumbnailAndId(data.userChatrooms[i].chatroomId)
-                        if (getChatRoomWithThumnail == null) {
-                            // 데이터가 없다면 넣는다.
-                            val chatRoom = mapperToChatRoomModel(isOpen, i, data)
-                            var deferred = coroutineScope {
-                                async {
-                                    local.chatRoomDao().insert(chatRoom)
-                                }
-                            }
-                            deferred.await()
-                            var deferred2 = coroutineScope {
-                                async {
-                                    if (data.userChatrooms[i].thumbnail?.size != 0) {
-                                        for (j in 0 until data.userChatrooms[i].thumbnail!!.size) {
-                                            lateinit var thumbnail: Thumbnail
-                                            if (data.userChatrooms[i].thumbnail?.get(j)
-                                                .isNullOrEmpty()
-                                            ) {
-                                                thumbnail = mapperToThumbnail(
-                                                    data.userChatrooms[i].chatroomId,
-                                                    ""
-                                                )
-                                            } else {
-                                                thumbnail = mapperToThumbnail(
-                                                    data.userChatrooms[i].chatroomId,
-                                                    data.userChatrooms[i].thumbnail?.get(j)!!
-                                                )
-                                            }
-                                            local.chatRoomDao().insertThumbnail(thumbnail)
-                                        }
-                                    }
-                                }
-                            }
-                            deferred2.await()
-                        } else {
-                            var deffered3 = coroutineScope {
+                when (response.body()!!.status) {
+                    Status.OK -> {
+                        val body = response.body()!!
+                        val data = body.data!!
+                        for (i in 0 until data.userChatrooms.size) {
+                            // local db 에서 데이터가 있는지 찾는다.
+                            local.chatRoomDao().getChatRoomWithThumbnailAndId(data.userChatrooms[i].chatroomId)
+                            val deferred = coroutineScope {
                                 async {
                                     local.chatRoomDao().updateChatRoomInfo(
                                         data.userChatrooms[i].title,
@@ -187,16 +174,15 @@ class ChatRoomRepositoryImpl @Inject constructor(
                                         local.chatRoomDao()
                                             .deleteThumbnailwithRoomId(data.userChatrooms[i].chatroomId)
                                         for (j in 0 until data.userChatrooms[i].thumbnail!!.size) {
-                                            lateinit var thumbnail: Thumbnail
-                                            if (data.userChatrooms[i].thumbnail?.get(j)
+                                            val thumbnail: Thumbnail = if (data.userChatrooms[i].thumbnail?.get(j)
                                                 .isNullOrEmpty()
                                             ) {
-                                                thumbnail = mapperToThumbnail(
+                                                mapperToThumbnail(
                                                     data.userChatrooms[i].chatroomId,
                                                     ""
                                                 )
                                             } else {
-                                                thumbnail = mapperToThumbnail(
+                                                mapperToThumbnail(
                                                     data.userChatrooms[i].chatroomId,
                                                     data.userChatrooms[i].thumbnail?.get(j)!!
                                                 )
@@ -206,22 +192,25 @@ class ChatRoomRepositoryImpl @Inject constructor(
                                     }
                                 }
                             }
-                            deffered3.await()
+                            deferred.await()
                         }
+                        emit(Results.Success(data))
                     }
-                    emit(Results.Success(data))
-                } else if (response.body()!!.status == 400) {
-                    emit(Results.Error("잘못된 요청입니다"))
-                } else if (response.body()!!.status == 401) {
-                    emit(Results.Error("권한이 없습니다"))
-                } else {
-                    emit(Results.Error("서버 에러입니다"))
+                    Status.BAD_REQUEST -> {
+                        emit(Results.Error("잘못된 요청입니다"))
+                    }
+                    Status.UNAUTHORIZED -> {
+                        emit(Results.Error("권한이 없습니다"))
+                    }
+                    else -> {
+                        emit(Results.Error("서버 에러입니다"))
+                    }
                 }
             }
         }.flowOn(ioDispatcher)
     }
     /**
-     * 내부 local database에 저장된 chatroomList를 가져오는 function입니다.
+     * 내부 local database 에 저장된 chatroomList 를 가져오는 function 입니다.
      * @param isOpen 오픈채팅유무
      * @desc 채팅방의 썸네일과 함께 채팅룸 리스트를 반환합니다.
      */
@@ -233,24 +222,35 @@ class ChatRoomRepositoryImpl @Inject constructor(
         }.flowOn(ioDispatcher)
     }
     /**
-     * 채팅방에 업로드된 파일 리스트를 불러오는 function입니다.
-     * @param chatroomId 채팅룸id
+     * 채팅방에 업로드된 파일 리스트를 불러오는 function 입니다.
+     * @param chatroomId 채팅룸 id
      */
     override fun getChatRoomFileList(chatroomId: String): Flow<Results<List<GetChatRoomFilesRes>, WrappedResponse<List<GetChatRoomFilesRes>>>> {
         return flow {
             val response = remote.getChatRoomFileList(chatroomId)
             if (response.isSuccessful) {
-                if (response.body()!!.status == 200) {
-                    val body = response.body()!!
-                    val data = body.data!!
-                    emit(Results.Success(data))
+                when (response.body()!!.status) {
+                    Status.OK -> {
+                        val body = response.body()!!
+                        val data = body.data!!
+                        emit(Results.Success(data))
+                    }
+                    Status.BAD_REQUEST -> {
+                        emit(Results.Error("잘못된 요청입니다"))
+                    }
+                    Status.UNAUTHORIZED -> {
+                        emit(Results.Error("권한이 없습니다"))
+                    }
+                    else -> {
+                        emit(Results.Error("서버 에러입니다"))
+                    }
                 }
             }
         }.flowOn(ioDispatcher)
     }
     /**
-     * 채팅방 수정 function입니다.
-     * @param userChatroomId 유저채팅방id
+     * 채팅방 수정 function 입니다.
+     * @param userChatroomId 유저 채팅방 id
      * @param updateChatRoomReq 업데이트 요청 request model
      */
     override fun updateChatRoom(
@@ -261,100 +261,121 @@ class ChatRoomRepositoryImpl @Inject constructor(
         return flow {
             val response = remote.updateChatRoom(userChatroomId, updateChatRoomReq)
             if (response.isSuccessful) {
-                if (response.body()!!.status == 200) {
-                    val body = response.body()!!
-                    val data = body.data!!
-                    local.chatRoomDao()
-                        .updateChatRoomTitle(data.title, data.inputLock, data.userChatroomId)
-                    if (data.thumbnail[0] != null) {
+                when (response.body()!!.status) {
+                    200 -> {
+                        val body = response.body()!!
+                        val data = body.data!!
+                        local.chatRoomDao()
+                            .updateChatRoomTitle(data.title, data.inputLock, data.userChatroomId)
                         local.chatRoomDao().deleteThumbnailwithRoomId(chatroomId)
-                        lateinit var thumbnail: Thumbnail
-                        thumbnail = mapperToThumbnail(
+                        val thumbnail: Thumbnail = mapperToThumbnail(
                             chatroomId,
                             data.thumbnail[0]
                         )
                         local.chatRoomDao().insertThumbnail(thumbnail)
-                    }
 
-                    emit(Results.Success(data))
-                } else if (response.body()!!.status == 400) {
-                    emit(Results.Error("잘못된 요청입니다"))
-                } else if (response.body()!!.status == 401) {
-                    emit(Results.Error("권한이 없습니다"))
-                } else {
-                    emit(Results.Error("서버 에러입니다"))
+                        emit(Results.Success(data))
+                    }
+                    400 -> {
+                        emit(Results.Error("잘못된 요청입니다"))
+                    }
+                    401 -> {
+                        emit(Results.Error("권한이 없습니다"))
+                    }
+                    else -> {
+                        emit(Results.Error("서버 에러입니다"))
+                    }
                 }
             }
         }.flowOn(ioDispatcher)
     }
     /**
-     * 채팅방에서 벗어날 때 lastReadMessageId를 갱신하는 function입니다.
+     * 채팅방에서 벗어날 때 lastReadMessageId를 갱신하는 function 입니다.
      * @param closeChatRoomReq 채팅방나가기 request model
      */
     override fun closeChatRoom(closeChatRoomReq: CloseChatRoomReq): Flow<Results<Boolean, WrappedResponse<Nothing>>> {
         return flow {
-            val TAG: String = "로그"
             val response = remote.closeChatRoom(closeChatRoomReq)
 
             if (response.isSuccessful) {
-                if (response.body()!!.status == 200) {
-                    var response: String = ""
-                    var updateResponse = 0
-                    var deffer: Deferred<String> = CoroutineScope(ioDispatcher).async {
-                        local.chatDao().getContents(closeChatRoomReq.lastReadMessageId)
+                when (response.body()!!.status) {
+                    Status.OK -> {
+                        val res: String
+                        val deffer: Deferred<String> = CoroutineScope(ioDispatcher).async {
+                            local.chatDao().getContents(closeChatRoomReq.lastReadMessageId)
+                        }
+                        res = deffer.await()
+                        val deffer2: Deferred<Int> = CoroutineScope(ioDispatcher).async {
+                            local.chatRoomDao().updateChatRoomWithMessageText(
+                                closeChatRoomReq.lastReadMessageId,
+                                res,
+                                System.currentTimeMillis(),
+                                closeChatRoomReq.userChatroomId,
+                            )
+                        }
+                        deffer2.await()
+                        emit(Results.Success(true))
                     }
-                    response = deffer.await()
-                    var deffer2: Deferred<Int> = CoroutineScope(ioDispatcher).async {
-                        local.chatRoomDao().updateChatRoomWithMessageText(
-                            closeChatRoomReq.lastReadMessageId,
-                            response,
-                            System.currentTimeMillis(),
-                            closeChatRoomReq.userChatroomId,
-                        )
+                    Status.BAD_REQUEST -> {
+                        emit(Results.Error("잘못된 요청입니다"))
                     }
-                    updateResponse = deffer2.await()
-                    emit(Results.Success(true))
-                } else if (response.body()!!.status == 400) {
-                    emit(Results.Error("잘못된 요청입니다"))
-                } else if (response.body()!!.status == 401) {
-                    emit(Results.Error("권한이 없습니다"))
-                } else {
-                    emit(Results.Error("서버 에러입니다"))
+                    Status.UNAUTHORIZED -> {
+                        emit(Results.Error("권한이 없습니다"))
+                    }
+                    else -> {
+                        emit(Results.Error("서버 에러입니다"))
+                    }
                 }
             }
         }.flowOn(ioDispatcher)
     }
     /**
-     * 오픈채팅방 프로필을 업데이트하는 function입니다.
+     * 오픈채팅방 프로필을 업데이트하는 function 입니다.
      * @param updateOpenChatRoomProfileReq 오픈채팅방프로필 업데이트 data model
      */
     override fun updateOpenChatRoomProfile(updateOpenChatRoomProfileReq: UpdateOpenChatRoomProfileReq): Flow<Results<Boolean, WrappedResponse<Nothing>>> {
         return flow {
             val response = remote.updateOpenChatRoomProfile(updateOpenChatRoomProfileReq)
             if (response.isSuccessful) {
-                if (response.body()!!.status == 200) {
-                    emit(Results.Success(true))
+                when (response.body()!!.status) {
+                    Status.OK -> {
+                        emit(Results.Success(true))
+                    }
+                    Status.BAD_REQUEST -> {
+                        emit(Results.Error("잘못된 요청입니다"))
+                    }
+                    Status.UNAUTHORIZED -> {
+                        emit(Results.Error("권한이 없습니다"))
+                    }
+                    else -> {
+                        emit(Results.Error("서버 에러입니다"))
+                    }
                 }
             }
         }.flowOn(ioDispatcher)
     }
     /**
-     * 채팅방을 나가는(삭제하는) function입니다.
-     * @param userChatroomId 유저채팅방id
+     * 채팅방을 나가는(삭제하는) function 입니다.
+     * @param userChatroomId 유저채팅방 id
      */
     override fun leaveChatRoom(userChatroomId: Long): Flow<Results<Boolean, WrappedResponse<Nothing>>> {
         return flow {
             val response = remote.leaveChatRoom(userChatroomId)
             if (response.isSuccessful) {
-                if (response.body()!!.status == 200) {
-                    local.chatRoomDao().deleteChatRoomWithuserChatroomId(userChatroomId)
-                    emit(Results.Success(true))
-                } else if (response.body()!!.status == 400) {
-                    emit(Results.Error("잘못된 요청입니다"))
-                } else if (response.body()!!.status == 401) {
-                    emit(Results.Error("권한이 없습니다"))
-                } else {
-                    emit(Results.Error("서버 에러입니다"))
+                when (response.body()!!.status) {
+                    Status.OK -> {
+                        local.chatRoomDao().deleteChatRoomWithuserChatroomId(userChatroomId)
+                        emit(Results.Success(true))
+                    }
+                    Status.BAD_REQUEST -> {
+                        emit(Results.Error("잘못된 요청입니다"))
+                    }
+                    Status.UNAUTHORIZED -> {
+                        emit(Results.Error("권한이 없습니다"))
+                    }
+                    else -> {
+                        emit(Results.Error("서버 에러입니다"))
+                    }
                 }
             }
         }.flowOn(ioDispatcher)
@@ -382,18 +403,22 @@ class ChatRoomRepositoryImpl @Inject constructor(
     ): Flow<Results<UploadImgRes, WrappedResponse<UploadImgRes>>> {
         return flow {
             val response = remote.fileCreate(file, chatroomId)
-            Log.d("로그", "response - $response() called")
             if (response.isSuccessful) {
-                if (response.body()!!.status == 200) {
-                    val body = response.body()!!
-                    val data = body.data!!
-                    emit(Results.Success(data))
-                } else if (response.body()!!.status == 400) {
-                    emit(Results.Error("잘못된 요청입니다"))
-                } else if (response.body()!!.status == 401) {
-                    emit(Results.Error("권한이 없습니다"))
-                } else {
-                    emit(Results.Error("서버 에러입니다"))
+                when (response.body()!!.status) {
+                    Status.OK -> {
+                        val body = response.body()!!
+                        val data = body.data!!
+                        emit(Results.Success(data))
+                    }
+                    Status.BAD_REQUEST -> {
+                        emit(Results.Error("잘못된 요청입니다"))
+                    }
+                    Status.UNAUTHORIZED -> {
+                        emit(Results.Error("권한이 없습니다"))
+                    }
+                    else -> {
+                        emit(Results.Error("서버 에러입니다"))
+                    }
                 }
             }
         }.flowOn(ioDispatcher)
@@ -403,16 +428,21 @@ class ChatRoomRepositoryImpl @Inject constructor(
         return flow {
             val response = remote.joinChatRoom(joinChatRoomReq)
             if (response.isSuccessful) {
-                if (response.body()!!.status == 200) {
-                    val body = response.body()!!
-                    val data = body.data!!
-                    emit(Results.Success(data))
-                } else if (response.body()!!.status == 400) {
-                    emit(Results.Error("잘못된 요청입니다"))
-                } else if (response.body()!!.status == 401) {
-                    emit(Results.Error("권한이 없습니다"))
-                } else {
-                    emit(Results.Error("서버 에러입니다"))
+                when (response.body()!!.status) {
+                    Status.OK -> {
+                        val body = response.body()!!
+                        val data = body.data!!
+                        emit(Results.Success(data))
+                    }
+                    Status.BAD_REQUEST -> {
+                        emit(Results.Error("잘못된 요청입니다"))
+                    }
+                    Status.UNAUTHORIZED -> {
+                        emit(Results.Error("권한이 없습니다"))
+                    }
+                    else -> {
+                        emit(Results.Error("서버 에러입니다"))
+                    }
                 }
             }
         }.flowOn(ioDispatcher)
@@ -425,18 +455,22 @@ class ChatRoomRepositoryImpl @Inject constructor(
     ): Flow<Results<List<FriendListRes>, WrappedResponse<List<FriendListRes>>>> {
         return flow {
             val response = friendRemote.getFriendList(isBirth, isHidden, isBlock)
-            Log.d("로그", "ChatRoomRepositoryImpl - getFriendUser() called")
             if (response.isSuccessful) {
-                if (response.body()!!.status == 200) {
-                    val body = response.body()!!
-                    val data = body.data!!
-                    emit(Results.Success(data))
-                } else if (response.body()!!.status == 400) {
-                    emit(Results.Error("잘못된 요청입니다"))
-                } else if (response.body()!!.status == 401) {
-                    emit(Results.Error("권한이 없습니다"))
-                } else {
-                    emit(Results.Error("서버 에러입니다"))
+                when (response.body()!!.status) {
+                    Status.OK -> {
+                        val body = response.body()!!
+                        val data = body.data!!
+                        emit(Results.Success(data))
+                    }
+                    Status.BAD_REQUEST -> {
+                        emit(Results.Error("잘못된 요청입니다"))
+                    }
+                    Status.UNAUTHORIZED -> {
+                        emit(Results.Error("권한이 없습니다"))
+                    }
+                    else -> {
+                        emit(Results.Error("서버 에러입니다"))
+                    }
                 }
             }
         }.flowOn(ioDispatcher)
